@@ -7,8 +7,6 @@
 
             <!-- main -->
             <main id="middle" class="flex-fill mx-auto">
-                <layout-pagetitle />
-
                 <router-view />
             </main>
         </div>

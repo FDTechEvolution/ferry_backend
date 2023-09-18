@@ -22,6 +22,10 @@ class AuthController extends Controller
         return view('index');
     }
 
+    public function forgotPassword() {
+        return view('pages.auth.forgot_password');
+    }
+
     public function authenticate(Request $request) {
         $credentials = $request->validate([
             'email' => 'required|email',
@@ -42,6 +46,28 @@ class AuthController extends Controller
             return back()->withErrors([
                 'email' => 'Your provided credentials do not match in our records.',
             ])->onlyInput('email');
+        }
+    }
+
+    public function resetPassword(Request $request) {
+        return redirect()->route('login');
+    }
+
+    public function dashboard() {
+        if(Auth::check()) {
+            return view('dashboard');
+        }
+
+        return redirect()->route('login');
+    }
+
+    public function logout(Request $request)
+    {
+        if (Auth::check()) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect()->route('login');
         }
     }
 }

@@ -21,5 +21,8 @@
             @include('includes.script')
 
         </div>
+
+        @yield('modal')
+        @yield('script')
     </body>
 </html>

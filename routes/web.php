@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,15 +15,23 @@ use App\Http\Controllers\Auth\AuthController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::get('/', function () { return view('index'); })->name('login');
-Route::get('/dashboard', function () { return view('dashboard'); })->name('dashboard');
-Route::get('/users', function () { return view('users'); })->name('users');
 
 Route::controller(AuthController::class)->group(function() {
+    Route::get('/', 'login')->name('login');
+    Route::get('/forgot-password', 'forgotPassword')->name('forgot-password');
+    Route::get('/logout', 'logout')->name('logout');
+    Route::get('/dashboard', 'dashboard')->name('dashboard');
+
     Route::post('/login', 'authenticate')->name('authenticate');
+    Route::post('/reset-password', 'resetPassword')->name('reset-password');
 });
 
+Route::middleware('auth')->controller(UsersController::class)->group(function() {
+    Route::get('/users', 'index')->name('users-index');
 
+    Route::post('/create-user', 'store')->name('create-user');
+    Route::post('/update-user', 'update')->name('update-user');
+});
 
 
 

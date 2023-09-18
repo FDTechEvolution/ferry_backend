@@ -559,7 +559,7 @@
 
         <div class="dropdown-divider mb-0 mt-3"></div>
 
-        <a href="#" class="prefix-icon-ignore dropdown-footer dropdown-custom-ignore fw-medium py-3 px-4">
+        <a href="{{ route('logout') }}" class="prefix-icon-ignore dropdown-footer dropdown-custom-ignore fw-medium py-3 px-4">
           <i class="fi fi-power float-start"></i>
           Log Out
         </a>

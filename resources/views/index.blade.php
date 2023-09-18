@@ -25,8 +25,8 @@
                 <label for="account_passwd">Password</label>
 
                 <!-- forgot -->
-                <a href="account-full-signin-password-1.html" class="btn bg-transparent shadow-none link-muted position-absolute top-0 end-0 m-1">
-                  Forgot
+                <a href="{{ route('forgot-password') }}" class="btn bg-transparent shadow-none link-muted position-absolute top-0 end-0 m-1">
+                  ลืมรหัสผ่าน?
                 </a>
               </div>
 

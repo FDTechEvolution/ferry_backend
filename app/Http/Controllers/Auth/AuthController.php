@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
 
 use App\Models\User;
 
@@ -18,14 +20,6 @@ class AuthController extends Controller
         ]);
     }
 
-    public function login() {
-        return view('index');
-    }
-
-    public function forgotPassword() {
-        return view('pages.auth.forgot_password');
-    }
-
     public function authenticate(Request $request) {
         $credentials = $request->validate([
             'email' => 'required|email',
@@ -33,24 +27,56 @@ class AuthController extends Controller
         ]);
 
         $user = User::where(['email' => $credentials['email']])->with('role')->first();
-        if($user->role->name !== 'Admin') return back()->withErrors(['email' => 'Your provided credentials do not match in our records.',]);
+        if($user->isactive) return back()->withFail(['email' => 'Your provided credentials do not match in our records.',]);
         else {
             // return redirect()->route('dashboard');
             if(Auth::attempt($credentials))
             {
                 $request->session()->regenerate();
                 return redirect()->route('dashboard')
-                    ->withSuccess('You have successfully logged in!');
+                    ->withSuccess('เข้าสู่ระบบเรียบร้อยแล้ว...');
             }
 
-            return back()->withErrors([
+            return back()->withFail([
                 'email' => 'Your provided credentials do not match in our records.',
             ])->onlyInput('email');
         }
     }
 
+    public function sendLinkToEmail(Request $request) {
+        $request->validate(['email' => 'required|email']);
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        return $status === Password::RESET_LINK_SENT
+                ? back()->with(['status' => __($status)])
+                : back()->withErrors(['email' => __($status)]);
+    }
+
     public function resetPassword(Request $request) {
-        return redirect()->route('login');
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->setRememberToken(Str::random(60));
+     
+                $user->save();
+     
+                event(new PasswordReset($user));
+            }
+        );
+
+        return $status === Password::PASSWORD_RESET
+                ? redirect()->route('login')->with('status', __($status))
+                : back()->withErrors(['email' => [__($status)]]);
     }
 
     public function dashboard() {

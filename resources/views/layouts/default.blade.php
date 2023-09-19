@@ -13,6 +13,7 @@
 
                 <!-- main -->
                 <main id="middle" class="flex-fill mx-auto">
+                    @include('includes.flash-message')
                     @yield('content')
                 </main>
             </div>

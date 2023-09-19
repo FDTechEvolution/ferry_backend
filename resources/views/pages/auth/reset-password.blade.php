@@ -8,15 +8,20 @@
             <div class="row">
                 <div class="col-sm-8 col-md-6 col-lg-9 col-xl-12 mx-auto max-w-450">
 
-                    <h1 class="fw-bold mb-5">ลืมรหัสผ่าน</h1>
+                    <h1 class="fw-bold mb-5">แก้ไขรหัสผ่าน</h1>
                     <p class="lead">ลิงค์สำหรับการรีเซ็ตรหัสผ่านจะถูกส่งไปยังอีเมล์</p>
 
-                    <form novalidate class="bs-validate" method="POST" action="{{ route('password-email') }}">
+                    <form novalidate class="bs-validate" method="POST" action="{{ route('reset-password') }}">
                     @csrf
                         <!-- email address -->
                         <div class="form-floating mb-3">
-                            <input required type="email" class="form-control" id="account_email" placeholder="Email address">
-                            <label for="account_email">อีเมล์</label>
+                            <input required type="password" class="form-control" id="new-password" name="new_password" placeholder="รหัสผ่านใหม่">
+                            <label for="account_email">รหัสผ่าน</label>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input required type="password" class="form-control" id="confirm-password" name="confirm_password" placeholder="ยืนยันรหัสผ่านใหม่">
+                            <label for="account_email">รหัสผ่าน</label>
                         </div>
 
                         <!-- submot button -->

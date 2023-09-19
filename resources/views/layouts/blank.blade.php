@@ -4,6 +4,7 @@
         @include('includes.head')
     </head>
     <body>
+        @include('includes.flash-message')
         @yield('content')
         
         @include('includes.script')

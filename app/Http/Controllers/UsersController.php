@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
+use DB;
+use Mail; 
 
 use App\Models\User;
 use App\Models\Role;
@@ -32,7 +35,7 @@ class UsersController extends Controller
             if($user['role']['name'] === 'User') $user_count['normal_user']++;
         }
 
-        $roles = Role::get();
+        $roles = Role::orderBy('name', 'ASC')->get();
         return view('pages.users.index', ['users' => $users, 'roles' => $roles, 'all_user' => $all_user, 'user_count' => $user_count]);
     }
 
@@ -94,5 +97,26 @@ class UsersController extends Controller
 
         if($user->save()) return redirect()->route('users-index')->withSuccess('ลบผู้ใช้งานเรียบร้อยแล้ว...');
         return redirect()->route('users-index')->withFail('เกิดข้อผิดพลาด กรุณาลองใหม่...');
+    }
+
+    public function resetUserPassword(string $id = null) {
+        $user = User::find($id);
+        if($user) {
+            $token = Str::random(64);
+
+            DB::table('password_resets')->insert([
+                'id' => Str::uuid(),
+                'email' => $user->email, 
+                'token' => $token, 
+                'created_at' => Carbon::now()
+            ]);
+    
+            Mail::send('email.reset-password', ['token' => $token], function($message) use($request){
+                $message->to($user->email);
+                $message->subject('Reset Password');
+            });
+        }
+
+        return back()->withSuccess('ส่งลิงค์การรีเซ็ตรหัสผ่านไปยังอีเมล์ผู้ใช้งาน '.$user->email.' เรียบร้อยแล้ว...');
     }
 }

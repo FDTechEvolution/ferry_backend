@@ -8,25 +8,34 @@
             <div class="row">
                 <div class="col-sm-8 col-md-6 col-lg-9 col-xl-12 mx-auto max-w-450">
 
-                    <h1 class="fw-bold mb-5">แก้ไขรหัสผ่าน</h1>
-                    <p class="lead">ลิงค์สำหรับการรีเซ็ตรหัสผ่านจะถูกส่งไปยังอีเมล์</p>
+                    <h1 class="fw-bold mb-5">รีเซ็ตรหัสผ่าน</h1>
 
-                    <form novalidate class="bs-validate" method="POST" action="{{ route('reset-password') }}">
+                    <form novalidate onSubmit="return formSubmit()" id="password-reset-form" class="bs-validate" method="POST" action="{{ route('update-password') }}">
                     @csrf
-                        <!-- email address -->
-                        <div class="form-floating mb-3">
-                            <input required type="password" class="form-control" id="new-password" name="new_password" placeholder="รหัสผ่านใหม่">
-                            <label for="account_email">รหัสผ่าน</label>
-                        </div>
+                        <input type="hidden" name="token" value="{{ $token }}">
                         
                         <div class="form-floating mb-3">
-                            <input required type="password" class="form-control" id="confirm-password" name="confirm_password" placeholder="ยืนยันรหัสผ่านใหม่">
-                            <label for="account_email">รหัสผ่าน</label>
+                            <input required type="email" name="email" class="form-control" id="account_email" placeholder="Email address">
+                            <label for="account_email">อีเมล์</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input required type="password" name="password" class="form-control" id="password" placeholder="รหัสผ่านใหม่" minlength="6">
+                            <label for="password">รหัสผ่านใหม่</label>
+
+                            <i class="fi fi-eye btn bg-transparent shadow-none link-muted position-absolute top-0 end-0 m-1" id="show-password"></i>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input required type="password" name="password_confirmation" class="form-control" id="confirm-password" placeholder="ยืนยันรหัสผ่าน" minlength="6">
+                            <label for="confirm-password">ยืนยันรหัสผ่าน</label>
+
+                            <i class="fi fi-eye btn bg-transparent shadow-none link-muted position-absolute top-0 end-0 m-1" id="show-confirm-password"></i>
                         </div>
 
                         <!-- submot button -->
                         <div class="d-grid mb-3">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" id="button-submit-form" class="btn btn-primary">
                             <span>รีเซ็ตรหัสผ่าน</span>
                             <svg class="rtl-flip" height="18px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
                                 <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"></path>
@@ -54,4 +63,6 @@
         </svg>
     </div>
 </div>
+
+<script src="{{ asset('assets/js/app/reset_password.js') }}"></script>
 @stop

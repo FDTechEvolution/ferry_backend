@@ -103,6 +103,7 @@
                                     <i class="fi fi-pencil text-secondary cursor-pointer" data-bs-toggle="modal" data-bs-target="#edit-user" title="แก้ไขข้อมูล" onClick="updateEditData({{ $index }})"></i>
                                     <x-ajax-icon-confirm 
                                         class="ms-2"
+                                        title="ลบผู้ใช้งาน"
                                         :url="route('user-delete', ['id' => $user['id']])"
                                         :message="'ยืนยันการลบรายการผู้ใช้งาน '.$user['firstname'].' '.$user['lastname'].' ?'"
                                         :icon="_('fi fi-close')"
@@ -132,9 +133,14 @@
     a.dt-button.dropdown-item.buttons-print {
         display: none;
     }
+    .border-bottom-only {
+        border-top: none;
+        border-right: none;
+        border-left: none;
+        border-radius: 0;
+    }
 </style>
 @stop
-
 
 @section('modal')
     @include('pages.users.modal.create')

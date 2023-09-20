@@ -15,7 +15,7 @@
                     @csrf
                         <!-- email address -->
                         <div class="form-floating mb-3">
-                            <input required type="email" class="form-control" id="account_email" placeholder="Email address">
+                            <input required type="email" name="email" class="form-control" id="account_email" placeholder="Email address">
                             <label for="account_email">อีเมล์</label>
                         </div>
 

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\ForgotPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,13 @@ Route::controller(AuthController::class)->group(function() {
     Route::get('/', function() {
         return view('index');
     })->middleware('guest')->name('login');
+    Route::get('/logout', 'logout')->name('logout');
+    Route::get('/dashboard', 'dashboard')->name('dashboard');
+
+    Route::post('/login', 'authenticate')->name('authenticate');
+});
+
+Route::controller(ForgotPasswordController::class)->group(function() {
     Route::get('/forgot-password', function () {
         return view('pages.auth.forgot_password');
     })->middleware('guest')->name('forgot-password');
@@ -27,12 +35,8 @@ Route::controller(AuthController::class)->group(function() {
         return view('pages.auth.reset-password', ['token' => $token]);
     })->middleware('guest')->name('reset-password');
 
-    Route::get('/logout', 'logout')->name('logout');
-    Route::get('/dashboard', 'dashboard')->name('dashboard');
-
-    Route::post('/login', 'authenticate')->name('authenticate');
-    Route::post('/forgot-password', 'sendLinkToEmail')->name('password-email');
-    Route::post('/reset-password', 'resetPassword')->name('update-password');
+    Route::post('/forgot-password', 'submitForgetPasswordForm')->name('password-email');
+    Route::post('/reset-password', 'submitResetPasswordForm')->name('update-password');
 });
 
 Route::middleware('auth')->group(function() {

@@ -27,7 +27,8 @@ class AuthController extends Controller
         ]);
 
         $user = User::where(['email' => $credentials['email']])->with('role')->first();
-        if($user->isactive) return back()->withFail(['email' => 'Your provided credentials do not match in our records.',]);
+        $result = $this->checkUserCondition($user);
+        if(!$result) return back()->withFail('Your provided credentials do not match in our records.');
         else {
             // return redirect()->route('dashboard');
             if(Auth::attempt($credentials))
@@ -37,10 +38,15 @@ class AuthController extends Controller
                     ->withSuccess('เข้าสู่ระบบเรียบร้อยแล้ว...');
             }
 
-            return back()->withFail([
-                'email' => 'Your provided credentials do not match in our records.',
-            ])->onlyInput('email');
+            return back()->withFail('Your provided credentials do not match in our records.');
         }
+    }
+
+    private function checkUserCondition($user) {
+        if($user->role->name == 'Admin' || $user->role->name == 'Agent') {
+            if($user->isactive && $user->status == 'CO') return true;
+        }
+        return false;
     }
 
     public function sendLinkToEmail(Request $request) {

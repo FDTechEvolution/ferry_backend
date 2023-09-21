@@ -21,7 +21,7 @@
     </div>
 
     <div class="col-12">
-        <div class="section">
+        <div id="to-user-list" class="section">
             <div class="card-body">
                 <button type="button" class="btn btn-sm btn-primary mb-3 ms-2" data-bs-toggle="modal" data-bs-target="#add-user">
                     + เพิ่มผู้ใช้งาน
@@ -91,30 +91,16 @@
                                 </td>
                                 <td class="text-center">
                                     @if($user['isactive'])
-                                        <input class="d-none-cloaked" id="user-isactive-{{$index}}" type="checkbox" name="switch-checkbox" value="1" checked readonly>
+                                        <i class="switch-icon switch-icon-primary disabled_hover active"></i>
                                     @else
-                                        <input class="d-none-cloaked" id="user-isactive-{{$index}}" type="checkbox" name="switch-checkbox" value="0" readonly>
+                                        <i class="switch-icon switch-icon-primary disabled_hover"></i>
                                     @endif
-                                    <i class="switch-icon switch-icon-primary switch-icon-sm"></i>
+                                    <input type="hidden" id="user-isactive-{{$index}}" value="{{ $user['isactive'] }}">
                                 </td>
                                 <td class="text-center">
                                     <input type="hidden" id="user-id-{{$index}}" value="{{ $user['id'] }}">
                                     <input type="hidden" id="user-role-{{$index}}" value="{{ $user['role_id'] }}">
-                                    <i class="fi fi-pencil text-secondary cursor-pointer" data-bs-toggle="modal" data-bs-target="#edit-user" title="แก้ไขข้อมูล" onClick="updateEditData({{ $index }})"></i>
-                                    <x-ajax-icon-confirm 
-                                        class="ms-2"
-                                        title="รีเซ็ตรหัสผ่าน"
-                                        :url="route('user-reset-password', ['id' => $user['id']])"
-                                        :message="'รีเซ็ตรหัสเข้าใช้งานของผู้ใช้ '.$user['email'].' ?'"
-                                        :icon="_('fi fi-reload')"
-                                    />
-                                    <x-ajax-icon-confirm 
-                                        class="ms-2"
-                                        title="ลบผู้ใช้งาน"
-                                        :url="route('user-delete', ['id' => $user['id']])"
-                                        :message="'ยืนยันการลบรายการผู้ใช้งาน '.$user['firstname'].' '.$user['lastname'].' ?'"
-                                        :icon="_('fi fi-close')"
-                                    />
+                                    <i class="fi fi-cog-full text-secondary cursor-pointer" title="แก้ไขข้อมูล" onClick="updateEditData({{ $index }})"></i>
                                 </td>
                             </tr>
                         @endforeach
@@ -122,11 +108,14 @@
                 </table>
             </div>
         </div>
+        <div id="to-user-edit" class="section w-75 m-auto d-none">
+            @include('pages.users.modal.edit2')
+        </div>
     </div>
 </div>
 
 <style>
-    .fi-pencil:hover {
+    .fi-cog-full:hover {
         color: #574fec !important;
     }
     div.dt-button-collection {
@@ -146,12 +135,15 @@
         border-left: none;
         border-radius: 0;
     }
+    i.disabled_hover {
+        pointer-events: none;
+        cursor: default;
+    }
 </style>
 @stop
 
 @section('modal')
     @include('pages.users.modal.create')
-    @include('pages.users.modal.edit')
 @stop
 
 @section('script')

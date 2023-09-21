@@ -1,10 +1,11 @@
-document.querySelector('#btn-submit-form').addEventListener('click', () => {
-    document.querySelector('#user-create-form').submit()
-})
+let btn_user_list = document.querySelector('#btn-user-list')
 
-document.querySelector('#btn-update-form').addEventListener('click', () => {
-    document.querySelector('#user-update-form').submit()
-})
+if(btn_user_list) {
+    btn_user_list.addEventListener('click', () => {
+        document.querySelector('#to-user-list').classList.remove('d-none')
+        document.querySelector('#to-user-edit').classList.add('d-none')
+    })
+}
 
 function updateEditData(index) {
     let data = document.querySelectorAll(`.user-data-${index}`)
@@ -25,4 +26,7 @@ function updateEditData(index) {
 
     document.querySelector('#user-edit-id').value = user_id.value
     document.querySelector('#edit-user-isactive').checked = isactive.value === '1' ? true : false
+
+    document.querySelector('#to-user-list').classList.add('d-none')
+    document.querySelector('#to-user-edit').classList.remove('d-none')
 }

@@ -1,4 +1,4 @@
-@props(['url' => '', 'message' => '', 'text' => ''])
+@props(['url' => '', 'message' => '', 'text' => '', 'icon' => ''])
 
 <a href="#"
     data-href="{{ $url }}"
@@ -19,5 +19,5 @@
     data-ajax-confirm-btn-no-icon="fi fi-close"
     {{ $attributes->merge(['class' => 'js-ajax-confirm']) }} 
     />
-    <i class="{{ $text }}"></i>
+    <i class="{{ $icon }}"></i> {{ $text }}
 </a>

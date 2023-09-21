@@ -103,6 +103,13 @@
                                     <i class="fi fi-pencil text-secondary cursor-pointer" data-bs-toggle="modal" data-bs-target="#edit-user" title="แก้ไขข้อมูล" onClick="updateEditData({{ $index }})"></i>
                                     <x-ajax-icon-confirm 
                                         class="ms-2"
+                                        title="รีเซ็ตรหัสผ่าน"
+                                        :url="route('user-reset-password', ['id' => $user['id']])"
+                                        :message="'รีเซ็ตรหัสเข้าใช้งานของผู้ใช้ '.$user['email'].' ?'"
+                                        :icon="_('fi fi-reload')"
+                                    />
+                                    <x-ajax-icon-confirm 
+                                        class="ms-2"
                                         title="ลบผู้ใช้งาน"
                                         :url="route('user-delete', ['id' => $user['id']])"
                                         :message="'ยืนยันการลบรายการผู้ใช้งาน '.$user['firstname'].' '.$user['lastname'].' ?'"

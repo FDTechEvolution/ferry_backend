@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function() {
     Route::controller(UsersController::class)->group(function() {
         Route::get('/users', 'index')->name('users-index');
         Route::get('/delete-user/{id}', 'destroy')->name('user-delete');
+        Route::get('/reset-password-user/{id}', 'resetUserPassword')->name('user-reset-password');
         Route::post('/create-user', 'store')->name('user-create');
         Route::post('/update-user', 'update')->name('user-update');
     });

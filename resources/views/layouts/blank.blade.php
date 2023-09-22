@@ -4,9 +4,10 @@
         @include('includes.head')
     </head>
     <body>
-        @include('includes.flash-message')
-        @yield('content')
-        
+        <div id="wrapper">
+            @include('includes.flash-message')
+            @yield('content')
+        </div>
         @include('includes.script')
     </body>
 </html>

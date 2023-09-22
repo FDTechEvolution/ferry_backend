@@ -17,6 +17,10 @@ use App\Http\Controllers\ForgotPasswordController;
 |
 */
 
+Route::get('/login', function() {
+    return view('login');
+})->middleware('guest')->name('login-new');
+
 Route::controller(AuthController::class)->group(function() {
     Route::get('/', function() {
         return view('index');

@@ -3,7 +3,8 @@
     <head>
         @include('includes.head')
     </head>
-    <body class="layout-admin aside-sticky header-sticky" data-s2t-class="btn-primary btn-sm bg-gradient-default rounded-circle border-0">
+    <body class="layout-admin layout-padded aside-sticky" data-s2t-class="btn-primary btn-sm bg-gradient-default rounded-circle border-0">
+
         <div id="wrapper" class="d-flex align-items-stretch flex-column">
             @include('includes.header')
 
@@ -12,13 +13,12 @@
                 @include('includes.sidebar')
 
                 <!-- main -->
-                <main id="middle" class="flex-fill mx-auto">
+                <main id="middle" class="flex-fill mx-auto py-2 px-5" style="background-color: #ffffff6b; margin-left: 10px !important; border-radius: 30px;">
                     @include('includes.flash-message')
                     @yield('content')
                 </main>
             </div>
 
-            @include('includes.footer')
             @include('includes.script')
 
         </div>

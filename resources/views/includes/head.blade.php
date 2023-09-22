@@ -16,5 +16,8 @@
 <link rel="stylesheet" href="{{ asset('assets/css/vendor_bundle.min.css') }}">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap">
 
+<!-- Custom Style -->
+<link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+
 <!-- favicon -->
 <link rel="shortcut icon" href="favicon.ico">

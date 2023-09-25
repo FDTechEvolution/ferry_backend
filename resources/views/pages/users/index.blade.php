@@ -1,5 +1,10 @@
 @extends('layouts.default')
 
+@section('page-title')
+    <h1 class="text-main-color-2 ms-2 me-2">Account</h1>
+    <button class="btn btn-primary btn-sm border-radius-10">Add</button>
+@stop
+
 @section('content')
 <x-page-header :header="_('ผู้ใช้งาน')" :sub_header="_('')" />
 

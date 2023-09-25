@@ -20,7 +20,7 @@
                 <x-dashboard-section-manage 
                     :text="_('Account')"
                     :bg="_('#ADD8E6')"
-                    :route="_('#')"
+                    :route="route('users-index')"
                 />
             </div>
             <div class="col-4">

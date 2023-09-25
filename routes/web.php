@@ -17,13 +17,9 @@ use App\Http\Controllers\ForgotPasswordController;
 |
 */
 
-Route::get('/login', function() {
-    return view('login');
-})->middleware('guest')->name('login-new');
-
 Route::controller(AuthController::class)->group(function() {
     Route::get('/', function() {
-        return view('index');
+        return view('login');
     })->middleware('guest')->name('login');
     Route::get('/logout', 'logout')->name('logout');
     Route::get('/dashboard', 'dashboard')->name('dashboard');
@@ -45,7 +41,7 @@ Route::controller(ForgotPasswordController::class)->group(function() {
 
 Route::middleware('auth')->group(function() {
     Route::controller(UsersController::class)->group(function() {
-        Route::get('/users', 'index')->name('users-index');
+        Route::get('/account', 'index')->name('users-index');
         Route::get('/delete-user/{id}', 'destroy')->name('user-delete');
         Route::get('/reset-password-user/{id}', 'resetUserPassword')->name('user-reset-password');
         Route::post('/create-user', 'store')->name('user-create');

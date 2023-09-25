@@ -20,13 +20,18 @@ class AuthController extends Controller
         ]);
     }
 
+    public function username()
+    {
+        return 'username';
+    }
+
     public function authenticate(Request $request) {
         $credentials = $request->validate([
-            'email' => 'required|email',
+            'username' => 'required',
             'password' => 'required'
         ]);
 
-        $user = User::where(['email' => $credentials['email']])->with('role')->first();
+        $user = User::where(['username' => $credentials['username']])->with('role')->first();
         $result = $this->checkUserCondition($user);
         if(!$result) return back()->withFail('Your provided credentials do not match in our records.');
         else {

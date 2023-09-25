@@ -1,3 +1,25 @@
 .text-main-color {
     color: #0a3961;
 }
+.text-main-color-2 {
+    color: #ff6100;
+}
+.text-second-color {
+    color: #00bf63;
+}
+
+.button-green-bg {
+    background-color: #00bf63;
+    color: #fff;
+}
+.button-orange-bg {
+    background-color: #ff6100;
+    color: #fff;
+}
+
+.border-radius-10 {
+    border-radius: 10px;
+}
+.border-radius-30 {
+    border-radius: 30px;
+}

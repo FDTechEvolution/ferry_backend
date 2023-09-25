@@ -22,42 +22,45 @@ class UsersController extends Controller
 
     public function index() {
         $users = User::with('role')->where('status', 'CO')->get();
-        $all_user = $users->count();
-        $user_count = [
-            'admin_user' => 0,
-            'agent_user' => 0,
-            'normal_user' => 0
-        ];
-
-        foreach($users as $user) {
-            if($user['role']['name'] === 'Admin') $user_count['admin_user']++;
-            if($user['role']['name'] === 'Agent') $user_count['agent_user']++;
-            if($user['role']['name'] === 'User') $user_count['normal_user']++;
-        }
-
+        Log::debug($users);
         $roles = Role::orderBy('name', 'ASC')->get();
-        return view('pages.users.index', ['users' => $users, 'roles' => $roles, 'all_user' => $all_user, 'user_count' => $user_count]);
+        return view('pages.users.index', ['users' => $users, 'roles' => $roles]);
     }
 
     public function store(Request $request) {
         $request->validate([
+            'username' => 'required|string',
+            'password' => 'required|min:6',
             'firstname' => 'required|string',
             'lastname' => 'required|string',
-            'email' => 'required|email',
-            'role' => 'required|string'
+            'office' => 'required|string',
+            'email' => 'email',
+            'role' => 'required|string',
+            'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
+        if(!$this->checkUsername($request->username)) return redirect()->route('users-index')->withFail('Username นี้มีอยู่ในระบบแล้ว กรุณาตรวจสอบ...');
         if(!$this->checkEmail($request->email)) return redirect()->route('users-index')->withFail('อีเมล์นี้มีผู้ใช้งานแล้ว กรุณาตรวจสอบ...');
+
+        $slug_image = null;
+        if ($request->hasFile('file')) {
+            $image = $request->file('file');
+            $slug_image = time().'.'.$image->getClientOriginalExtension();
+            $image->move(public_path('/assets/images/avatar'), $slug_image);
+        }
 
         $user = User::create([
             'code' => Str::random(6),
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
             'email' => $request->email,
-            'password' => Hash::make('password'),
+            'username' => $request->username,
+            'password' => Hash::make($request->password),
             'role_id' => $request->role,
             'isactive' => true,
-            'status' => 'CO'
+            'status' => 'CO',
+            'office' => $request->office,
+            'image' => $slug_image
         ]);
 
         if($user) return redirect()->route('users-index')->withSuccess('เพิ่มผู้ใช้งานเรียบร้อยแล้ว...');
@@ -66,6 +69,12 @@ class UsersController extends Controller
 
     private function checkEmail(string $email, string $user_id = null) {
         $user = User::where('email', $email)->where('id', '!=', $user_id)->first();
+        if($user) return false;
+        return true;
+    }
+
+    private function checkUsername(string $username, string $user_id = null) {
+        $user = User::where('username', $username)->where('id', '!=', $user_id)->first();
         if($user) return false;
         return true;
     }

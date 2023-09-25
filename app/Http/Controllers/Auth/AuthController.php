@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 
 use App\Models\User;
+use App\Models\UserLog;
 
 class AuthController extends Controller
 {
@@ -32,19 +33,27 @@ class AuthController extends Controller
         ]);
 
         $user = User::where(['username' => $credentials['username']])->with('role')->first();
-        $result = $this->checkUserCondition($user);
-        if(!$result) return back()->withFail('Your provided credentials do not match in our records.');
-        else {
-            // return redirect()->route('dashboard');
-            if(Auth::attempt($credentials))
-            {
-                $request->session()->regenerate();
-                return redirect()->route('dashboard')
-                    ->withSuccess('เข้าสู่ระบบเรียบร้อยแล้ว...');
-            }
+        if($user) {
+            $result = $this->checkUserCondition($user);
+            if(!$result) return back()->withFail('Your provided credentials do not match in our records.');
+            else {
+                // return redirect()->route('dashboard');
+                if(Auth::attempt($credentials))
+                {
+                    UserLog::create([
+                        'user_id' => Auth::user()->id,
+                        'activity' => 'login',
+                        'datetime' => date('Y-m-d H:i:s')
+                    ]);
 
-            return back()->withFail('Your provided credentials do not match in our records.');
+                    $request->session()->regenerate();
+                    return redirect()->route('dashboard')
+                        ->withSuccess('เข้าสู่ระบบเรียบร้อยแล้ว...');
+                }
+            }
         }
+        
+        return back()->withFail('Your provided credentials do not match in our records.');
     }
 
     private function checkUserCondition($user) {

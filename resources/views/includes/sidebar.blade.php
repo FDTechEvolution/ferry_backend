@@ -1,5 +1,5 @@
 <!-- sidebar -->
-<aside id="aside-main" class="aside-start aside-hide-xs shadow-sm d-flex flex-column px-2 h-auto" style="background-color: #ffffff6b; border-radius: 30px;">
+<aside id="aside-main" class="aside-start aside-hide-xs shadow-sm d-flex flex-column px-2 h-auto background-trans border-radius-30">
 
 
 <!-- sidebar : logo -->

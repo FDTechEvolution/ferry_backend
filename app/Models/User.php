@@ -55,4 +55,8 @@ class User extends Authenticatable
     public function role() {
         return $this->belongsTo(Role::class);
     }
+
+    public function last_login() {
+        return $this->belongsTo(UserLog::class, 'user_id')->orderBy('created_at', 'DESC')->first();
+    }
 }

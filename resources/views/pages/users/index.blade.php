@@ -1,111 +1,70 @@
 @extends('layouts.default')
 
 @section('page-title')
-    <h1 class="text-main-color-2 ms-2 me-2">Account</h1>
-    <button class="btn btn-primary btn-sm border-radius-10">Add</button>
+    <h1 class="ms-2 me-5 mb-0" id="account-page-title"><span class="text-main-color-2">Account</span></h1>
+    <x-button-green :type="_('button')" :text="_('Add')" class="ms-5 btn-sm w--10" id="btn-user-create" />
+    <x-button-orange :type="_('button')" :text="_('Edit')" class="ms-3 btn-sm w--10" id="btn-user-edit"/>
 @stop
 
 @section('content')
-<x-page-header :header="_('ผู้ใช้งาน')" :sub_header="_('')" />
-
-<div class="row">
-    <div class="col-lg-3">
-        <x-user-overview-section :header="_('All users')" :main_content="$all_user" />
-    </div>
-
-    <div class="col-lg-3">
-        <x-user-overview-section :header="_('Admin')" :main_content="$user_count['admin_user']" :sub_content="$all_user"/>
-    </div>
-
-    <div class="col-lg-3">
-        <x-user-overview-section :header="_('Agent')" :main_content="$user_count['agent_user']" :sub_content="$all_user" />
-    </div>
-
-    <div class="col-lg-3">
-        <x-user-overview-section :header="_('Normal')" :main_content="$user_count['normal_user']" :sub_content="$all_user" />
-    </div>
+<div class="row mt-4">
 
     <div class="col-12">
-        <div id="to-user-list" class="section">
+        <div id="to-user-list">
             <div class="card-body">
-                <button type="button" class="btn btn-sm btn-primary mb-3 ms-2" data-bs-toggle="modal" data-bs-target="#add-user">
-                    + เพิ่มผู้ใช้งาน
-                </button>
-                <table class="table-datatable table table-hover"
-                    id="users-datatable" 
-                    data-lng-empty="No data available in table"
-                    data-lng-page-info="แสดงผล _START_ ถึง _END_ จากจำนวน _TOTAL_ รายการ"
-                    data-lng-filtered="(filtered from _MAX_ total entries)"
-                    data-lng-loading="Loading..."
-                    data-lng-processing="Processing..."
-                    data-lng-search="ค้นหาข้อมูล..."
-                    data-lng-norecords="ไม่เจอข้อมูลที่ค้นหา"
-                    data-lng-sort-ascending=": activate to sort column ascending"
-                    data-lng-sort-descending=": activate to sort column descending"
-
-                    data-main-search="true"
-                    data-column-search="false"
-                    data-row-reorder="false"
-                    data-col-reorder="true"
-                    data-responsive="true"
-                    data-header-fixed="true"
-                    data-select-onclick="false"
-                    data-enable-paging="true"
-                    data-enable-col-sorting="false"
-                    data-autofill="false"
-                    data-group="false"
-                    data-items-per-page="30"
-
-                    data-enable-column-visibility="false"
-                    data-lng-column-visibility="Column Visibility"
-
-                    data-enable-export="true"
-                    data-lng-export="<i class='fi fi-squared-dots fs-5 lh-1'></i>"
-                    data-lng-pdf="PDF"
-                    data-lng-xls="XLS"
-                    data-export-pdf-disable-mobile="true"
-                    data-export='["pdf", "xls"]'
-
-                    data-custom-config='{}'>
+                <table class="table table-custom-style" id="users-datatable" >
                     <thead>
                         <tr>
-                            <th style="width: 40px;">#</th>
-                            <th style="width: 120px;">รหัส</th>
-                            <th>ผู้ใช้งาน</th>
-                            <th class="text-center">ระดับ</th>
-                            <th class="text-center">สถานะ</th>
-                            <th class="text-center">จัดการ</th>
+                            <th class="text-center">Username</th>
+                            <th class="text-center">Name</th>
+                            <th class="text-center">Lastname</th>
+                            <th class="text-center">Office</th>
+                            <th class="text-center">Email</th>
+                            <th class="text-center">Role</th>
+                            <th class="text-center">Last login</th>
+                            <th class="text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($users as $index => $user)
-                            <tr>
-                                <td class="user-index">{{ $index+1 }}</td>
-                                <td class="user-code"><small>{{ $user['code'] }}</small></td>
-                                <td class="user-name">
-                                    <p class="mb-0">
-                                        <span class="user-data-{{$index}}">{{ $user['firstname'] }}</span> 
-                                        <span class="user-data-{{$index}}">{{ $user['lastname'] }}</span>
-                                    </p>
-                                    <small class="user-data-{{$index}}">{{ $user['email'] }}</small>
-                                </td>
+                            <tr class="text-center">
+                                <td class="user-username">{{ $user['username'] }}</td>
+                                <td class="user-firstname">{{ $user['firstname'] }}</td>
+                                <td class="user-lastname">{{ $user['lastname'] }}</td>
+                                <td class="user-office">{{ $user['office'] }}</td>
+                                <td class="user-email">{{ $user['email'] }}</td>
                                 <td class="text-center user-role">
-                                    <span class="@if($user['role']['name'] === 'Admin') bg-primary 
-                                                @elseif($user['role']['name'] === 'Agent') bg-info 
-                                                @else bg-secondary @endif badge">{{ $user['role']['name'] }}</span>
+                                    <span class="@if($user['role']['name'] === 'Admin') text-success 
+                                                @elseif($user['role']['name'] === 'Agent') text-info 
+                                                @else text-secondary @endif">{{ $user['role']['name'] }}</span>
                                 </td>
-                                <td class="text-center">
-                                    @if($user['isactive'])
-                                        <i class="switch-icon switch-icon-primary disabled_hover active"></i>
-                                    @else
-                                        <i class="switch-icon switch-icon-primary disabled_hover"></i>
-                                    @endif
-                                    <input type="hidden" id="user-isactive-{{$index}}" value="{{ $user['isactive'] }}">
-                                </td>
+                                <td class="text-center text-danger"></td>
                                 <td class="text-center">
                                     <input type="hidden" id="user-id-{{$index}}" value="{{ $user['id'] }}">
                                     <input type="hidden" id="user-role-{{$index}}" value="{{ $user['role_id'] }}">
-                                    <i class="fi fi-cog-full text-secondary cursor-pointer" title="แก้ไขข้อมูล" onClick="updateEditData({{ $index }})"></i>
+                                    <!-- pdf -->
+                                    <a href="#" class="me-1 text-dark">
+                                        <svg width="18px" height="18px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-file-earmark-pdf" viewBox="0 0 16 16">  
+                                            <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"></path>  
+                                            <path d="M4.603 14.087a.81.81 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.68 7.68 0 0 1 1.482-.645 19.697 19.697 0 0 0 1.062-2.227 7.269 7.269 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .477.365c.088.164.12.356.127.538.007.188-.012.396-.047.614-.084.51-.27 1.134-.52 1.794a10.954 10.954 0 0 0 .98 1.686 5.753 5.753 0 0 1 1.334.05c.364.066.734.195.96.465.12.144.193.32.2.518.007.192-.047.382-.138.563a1.04 1.04 0 0 1-.354.416.856.856 0 0 1-.51.138c-.331-.014-.654-.196-.933-.417a5.712 5.712 0 0 1-.911-.95 11.651 11.651 0 0 0-1.997.406 11.307 11.307 0 0 1-1.02 1.51c-.292.35-.609.656-.927.787a.793.793 0 0 1-.58.029zm1.379-1.901c-.166.076-.32.156-.459.238-.328.194-.541.383-.647.547-.094.145-.096.25-.04.361.01.022.02.036.026.044a.266.266 0 0 0 .035-.012c.137-.056.355-.235.635-.572a8.18 8.18 0 0 0 .45-.606zm1.64-1.33a12.71 12.71 0 0 1 1.01-.193 11.744 11.744 0 0 1-.51-.858 20.801 20.801 0 0 1-.5 1.05zm2.446.45c.15.163.296.3.435.41.24.19.407.253.498.256a.107.107 0 0 0 .07-.015.307.307 0 0 0 .094-.125.436.436 0 0 0 .059-.2.095.095 0 0 0-.026-.063c-.052-.062-.2-.152-.518-.209a3.876 3.876 0 0 0-.612-.053zM8.078 7.8a6.7 6.7 0 0 0 .2-.828c.031-.188.043-.343.038-.465a.613.613 0 0 0-.032-.198.517.517 0 0 0-.145.04c-.087.035-.158.106-.196.283-.04.192-.03.469.046.822.024.111.054.227.09.346z"></path>
+                                        </svg>
+                                    </a>
+
+                                    <!-- edit -->
+                                    <a href="#" class="me-1 text-primary">
+                                        <svg width="18px" height="18px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">  
+                                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>  
+                                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"></path>
+                                        </svg>
+                                    </a>
+
+                                    <!-- delete -->
+                                    <x-ajax-icon-confirm 
+                                        class="text-danger"
+                                        :url="route('user-delete', ['id' => $user['id']])"
+                                        :message="_('ยืนยันการลบผู้ใช้งาน '.$user['username'].'?')"
+                                        :icon="_('fi fi-thrash')"
+                                    />
                                 </td>
                             </tr>
                         @endforeach
@@ -113,8 +72,11 @@
                 </table>
             </div>
         </div>
-        <div id="to-user-edit" class="section w-75 m-auto d-none">
-            @include('pages.users.modal.edit2')
+        <div id="to-user-create" class="w--80 m-auto d-none">
+            @include('pages.users.create')
+        </div>
+        <div id="to-user-edit" class="m-auto d-none">
+            @include('pages.users.edit')
         </div>
     </div>
 </div>
@@ -145,10 +107,6 @@
         cursor: default;
     }
 </style>
-@stop
-
-@section('modal')
-    @include('pages.users.modal.create')
 @stop
 
 @section('script')

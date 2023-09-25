@@ -2,8 +2,7 @@
 
 <button 
     type="{{ $type }}"
-    {{ $attributes->merge(['class' => 'btn button-green-bg border-radius-10']) }} 
-
+    {{ $attributes->merge(['class' => 'btn button-orange-bg border-radius-10']) }} 
 >
 {{ $text }}
 </button>

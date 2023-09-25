@@ -13,7 +13,7 @@
                 @include('includes.sidebar')
 
                 <!-- main -->
-                <main id="middle" class="flex-fill mx-auto py-2 px-5" style="background-color: #ffffff6b; margin-left: 10px !important; border-radius: 30px;">
+                <main id="middle" class="flex-fill mx-auto py-2 background-trans border-radius-30" style="margin-left: 10px !important;">
                     @include('includes.flash-message')
                     @yield('content')
                 </main>

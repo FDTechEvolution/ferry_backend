@@ -1,5 +1,5 @@
 <!--  header -->
-<header id="header" class="d-flex align-items-center shadow-xs mb-3 rounded">
+<header id="header" class="d-flex align-items-center shadow-xs mb-3 background-trans rounded">
 
   <!-- Navbar -->
   <div class="container-fluid position-relative">
@@ -40,11 +40,12 @@
     <ul class="list-inline list-unstyled mb-0 d-flex align-items-end">
 
       <!-- account -->
-      <li class="list-inline-item mx-1 dropdown">
+      <li class="list-inline-item mx-1 dropdown text-end">
 
         <!-- has avatar -->
-        <span><i class="fi fi-arrow-down-full me-1 text-secondary"></i> {{ Auth::user()->username }}</span>
-        <a href="#" id="dropdownAccountOptions" class="btn btn-sm btn-icon btn-light dropdown-toggle rounded-circle shadow bg-cover ms-2" style="background-image:url(../assets/images/joseph-gonzalez-iFgRcqHznqg-unsplash.jpg)" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-haspopup="true" aria-label="Account options"></a>
+        <a href="return javascript(void)" id="dropdownAccountOptions" class="dropdown-toggle text-dark" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-haspopup="true" aria-label="Account options"><i class="fi fi-arrow-down-full me-1 text-secondary"></i> {{ Auth::user()->username }}
+          <img src="../assets/images/avatar/{{ Auth::user()->image != '' ? Auth::user()->image : 'blank-profile-picture.png' }}" class="rounded-circle shadow ms-2" style="width: 42px; margin-top: -5px;" />
+        </a>
 
         <!-- no avatar -->
         <!--

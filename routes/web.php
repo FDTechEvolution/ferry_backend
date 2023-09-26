@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\StationsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,10 @@ Route::middleware('auth')->group(function() {
         Route::get('/reset-password-user/{id}', 'resetUserPassword')->name('user-reset-password');
         Route::post('/create-user', 'store')->name('user-create');
         Route::post('/update-user', 'update')->name('user-update');
+    });
+
+    Route::controller(StationsController::class)->group(function() {
+        Route::get('/stations', 'index')->name('stations-index');
     });
 });
 

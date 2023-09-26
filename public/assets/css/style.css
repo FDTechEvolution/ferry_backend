@@ -7,6 +7,14 @@ body.layout-admin #middle {
 }
 /* --------------------------- */
 
+/* Datatable Css replace */
+a.dt-button.dropdown-item.buttons-csv.buttons-html5,
+a.dt-button.dropdown-item.buttons-copy.buttons-html5, 
+a.dt-button.dropdown-item.buttons-print {
+    display: none;
+}
+/* -------------------------- */
+
 /* Custom Css */
 .background-trans {
     background-color: #ffffff6b !important;

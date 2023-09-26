@@ -22,7 +22,6 @@ class UsersController extends Controller
 
     public function index() {
         $users = User::with('role')->where('status', 'CO')->get();
-        Log::debug($users);
         $roles = Role::orderBy('name', 'ASC')->get();
         return view('pages.users.index', ['users' => $users, 'roles' => $roles]);
     }

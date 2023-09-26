@@ -12,7 +12,29 @@
     <div class="col-12">
         <div id="to-user-list">
             <div class="card-body">
-                <table class="table table-custom-style" id="users-datatable" >
+                <table class="table-datatable table table-custom-style" id="users-datatable" 
+                    data-lng-empty="No data available in table"
+                    data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
+                    data-lng-filtered="(filtered from _MAX_ total entries)"
+                    data-lng-loading="Loading..."
+                    data-lng-processing="Processing..."
+                    data-lng-search="Search..."
+                    data-lng-norecords="No matching records found"
+                    data-lng-sort-ascending=": activate to sort column ascending"
+                    data-lng-sort-descending=": activate to sort column descending"
+
+                    data-enable-col-sorting="false"
+                    data-items-per-page="15"
+
+                    data-enable-column-visibility="false"
+                    data-enable-export="false"
+                    data-lng-export="<i class='fi fi-squared-dots fs-5 lh-1'></i>"
+                    data-lng-pdf="PDF"
+                    data-lng-xls="XLS"
+                    data-lng-all="All"
+                    data-export-pdf-disable-mobile="true"
+                    data-export='["pdf", "xls"]'
+                >
                     <thead>
                         <tr>
                             <th class="text-center">Username</th>
@@ -51,19 +73,16 @@
                                     </a>
 
                                     <!-- edit -->
-                                    <a href="#" class="me-1 text-primary">
-                                        <svg width="18px" height="18px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">  
-                                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>  
-                                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"></path>
-                                        </svg>
-                                    </a>
+                                    <x-action-edit 
+                                        class="me-1"
+                                        style="margin-top: -2px;"
+                                        :url="_('#')"
+                                    />
 
                                     <!-- delete -->
-                                    <x-ajax-icon-confirm 
-                                        class="text-danger"
+                                    <x-action-delete 
                                         :url="route('user-delete', ['id' => $user['id']])"
                                         :message="_('ยืนยันการลบผู้ใช้งาน '.$user['username'].'?')"
-                                        :icon="_('fi fi-thrash')"
                                     />
                                 </td>
                             </tr>
@@ -90,11 +109,6 @@
     }
     div.dt-button-collection .dt-button:not(.dt-btn-split-drop) {
         min-width: 80px;
-    }
-    a.dt-button.dropdown-item.buttons-csv.buttons-html5,
-    a.dt-button.dropdown-item.buttons-copy.buttons-html5, 
-    a.dt-button.dropdown-item.buttons-print {
-        display: none;
     }
     .border-bottom-only {
         border-top: none;

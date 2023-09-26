@@ -85,7 +85,7 @@
                                     <!-- delete -->
                                     <x-action-delete 
                                         :url="route('user-delete', ['id' => $user['id']])"
-                                        :message="_('ยืนยันการลบผู้ใช้งาน '.$user['username'].'?')"
+                                        :message="_('Are you sure? Delete this account : '.$user['username'].'?')"
                                     />
                                 </td>
                             </tr>

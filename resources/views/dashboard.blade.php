@@ -53,11 +53,34 @@
                     />
                 </div>
                 <div class="col-4">
-                    <x-dashboard-section-manage 
-                        :text="_('Logout')"
-                        :bg="_('#ff6100')"
-                        :route="route('logout')"
-                    />
+                    <a href="#"
+                        class = 'js-ajax-confirm'
+                        data-href="{{ route('logout') }}"
+                        data-ajax-confirm-mode="regular"
+                        data-ajax-confirm-type="primary"
+
+                        data-ajax-confirm-size="modal-md"
+                        data-ajax-confirm-centered="false"
+
+                        data-ajax-confirm-title="Please Confirm"
+                        data-ajax-confirm-body="Logout?"
+
+                        data-ajax-confirm-btn-yes-class="btn-primary"
+                        data-ajax-confirm-btn-yes-text="Yes"
+                        data-ajax-confirm-btn-yes-icon="fi fi-check"
+
+                        data-ajax-confirm-btn-no-class="btn-light"
+                        data-ajax-confirm-btn-no-text="Cancel"
+                        data-ajax-confirm-btn-no-icon="fi fi-close" 
+                    >
+                        <div class="section w-100" style="background-color: #ff61006b">
+                            <div class="d-flex w-100 align-items-center text-center">
+                                <span class="w-100 display-6 text-light fw-bold">
+                                    Logout
+                                </span>
+                            </div>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>

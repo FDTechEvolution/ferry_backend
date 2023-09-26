@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\StationsController;
+use App\Http\Controllers\MealsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +52,10 @@ Route::middleware('auth')->group(function() {
 
     Route::controller(StationsController::class)->group(function() {
         Route::get('/stations', 'index')->name('stations-index');
+    });
+
+    Route::controller(MealsController::class)->group(function() {
+        Route::get('/meals', 'index')->name('meals-index');
     });
 });
 

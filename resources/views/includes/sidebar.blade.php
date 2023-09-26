@@ -84,7 +84,7 @@
         </a>
       </li>
       <li class="nav-item">
-          <a class="nav-link" href="#">
+          <a class="nav-link" href="{{ route('meals-index') }}">
               <i class="fi fi-arrow-right"></i>
               <span>Meal on board</span>
           </a>
@@ -172,7 +172,7 @@
     <x-ajax-button-confirm 
       class="link-normal"
       :url="route('logout')"
-      :message="_('ออกจากระบบ?')"
+      :message="_('Logout?')"
       :text="_('Logout')"
     />
   </p>

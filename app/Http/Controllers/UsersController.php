@@ -38,8 +38,8 @@ class UsersController extends Controller
             'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
-        if(!$this->checkUsername($request->username)) return redirect()->route('users-index')->withFail('Username นี้มีอยู่ในระบบแล้ว กรุณาตรวจสอบ...');
-        if(!$this->checkEmail($request->email)) return redirect()->route('users-index')->withFail('อีเมล์นี้มีผู้ใช้งานแล้ว กรุณาตรวจสอบ...');
+        if(!$this->checkUsername($request->username)) return redirect()->route('users-index')->withFail('This username is exist...');
+        if(!$this->checkEmail($request->email)) return redirect()->route('users-index')->withFail('This email address is exist...');
 
         $slug_image = null;
         if ($request->hasFile('file')) {
@@ -62,8 +62,8 @@ class UsersController extends Controller
             'image' => $slug_image
         ]);
 
-        if($user) return redirect()->route('users-index')->withSuccess('เพิ่มผู้ใช้งานเรียบร้อยแล้ว...');
-        else return redirect()->route('users-index')->withFail('เกิดข้อผิดพลาด กรุณาลองใหม่...');
+        if($user) return redirect()->route('users-index')->withSuccess('Account created...');
+        else return redirect()->route('users-index')->withFail('Something is wrong. Please try again.');
     }
 
     private function checkEmail(string $email, string $user_id = null) {
@@ -82,29 +82,43 @@ class UsersController extends Controller
         $request->validate([
             'firstname' => 'required|string',
             'lastname' => 'required|string',
+            'office' => 'required|string',
             'email' => 'required|email',
-            'role' => 'required|string'
+            'role' => 'required|string',
+            'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
-        if(!$this->checkEmail($request->email, $request->user_edit)) return redirect()->route('users-index')->withFail('อีเมล์นี้มีผู้ใช้งานแล้ว กรุณาตรวจสอบ...');
+        if(!$this->checkEmail($request->email, $request->id)) return redirect()->route('users-index')->withFail('This email address is exist...');
 
-        $user = User::find($request->user_edit);
+        $user = User::find($request->id);
+
+        $slug_image = null;
+        if ($request->hasFile('file')) {
+            $image = $request->file('file');
+            $slug_image = time().'.'.$image->getClientOriginalExtension();
+            $image->move(public_path('/assets/images/avatar'), $slug_image);
+        }
+
+        if($user->image != '') unlink(public_path().'/assets/images/avatar/'. $user->image);
+
         $user->firstname = $request->firstname;
         $user->lastname = $request->lastname;
         $user->role_id = $request->role;
         $user->email = $request->email;
+        $user->office = $request->office;
+        if($slug_image != null) $user->image = $slug_image;
         $user->isactive = isset($request->isactive) ? 1 : 0;
 
-        if($user->save()) return redirect()->route('users-index')->withSuccess('แก้ไขรายละเอียดผู้ใช้งานเรียบร้อยแล้ว...');
-        else return redirect()->route('users-index')->withFail('เกิดข้อผิดพลาด กรุณาลองใหม่...');
+        if($user->save()) return redirect()->route('users-index')->withSuccess('Account updated...');
+        else return redirect()->route('users-index')->withFail('Something is wrong. Please try again.');
     }
 
     public function destroy(string $id = null) {
         $user = User::find($id);
         $user->status = 'VO';
 
-        if($user->save()) return redirect()->route('users-index')->withSuccess('ลบผู้ใช้งานเรียบร้อยแล้ว...');
-        return redirect()->route('users-index')->withFail('เกิดข้อผิดพลาด กรุณาลองใหม่...');
+        if($user->save()) return redirect()->route('users-index')->withSuccess('Account deleted...');
+        return redirect()->route('users-index')->withFail('Something is wrong. Please try again.');
     }
 
     public function resetUserPassword(string $id = null) {
@@ -125,6 +139,6 @@ class UsersController extends Controller
             });
         }
 
-        return back()->withSuccess('ส่งลิงค์การรีเซ็ตรหัสผ่านไปยังอีเมล์ผู้ใช้งาน '.$user->email.' เรียบร้อยแล้ว...');
+        return back()->withSuccess('A link to reset your password will be sent to your email : '.$user->email);
     }
 }

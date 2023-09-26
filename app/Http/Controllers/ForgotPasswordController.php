@@ -36,7 +36,7 @@ class ForgotPasswordController extends Controller
             });
         }
 
-        return back()->withSuccess('ส่งลิงค์การรีเซ็ตรหัสผ่านไปยังอีเมล์เรียบร้อยแล้ว อาจใช้เวลาซักครู่...');
+        return back()->withSuccess('A link to reset your password will be sent to your email...');
     }
 
     public function submitResetPasswordForm(Request $request) {
@@ -53,13 +53,13 @@ class ForgotPasswordController extends Controller
                             ])
                             ->first();
 
-        if(!$updatePassword) return back()->withFail('การยืนยันตัวตนไม่ถูกต้อง....');
+        if(!$updatePassword) return back()->withFail('Invalid identity verification....');
     
         $user = User::where('email', $request->email)
                     ->update(['password' => Hash::make($request->password)]);
 
         DB::table('password_resets')->where(['email'=> $request->email])->delete();
 
-        return redirect()->route('login')->withSuccess('รีเซ็ตรหัสผ่านใหม่เรียบร้อยแล้ว...');
+        return redirect()->route('login')->withSuccess('Password reseted...');
     }
 }

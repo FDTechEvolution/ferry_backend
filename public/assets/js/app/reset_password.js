@@ -4,15 +4,18 @@ const password = document.querySelector('#show-password')
 const confirm = document.querySelector('#show-confirm-password')
 
 function formSubmit() {
+    let notice = document.querySelector('#reset-password-error-notice')
     if(_password.value === _confirm.value) {
         if(_password.value.length >= 6) return true
         else {
-            $.SOW.core.toast.show('danger', '', 'รหัสผ่านต้องไม่น้อยกว่า 6 ตัว', 'top-start', 0, true)
+            $.SOW.core.toast.show('danger', '', 'Password must be at least 6 characters.', 'top-end', 0, true)
+            notice.innerHTML = 'Password must be at least 6 characters.'
             return false
         }
     }
     else {
-        $.SOW.core.toast.show('danger', '', 'รหัสผ่านไม่ตรงกัน กรุณาตรวจสอบ', 'top-start', 0, true)
+        $.SOW.core.toast.show('danger', '', 'Passwords not match.', 'top-end', 0, true)
+        notice.innerHTML = 'Passwords not match.'
         return false
     }
 }

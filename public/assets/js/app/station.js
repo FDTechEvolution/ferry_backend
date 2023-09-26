@@ -22,6 +22,19 @@ if(btn_station_create) {
     })
 }
 
+if(btn_cancel_create) {
+    btn_cancel_create.addEventListener('click', () => {
+        setClassListAdd('to-station-create')
+
+        setClassListRemove('to-station-list')
+        setClassListRemove('btn-station-create')
+        setClassListRemove('btn-station-edit')
+        setClassListRemove('btn-station-add')
+        setClassListRemove('btn-station-manage')
+        station_title.innerHTML = `<span class="text-main-color-2">Station</span> manager`
+    })
+}
+
 function setClassListAdd(element_id) {
     document.querySelector(`#${element_id}`).classList.add('d-none')
 }

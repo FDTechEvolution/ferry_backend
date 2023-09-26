@@ -1,6 +1,7 @@
 let btn_user_list = document.querySelector('#btn-user-list')
 let btn_user_create = document.querySelector('#btn-user-create')
 let btn_cancel_create = document.querySelector('#btn-cancel-create')
+let btn_cancel_edit = document.querySelector('#btn-cancel-edit')
 let btn_user_edit = document.querySelector('#btn-user-edit')
 let account_title = document.querySelector('#account-page-title')
 
@@ -18,13 +19,13 @@ if(btn_user_create) {
 
 if(btn_cancel_create) {
     btn_cancel_create.addEventListener('click', () => {
-        setClassListAdd('to-user-create')
-        setClassListAdd('to-user-edit')
+        backToUserList()
+    })
+}
 
-        setClassListRemove('btn-user-create')
-        setClassListRemove('btn-user-edit')
-        setClassListRemove('to-user-list')
-        account_title.innerHTML = `<span class="text-main-color-2">Account</span>`
+if(btn_cancel_edit) {
+    btn_cancel_edit.addEventListener('click', () => {
+        backToUserList()
     })
 }
 
@@ -33,6 +34,7 @@ if(btn_user_edit) {
         setClassListRemove('to-user-edit')
 
         setClassListAdd('to-user-list')
+        setClassListAdd('btn-user-create')
         account_title.innerHTML = `<span class="text-main-color-2">Edit</span> account`
     })
 }
@@ -42,6 +44,15 @@ if(btn_user_list) {
         setClassListRemove('to-user-list')
         setClassListAdd('to-user-edit')
     })
+}
+
+function backToUserList() {
+    setClassListAdd('to-user-create')
+    setClassListAdd('to-user-edit')
+
+    setClassListRemove('btn-user-create')
+    setClassListRemove('to-user-list')
+    account_title.innerHTML = `<span class="text-main-color-2">Account</span>`
 }
 
 function setClassListAdd(element_id) {
@@ -54,10 +65,11 @@ function setClassListRemove(element_id) {
 
 function updateEditData(index) {
     let data = document.querySelectorAll(`.user-data-${index}`)
-    let user_id = document.querySelector(`#user-id-${index}`)
-    let role_id = document.querySelector(`#user-role-${index}`)
-    let isactive = document.querySelector(`#user-isactive-${index}`)
-    let element_ids = ['edit_first_name', 'edit_last_name', 'edit_email']
+    let user_id = document.querySelector(`#id-${index}`)
+    let role_id = document.querySelector(`#role-${index}`)
+    let username = document.querySelector(`#user-data-username-${index}`)
+    let image = document.querySelector(`#image-${index}`)
+    let element_ids = ['edit-firstname', 'edit-lastname', 'edit-office', 'edit-email']
     let role_select = document.querySelector('#edit-role')
     let options = role_select.getElementsByTagName('option')
 
@@ -69,11 +81,15 @@ function updateEditData(index) {
         if(option.value === role_id.value) options[index].selected = true
     })
 
+    document.querySelector('#edit-username-data').innerHTML = username.innerText
     document.querySelector('#user-edit-id').value = user_id.value
-    document.querySelector('#edit-user-isactive').checked = isactive.value === '1' ? true : false
+    document.querySelector('#edit-user-avatar').src = `../assets/images/avatar/${image.value !== '' ? image.value : 'blank-profile-picture.png'}`
 
-    document.querySelector('#to-user-list').classList.add('d-none')
-    document.querySelector('#to-user-edit').classList.remove('d-none')
+    setClassListRemove('to-user-edit')
+    setClassListAdd('to-user-create')
+    setClassListAdd('to-user-list')
+    setClassListAdd('btn-user-create')
+    account_title.innerHTML = `<span class="text-main-color-2">Edit</span> account`
 }
 
 function checkValidate() {

@@ -48,7 +48,7 @@ class AuthController extends Controller
 
                     $request->session()->regenerate();
                     return redirect()->route('dashboard')
-                        ->withSuccess('เข้าสู่ระบบเรียบร้อยแล้ว...');
+                        ->withSuccess('Welcome '.Auth::user()->username);
                 }
             }
         }

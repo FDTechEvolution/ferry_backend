@@ -41,7 +41,7 @@
                         :message="_('ยืนยันการลบ ?')"
                     />
                 </div>
-                <table class="table-datatable table table-custom-style" id="station-datatable" 
+                <table class="table-datatable table table-datatable-custom" id="station-datatable" 
                     data-lng-empty="No data available in table"
                     data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
                     data-lng-filtered="(filtered from _MAX_ total entries)"
@@ -56,7 +56,7 @@
                     data-items-per-page="15"
 
                     data-enable-column-visibility="false"
-                    data-enable-export="false"
+                    data-enable-export="true"
                     data-lng-export="<i class='fi fi-squared-dots fs-5 lh-1'></i>"
                     data-lng-pdf="PDF"
                     data-lng-xls="XLS"

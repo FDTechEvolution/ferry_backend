@@ -13,6 +13,13 @@ a.dt-button.dropdown-item.buttons-copy.buttons-html5,
 a.dt-button.dropdown-item.buttons-print {
     display: none;
 }
+.table-datatable-custom thead tr th {
+    border-bottom-color: #6b6b6b;
+}
+.table-datatable-custom tbody tr td {
+    line-height: 2.2rem;
+    border-bottom-color: #dbdbdb;
+}
 /* -------------------------- */
 
 /* Custom Css */

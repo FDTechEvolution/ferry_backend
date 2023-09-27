@@ -76,7 +76,6 @@
                                     <!-- edit -->
                                     <x-action-edit 
                                         class="me-2"
-                                        style="margin-top: -2px;"
                                         :url="_('javascript:void(0)')"
                                         id="btn-user-edit"
                                         onClick="updateEditData({{ $index }})"

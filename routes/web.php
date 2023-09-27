@@ -56,6 +56,9 @@ Route::middleware('auth')->group(function() {
 
     Route::controller(MealsController::class)->group(function() {
         Route::get('/meals', 'index')->name('meals-index');
+
+        Route::post('/create-meal', 'store')->name('meal-create');
+        Route::post('/update-meal', 'update')->name('meal-update');
     });
 });
 

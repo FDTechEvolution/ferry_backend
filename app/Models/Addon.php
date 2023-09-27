@@ -16,10 +16,21 @@ class Addon extends Model
         'code',
         'type',
         'amount',
-        'description'
+        'description',
+        'image_id',
+        'image_icon_id'
     ];
 
     protected $hidden = [
-
+        'image_id',
+        'image_icon_id'
     ];
+
+    public function image() {
+        return $this->hasOne(Image::class, 'id', 'image_id');
+    }
+
+    public function icon() {
+        return $this->hasOne(Image::class, 'id', 'image_icon_id');
+    }
 }

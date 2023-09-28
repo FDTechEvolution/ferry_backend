@@ -48,7 +48,7 @@
                                 <td>
                                     <div class="avatar avatar-md" 
                                         style="background-image:url({{ $meal['image_icon_id'] == '' ? 
-                                                                        asset('assets/images/meal/meal-no-picture.png') : 
+                                                                        asset('assets/images/no_image_icon.svg') : 
                                                                         asset($meal['icon']['path'].'/'.$meal['icon']['name'])
                                                                     }})">
                                     </div>
@@ -63,12 +63,12 @@
                                         onClick="updateEditData({{ $index }})"
                                     />
                                     <x-action-delete 
-                                        :url="_('#')"
+                                        :url="route('meal-delete', ['id' => $meal['id']])"
                                         :message="_('Are you sure? Delete '. $meal['name'] .'?')"
                                     />
                                 </td>
-                                <input type="hidden" data-id="icon" value="{{ $meal['icon']['path'].'/'.$meal['icon']['name'] }}">
-                                <input type="hidden" data-id="image" value="{{ $meal['image']['path'].'/'.$meal['image']['name'] }}">
+                                <input type="hidden" data-id="icon" value="{{ $meal['image_icon_id'] != '' ? $meal['icon']['path'].'/'.$meal['icon']['name'] : '' }}">
+                                <input type="hidden" data-id="image" value="{{ $meal['image_id'] != '' ? $meal['image']['path'].'/'.$meal['image']['name'] : '' }}">
                                 <input type="hidden" data-id="description" value="{{ $meal['description'] }}"> 
                                 <input type="hidden" data-id="id" value="{{ $meal['id'] }}"> 
                             </tr>

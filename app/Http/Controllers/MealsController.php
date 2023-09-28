@@ -21,7 +21,7 @@ class MealsController extends Controller
     }
 
     public function index() {
-        $meals = Addon::where('type', $this->Type)->where('isactive', true)->with('image', 'icon')->get();
+        $meals = Addon::where('type', $this->Type)->where('status', 'CO')->with('image', 'icon')->get();
         return view('pages.meals.index', ['meals' => $meals]);
     }
 
@@ -29,33 +29,43 @@ class MealsController extends Controller
         $request->validate([
             'name' => 'required|string',
             'price' => 'required|integer',
-            'detail' => 'string',
-            'file_picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-            'file_icon' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1024'
+            'detail' => 'string|nullable',
+            'file_picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable',
+            'file_icon' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1024|nullable'
         ]);
 
-        $image_id = null;
-        $icon_id = null;
-        if ($request->hasFile('file_picture')) {
-            $image_id = $this->storeImage($request->file('file_picture'), $this->PathImage);
-        }
-        if($request->hasFile('file_icon')) {
-            $icon_id = $this->storeImage($request->file('file_icon'), $this->PathIcon);
+        if($this->checkNameDupplicate($request->name)) {
+            $image_id = null;
+            $icon_id = null;
+            if ($request->hasFile('file_picture')) {
+                $image_id = $this->storeImage($request->file('file_picture'), $this->PathImage);
+            }
+            if($request->hasFile('file_icon')) {
+                $icon_id = $this->storeImage($request->file('file_icon'), $this->PathIcon);
+            }
+
+            $addon = Addon::create([
+                'code' => Str::random(6),
+                'name' => $request->name,
+                'type' => $this->Type,
+                'isactive' => true,
+                'amount' => $request->price,
+                'description' => $request->detail,
+                'image_id' => $image_id,
+                'image_icon_id' => $icon_id
+            ]);
+
+            if($addon) return redirect()->route('meals-index')->withSuccess('Meal created...');
+            else return redirect()->route('meals-index')->withFail('Something is wrong. Please try again.');
         }
 
-        $addon = Addon::create([
-            'code' => Str::random(6),
-            'name' => $request->name,
-            'type' => $this->Type,
-            'isactive' => true,
-            'amount' => $request->price,
-            'description' => $request->detail,
-            'image_id' => $image_id,
-            'image_icon_id' => $icon_id
-        ]);
+        return redirect()->route('meals-index')->withFail('Meal name is exist.');
+    }
 
-        if($addon) return redirect()->route('meals-index')->withSuccess('Meal created...');
-        else return redirect()->route('meals-index')->withFail('Something is wrong. Please try again.');
+    private function checkNameDupplicate($name) {
+        $meal = Addon::where('name', $name)->where('type', $this->Type)->where('status', 'CO')->first();
+        if(isset($meal)) return false;
+        return true;
     }
 
     private function storeImage($image, $path) {
@@ -76,9 +86,9 @@ class MealsController extends Controller
         $request->validate([
             'name' => 'required|string',
             'price' => 'required|integer',
-            'detail' => 'string',
-            'file_picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-            'file_icon' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1024'
+            'detail' => 'string|nullable',
+            'file_picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable',
+            'file_icon' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1024|nullable'
         ]);
 
         $meal = Addon::find($request->id);
@@ -89,12 +99,15 @@ class MealsController extends Controller
         $icon_id = null;
         if ($request->hasFile('file_picture')) {
             $image_id = $this->storeImage($request->file('file_picture'), $this->PathImage);
-            if($meal->image_id != '') unlink(public_path().$image->path.'/'.$image->name);
+            if($meal->image_id != '') $this->isDeleteImage($meal->id, $meal->image_id, $image->path, $image->name, 'image');
         }
         if($request->hasFile('file_icon')) {
             $icon_id = $this->storeImage($request->file('file_icon'), $this->PathIcon);
-            if($meal->image_icon_id != '') unlink(public_path().$icon->path.'/'.$icon->name);
+            if($meal->image_icon_id != '') $this->isDeleteImage($meal->id, $meal->image_icon_id, $image->path, $image->name, 'icon');
         }
+
+        if(!$request->_image && $image_id == null) $this->isDeleteImage($meal->id, $meal->image_id, $image->path, $image->name, 'image');
+        if(!$request->_icon && $icon_id == null) $this->isDeleteImage($meal->id, $meal->image_icon_id, $icon->path, $icon->name, 'icon');
 
         $meal->name = $request->name;
         $meal->amount = $request->price;
@@ -106,7 +119,21 @@ class MealsController extends Controller
         else return redirect()->route('meals-index')->withFail('Something is wrong. Please try again.');
     }
 
-    private function isDeleteImage() {
-        
+    private function isDeleteImage($meal_id, $image_id, $path, $name, $type) {
+        $image = Image::find($image_id)->delete();
+        if($image) {
+            unlink(public_path().$path.'/'.$name);
+            $meal = Addon::find($meal_id);
+            if($type == 'image') $meal->image_id = NULL;
+            if($type == 'icon') $meal->image_icon_id = NULL;
+            $meal->save();
+        }
+    }
+
+    public function destroy(string $id = null) {
+        $meal = Addon::find($id);
+        $meal->status = 'VO';
+        if($meal->save()) return redirect()->route('meals-index')->withSuccess('Meal deleted...');
+        return redirect()->route('meals-index')->withFail('Something is wrong. Please try again.');
     }
 }

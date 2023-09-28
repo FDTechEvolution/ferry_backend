@@ -33,9 +33,9 @@ class UsersController extends Controller
             'firstname' => 'required|string',
             'lastname' => 'required|string',
             'office' => 'required|string',
-            'email' => 'email',
+            'email' => 'required|email',
             'role' => 'required|string',
-            'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048|nullable'
         ]);
 
         if(!$this->checkUsername($request->username)) return redirect()->route('users-index')->withFail('This username is exist...');
@@ -85,7 +85,7 @@ class UsersController extends Controller
             'office' => 'required|string',
             'email' => 'required|email',
             'role' => 'required|string',
-            'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048|nullable'
         ]);
 
         if(!$this->checkEmail($request->email, $request->id)) return redirect()->route('users-index')->withFail('This email address is exist...');

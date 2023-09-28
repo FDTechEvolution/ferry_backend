@@ -30,8 +30,23 @@ if(btn_cancel_edit) {
 
         setClassListRemove('to-meal-list')
         setClassListRemove('btn-meal-create')
+        clearEditData()
+
         meal_header.innerHTML = `<span class="text-main-color-2">Meal manager`
     })
+}
+
+function clearEditData() {
+    document.querySelector('#edit-id').value = ''
+    document.querySelector('#edit-meal-detail').value = ''
+    document.querySelector('#edit-meal-name').value = ''
+    document.querySelector('#edit-meal-price').value = ''
+    document.querySelector('#edit-icon-cover').style = ''
+    document.querySelector('#edit-image-cover').style = ''
+    document.querySelector('#has-icon').value = 0
+    document.querySelector('#has-image').value = 0
+    setClassListAdd('current-icon')
+    setClassListAdd('current-image')
 }
 
 function setClassListAdd(element_id) {
@@ -43,6 +58,7 @@ function setClassListRemove(element_id) {
 }
 
 function updateEditData(index) {
+    edit_data = []
     setClassListAdd('btn-meal-create')
     meal_header.innerHTML = `<span class="text-main-color-2">Edit</span> Meal`
 
@@ -63,15 +79,15 @@ function setDataToEdutForm() {
     document.querySelector('#edit-meal-detail').value = edit_data['description']
     document.querySelector('#edit-meal-name').value = edit_data['name']
     document.querySelector('#edit-meal-price').value = parseInt(edit_data['price'])
-    if(edit_data['icon']) {
+    if(edit_data['icon'] !== '') {
         document.querySelector('#current-icon').classList.remove('d-none')
         document.querySelector('#edit-icon-cover').style = `background-image: url('..${edit_data['icon']}'); width: 80px; height: 80px; min-width: 80px;`
-        document.querySelector('#has-icon').value = true
+        document.querySelector('#has-icon').value = 1
     }
-    if(edit_data['image']) {
+    if(edit_data['image'] !== '') {
         document.querySelector('#current-image').classList.remove('d-none')
         document.querySelector('#edit-image-cover').style = `background-image: url('..${edit_data['image']}'); width: 80px; height: 80px; min-width: 80px;`
-        document.querySelector('#has-image').value = true
+        document.querySelector('#has-image').value = 1
     }
 }
 
@@ -82,4 +98,27 @@ function setDataEdit(items, datatype) {
             edit_data[item.attributes['data-id'].value] = (datatype === 'value') ? item.value : item.innerText
         }
     })
+}
+
+function deleteCurrentImage(element_id, is_has, element_restore) {
+    let element = document.querySelector(`#${element_id}`)
+    document.querySelector(`#${is_has}`).value = 0
+
+    element.classList.add('hidden-element')
+    setTimeout(() => {
+        element.classList.add('d-none')
+        document.querySelector(`#${element_restore}`).classList.remove('d-none')
+    }, 500);
+}
+
+function restoreCurrentImage(element_id, is_has, element_restore) {
+    let element = document.querySelector(`#${element_id}`)
+    document.querySelector(`#${is_has}`).value = 1
+    element.classList.remove('d-none')
+
+    setTimeout(() => {
+        element.classList.remove('hidden-element')
+        element.classList.add('visible-element')
+    }, 500)
+    document.querySelector(`#${element_restore}`).classList.add('d-none')
 }

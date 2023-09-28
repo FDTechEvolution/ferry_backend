@@ -98,3 +98,14 @@ a.dt-button.dropdown-item.buttons-print {
     border-bottom: none;
     line-height: 2.2rem;
 }
+
+.visible-element {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.5s linear;
+}
+.hidden-element {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 0.5s, opacity 0.5s linear;
+}

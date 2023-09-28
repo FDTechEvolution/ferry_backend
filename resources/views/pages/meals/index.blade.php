@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('page-title')
-    <h1 class="ms-2 mb-0" id="meal-page-title">Meal manager</h1>
+    <h1 class="ms-2 mb-0" id="meal-page-title">Meal manage</h1>
     <x-button-green :type="_('button')" :text="_('Add')" class="ms-3 btn-sm w--10" id="btn-meal-create" />
 @stop
 

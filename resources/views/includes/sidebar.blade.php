@@ -42,6 +42,12 @@
         </a>
       </li>
       <li class="nav-item">
+        <a class="nav-link" href="{{ route('users-index') }}">
+          <i class="fi fi-arrow-right"></i>
+          <span>Account</span>
+        </a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" href="{{ route('stations-index') }}">
           <i class="fi fi-arrow-right"></i>
           <span>Station Manage</span>
@@ -90,7 +96,7 @@
           </a>
       </li>
       <li class="nav-item">
-          <a class="nav-link" href="#">
+          <a class="nav-link" href="{{ route('activity-index') }}">
               <i class="fi fi-arrow-right"></i>
               <span>Activity</span>
           </a>

@@ -2,14 +2,14 @@
     @csrf
     <fieldset id="meal-create">
         <div class="row bg-transparent mt-5">
-            <div class="col-sm-12 w-75 mx-auto">
+            <div class="col-sm-12 w--80 mx-auto">
 
                 <div class="row">
                     <div class="col-7 px-4">
-                        <h1 class="fw-bold text-second-color mb-4"><span>Add new Meal</h1>
+                        <h1 class="fw-bold text-second-color mb-4"><span>Add new Activity manage</h1>
 
                         <div class="mb-4 row">
-                            <label for="meal-name" class="col-sm-3 col-form-label-sm text-start">Meal Name* :</label>
+                            <label for="meal-name" class="col-sm-3 col-form-label-sm text-start">Activity Name* :</label>
                             <div class="col-sm-9">
                                 <input type="text" required class="form-control form-control-sm" id="meal-name" name="name" value="">
                             </div>
@@ -21,9 +21,29 @@
                             </div>
                         </div>
                         <div class="mb-4 row">
-                            <label for="meal-detail" class="col-sm-3 col-form-label-sm text-start">Detail Meal :</label>
+                            <label for="meal-detail" class="col-sm-3 col-form-label-sm text-start">Detail Activity :</label>
                             <div class="col-sm-9">
-                                <textarea class="form-control form-control-sm" id="meal-detail" name="detail" row="3"></textarea>
+                                <textarea class="summernote-editor w-100"
+                                    data-summernote-config='{
+                                        "placeholder":	"Type here...",
+                                        "focus":		false,
+                                        "lang":			"en-US",
+                                        "minHeight":	 300,
+                                        "maxHeight":	 1500,
+
+                                        "toolbar": [
+                                            ["font", ["bold", "italic", "underline", "clear"]],
+                                            ["color", ["color"]],
+                                            ["para", ["ul", "ol", "paragraph"]],
+                                            ["insert", ["link", "picture", "video", "hr"]],
+                                            ["view", ["fullscreen", "codeview", "help"]]
+                                        ],
+
+                                        "disableDragAndDrop":	 false,
+                                        "codeviewFilter":		 false,
+                                        "codeviewIframeFilter":	 true
+                                    }'>
+                                </textarea>
                             </div>
                         </div>
                         <div class="mb-4 row">
@@ -136,18 +156,7 @@
                         </div>
                     </div>
 
-                    <div class="col-12 text-center mt-5">
-                        <x-button-submit-loading 
-                            class="btn-lg w--20 me-2"
-                            :form_id="_('meal-create-form')"
-                            :fieldset_id="_('meal-created')"
-                            :text="_('Add')"
-                        />
-                        <button type="button" class="btn btn-secondary btn-lg w--20" id="btn-cancel-create">Cancel</button>
-                        <small id="user-create-error-notice" class="text-danger mt-3"></small>
-                    </div>
                 </div>
-
             </div>
         </div>
     </fieldset>

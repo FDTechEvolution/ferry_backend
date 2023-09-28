@@ -7,6 +7,7 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\StationsController;
 use App\Http\Controllers\MealsController;
+use App\Http\Controllers\ActivitiesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,6 +61,12 @@ Route::middleware('auth')->group(function() {
 
         Route::post('/create-meal', 'store')->name('meal-create');
         Route::post('/update-meal', 'update')->name('meal-update');
+    });
+
+    Route::controller(ActivitiesController::class)->group(function() {
+        Route::get('/activity', 'index')->name('activity-index');
+
+        Route::post('/create-station', 'store')->name('station-create');
     });
 });
 

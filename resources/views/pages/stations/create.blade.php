@@ -1,7 +1,7 @@
 <form novalidate class="bs-validate" id="station-create-form" method="POST" action="#" enctype="multipart/form-data">
     @csrf
     <div class="row bg-transparent mt-5">
-        <div class="col-sm-12 w-75 mx-auto">
+        <div class="col-sm-12 w--80 mx-auto">
             <h1 class="fw-bold text-second-color mb-4">Add new station</h1>
 
             <div class="row">
@@ -15,7 +15,7 @@
                     <div class="mb-3 row">
                         <label for="station-pier" class="col-sm-4 col-form-label-sm text-start">Station Pier :</label>
                         <div class="col-sm-8">
-                            <input type="text" required class="form-control form-control-sm" id="station-pier" name="pier" value="">
+                            <input type="text" class="form-control form-control-sm" id="station-pier" name="pier" value="">
                         </div>
                     </div>
                     <div class="mb-3 row">
@@ -73,6 +73,14 @@
                                 <i class="switch-icon switch-icon-primary"></i>
                                 <span class="px-3 user-select-none" id="station-status-checked">On</span>
                             </label>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="station-sort" class="col-sm-4 col-form-label-sm text-start">Section* :</label>
+                        <div class="col-sm-8">
+                            <select required class="form-select form-select-sm" id="station-sort" name="section">
+                                <option value="" selected disabled>-- Select --</option>
+                            </select>
                         </div>
                     </div>
                     <div class="mb-3 row">

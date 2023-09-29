@@ -53,6 +53,14 @@ Route::middleware('auth')->group(function() {
 
     Route::controller(StationsController::class)->group(function() {
         Route::get('/stations', 'index')->name('stations-index');
+        Route::get('/delete-station/{id}', 'destroy')->name('station-delete');
+        Route::post('/create-station', 'store')->name('station-create');
+        Route::post('/update-station', 'update')->name('station-update');
+
+        // section
+        Route::get('/delete-section/{id}', 'destroySection')->name('section-delete');
+        Route::post('/create-section', 'storeSection')->name('section-create');
+        Route::post('/update-section', 'updateSection')->name('section-update');
     });
 
     Route::controller(MealsController::class)->group(function() {
@@ -65,8 +73,6 @@ Route::middleware('auth')->group(function() {
 
     Route::controller(ActivitiesController::class)->group(function() {
         Route::get('/activity', 'index')->name('activity-index');
-
-        Route::post('/create-station', 'store')->name('station-create');
     });
 });
 

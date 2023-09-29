@@ -36,15 +36,9 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">
-          <i class="fi fi-arrow-right"></i>
-          <span>Administation</span>
-        </a>
-      </li>
-      <li class="nav-item">
         <a class="nav-link" href="{{ route('users-index') }}">
           <i class="fi fi-arrow-right"></i>
-          <span>Account</span>
+          <span>Administation</span>
         </a>
       </li>
       <li class="nav-item">

@@ -40,6 +40,9 @@ a.dt-button.dropdown-item.buttons-print {
 }
 
 /* width */
+.w--5 {
+    width: 5%;
+}
 .w--10 {
     width: 10%;
 }
@@ -48,6 +51,9 @@ a.dt-button.dropdown-item.buttons-print {
 }
 .w--20 {
     width: 20%;
+}
+.w--30 {
+    width: 30%;
 }
 .w--40 {
     width: 40%;

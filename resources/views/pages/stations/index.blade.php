@@ -66,19 +66,43 @@
                 >
                     <thead>
                         <tr>
-                            <th class="text-center">Choose</th>
+                            <th class="text-center w--5">Choose</th>
                             <th class="text-center">Station Name</th>
                             <th class="text-center">Station Pier</th>
                             <th class="text-center">Nickname</th>
                             <th class="text-center">Sort</th>
                             <th class="text-center">Sections Group</th>
                             <th class="text-center">Status</th>
-                            <th class="text-center">Last login</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        
+                        @foreach($stations as $index => $station)
+                            <tr class="text-center" id="station-row-{{ $index }}">
+                                <td><input class="form-check-input form-check-input-primary station-check mt-2" type="checkbox" value=""></td>
+                                <td data-id="name">{{ $station['name'] }}</td>
+                                <td data-id="piername">{{ $station['piername'] }}</td>
+                                <td data-id="nickname">{{ $station['nickname'] }}</td>
+                                <td data-id="sort">{{ $station['sort'] }}</td>
+                                <td>{{ $station['section']['name'] }}</td>
+                                <td>{!! $status[$station['isactive']] !!}</td>
+                                <td>
+                                    <input type="hidden" id="station-id-{{ $index }}" value="{{ $station['id'] }}">
+                                    <input type="hidden" id="station-section-{{ $index }}" value="{{ $station['section']['id'] }}">
+                                    <input type="hidden" id="station-status-{{ $index }}" value="{{ $station['isactive'] }}">
+                                    <x-action-edit 
+                                        class="me-2"
+                                        :url="_('javascript:void(0)')"
+                                        id="btn-station-edit"
+                                        onClick="updateStationEditData({{ $index }})"
+                                    />
+                                    <x-action-delete 
+                                        :url="route('station-delete', ['id' => $station['id']])"
+                                        :message="_('Are you sure? Delete '. $station['name'] .'?')"
+                                    />
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -87,13 +111,21 @@
             @include('pages.stations.create')
         </div>
         <div id="to-station-edit" class="m-auto d-none">
-            
+            @include('pages.stations.edit')
         </div>
         <div id="to-section-create" class="m-auto d-none">
             @include('pages.stations.section_create')
         </div>
+        <div id="to-section-manage" class="m-auto d-none">
+            @include('pages.stations.section_manage')
+        </div>
     </div>
 </div>
+@stop
 
+@section('script')
+<script>
+    let stations = {{ Js::from($stations) }}
+</script>
 <script src="{{ asset('assets/js/app/station.js') }}"></script>
 @stop

@@ -88,6 +88,7 @@ class UsersController extends Controller
             'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048|nullable'
         ]);
 
+        if(!$this->checkUsername($request->username, $request->id)) return redirect()->route('users-index')->withFail('This username is exist...');
         if(!$this->checkEmail($request->email, $request->id)) return redirect()->route('users-index')->withFail('This email address is exist...');
 
         $user = User::find($request->id);

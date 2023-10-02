@@ -29,7 +29,7 @@
                             <label for="station-info-from" class="col-sm-4 col-form-label-sm text-start">Master Info From :</label>
                             <div class="col-sm-8">
                                 <select class="form-select form-select-sm" id="station-info-from" name="info_from">
-                                    <option value="" selected disabled>-- Select --</option>
+                                    <option value="" selected>-- No Content --</option>
                                 </select>
                             </div>
                         </div>
@@ -37,7 +37,7 @@
                             <label for="station-info-to" class="col-sm-4 col-form-label-sm text-start">Master Info To :</label>
                             <div class="col-sm-8">
                                 <select class="form-select form-select-sm" id="station-info-to" name="info_to">
-                                    <option value="" selected disabled>-- Select --</option>
+                                    <option value="" selected>-- No Content --</option>
                                 </select>
                             </div>
                         </div>

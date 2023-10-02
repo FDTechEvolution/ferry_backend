@@ -8,6 +8,7 @@ use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\StationsController;
 use App\Http\Controllers\MealsController;
 use App\Http\Controllers\ActivitiesController;
+use App\Http\Controllers\StationInfomationsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,6 +62,13 @@ Route::middleware('auth')->group(function() {
         Route::get('/delete-section/{id}', 'destroySection')->name('section-delete');
         Route::post('/create-section', 'storeSection')->name('section-create');
         Route::post('/update-section', 'updateSection')->name('section-update');
+    });
+
+    Route::controller(StationInfomationsController::class)->group(function() {
+        Route::get('/stations-info', 'index')->name('stations-info-index');
+
+        Route::post('/create-station-info', 'store')->name('station-info-create');
+        Route::post('/update-station-info', 'update')->name('station-info-update');
     });
 
     Route::controller(MealsController::class)->group(function() {

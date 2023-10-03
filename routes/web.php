@@ -78,6 +78,7 @@ Route::middleware('auth')->group(function() {
 
         Route::post('/create-meal', 'store')->name('meal-create');
         Route::post('/update-meal', 'update')->name('meal-update');
+        Route::post('/upload-icon-meal', 'uploadIcon')->name('meal-upload-icon');
     });
 
     Route::controller(ActivitiesController::class)->group(function() {

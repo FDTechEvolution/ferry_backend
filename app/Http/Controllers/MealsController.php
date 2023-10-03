@@ -30,19 +30,18 @@ class MealsController extends Controller
             'name' => 'required|string',
             'price' => 'required|integer',
             'detail' => 'string|nullable',
-            'file_picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable',
-            'file_icon' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1024|nullable'
+            'file_picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable'
         ]);
 
         if($this->checkNameDupplicate($request->name)) {
             $image_id = null;
-            $icon_id = null;
+            // $icon_id = null;
             if ($request->hasFile('file_picture')) {
                 $image_id = $this->storeImage($request->file('file_picture'), $this->PathImage);
             }
-            if($request->hasFile('file_icon')) {
-                $icon_id = $this->storeImage($request->file('file_icon'), $this->PathIcon);
-            }
+            // if($request->hasFile('file_icon')) {
+            //     $icon_id = $this->storeImage($request->file('file_icon'), $this->PathIcon);
+            // }
 
             $addon = Addon::create([
                 'code' => Str::random(6),
@@ -51,8 +50,7 @@ class MealsController extends Controller
                 'isactive' => true,
                 'amount' => $request->price,
                 'description' => $request->detail,
-                'image_id' => $image_id,
-                'image_icon_id' => $icon_id
+                'image_id' => $image_id
             ]);
 
             if($addon) return redirect()->route('meals-index')->withSuccess('Meal created...');
@@ -135,5 +133,11 @@ class MealsController extends Controller
         $meal->status = 'VO';
         if($meal->save()) return redirect()->route('meals-index')->withSuccess('Meal deleted...');
         return redirect()->route('meals-index')->withFail('Something is wrong. Please try again.');
+    }
+
+    public function uploadIcon(Request $request) {
+        Log::debug($request);
+
+        return response(['success' => 'icon uploaded.']);
     }
 }

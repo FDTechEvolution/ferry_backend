@@ -4,6 +4,8 @@
 
 <meta name="viewport" content="width=device-width, maximum-scale=5, initial-scale=1">
 
+<meta name="csrf-token" content="{{ csrf_token() }}" />
+
 <!-- up to 10% speed up for external res -->
 <link rel="dns-prefetch" href="https://fonts.googleapis.com/">
 <link rel="dns-prefetch" href="https://fonts.gstatic.com/">

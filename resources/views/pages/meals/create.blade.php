@@ -28,48 +28,21 @@
                         </div>
                         <div class="mb-4 row">
                             <label for="meal-detail" class="col-sm-3 col-form-label-sm text-start">Icon :</label>
-                            <div class="col-sm-9">
-                                <label class="btn btn-light btn-sm cursor-pointer position-relative w-100 rounded border" style="background-color: #fff;">
-                                    <input type="file" name="file_icon"
-                                        data-file-ext="jpeg, jpg, png, gif, svg"
-                                        data-file-max-size-kb-per-file="1024"
-                                        data-file-max-size-kb-total="1024"
-                                        data-file-max-total-files="100"
-                                        data-file-ext-err-msg="Allowed:"
-                                        data-file-exist-err-msg="File already exists:"
-                                        data-file-size-err-item-msg="File too large!"
-                                        data-file-size-err-total-msg="Total allowed size exceeded!"
-                                        data-file-size-err-max-msg="Maximum allowed files:"
-                                        data-file-toast-position="bottom-center"
-                                        data-file-preview-container=".js-file-input-container-multiple-list-static"
-                                        data-file-preview-img-height="80"
-                                        data-file-btn-clear="a.js-file-input-btn-multiple-list-static-remove"
-                                        data-file-preview-show-info="true"
-                                        data-file-preview-list-type="list"
-                                        class="custom-file-input absolute-full cursor-pointer"
-                                        title="jpeg, jpg, png, gif, svg (1MB)" data-bs-toggle="tooltip"
-                                    >
-
-                                    <span class="group-icon cursor-pointer">
-                                        <i class="fi fi-arrow-upload"></i>
-                                        <i class="fi fi-circle-spin fi-spin"></i>
-                                    </span>
-
-                                    <span class="cursor-pointer">Upload image</span>
-                                </label>
-
-                                <div class="row">
-                                    <div class="col-10">
-                                        <div class="js-file-input-container-multiple-list-static position-relative hide-empty mt-2"><!-- container --></div>
-                                    </div>
-                                    <div class="col-2 text-center">
-                                        <!-- remove button -->
-                                        <a href="#" title="Clear Images" data-bs-toggle="tooltip" class="js-file-input-btn-multiple-list-static-remove hide btn btn-secondary mt-4 text-center">
-                                            <i class="fi fi-close mx-auto"></i>
-                                        </a>
-                                    </div>
-                                </div>
+                            <label class="col-sm-1 col-form-label-sm text-start pe-1">
+                                <img src="../assets/images/no_image_icon.svg" id="icon-image-show" width="22" height="22">
+                            </label>
+                            <div class="col-sm-7 ps-0">
+                                <select class="form-select form-select-sm" id="meal-icon" name="icon">
+                                    <option value="" selected>-- No icon --</option>
+                                </select>
                             </div>
+                            <label class="col-sm-1 col-form-label-sm text-start ps-1">
+                                <a href="javascript:void(0)" class="text-dark" data-bs-toggle="modal" data-bs-target="#upload-icon">
+                                    <svg width="22px" height="22px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">  
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"></path>
+                                    </svg>
+                                </a>
+                            </label>
                         </div>
                         <div class="mb-4 row">
                             <label for="meal-detail" class="col-sm-3 col-form-label-sm text-start">Picture :</label>
@@ -109,7 +82,7 @@
                                     </div>
                                     <div class="col-2 text-center">
                                         <!-- remove button -->
-                                        <a href="#" title="Clear Images" data-bs-toggle="tooltip" class="js-file-input-btn-multiple-list-static-remove-picture hide btn btn-secondary mt-4 text-center">
+                                        <a href="javascript:void(0)" title="Clear Images" data-bs-toggle="tooltip" class="js-file-input-btn-multiple-list-static-remove-picture hide btn btn-secondary mt-4 text-center">
                                             <i class="fi fi-close mx-auto"></i>
                                         </a>
                                     </div>

@@ -2,6 +2,7 @@ const btn_create = document.querySelector('#btn-meal-create')
 const btn_cancel = document.querySelector('#btn-cancel-create')
 const btn_cancel_edit = document.querySelector('#btn-cancel-edit')
 const meal_header = document.querySelector('#meal-page-title')
+const btn_upload_icon = document.querySelector('#btn-upload-icon')
 let edit_data = []
 
 if(btn_create) {
@@ -11,7 +12,56 @@ if(btn_create) {
 
         setClassListRemove('to-meal-create')
         meal_header.innerHTML = `<span class="text-main-color-2">Add</span> new Meal`
+        loadFileIcon()
     })
+}
+
+// if(btn_upload_icon) {
+//     btn_upload_icon.addEventListener('click', (e) => {
+//         e.preventDefault();
+//         ajaxUploadIcon()
+//     })
+// }
+
+function clearSelectOption(select_id) {
+    while (select_id.options.length > 0) {
+        select_id.remove(0)
+    }
+}
+
+function addSelectOption(select_id, icons) {
+    let _option = document.createElement('option')
+    _option.value = ''
+    _option.innerText = '-- No icon --'
+    select_id.add(_option)
+
+    icons.forEach((icon, index) => {
+        let _option = document.createElement('option')
+        _option.value = icon.name
+        _option.innerText = icon.name
+        select_id.add(_option)
+    })
+}
+
+let res = ''
+async function loadFileIcon() {
+    let response = await fetch('../assets/images/meal/icon.json')
+    res = await response.json()
+
+    let _select = document.querySelector('#meal-icon')
+    _select.addEventListener('change', function() { iconSelected(this) }, false)
+    clearSelectOption(_select)
+    addSelectOption(_select, res)
+}
+
+function iconSelected(e) {
+    if(e.value == '') {
+        document.querySelector('#icon-image-show').src = '../assets/images/no_image_icon.svg'
+    }
+    else {
+        let icon = res.find((item, index) => { return item.name === e.value })
+        document.querySelector('#icon-image-show').src = icon.path
+    }
 }
 
 if(btn_cancel) {
@@ -20,7 +70,7 @@ if(btn_cancel) {
 
         setClassListRemove('to-meal-list')
         setClassListRemove('btn-meal-create')
-        meal_header.innerHTML = `<span class="text-main-color-2">Meal manager`
+        meal_header.innerHTML = `<span>Meal manager</span>`
     })
 }
 
@@ -32,7 +82,7 @@ if(btn_cancel_edit) {
         setClassListRemove('btn-meal-create')
         clearEditData()
 
-        meal_header.innerHTML = `<span class="text-main-color-2">Meal manager`
+        meal_header.innerHTML = `<span>Meal manager</span>`
     })
 }
 
@@ -62,42 +112,28 @@ function updateEditData(index) {
     setClassListAdd('btn-meal-create')
     meal_header.innerHTML = `<span class="text-main-color-2">Edit</span> Meal`
 
-    const tr = document.querySelector(`#meal-row-${index}`)
-    const td = tr.getElementsByTagName('td')
-    const input = tr.getElementsByTagName('input')
-    
-    setDataEdit(td, 'innerText')
-    setDataEdit(input, 'value')
+    let meal = meals.find((item, key) => { return key === index })
 
     setClassListAdd('to-meal-list')
     setClassListRemove('to-meal-edit')
-    setDataToEdutForm()
+    setDataToEditForm(meal)
 }
 
-function setDataToEdutForm() {
-    document.querySelector('#edit-id').value = edit_data['id']
-    document.querySelector('#edit-meal-detail').value = edit_data['description']
-    document.querySelector('#edit-meal-name').value = edit_data['name']
-    document.querySelector('#edit-meal-price').value = parseInt(edit_data['price'])
+function setDataToEditForm(meal) {
+    document.querySelector('#edit-id').value = meal.id
+    document.querySelector('#edit-meal-detail').value = meal.description
+    document.querySelector('#edit-meal-name').value = meal.name
+    document.querySelector('#edit-meal-price').value = parseInt(meal.amount)
     if(edit_data['icon'] !== '') {
         document.querySelector('#current-icon').classList.remove('d-none')
-        document.querySelector('#edit-icon-cover').style = `background-image: url('..${edit_data['icon']}'); width: 80px; height: 80px; min-width: 80px;`
+        document.querySelector('#edit-icon-cover').style = `background-image: url('..${meal.icon.path}/${meal.icon.name}'); width: 80px; height: 80px; min-width: 80px;`
         document.querySelector('#has-icon').value = 1
     }
     if(edit_data['image'] !== '') {
         document.querySelector('#current-image').classList.remove('d-none')
-        document.querySelector('#edit-image-cover').style = `background-image: url('..${edit_data['image']}'); width: 80px; height: 80px; min-width: 80px;`
+        document.querySelector('#edit-image-cover').style = `background-image: url('..${meal.image.path}/${meal.image.name}'); width: 80px; height: 80px; min-width: 80px;`
         document.querySelector('#has-image').value = 1
     }
-}
-
-function setDataEdit(items, datatype) {
-
-    Array.from(items).forEach((item, index) => {
-        if(item.attributes['data-id']) {
-            edit_data[item.attributes['data-id'].value] = (datatype === 'value') ? item.value : item.innerText
-        }
-    })
 }
 
 function deleteCurrentImage(element_id, is_has, element_restore) {

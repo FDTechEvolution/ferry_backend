@@ -87,6 +87,13 @@
 </div>
 @stop
 
+@section('modal')
+    @include('pages.meals.upload_icon')
+@stop
+
 @section('script')
+<script>
+    const meals = {{ Js::from($meals) }}
+</script>
 <script src="{{ asset('assets/js/app/meal.js') }}"></script>
 @stop

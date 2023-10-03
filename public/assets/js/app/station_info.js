@@ -25,6 +25,8 @@ if(btn_calcel_create) {
 if(btn_cancel_edit) {
     btn_cancel_edit.addEventListener('click', () => {
         clearAllSection()
+        document.querySelector('#quill-editable .ql-snow').remove()
+        document.querySelector('#station-info-edit-detail').remove()
 
         setClassListRemove('to-station-info-list')
         setClassListRemove('btn-station-info-create')
@@ -61,14 +63,40 @@ function setModalContent(index) {
 
 function updateStationInfoEditData(index) {
     clearAllSection()
+    const create_quill = document.createElement('div')
+    create_quill.id = 'station-info-edit-detail'
+    document.querySelector('#quill-editable').appendChild(create_quill)
+
     let info = s_info.find((item, key) => { return index === key })
 
     document.querySelector('#edit-station-info-name').value = info.name
     let type = document.querySelector('#edit-station-info-type')
     type.value = info.type
     type.options[type.selectedIndex].defaultSelected = true
-    document.querySelector('#station-info-edit-detail').innerHTML = info.text
+    // document.querySelector('#station-info-edit-detail').innerHTML = info.text
     document.querySelector('#station-info-edit-id').value = info.id
+
+    var quill = new Quill("#station-info-edit-detail", {
+        modules: {
+            toolbar: [
+                [{ "header": [2, 3, 4, 5, 6, false] }],
+                ["bold", "italic", "underline", "strike"],
+                [{ "color": [] }, { "background": [] }],
+                [{ "script": "super" }, { "script": "sub" }],
+                ["blockquote"],
+                [{ "list": "ordered" }, { "list": "bullet"}, { "indent": "-1" }, { "indent": "+1" }],
+                [{ "align": [] }],
+                ["link", "image", "video"],
+                ["clean", "code-block"]
+            ]
+        },
+        theme: "snow"
+    });
+    quill.pasteHTML(info.text);
+    quill.on('text-change', function(delta, oldDelta, source) {
+        document.querySelector('#edit-detail-textarea').innerHTML = quill.container.firstChild.innerHTML
+        // console.log(quill.container.firstChild.innerHTML)
+    })
 
     setClassListRemove('to-station-info-edit')
     page_title.innerHTML = `<span class="text-main-color-2">Edit</span> Station infomation`

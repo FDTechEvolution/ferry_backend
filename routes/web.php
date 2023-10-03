@@ -66,6 +66,7 @@ Route::middleware('auth')->group(function() {
 
     Route::controller(StationInfomationsController::class)->group(function() {
         Route::get('/stations-info', 'index')->name('stations-info-index');
+        Route::get('/delete-station-info/{id}', 'destroy')->name('station-info-delete');
 
         Route::post('/create-station-info', 'store')->name('station-info-create');
         Route::post('/update-station-info', 'update')->name('station-info-update');

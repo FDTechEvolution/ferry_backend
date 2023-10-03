@@ -48,7 +48,6 @@ class StationInfomationsController extends Controller
 
         if($info) return redirect()->route('stations-info-index')->withSuccess('Station infomation created...');
         else return redirect()->route('stations-info-index')->withFail('Something is wrong. Please try again.');
-        
     }
 
     private function checkInfoName(string $name = null, string $type = null, string $info_id = null) {
@@ -70,8 +69,23 @@ class StationInfomationsController extends Controller
         $info->name = $request->name;
         $info->type = $request->type;
         $info->text = $request->detail;
-        
+
         if($info->save()) return redirect()->route('stations-info-index')->withSuccess('Station infomation updated...');
         else return redirect()->route('stations-info-index')->withFail('Something is wrong. Please try again.');
+    }
+
+    public function destroy(string $id = null) {
+        if($id) {
+            $info = StationInfomation::find($id);
+            $info_use = $info->type === 'from' ? $info->info_from : $info->info_to;
+
+            if(isset($info_use)) 
+                return redirect()->route('stations-info-index')->withWarning('Station infomation is in use. Can not delete this item...');
+
+            $info->status = 'N';
+            if($info->save()) return redirect()->route('stations-info-index')->withSuccess('Station infomation deleted...');
+            else return redirect()->route('stations-info-index')->withFail('Something is wrong. Please try again.');
+        }
+        return redirect()->route('stations-info-index')->withFail('Something is wrong. Please try again.');
     }
 }

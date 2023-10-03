@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Models\Station;
 use App\Models\Section;
+use App\Models\StationInfomation;
 
 class StationsController extends Controller
 {
@@ -23,9 +24,10 @@ class StationsController extends Controller
     public function index() {
         $stations = Station::where('status', 'CO')->orderBy('sort', 'ASC')->get();
         $sections = Section::where('isactive', 'Y')->orderBy('created_at', 'DESC')->get();
+        $info = StationInfomation::where('status', 'Y')->get();
         $status = $this->_Status;
 
-        return view('pages.stations.index', ['stations' => $stations, 'sections' => $sections, 'status' => $status]);
+        return view('pages.stations.index', ['stations' => $stations, 'sections' => $sections, 'status' => $status, 'info' => $info]);
     }
 
     public function store(Request $request) {
@@ -34,26 +36,29 @@ class StationsController extends Controller
             'pier' => 'string',
             'nickname' => 'required|string',
             'section' => 'required|string',
-            'sort' => 'required|integer'
+            'sort' => 'required|integer',
+            'info_from' => 'string|nullable',
+            'info_to' => 'string|nullable'
         ]);
 
-        if($this->checkStationName($request->name)) {
-            if($this->checkNickname($request->nickname)) {
-                $station = Station::create([
-                    'name' => $request->name,
-                    'piername' => $request->pier,
-                    'nickname' => $request->nickname,
-                    'isactive' => isset($request->isactive) ? 'Y' : 'N',
-                    'section_id' => $request->section,
-                    'sort' => $request->sort
-                ]);
-
-                if($station) return redirect()->route('stations-index')->withSuccess('Station created...');
-                else return redirect()->route('stations-index')->withFail('Something is wrong. Please try again.');
-            }
+        if(!$this->checkStationName($request->name)) 
             return redirect()->route('stations-index')->withFail('Station name is exist. Please check.');
-        }
-        return redirect()->route('stations-index')->withFail('Station nickname is exist. Please check.');
+        if(!$this->checkNickname($request->nickname)) 
+            return redirect()->route('stations-index')->withFail('Station nickname is exist. Please check.');
+        
+        $station = Station::create([
+            'name' => $request->name,
+            'piername' => $request->pier,
+            'nickname' => $request->nickname,
+            'isactive' => isset($request->isactive) ? 'Y' : 'N',
+            'section_id' => $request->section,
+            'station_infomation_from_id' => $request->info_from,
+            'station_infomation_to_id' => $request->info_to,
+            'sort' => $request->sort
+        ]);
+
+        if($station) return redirect()->route('stations-index')->withSuccess('Station created...');
+        else return redirect()->route('stations-index')->withFail('Something is wrong. Please try again.');
     }
 
     private function checkStationName(string $name = null, string $station_id = null) {
@@ -74,27 +79,32 @@ class StationsController extends Controller
             'pier' => 'string',
             'nickname' => 'required|string',
             'section' => 'required|string',
-            'sort' => 'required|integer'
+            'sort' => 'required|integer',
+            'info_from' => 'string|nullable',
+            'info_to' => 'string|nullable'
         ]);
 
-        if($this->checkStationName($request->name, $request->edit_id)) {
-            if($this->checkNickname($request->nickname, $request->edit_id)) {
-                $station = Station::find($request->edit_id);
-                if(isset($station)) {
-                    $station->name = $request->name;
-                    $station->piername = $request->pier;
-                    $station->nickname = $request->nickname;
-                    $station->section_id = $request->section;
-                    $station->sort = $request->sort;
-                    $station->isactive = isset($request->isactive) ? 'Y' : 'N';
+        if(!$this->checkStationName($request->name, $request->edit_id)) 
+            return redirect()->route('stations-index')->withFail('Station name is exist. Please check.');
+        if(!$this->checkNickname($request->nickname, $request->edit_id)) 
+            return redirect()->route('stations-index')->withFail('Station nickname is exist. Please check.');
+            
+        $station = Station::find($request->edit_id);
+        if(isset($station)) {
+            $station->name = $request->name;
+            $station->piername = $request->pier;
+            $station->nickname = $request->nickname;
+            $station->section_id = $request->section;
+            $station->station_infomation_from_id = $request->info_from;
+            $station->station_infomation_to_id = $request->info_to;
+            $station->sort = $request->sort;
+            $station->isactive = isset($request->isactive) ? 'Y' : 'N';
 
-                    if($station->save()) return redirect()->route('stations-index')->withSuccess('Station updated...');
-                    else return redirect()->route('stations-index')->withFail('Something is wrong. Please try again.');
-                }
-
-                return redirect()->route('stations-index')->withFail('Station record not exist. Please check.');
-            }
+            if($station->save()) return redirect()->route('stations-index')->withSuccess('Station updated...');
+            else return redirect()->route('stations-index')->withFail('Something is wrong. Please try again.');
         }
+
+        return redirect()->route('stations-index')->withFail('Station record not exist. Please check.');
     }
 
     public function destroy(string $id = null) {

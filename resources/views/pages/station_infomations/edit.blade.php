@@ -27,31 +27,9 @@
 
                         <div class="mb-3 row">
                             <label class="col-sm-2 col-form-label-sm text-start">Detail* :</label>
-                            <div class="col-sm-8">
-                                <div class="quill-editor"
-                                    id="station-info-edit-detail"
-                                    data-ajax-url="_ajax/demo.summernote.php"
-                                    data-ajax-params="['action','upload']['param2','value2']"
-                                    data-textarea-name="detail"
-                                    data-quill-config='{
-                                        "modules": {
-                                            "toolbar": [
-                                                [{ "header": [2, 3, 4, 5, 6, false] }],
-                                                ["bold", "italic", "underline", "strike"],
-                                                [{ "color": [] }, { "background": [] }],
-                                                [{ "script": "super" }, { "script": "sub" }],
-                                                ["blockquote"],
-                                                [{ "list": "ordered" }, { "list": "bullet"}, { "indent": "-1" }, { "indent": "+1" }],
-                                                [{ "align": [] }],
-                                                ["link", "image", "video"],
-                                                ["clean", "code-block"]
-                                            ]
-                                        },
-
-                                        "placeholder": "Type here..."
-                                    }'>
-                                    <p></p>
-                                </div>
+                            <div class="col-sm-8" id="quill-editable">
+                                <div id="station-info-edit-detail"></div>
+                                <textarea class="d-none" id="edit-detail-textarea" name="detail"></textarea>
                             </div>
                         </div>
                     </div>

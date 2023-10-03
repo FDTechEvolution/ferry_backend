@@ -16,6 +16,8 @@ class Station extends Model
         'nickname',
         'isactive',
         'section_id',
+        'station_infomation_from_id',
+        'station_infomation_to_id',
         'sort',
     ];
 

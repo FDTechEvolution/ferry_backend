@@ -26,20 +26,32 @@
                             </div>
                         </div>
                         <div class="mb-4 row">
-                            <label for="station-info-from" class="col-sm-4 col-form-label-sm text-start">Master Info From :</label>
-                            <div class="col-sm-8">
-                                <select class="form-select form-select-sm" id="station-info-from" name="info_from">
-                                    <option value="" selected disabled>-- Select --</option>
+                            <label for="edit-station-info-from" class="col-sm-4 col-form-label-sm text-start">Master Info From :</label>
+                            <div class="col-sm-7">
+                                <select class="form-select form-select-sm" id="edit-station-info-from" name="info_from">
+                                    <option value="" selected>-- Select --</option>
+                                    @foreach($info as $item)
+                                        @if($item['type'] == 'from')
+                                            <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
+                                        @endif
+                                    @endforeach
                                 </select>
                             </div>
+                            <label class="col-sm-1 col-form-label-sm text-start"><i id="edit-from-info-text" class="fi fi-squared-info" data-bs-toggle="tooltip" data-bs-placement="right" title="View content..."></i></label>
                         </div>
                         <div class="mb-4 row">
-                            <label for="station-info-to" class="col-sm-4 col-form-label-sm text-start">Master Info To :</label>
-                            <div class="col-sm-8">
-                                <select class="form-select form-select-sm" id="station-info-to" name="info_to">
-                                    <option value="" selected disabled>-- Select --</option>
+                            <label for="edit-station-info-to" class="col-sm-4 col-form-label-sm text-start">Master Info To :</label>
+                            <div class="col-sm-7">
+                                <select class="form-select form-select-sm" id="edit-station-info-to" name="info_to">
+                                    <option value="" selected>-- Select --</option>
+                                    @foreach($info as $item)
+                                        @if($item['type'] == 'to')
+                                            <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
+                                        @endif
+                                    @endforeach
                                 </select>
                             </div>
+                            <label class="col-sm-1 col-form-label-sm text-start"><i id="edit-to-info-text" class="fi fi-squared-info" data-bs-toggle="tooltip" data-bs-placement="right" title="View content..."></i></label>
                         </div>
                         <div class="mb-4 row">
                             <label for="station-shuttle-bus" class="col-sm-4 col-form-label-sm text-start">
@@ -75,12 +87,12 @@
 
                     <div class="col-6 px-4">
                         <div class="mb-3 row">
-                            <label for="station-status" class="col-sm-4 col-form-label-sm text-start">Station Status :</label>
+                            <label class="col-sm-4 col-form-label-sm text-start">Station Status :</label>
                             <div class="col-sm-5">
                                 <label class="d-flex align-items-center mb-3">
                                     <input class="d-none-cloaked" type="checkbox" id="edit-station-status" name="isactive" value="1" checked>
                                     <i class="switch-icon switch-icon-primary"></i>
-                                    <span class="px-3 user-select-none" id="station-status-checked">On</span>
+                                    <span class="px-3 user-select-none" id="edit-station-status-checked">On</span>
                                 </label>
                             </div>
                         </div>

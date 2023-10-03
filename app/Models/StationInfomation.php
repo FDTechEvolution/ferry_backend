@@ -20,4 +20,12 @@ class StationInfomation extends Model
     protected $hidden = [
         
     ];
+
+    public function info_from() {
+        return $this->belongsTo(Station::class, 'id', 'station_infomation_from_id');
+    }
+
+    public function info_to() {
+        return $this->belongsTo(Station::class, 'id', 'station_infomation_to_id');
+    }
 }

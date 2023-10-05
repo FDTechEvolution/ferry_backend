@@ -21,7 +21,7 @@ class MealsController extends Controller
     }
 
     public function index() {
-        $meals = Addon::where('type', $this->Type)->where('status', 'CO')->with('image', 'icon')->get();
+        $meals = Addon::where('type', $this->Type)->where('status', 'CO')->with('image')->get();
         return view('pages.meals.index', ['meals' => $meals]);
     }
 
@@ -50,7 +50,10 @@ class MealsController extends Controller
                 'isactive' => true,
                 'amount' => $request->price,
                 'description' => $request->detail,
-                'image_id' => $image_id
+                'image_id' => $image_id,
+                'image_icon' => $request->icon,
+                'is_route_station' => isset($request->route_station) ? 'Y' : 'N',
+                'is_main_menu' => isset($request->main_menu) ? 'Y' : 'N',
             ]);
 
             if($addon) return redirect()->route('meals-index')->withSuccess('Meal created...');
@@ -85,8 +88,7 @@ class MealsController extends Controller
             'name' => 'required|string',
             'price' => 'required|integer',
             'detail' => 'string|nullable',
-            'file_picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable',
-            'file_icon' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1024|nullable'
+            'file_picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable'
         ]);
 
         $meal = Addon::find($request->id);
@@ -99,19 +101,22 @@ class MealsController extends Controller
             $image_id = $this->storeImage($request->file('file_picture'), $this->PathImage);
             if($meal->image_id != '') $this->isDeleteImage($meal->id, $meal->image_id, $image->path, $image->name, 'image');
         }
-        if($request->hasFile('file_icon')) {
-            $icon_id = $this->storeImage($request->file('file_icon'), $this->PathIcon);
-            if($meal->image_icon_id != '') $this->isDeleteImage($meal->id, $meal->image_icon_id, $image->path, $image->name, 'icon');
-        }
+        // if($request->hasFile('file_icon')) {
+        //     $icon_id = $this->storeImage($request->file('file_icon'), $this->PathIcon);
+        //     if($meal->image_icon_id != '') $this->isDeleteImage($meal->id, $meal->image_icon_id, $image->path, $image->name, 'icon');
+        // }
 
         if(!$request->_image && $image_id == null) $this->isDeleteImage($meal->id, $meal->image_id, $image->path, $image->name, 'image');
-        if(!$request->_icon && $icon_id == null) $this->isDeleteImage($meal->id, $meal->image_icon_id, $icon->path, $icon->name, 'icon');
+        // if(!$request->_icon && $icon_id == null) $this->isDeleteImage($meal->id, $meal->image_icon_id, $icon->path, $icon->name, 'icon');
 
         $meal->name = $request->name;
         $meal->amount = $request->price;
         $meal->description = $request->detail;
         if($image_id != null) $meal->image_id = $image_id;
-        if($icon_id != null) $meal->image_icon_id = $icon_id;
+        $meal->image_icon = $request->icon;
+        $meal->is_route_station = isset($request->route_station) ? 'Y' : 'N';
+        $meal->is_main_menu = isset($request->main_menu) ? 'Y' : 'N';
+        // if($icon_id != null) $meal->image_icon_id = $icon_id;
 
         if($meal->save()) return redirect()->route('meals-index')->withSuccess('Meal updated...');
         else return redirect()->route('meals-index')->withFail('Something is wrong. Please try again.');
@@ -136,8 +141,65 @@ class MealsController extends Controller
     }
 
     public function uploadIcon(Request $request) {
-        Log::debug($request);
+        $request->validate([
+            'name' => 'required|string',
+            'file_icon' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1024'
+        ]);
 
-        return response(['success' => 'icon uploaded.']);
+        if($request->hasFile('file_icon')) {
+            $json_icon = file_get_contents(public_path('/assets/images/meal/icon.json'));
+            $current_icon = json_decode($json_icon, true);
+
+            $checkName = true;
+            foreach($current_icon as $icon) {
+                if($icon['name'] == $request->name) $checkName = false;
+            }
+
+            if($checkName) {
+                $slug_image = $this->storeIcon($request->file('file_icon'), $this->PathIcon);
+                $new_icon = [
+                    "name" => $request->name,
+                    "path" => '..'.$this->PathIcon.'/',
+                    "icon" => $slug_image
+                ];
+
+                array_push($current_icon, $new_icon);
+                $update_icon = json_encode($current_icon, JSON_PRETTY_PRINT);
+                file_put_contents(public_path('/assets/images/meal/icon.json'), stripslashes($update_icon));
+
+                return response(['message' => 'Icon uploaded.', 'status' => 'success']);
+            }
+            return response(['message' => 'Icon Name is exist.', 'status' => 'fail']);
+        }
+
+        return response(['message' => 'No icon upload.', 'status' => 'fail']);
+    }
+
+    public function destroyIcon(Request $request) {
+        $json_icon = file_get_contents(public_path('/assets/images/meal/icon.json'));
+        $current_icon = json_decode($json_icon, true);
+        $is_icon = $current_icon[$request->key];
+
+        if(!$this->iconCheckUsed($is_icon['icon'])) return response(['message' => 'Icon has use. Can not delete this icon.', 'status' => 'fail']);
+
+        array_splice($current_icon, $request->key, 1);
+        $update_icon = json_encode($current_icon, JSON_PRETTY_PRINT);
+        file_put_contents(public_path('/assets/images/meal/icon.json'), stripslashes($update_icon));
+        unlink(public_path().$this->PathIcon.'/'.$is_icon['icon']);
+
+        return response(['message' => 'Icon deleted.', 'status' => 'success']);
+    }
+
+    private function storeIcon($image, $path) {
+        $slug_image = time().'.'.$image->getClientOriginalExtension();
+
+        $image->move(public_path($path), $slug_image);
+        return $slug_image;
+    }
+
+    private function iconCheckUsed($icon) {
+        $meal = Addon::where('image_icon', $icon)->first();
+        if(isset($meal)) return false;
+        return true;
     }
 }

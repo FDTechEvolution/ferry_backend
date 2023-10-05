@@ -18,7 +18,10 @@ class Addon extends Model
         'amount',
         'description',
         'image_id',
-        'image_icon_id'
+        'image_icon_id',
+        'image_icon',
+        'is_route_station',
+        'is_main_menu'
     ];
 
     protected $hidden = [
@@ -30,7 +33,5 @@ class Addon extends Model
         return $this->hasOne(Image::class, 'id', 'image_id');
     }
 
-    public function icon() {
-        return $this->hasOne(Image::class, 'id', 'image_icon_id');
-    }
+    
 }

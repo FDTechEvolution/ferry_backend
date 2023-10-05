@@ -12,7 +12,7 @@ if(btn_create) {
 
         setClassListRemove('to-meal-create')
         meal_header.innerHTML = `<span class="text-main-color-2">Add</span> new Meal`
-        loadFileIcon()
+        loadFileIcon('#meal-icon')
     })
 }
 
@@ -29,7 +29,7 @@ function clearSelectOption(select_id) {
     }
 }
 
-function addSelectOption(select_id, icons) {
+function addSelectOption(select_id, icons, is_icon) {
     let _option = document.createElement('option')
     _option.value = ''
     _option.innerText = '-- No icon --'
@@ -37,30 +37,54 @@ function addSelectOption(select_id, icons) {
 
     icons.forEach((icon, index) => {
         let _option = document.createElement('option')
-        _option.value = icon.name
+        _option.value = icon.icon
         _option.innerText = icon.name
+        if(icon.icon === is_icon) { 
+            _option.selected = true 
+            document.querySelector('#icon-image-show-edit').src = icon.path + icon.icon
+        }
         select_id.add(_option)
     })
 }
 
 let res = ''
-async function loadFileIcon() {
+async function loadFileIcon(is_select, is_icon) {
     let response = await fetch('../assets/images/meal/icon.json')
     res = await response.json()
 
-    let _select = document.querySelector('#meal-icon')
-    _select.addEventListener('change', function() { iconSelected(this) }, false)
+    let _select = document.querySelector(is_select)
+    _select.addEventListener('change', function() { 
+        if(is_icon) iconSelected(this, false) 
+        else iconSelected(this, true) 
+    }, false)
     clearSelectOption(_select)
-    addSelectOption(_select, res)
+    addSelectOption(_select, res, is_icon)
 }
 
-function iconSelected(e) {
-    if(e.value == '') {
+async function showIconList() {
+    let showList = document.querySelector('#show-meal-icon-list')
+    showList.innerHTML = ''
+
+    let response = await fetch('../assets/images/meal/icon.json')
+    let _res = await response.json()
+
+    _res.forEach((icon, index) => {
+        let _li = document.createElement('li')
+        _li.innerHTML = `<img src="${icon.path}${icon.icon}" width="22" height=22> ${icon.name} 
+                            <i class="fi fi-round-close text-danger cursor-pointer meal-icon-delete" onClick="return confirmDeleteIcon(${index})" title="Delete this icon."></i>`
+        showList.appendChild(_li)
+    })
+}
+
+function iconSelected(e, status) {
+    let _value = e.value
+    if(_value === '') {
         document.querySelector('#icon-image-show').src = '../assets/images/no_image_icon.svg'
     }
     else {
-        let icon = res.find((item, index) => { return item.name === e.value })
-        document.querySelector('#icon-image-show').src = icon.path
+        let element_id = status ? '#icon-image-show' : '#icon-image-show-edit'
+        let icon = res.find((item, index) => { return item.icon === _value })
+        document.querySelector(element_id).src = icon.path + icon.icon
     }
 }
 
@@ -70,6 +94,8 @@ if(btn_cancel) {
 
         setClassListRemove('to-meal-list')
         setClassListRemove('btn-meal-create')
+        document.querySelector('#icon-image-show').src = '../assets/images/no_image_icon.svg'
+        document.querySelector('#icon-image-show-edit').src = '../assets/images/no_image_icon.svg'
         meal_header.innerHTML = `<span>Meal manager</span>`
     })
 }
@@ -91,11 +117,12 @@ function clearEditData() {
     document.querySelector('#edit-meal-detail').value = ''
     document.querySelector('#edit-meal-name').value = ''
     document.querySelector('#edit-meal-price').value = ''
-    document.querySelector('#edit-icon-cover').style = ''
     document.querySelector('#edit-image-cover').style = ''
     document.querySelector('#has-icon').value = 0
     document.querySelector('#has-image').value = 0
-    setClassListAdd('current-icon')
+    document.querySelector('#icon-image-show').src = '../assets/images/no_image_icon.svg'
+    document.querySelector('#icon-image-show-edit').src = '../assets/images/no_image_icon.svg'
+    current_icon_edit = ''
     setClassListAdd('current-image')
 }
 
@@ -116,6 +143,8 @@ function updateEditData(index) {
 
     setClassListAdd('to-meal-list')
     setClassListRemove('to-meal-edit')
+    loadFileIcon('#meal-icon-edit', meal.image_icon)
+    current_icon_edit = meal.image_icon
     setDataToEditForm(meal)
 }
 
@@ -124,11 +153,9 @@ function setDataToEditForm(meal) {
     document.querySelector('#edit-meal-detail').value = meal.description
     document.querySelector('#edit-meal-name').value = meal.name
     document.querySelector('#edit-meal-price').value = parseInt(meal.amount)
-    if(edit_data['icon'] !== '') {
-        document.querySelector('#current-icon').classList.remove('d-none')
-        document.querySelector('#edit-icon-cover').style = `background-image: url('..${meal.icon.path}/${meal.icon.name}'); width: 80px; height: 80px; min-width: 80px;`
-        document.querySelector('#has-icon').value = 1
-    }
+    document.querySelector('#edit-route-station').checked = meal.is_route_station === 'Y' ? true : false
+    document.querySelector('#edit-main-menu').checked = meal.is_main_menu === 'Y' ? true : false
+
     if(edit_data['image'] !== '') {
         document.querySelector('#current-image').classList.remove('d-none')
         document.querySelector('#edit-image-cover').style = `background-image: url('..${meal.image.path}/${meal.image.name}'); width: 80px; height: 80px; min-width: 80px;`

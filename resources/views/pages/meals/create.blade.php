@@ -31,15 +31,15 @@
                             <label class="col-sm-1 col-form-label-sm text-start pe-1">
                                 <img src="../assets/images/no_image_icon.svg" id="icon-image-show" width="22" height="22">
                             </label>
-                            <div class="col-sm-7 ps-0">
+                            <div class="col-sm-7 ps-0 pe-1">
                                 <select class="form-select form-select-sm" id="meal-icon" name="icon">
                                     <option value="" selected>-- No icon --</option>
                                 </select>
                             </div>
-                            <label class="col-sm-1 col-form-label-sm text-start ps-1">
-                                <a href="javascript:void(0)" class="text-dark" data-bs-toggle="modal" data-bs-target="#upload-icon">
-                                    <svg width="22px" height="22px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">  
-                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"></path>
+                            <label class="col-sm-1 col-form-label-sm text-end ps-1">
+                                <a href="javascript:void(0)" class="text-dark me-1" data-bs-toggle="modal" data-bs-target="#upload-icon" onClick="showIconList()">
+                                    <svg width="22px" height="22px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus-slash-minus" viewBox="0 0 16 16">  
+                                        <path d="m1.854 14.854 13-13a.5.5 0 0 0-.708-.708l-13 13a.5.5 0 0 0 .708.708ZM4 1a.5.5 0 0 1 .5.5v2h2a.5.5 0 0 1 0 1h-2v2a.5.5 0 0 1-1 0v-2h-2a.5.5 0 0 1 0-1h2v-2A.5.5 0 0 1 4 1Zm5 11a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5A.5.5 0 0 1 9 12Z"></path>
                                     </svg>
                                 </a>
                             </label>
@@ -95,13 +95,13 @@
                         <div class="bg-light p-4 rounded">
                             <p>View</p>
                             <div class="form-check ms-3 mb-3">
-                                <input class="form-check-input form-check-input-primary" type="checkbox" name="route_station" value="" id="route-station">
+                                <input class="form-check-input form-check-input-primary" type="checkbox" name="route_station" value="1" id="route-station">
                                 <label class="form-check-label" for="route-station">
                                     Route station
                                 </label>
                             </div>
                             <div class="form-check ms-3 mb-3">
-                                <input class="form-check-input form-check-input-primary" type="checkbox" name="main_menu" value="" id="main-menu">
+                                <input class="form-check-input form-check-input-primary" type="checkbox" name="main_menu" value="1" id="main-menu">
                                 <label class="form-check-label" for="main-menu">
                                     Main menu
                                 </label>

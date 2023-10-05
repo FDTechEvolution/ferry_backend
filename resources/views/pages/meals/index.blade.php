@@ -46,11 +46,8 @@
                         @foreach($meals as $index => $meal)
                             <tr class="text-center" id="meal-row-{{ $index }}">
                                 <td>
-                                    <div class="avatar avatar-md" 
-                                        style="background-image:url({{ $meal['image_icon_id'] == '' ? 
-                                                                        asset('assets/images/no_image_icon.svg') : 
-                                                                        asset($meal['icon']['path'].'/'.$meal['icon']['name'])
-                                                                    }})">
+                                    <div class="avatar avatar-md {{ !isset($meal['image_icon']) ? 'opacity-25' : 'opacity-100' }}" 
+                                        style="background-image:url({{ isset($meal['image_icon']) ? asset('assets/images/meal/icon/'.$meal['image_icon']) : asset('assets/images/no_image_icon.svg') }})">
                                     </div>
                                 </td>
                                 <td class="text-start" data-id="name">{{ $meal['name'] }}</td>
@@ -67,7 +64,6 @@
                                         :message="_('Are you sure? Delete '. $meal['name'] .'?')"
                                     />
                                 </td>
-                                <input type="hidden" data-id="icon" value="{{ $meal['image_icon_id'] != '' ? $meal['icon']['path'].'/'.$meal['icon']['name'] : '' }}">
                                 <input type="hidden" data-id="image" value="{{ $meal['image_id'] != '' ? $meal['image']['path'].'/'.$meal['image']['name'] : '' }}">
                                 <input type="hidden" data-id="description" value="{{ $meal['description'] }}"> 
                                 <input type="hidden" data-id="id" value="{{ $meal['id'] }}"> 

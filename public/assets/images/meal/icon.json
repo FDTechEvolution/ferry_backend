@@ -1,10 +1,17 @@
 [
     {
-    "name": "Pizza",
-    "path": "../assets/images/meal/icon/1695813280.svg"
+        "name": "Pizza",
+        "path": "../assets/images/meal/icon/",
+        "icon": "1696497021.svg"
     },
     {
         "name": "Hamberger",
-        "path": "../assets/images/meal/icon/1695883771.svg"
+        "path": "../assets/images/meal/icon/",
+        "icon": "1696497038.svg"
+    },
+    {
+        "name": "Chicken",
+        "path": "../assets/images/meal/icon/",
+        "icon": "1696497084.svg"
     }
 ]

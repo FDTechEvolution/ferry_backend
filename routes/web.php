@@ -9,6 +9,7 @@ use App\Http\Controllers\StationsController;
 use App\Http\Controllers\MealsController;
 use App\Http\Controllers\ActivitiesController;
 use App\Http\Controllers\StationInfomationsController;
+use App\Http\Controllers\RouteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,6 +87,10 @@ Route::middleware('auth')->group(function() {
 
     Route::controller(ActivitiesController::class)->group(function() {
         Route::get('/activity', 'index')->name('activity-index');
+    });
+
+    Route::controller(RouteController::class)->group(function() {
+        Route::get('/route-control', 'index')->name('route-index');
     });
 });
 

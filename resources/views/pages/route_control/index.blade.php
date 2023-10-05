@@ -3,7 +3,7 @@
 @section('page-title')
     <h1 class="ms-2 mb-0" id="meal-page-title"><span class="text-main-color-2">Route</span> control</h1>
     <x-button-green :type="_('button')" :text="_('Add')" class="ms-3 btn-sm w--10" id="btn-route-create" />
-    <div class="route-search">
+    <div class="route-search d-none">
         <div class="mb-3">
             <label for="station-from" class="form-label">Station From* </label>
             <input type="text" class="form-control" id="station-from">
@@ -23,10 +23,10 @@
 <div class="row mt-4">
 
     <div class="col-12">
-        <div id="to-meal-list">
+        <div id="to-route-list">
             <div class="card-body w--90 mx-auto">
                 <h1>Route control</h1>
-                <table class="table-datatable table table-datatable-custom" id="meals-datatable" 
+                <table class="table-datatable table table-datatable-custom" id="route-datatable" 
                     data-lng-empty="No data available in table"
                     data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
                     data-lng-filtered="(filtered from _MAX_ total entries)"
@@ -67,6 +67,10 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+
+        <div id="to-route-create">
+            @include('pages.route_control.create')
         </div>
     </div>
 

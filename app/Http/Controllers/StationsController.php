@@ -23,7 +23,7 @@ class StationsController extends Controller
 
     public function index()
     {
-        $stations = Station::where('status', 'CO')->orderBy('sort', 'ASC')->get();
+        $stations = Station::where('status', 'CO')->orderBy('section_id', 'ASC')->orderBy('sort', 'ASC')->get();
         $sections = Section::where('isactive', 'Y')->orderBy('created_at', 'DESC')->get();
         $info = StationInfomation::where('status', 'Y')->get();
         $status = $this->_Status;
@@ -35,7 +35,7 @@ class StationsController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
-            'pier' => 'string',
+            'pier' => 'string|nullable',
             'nickname' => 'required|string',
             'section' => 'required|string',
             'sort' => 'required|integer',
@@ -60,7 +60,7 @@ class StationsController extends Controller
         ]);
 
         if ($station)
-            return redirect()->route('stations-index')->withSuccess('Station created...');
+            return redirect()->route('stations-index')->withSuccess(sprintf('Create Station "%s"',$request->name));
         else
             return redirect()->route('stations-index')->withFail('Something is wrong. Please try again.');
     }

@@ -22,7 +22,9 @@ class MealsController extends Controller
 
     public function index() {
         $meals = Addon::where('type', $this->Type)->where('status', 'CO')->with('image')->get();
-        return view('pages.meals.index', ['meals' => $meals]);
+
+        $icons = IconController::getListIcon();
+        return view('pages.meals.index', ['meals' => $meals,'icons'=>$icons]);
     }
 
     public function store(Request $request) {

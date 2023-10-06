@@ -91,7 +91,7 @@
                                         @endforeach
                                     </div>
                                 </td>
-                                <td>{{ $route['regular_price'] }}</td>
+                                <td>{{ number_format($route['regular_price']) }}</td>
                                 <td>{!! $route_status[$route['isactive']] !!}</td>
                                 <td>
                                     <x-action-edit 

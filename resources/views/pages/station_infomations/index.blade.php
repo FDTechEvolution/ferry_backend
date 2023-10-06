@@ -37,7 +37,7 @@
                         <tr>
                             <th>Name</th>
                             <th class="text-center">Detail</th>
-                            <th class="text-center">Type</th>
+                            <th class="text-center">Status</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>

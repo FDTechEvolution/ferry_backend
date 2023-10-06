@@ -45,8 +45,12 @@ class RouteController extends Controller
 
     public function edit(string $id = null) {
         $route = Route::find($id);
+        $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
+        $icons = $route->icons;
 
-        return view('pages.route_control.edit', ['route' => $route]);
+        Log::debug($route->toArray());
+
+        return view('pages.route_control.edit', ['route' => $route, 'icons' => $icons, 'stations' => $stations]);
     }
 
     public function store(Request $request) {

@@ -44,7 +44,9 @@ class RouteController extends Controller
     }
 
     public function edit(string $id = null) {
-        
+        $route = Route::find($id);
+
+        return view('pages.route_control.edit', ['route' => $route]);
     }
 
     public function store(Request $request) {

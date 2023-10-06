@@ -51,42 +51,42 @@
                 >
                     <thead>
                         <tr>
-                            <th class="text-center" style="width: 60px;">Choose</th>
-                            <th class="text-center">Station From</th>
-                            <th class="text-center">Station To</th>
+                            <th class="text-center d-none" style="width: 60px;">Choose</th>
+                            <th class="text-start">Station From</th>
+                            <th class="text-start">Station To</th>
                             <th class="text-center">Depart</th>
                             <th class="text-center">Arrive</th>
-                            <th class="text-center">Icon</th>
+                            <th class="text-center" style="width: 120px;">Icon</th>
                             <th class="text-center">Price</th>
-                            <th class="text-center">Station</th>
+                            <th class="text-center">status</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($routes as $index => $route)
                             <tr class="text-center">
-                                <td>
+                                <td class="d-none">
                                     <input class="form-check-input form-check-input-primary" type="checkbox" value="" id="route-check-{{ $index }}">
                                 </td>
-                                <td style="line-height: 1.2rem;">
+                                <td class="text-start" style="line-height: 1.2rem;">
                                     {{ $route['station_from']['name'] }}
                                     @if($route['station_from']['piername'] != '')
                                         <small class="text-secondary fs-d-80">({{$route['station_from']['piername']}})</small>
                                     @endif
                                 </td>
-                                <td style="line-height: 1.2rem;">
+                                <td class="text-start" style="line-height: 1.2rem;">
                                     {{ $route['station_to']['name'] }}
                                     @if($route['station_to']['piername'] != '')
                                         <small class="text-secondary fs-d-80">({{$route['station_to']['piername']}})</small>
                                     @endif
                                 </td>
-                                <td>{{ $route['depart_time'] }}</td>
-                                <td>{{ $route['arrive_time'] }}</td>
-                                <td class="mx-auto">
-                                    <div class="row">
+                                <td>{{ date('H:i', strtotime($route['depart_time'])) }}</td>
+                                <td>{{ date('H:i', strtotime($route['arrive_time'])) }}</td>
+                                <td>
+                                    <div class="row mx-auto" style="justify-content: center;">
                                         @foreach($route['icons'] as $icon)
-                                        <div class="col-sm-4 px-0">
-                                            <img src="{{ $icon['path'] }}" width="24" height="24">
+                                        <div class="col-sm-4 px-0" style="max-width: 40px;">
+                                            <img src="{{ $icon['path'] }}" class="w-100">
                                         </div>
                                         @endforeach
                                     </div>

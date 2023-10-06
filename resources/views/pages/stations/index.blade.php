@@ -67,9 +67,9 @@
                     <thead>
                         <tr>
                             <th class="text-center w--5">Choose</th>
-                            <th class="text-center">Station Name</th>
-                            <th class="text-center">Station Pier</th>
-                            <th class="text-center">Nickname</th>
+                            <th class="text-start">Station Name</th>
+                            <th class="text-start">Station Pier</th>
+                            <th class="text-start">Nickname</th>
                             <th class="text-center">Sort</th>
                             <th class="text-center">Sections Group</th>
                             <th class="text-center">Status</th>
@@ -80,9 +80,9 @@
                         @foreach($stations as $index => $station)
                             <tr class="text-center" id="station-row-{{ $index }}">
                                 <td><input class="form-check-input form-check-input-primary station-check mt-2" type="checkbox" value=""></td>
-                                <td data-id="name">{{ $station['name'] }}</td>
-                                <td data-id="piername">{{ $station['piername'] }}</td>
-                                <td data-id="nickname">{{ $station['nickname'] }}</td>
+                                <td data-id="name" class="text-start">{{ $station['name'] }}</td>
+                                <td data-id="piername" class="text-start">{{ $station['piername'] }}</td>
+                                <td data-id="nickname" class="text-start">{{ $station['nickname'] }}</td>
                                 <td data-id="sort">{{ $station['sort'] }}</td>
                                 <td>{{ $station['section']['name'] }}</td>
                                 <td>{!! $status[$station['isactive']] !!}</td>

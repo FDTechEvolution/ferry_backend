@@ -43,8 +43,10 @@ class StationsController extends Controller
             'info_to' => 'string|nullable'
         ]);
 
+        /*
         if (!$this->checkStationName($request->name))
             return redirect()->route('stations-index')->withFail('Station name is exist. Please check.');
+        */
         if (!$this->checkNickname($request->nickname))
             return redirect()->route('stations-index')->withFail('Station nickname is exist. Please check.');
 

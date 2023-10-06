@@ -92,9 +92,11 @@ Route::middleware('auth')->group(function() {
     Route::controller(RouteController::class)->group(function() {
         Route::get('/route-control', 'index')->name('route-index');
         Route::get('/route-create', 'create')->name('route-create');
+        Route::get('/route-edit/{id}', 'edit')->name('route-edit');
         Route::get('/route-delete/{id}', 'destroy')->name('route-delete');
 
-        Route::post('/create-route', 'store')->name('route-update');
+        Route::post('/route-store', 'store')->name('route-store');
+        Route::post('/route-update', 'update')->name('route-update');
     });
 });
 

@@ -40,29 +40,71 @@ function updateEditData(index) {
 
 }
 
+let icon_position = []
+let icon_input = []
 function addRouteIcon(index) {
-    const ul = document.querySelector('.list-group-horizontal')
-    const active = document.querySelector(`#icon-active-${index}`)
-    let icon = icons.find((item, key) => { return key === index })
+    if(icon_input.length < 6) {
+        setClassListAdd('icon-notice')
+        document.querySelector('#dropdownIcons').disabled = false
+        const ul = document.querySelector('.list-group-horizontal')
+        const icon_list = document.querySelector('#route-add-icon')
+        let icon = icons.find((item, key) => { return key === index })
 
-    let li = document.createElement('li')
-    li.classList.add('list-group-item')
-    li.classList.add('bg-transparent')
-    li.classList.add('border-0')
-    li.id = `icon-active-on-${index}`
-    li.setAttribute('style', 'max-width: 100px;')
+        let rand = generateString(8)
+        icon_position.push(rand)
+        let li = document.createElement('li')
+        li.classList.add('list-group-item')
+        li.classList.add('bg-transparent')
+        li.classList.add('border-0')
+        li.classList.add('icon-active-on')
+        li.id = rand
+        li.setAttribute('style', 'max-width: 100px;')
 
-    li.innerHTML = `<img src="${icon.path}" class="w-100">`
-    ul.appendChild(li)
+        li.innerHTML = `<img src="${icon.path}" class="w-100">`
+        ul.appendChild(li)
 
-    active.classList.add('d-none')
+        let del = document.createElement('i')
+        del.classList.add('fi')
+        del.classList.add('fi-round-close')
+        del.classList.add('text-danger')
+        del.classList.add('cursor-pointer')
+        del.classList.add('icon-del-style')
 
-    let del = document.createElement('i')
-    del.classList.add('fi')
-    del.classList.add('fi-round-close')
-    del.classList.add('text-danger')
-    del.classList.add('icon-del-style')
+        del.setAttribute('onClick', `deleteIconSelected('${rand}', '${icon.id}')`)
+        li.appendChild(del)
 
-    del.setAttribute('onClick', `deleteIconSelected(${index})`)
-    li.appendChild(del)
+        icon_input.push(icon.id)
+        icon_list.value = icon_input
+    }
+    
+    if(icon_input.length >= 6) {
+        setClassListRemove('icon-notice')
+        document.querySelector('#dropdownIcons').disabled = true
+    }
+}
+
+function deleteIconSelected(rand, id) {
+    const icon_list = document.querySelector('#route-add-icon')
+    const icon_active = document.querySelectorAll('.icon-active-on')
+
+    icon_active.forEach((item, index) => {
+        if(item.id === rand) item.remove()
+    })
+
+    let _index = icon_input.findIndex(item => item === id)
+    icon_input.splice(_index, 1)
+    icon_list.value = icon_input
+    setClassListAdd('icon-notice')
+    document.querySelector('#dropdownIcons').disabled = false
+}
+
+const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+function generateString(length) {
+    let result = ' ';
+    const charactersLength = characters.length;
+    for ( let i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
 }

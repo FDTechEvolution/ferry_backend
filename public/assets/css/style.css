@@ -65,6 +65,11 @@ a.dt-button.dropdown-item.buttons-print {
     width: 90%;
 }
 
+/* Font size */
+.fs-d-80 {
+ font-size: 80%;
+}
+
 .button-green-bg {
     background-color: #00bf63;
     color: #fff;

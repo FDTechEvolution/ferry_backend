@@ -21,7 +21,7 @@
 @section('content')
 <div class="row mt-4">
     <div class="col-12">
-        <form novalidate class="bs-validate" id="route-create-form" method="POST" action="{{ route('route-create') }}">
+        <form novalidate class="bs-validate" id="route-create-form" method="POST" action="{{ route('route-store') }}">
             @csrf
             <fieldset id="route-create">
                 <div class="row bg-transparent mt-5">
@@ -89,7 +89,7 @@
 
                                 <div class="row mb-4">
                                     <div class="col-3">
-                                        <label for="icon" class="col-form-label-sm text-start fw-bold">Icon</label>
+                                        <label for="icon" class="col-form-label-sm text-start fw-bold">Icon <small class="text-danger d-none" id="icon-notice">MAX!</small></label>
                                         <div class="dropdown">
                                             <a class="btn btn-outline-dark btn-sm dropdown-toggle" href="#" role="button" id="dropdownIcons" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,6">
                                                 Select icon
@@ -120,7 +120,7 @@
                                         <label for="icon" class="col-form-label-sm text-start fw-bold"></label>
                                         <ul class="list-group list-group-horizontal">
                                         </ul>
-                                        <input type="hidden" name="icons[]" id="route-add-icon" value="">
+                                        <input type="hidden" name="icons" id="route-add-icon" value="">
                                     </div>
                                 </div>
 
@@ -202,7 +202,7 @@
                                 <x-button-submit-loading 
                                     class="btn-lg w--20 me-4 button-orange-bg"
                                     :form_id="_('route-create-form')"
-                                    :fieldset_id="_('route-update')"
+                                    :fieldset_id="_('route-create')"
                                     :text="_('Add')"
                                 />
                                 <a href="{{ route('route-index') }}" class="btn btn-secondary btn-lg w--20">Cancel</a>
@@ -215,6 +215,14 @@
         </form>
     </div>
 </div>
+
+<style>
+    .icon-del-style {
+        position: absolute;
+        right: 10px;
+        top: -5px;
+    }
+</style>
 @stop
 
 @section('script')

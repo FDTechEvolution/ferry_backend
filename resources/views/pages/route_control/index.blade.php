@@ -68,29 +68,36 @@
                                 <td>
                                     <input class="form-check-input form-check-input-primary" type="checkbox" value="" id="route-check-{{ $index }}">
                                 </td>
-                                <td>
+                                <td style="line-height: 1.2rem;">
                                     {{ $route['station_from']['name'] }}
                                     @if($route['station_from']['piername'] != '')
-                                        <small>({{$route['station_from']['piername']}})</small>
+                                        <small class="text-secondary fs-d-80">({{$route['station_from']['piername']}})</small>
                                     @endif
                                 </td>
-                                <td>
+                                <td style="line-height: 1.2rem;">
                                     {{ $route['station_to']['name'] }}
                                     @if($route['station_to']['piername'] != '')
-                                        <small>({{$route['station_to']['piername']}})</small>
+                                        <small class="text-secondary fs-d-80">({{$route['station_to']['piername']}})</small>
                                     @endif
                                 </td>
                                 <td>{{ $route['depart_time'] }}</td>
                                 <td>{{ $route['arrive_time'] }}</td>
-                                <td>icon</td>
+                                <td class="mx-auto">
+                                    <div class="row">
+                                        @foreach($route['icons'] as $icon)
+                                        <div class="col-sm-4 px-0">
+                                            <img src="{{ $icon['path'] }}" width="24" height="24">
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                </td>
                                 <td>{{ $route['regular_price'] }}</td>
                                 <td>{!! $route_status[$route['isactive']] !!}</td>
                                 <td>
                                     <x-action-edit 
                                         class="me-2"
-                                        :url="_('javascript:void(0)')"
+                                        :url="route('route-edit', ['id' => $route['id']])"
                                         id="btn-route-edit"
-                                        onClick="updateEditData({{ $index }})"
                                     />
                                     <x-action-delete 
                                         :url="route('route-delete', ['id' => $route['id']])"

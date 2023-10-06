@@ -31,4 +31,8 @@ class Route extends Model
     public function station_to() {
         return $this->hasOne(Station::class, 'id', 'station_to_id');
     }
+
+    public function icons() {
+        return $this->belongsToMany(Icon::class, 'route_icons', 'route_id', 'icon_id');
+    }
 }

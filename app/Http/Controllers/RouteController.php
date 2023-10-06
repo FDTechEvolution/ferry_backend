@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\Station;
 use App\Models\Route;
+use App\Models\RouteIcon;
 
 class RouteController extends Controller
 {
@@ -23,11 +24,9 @@ class RouteController extends Controller
     ];
 
     public function index() {
-        $routes = Route::with('station_from', 'station_to')->get();
+        $routes = Route::with('station_from', 'station_to', 'icons')->get();
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
-
-        // Log::debug($icons);
 
         $status = $this->_Status;
         return view('pages.route_control.index', 
@@ -42,6 +41,10 @@ class RouteController extends Controller
         return view('pages.route_control.create', 
                     ['stations' => $stations, 'icons' => $icons]
                 );
+    }
+
+    public function edit(string $id = null) {
+        
     }
 
     public function store(Request $request) {
@@ -62,8 +65,26 @@ class RouteController extends Controller
                     'isactive' => isset($request->status) ? 'Y' : 'N'
                 ]);
 
-        if($route) return redirect()->route('route-index')->withSuccess('Route created...');
-        else return redirect()->route('route-index')->withFail('Something is wrong. Please try again.');
+        if($route) {
+            $result = $this->routeIconStore($request->icons, $route->id);
+
+            if($result) return redirect()->route('route-index')->withSuccess('Route created...');
+            else return redirect()->route('route-index')->withFail('Something is wrong. Please try again.');
+        }
+    }
+
+    private function routeIconStore(string $icons = null, string $route_id = null) {
+        $_icons = preg_split('/\,/', $icons);
+
+        foreach($_icons as $index => $icon) {
+            RouteIcon::create([
+                'route_id' => $route_id,
+                'icon_id' => $icon,
+                'seq' => $index
+            ]);
+        }
+
+        return true;
     }
 
     public function destroy(string $id = null) {

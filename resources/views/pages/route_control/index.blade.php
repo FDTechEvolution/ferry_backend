@@ -2,7 +2,7 @@
 
 @section('page-title')
     <h1 class="ms-2 mb-0" id="route-page-title"><span class="text-main-color-2">Route</span> control</h1>
-    <x-button-green :type="_('button')" :text="_('Add')" class="ms-3 btn-sm w--10" id="btn-route-create" />
+    <a href="{{ route('route-create') }}" class="btn button-green-bg border-radius-10 ms-3 btn-sm w--10">Add</a>
     <div class="route-search d-none">
         <div class="mb-3">
             <label for="station-from" class="form-label">Station From* </label>
@@ -102,10 +102,6 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-
-        <div class="d-none" id="to-route-create">
-            @include('pages.route_control.create')
         </div>
     </div>
 

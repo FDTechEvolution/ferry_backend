@@ -35,6 +35,15 @@ class RouteController extends Controller
                 );
     }
 
+    public function create() {
+        $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
+        $icons = DB::table('icons')->where('type', $this->Type)->get();
+
+        return view('pages.route_control.create', 
+                    ['stations' => $stations, 'icons' => $icons]
+                );
+    }
+
     public function store(Request $request) {
         $request->validate([
             'station_from' => 'required|string|min:36|max:36',

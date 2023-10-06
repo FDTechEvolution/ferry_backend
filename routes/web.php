@@ -91,9 +91,10 @@ Route::middleware('auth')->group(function() {
 
     Route::controller(RouteController::class)->group(function() {
         Route::get('/route-control', 'index')->name('route-index');
+        Route::get('/route-create', 'create')->name('route-create');
         Route::get('/route-delete/{id}', 'destroy')->name('route-delete');
 
-        Route::post('/create-route', 'store')->name('route-create');
+        Route::post('/create-route', 'store')->name('route-update');
     });
 });
 

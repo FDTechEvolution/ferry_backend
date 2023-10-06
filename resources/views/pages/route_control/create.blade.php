@@ -1,6 +1,6 @@
-<form novalidate class="bs-validate" id="meal-create-form" method="POST" action="{{ route('meal-create') }}" enctype="multipart/form-data">
+<form novalidate class="bs-validate" id="route-create-form" method="POST" action="{{ route('route-create') }}">
     @csrf
-    <fieldset id="meal-create">
+    <fieldset id="route-create">
         <div class="row bg-transparent mt-5">
             <div class="col-sm-12 w-75 mx-auto">
 
@@ -11,16 +11,22 @@
                         <div class="mb-4 w-75 row">
                             <label class="col-sm-3 col-form-label-sm text-start fw-bold">Station From* :</label>
                             <div class="col-sm-9">
-                                <select class="form-select form-select-sm" name="station_from">
+                                <select required class="form-select form-select-sm" name="station_from">
                                     <option value="">--- Choose ---</option>
+                                    @foreach($stations as $station)
+                                        <option value="{{ $station['id'] }}">{{ $station['name'] }} @if($station['piername'] != '') [ {{ $station['piername'] }} ] @endif</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
                         <div class="mb-4 w-75 row">
                             <label class="col-sm-3 col-form-label-sm text-start fw-bold">Station To* :</label>
                             <div class="col-sm-9">
-                                <select class="form-select form-select-sm" name="station_to">
+                                <select required class="form-select form-select-sm" name="station_to">
                                     <option value="">--- Choose ---</option>
+                                    @foreach($stations as $station)
+                                        <option value="{{ $station['id'] }}">{{ $station['name'] }} @if($station['piername'] != '') [{{ $station['piername'] }}] @endif</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -30,25 +36,11 @@
                         <div class="mb-2 row">
                             <div class="col-2">
                                 <label class="col-form-label-sm text-start fw-bold">Depart Time</label>
-                                <input type="text" name="depart_time" class="form-control form-control-sm datepicker"
-                                    data-show-weeks="true"
-                                    data-today-highlight="true"
-                                    data-today-btn="true"
-                                    data-clear-btn="false"
-                                    data-autoclose="true"
-                                    data-date-start="today"
-                                    data-format="MM/DD/YYYY">
+                                <input type="time" name="depart_time" class="form-control form-control-sm">
                             </div>
                             <div class="col-2">
                                 <label class="col-form-label-sm text-start fw-bold">Arrive Time</label>
-                                <input type="text" name="arrive_time" class="form-control form-control-sm datepicker"
-                                    data-show-weeks="true"
-                                    data-today-highlight="true"
-                                    data-today-btn="true"
-                                    data-clear-btn="false"
-                                    data-autoclose="true"
-                                    data-date-start="today"
-                                    data-format="MM/DD/YYYY">
+                                <input type="time" name="arrive_time" class="form-control form-control-sm">
                             </div>
                             <div class="col-2">
                                 <label for="regular-price" class="col-form-label-sm text-start fw-bold">Regular Price</label>
@@ -72,18 +64,126 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row mb-4">
                             <div class="col-3">
                                 <label for="icon" class="col-form-label-sm text-start fw-bold">Icon</label>
-                                <select class="form-control form-control-sm" id="icon" name="icon">
-                                    
-                                </select>
+                                <div class="dropdown">
+                                    <a class="btn btn-outline-dark btn-sm dropdown-toggle" href="#" role="button" id="dropdownIcons" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,6">
+                                        Select icon
+                                        <span class="group-icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                            </svg>
+                                        </span>
+                                    </a>
+
+                                    <ul class="dropdown-menu shadow-lg p-1" aria-labelledby="dropdownIcons">
+                                        @foreach($icons as $index => $icon)
+                                            <li id="icon-active-{{ $index }}">
+                                                <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteIcon({{ $index }})">
+                                                    <img src="{{ asset($icon->path) }}" class="me-2" width="24" height="24">
+                                                    <span>{{ $icon->name }}</span>
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             </div>
                             <div class="col-9 show-icon">
                                 <label for="icon" class="col-form-label-sm text-start fw-bold"></label>
-                                <p class="mt-4">Show icon....</p>
+                                <ul class="list-group list-group-horizontal">
+                                </ul>
+                                <input type="hidden" name="icons[]" id="route-add-icon" value="">
                             </div>
                         </div>
+
+                        <div class="row mb-4">
+                            <div class="col-4">
+                                <label class="d-flex align-items-center mb-1">
+                                    <span class="user-select-none fw-bold me-2">Master From </span>
+                                    <input class="d-none-cloaked" type="checkbox" name="master_from_on" value="1">
+                                    <i class="switch-icon switch-icon-primary switch-icon-xs"></i>
+                                    <span class="ms-1 user-select-none">Off</span>
+                                </label>
+                                <select class="form-select" size="4" name="manter_from" aria-label="size 3 select example">
+                                    <option selected>Open this select menu</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                </select>
+                            </div>
+
+                            <div class="col-4">
+                                <label class="d-flex align-items-center mb-1">
+                                    <span class="user-select-none fw-bold me-2">Master To </span>
+                                    <input class="d-none-cloaked" type="checkbox" name="master_to_on" value="1">
+                                    <i class="switch-icon switch-icon-primary switch-icon-xs"></i>
+                                    <span class="ms-1 user-select-none">Off</span>
+                                </label>
+                                <select class="form-select" size="4" name="master_to" aria-label="size 3 select example">
+                                    <option selected>Open this select menu</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-4">
+                                <label class="d-flex align-items-center mb-1 fw-bold">
+                                    Infomation From 
+                                    <i class="fi fi-round-plus text-main-color-2 ms-2"></i>
+                                    <i class="fi fi-round-close text-main-color-2 ms-2"></i>
+                                </label>
+                                <select class="form-select" size="4" name="info_from" aria-label="size 3 select example">
+                                    <option selected>Open this select menu</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                </select>
+                            </div>
+
+                            <div class="col-4">
+                                <label class="d-flex align-items-center mb-1 fw-bold">
+                                    Infomation To 
+                                    <i class="fi fi-round-plus text-main-color-2 ms-2"></i>
+                                    <i class="fi fi-round-close text-main-color-2 ms-2"></i>
+                                </label>
+                                <select class="form-select" size="4" name="info_to" aria-label="size 3 select example">
+                                    <option selected>Open this select menu</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <label class="col-sm-2 text-start fw-bold">Status :</label>
+                            <div class="col-sm-2">
+                                <label class="d-flex align-items-center mb-3">
+                                    <input class="d-none-cloaked" type="checkbox" name="status" value="1" checked>
+                                    <i class="switch-icon switch-icon-primary"></i>
+                                    <span class="px-3 user-select-none">On</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mt-4">
+                        <x-button-submit-loading 
+                            class="btn-lg w--20 me-4 button-orange-bg"
+                            :form_id="_('route-create-form')"
+                            :fieldset_id="_('route-created')"
+                            :text="_('Add')"
+                        />
+                        <button type="button" class="btn btn-secondary btn-lg w--20" id="btn-cancel-create">Cancel</button>
+                        <small id="user-create-error-notice" class="text-danger mt-3"></small>
                     </div>
                 </div>
             </div>

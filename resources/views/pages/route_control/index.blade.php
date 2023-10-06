@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('page-title')
-    <h1 class="ms-2 mb-0" id="meal-page-title"><span class="text-main-color-2">Route</span> control</h1>
+    <h1 class="ms-2 mb-0" id="route-page-title"><span class="text-main-color-2">Route</span> control</h1>
     <x-button-green :type="_('button')" :text="_('Add')" class="ms-3 btn-sm w--10" id="btn-route-create" />
     <div class="route-search d-none">
         <div class="mb-3">
@@ -51,7 +51,7 @@
                 >
                     <thead>
                         <tr>
-                            <th class="text-center w--15">Choose</th>
+                            <th class="text-center" style="width: 60px;">Choose</th>
                             <th class="text-center">Station From</th>
                             <th class="text-center">Station To</th>
                             <th class="text-center">Depart</th>
@@ -63,16 +63,58 @@
                         </tr>
                     </thead>
                     <tbody>
-
+                        @foreach($routes as $index => $route)
+                            <tr class="text-center">
+                                <td>
+                                    <input class="form-check-input form-check-input-primary" type="checkbox" value="" id="route-check-{{ $index }}">
+                                </td>
+                                <td>
+                                    {{ $route['station_from']['name'] }}
+                                    @if($route['station_from']['piername'] != '')
+                                        <small>({{$route['station_from']['piername']}})</small>
+                                    @endif
+                                </td>
+                                <td>
+                                    {{ $route['station_to']['name'] }}
+                                    @if($route['station_to']['piername'] != '')
+                                        <small>({{$route['station_to']['piername']}})</small>
+                                    @endif
+                                </td>
+                                <td>{{ $route['depart_time'] }}</td>
+                                <td>{{ $route['arrive_time'] }}</td>
+                                <td>icon</td>
+                                <td>{{ $route['regular_price'] }}</td>
+                                <td>{!! $route_status[$route['isactive']] !!}</td>
+                                <td>
+                                    <x-action-edit 
+                                        class="me-2"
+                                        :url="_('javascript:void(0)')"
+                                        id="btn-route-edit"
+                                        onClick="updateEditData({{ $index }})"
+                                    />
+                                    <x-action-delete 
+                                        :url="route('route-delete', ['id' => $route['id']])"
+                                        :message="_('Are you sure? Delete this route ?')"
+                                    />
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <div id="to-route-create">
+        <div class="d-none" id="to-route-create">
             @include('pages.route_control.create')
         </div>
     </div>
 
 </div>
+@stop
+
+@section('script')
+<script>
+    const icons = {{ Js::from($icons) }}
+</script>
+<script src="{{ asset('assets/js/app/route_control.js') }}"></script>
 @stop

@@ -14,16 +14,16 @@
                             </div>
                         </div>
 
-                        <div class="mb-3 row">
+                        <!-- <div class="mb-3 row">
                             <label for="edit-station-info-type" class="col-sm-2 col-form-label-sm text-start">Type* :</label>
                             <div class="col-sm-8">
-                                <select required class="form-select form-select-sm" id="edit-station-info-type" name="type">
+                                <select class="form-select form-select-sm" id="edit-station-info-type" name="type">
                                     <option value="" selected disabled>-- Select --</option>
                                     <option value="from">Master Info From</option>
                                     <option value="to">Master Info To</option>
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="mb-3 row">
                             <label class="col-sm-2 col-form-label-sm text-start">Detail* :</label>

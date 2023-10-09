@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Station;
 use App\Models\Section;
 use App\Models\StationInfomation;
+use App\Models\StationInfoLine;
 
 class StationsController extends Controller
 {
@@ -31,6 +32,24 @@ class StationsController extends Controller
         return view('pages.stations.index', ['stations' => $stations, 'sections' => $sections, 'status' => $status, 'info' => $info]);
     }
 
+    public function create() {
+        $sections = Section::where('isactive', 'Y')->orderBy('created_at', 'DESC')->get();
+        $info = StationInfomation::where('status', 'Y')->get();
+
+        return view('pages.stations.create', ['sections' => $sections, 'info' => $info]);
+    }
+
+    public function edit(string $id = null) {
+        $station = Station::find($id);
+        $station->info_line;
+        $sections = Section::where('isactive', 'Y')->orderBy('created_at', 'DESC')->get();
+        $info = StationInfomation::where('status', 'Y')->get();
+
+        Log::debug($station->toArray());
+
+        return view('pages.stations.edit', ['station' => $station, 'sections' => $sections, 'info' => $info]);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -38,9 +57,7 @@ class StationsController extends Controller
             'pier' => 'string|nullable',
             'nickname' => 'required|string',
             'section' => 'required|string',
-            'sort' => 'required|integer',
-            'info_from' => 'string|nullable',
-            'info_to' => 'string|nullable'
+            'sort' => 'required|integer'
         ]);
 
         /*
@@ -56,15 +73,28 @@ class StationsController extends Controller
             'nickname' => $request->nickname,
             'isactive' => isset($request->isactive) ? 'Y' : 'N',
             'section_id' => $request->section,
-            'station_infomation_from_id' => $request->info_from,
-            'station_infomation_to_id' => $request->info_to,
             'sort' => $request->sort
         ]);
 
-        if ($station)
+        if ($station) {
+            if($request->station_info_from_list != '') $this->storeInfoLine($station->id, $request->station_info_from_list, 'from');
+            if($request->station_info_to_list != '') $this->storeInfoLine($station->id, $request->station_info_to_list, 'to');
             return redirect()->route('stations-index')->withSuccess(sprintf('Create Station "%s"',$request->name));
+        }
         else
             return redirect()->route('stations-index')->withFail('Something is wrong. Please try again.');
+    }
+
+    private function storeInfoLine(string $station_id = null, string $info = null, string $type = null) {
+        $_info = preg_split('/\,/', $info);
+
+        foreach($_info as $item) {
+            StationInfoLine::create([
+                'station_id' => $station_id,
+                'station_infomation_id' => $item,
+                'type' => $type
+            ]);
+        }
     }
 
     private function checkStationName(string $name = null, string $station_id = null)

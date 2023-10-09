@@ -25,16 +25,24 @@ class StationInfomationsController extends Controller
 
     public function index() {
         $info = StationInfomation::where('status', 'Y')->get();
-        $info_type = $this->InfoType;
         $info_status = $this->_Status;
 
-        return view('pages.station_infomations.index', ['s_info' => $info, 'info_type' => $info_type, 'info_status' => $info_status]);
+        return view('pages.station_infomations.index', ['s_info' => $info, 'info_status' => $info_status]);
+    }
+
+    public function create() {
+        return view('pages.station_infomations.create');
+    }
+
+    public function edit(string $id = null) {
+        $info = StationInfomation::find($id);
+
+        return view('pages.station_infomations.edit', ['info' => $info]);
     }
 
     public function store(Request $request) {
         $request->validate([
             'name' => 'required|string',
-            'type' => 'required|string',
             'detail' => 'required'
         ]);
         
@@ -42,7 +50,6 @@ class StationInfomationsController extends Controller
 
         $info = StationInfomation::create([
             'name' => $request->name,
-            'type' => $request->type,
             'text' => $request->detail
         ]);
 

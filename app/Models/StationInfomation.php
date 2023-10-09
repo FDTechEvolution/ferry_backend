@@ -13,8 +13,7 @@ class StationInfomation extends Model
     protected $fillable = [
         'name',
         'text',
-        'status',
-        'type'
+        'isactive'
     ];
 
     protected $hidden = [

@@ -28,4 +28,9 @@ class Station extends Model
     public function section() {
         return $this->hasOne(Section::class, 'id', 'section_id');
     }
+
+    public function info_line() {
+        return $this->belongsToMany(StationInfomation::class, 'station_info_lines', 'station_id', 'station_infomation_id')
+                    ->withPivot('type');
+    }
 }

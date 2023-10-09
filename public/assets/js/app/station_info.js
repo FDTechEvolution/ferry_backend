@@ -70,9 +70,9 @@ function updateStationInfoEditData(index) {
     let info = s_info.find((item, key) => { return index === key })
 
     document.querySelector('#edit-station-info-name').value = info.name
-    let type = document.querySelector('#edit-station-info-type')
-    type.value = info.type
-    type.options[type.selectedIndex].defaultSelected = true
+    // let type = document.querySelector('#edit-station-info-type')
+    // type.value = info.type
+    // type.options[type.selectedIndex].defaultSelected = true
     // document.querySelector('#station-info-edit-detail').innerHTML = info.text
     document.querySelector('#station-info-edit-id').value = info.id
 

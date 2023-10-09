@@ -91,7 +91,7 @@
                                     <div class="col-3">
                                         <label for="icon" class="col-form-label-sm text-start fw-bold">Icon <small class="text-danger d-none" id="icon-notice">MAX!</small></label>
                                         <div class="dropdown">
-                                            <a class="btn btn-outline-dark btn-sm dropdown-toggle" href="#" role="button" id="dropdownIcons" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,6">
+                                            <a class="btn btn-outline-dark btn-sm dropdown-toggle w-100" href="#" role="button" id="dropdownIcons" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,6">
                                                 Select icon
                                                 <span class="group-icon">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -104,7 +104,7 @@
                                                 </span>
                                             </a>
 
-                                            <ul class="dropdown-menu shadow-lg p-1" aria-labelledby="dropdownIcons">
+                                            <ul class="dropdown-menu shadow-lg p-1 w-100" aria-labelledby="dropdownIcons">
                                                 @foreach($icons as $index => $icon)
                                                     <li id="icon-active-{{ $index }}">
                                                         <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteIcon({{ $index }})">

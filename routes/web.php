@@ -56,7 +56,10 @@ Route::middleware('auth')->group(function() {
     Route::controller(StationsController::class)->group(function() {
         Route::get('/stations', 'index')->name('stations-index');
         Route::get('/delete-station/{id}', 'destroy')->name('station-delete');
-        Route::post('/create-station', 'store')->name('station-create');
+        Route::get('/create-station', 'create')->name('create-station');
+        Route::get('/edit-station/{id}', 'edit')->name('edit-station');
+
+        Route::post('/station-create', 'store')->name('station-create');
         Route::post('/update-station', 'update')->name('station-update');
 
         // section
@@ -67,9 +70,11 @@ Route::middleware('auth')->group(function() {
 
     Route::controller(StationInfomationsController::class)->group(function() {
         Route::get('/stations-info', 'index')->name('stations-info-index');
+        Route::get('/create-station-info', 'create')->name('create-station-info');
+        Route::get('/edit-station-info/{id}', 'edit')->name('edit-station-info');
         Route::get('/delete-station-info/{id}', 'destroy')->name('station-info-delete');
 
-        Route::post('/create-station-info', 'store')->name('station-info-create');
+        Route::post('/station-info-create', 'store')->name('station-info-create');
         Route::post('/update-station-info', 'update')->name('station-info-update');
     });
 

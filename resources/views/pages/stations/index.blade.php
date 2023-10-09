@@ -2,7 +2,7 @@
 
 @section('page-title')
     <h1 class="ms-2 mb-0" id="station-page-title"><span class="text-main-color-2">Station</span> manager</h1>
-    <x-button-green :type="_('button')" :text="_('Add')" class="ms-3 btn-sm w--10" id="btn-station-create" />
+    <x-a-href-green :text="_('Add')" :href="route('create-station')" :target="_('_self')" class="ms-3 btn-sm w--10" />
     <x-button-orange :type="_('button')" :text="_('Edit')" class="ms-3 btn-sm w--10" id="btn-station-edit"/>
     <x-button-green :type="_('button')" :text="_('Add Section')" class="ms-3 btn-sm w--15" id="btn-section-create" />
     <x-button-orange :type="_('button')" :text="_('Manage Section')" class="ms-3 btn-sm w--15" id="btn-section-manage" />
@@ -92,9 +92,8 @@
                                     <input type="hidden" id="station-status-{{ $index }}" value="{{ $station['isactive'] }}">
                                     <x-action-edit 
                                         class="me-2"
-                                        :url="_('javascript:void(0)')"
+                                        :url="route('edit-station', ['id' => $station['id']])"
                                         id="btn-station-edit"
-                                        onClick="updateStationEditData({{ $index }})"
                                     />
                                     <x-action-delete 
                                         :url="route('station-delete', ['id' => $station['id']])"
@@ -106,12 +105,6 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-        <div id="to-station-create" class="m-auto d-none">
-            @include('pages.stations.create')
-        </div>
-        <div id="to-station-edit" class="m-auto d-none">
-            @include('pages.stations.edit')
         </div>
         <div id="to-section-create" class="m-auto d-none">
             @include('pages.stations.section_create')

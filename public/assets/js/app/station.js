@@ -18,6 +18,9 @@ const station_list = document.querySelector('#to-station-list')
 const station_create = document.querySelector('#to-station-create')
 const section_create = document.querySelector('#to-section-create')
 
+const info_icon = 'fi fi-squared-info'
+const remove_icon = 'fi fi-round-close'
+
 const station_title = document.querySelector('#station-page-title')
 let edit_data = []
 let info_from_id = ''
@@ -90,13 +93,6 @@ if(btn_station_cancel_edit) {
         setClassListRemove('btn-section-create')
         setClassListRemove('btn-section-manage')
         station_title.innerHTML = `<span class="text-main-color-2">Station</span> manage`
-    })
-}
-
-if(master_info_from) {
-    master_info_from.addEventListener('change', (e) => {
-        info_from_id = e.target.value
-        setMasterInfo(info_from_id, 'from-info-text', 'from')
     })
 }
 
@@ -255,4 +251,135 @@ function updateStationEditData(index) {
     let sort = document.querySelector('#edit-station-sort')
     sort.value = station.sort
     sort.options[sort.selectedIndex].defaultSelected = true
+}
+
+const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+function generateString(length) {
+    let result = ' ';
+    const charactersLength = characters.length;
+    for ( let i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+}
+
+// Add / Remove Master Info From
+const input_info_from_list = document.querySelector('#input-station-info-from-list')
+let info_from_value = []
+function addMasterInfoFrom(index) {
+    const info_from_list = document.querySelector('#station-info-from-list')
+    let _info = station_info.find((item, key) => { return key === index })
+    let rand = generateString(8)
+    let li = document.createElement('li')
+    li.classList.add('info-from-active-on')
+    li.id = rand
+    li.innerHTML = `${_info.name} 
+                    <i class="${info_icon} ms-2 text-primary cursor-pointer" title="View" onClick="viewInfo('${_info.id}', 'from')"></i>
+                    <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoFrom('${rand}', ${index}, '${_info.id}')"></i>`
+    info_from_list.appendChild(li)
+
+    info_from_value.push(_info.id)
+    input_info_from_list.value = info_from_value
+    document.querySelector(`#info-from-active-${index}`).classList.add('d-none')
+    if(info_from_value.length > 0) info_from_list.classList.remove('d-none')
+}
+function removeInfoFrom(rand, index, id) {
+    const info_from_list = document.querySelector('#station-info-from-list')
+    const info_active = document.querySelectorAll('.info-from-active-on')
+
+    let _index = info_from_value.findIndex(item => item === id)
+    info_from_value.splice(_index, 1)
+    input_info_from_list.value = info_from_value
+
+    info_active.forEach((item, index) => {
+        if(item.id === rand) item.remove()
+    })
+    document.querySelector(`#info-from-active-${index}`).classList.remove('d-none')
+    if(info_from_value.length <= 0) info_from_list.classList.add('d-none')
+}
+
+
+
+// Add / Remove Master Info To
+const input_info_to_list = document.querySelector('#input-station-info-to-list')
+let info_to_value = []
+function addMasterInfoTo(index) {
+    const info_to_list = document.querySelector('#station-info-to-list')
+    let _info = station_info.find((item, key) => { return key === index })
+    let rand = generateString(8)
+    let li = document.createElement('li')
+    li.classList.add('info-to-active-on')
+    li.id = rand
+    li.innerHTML = `${_info.name} 
+                    <i class="${info_icon} ms-2 text-primary cursor-pointer" title="View" onClick="viewInfo('${_info.id}', 'to')"></i>
+                    <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoTo('${rand}', ${index}, '${_info.id}')"></i>`
+                    info_to_list.appendChild(li)
+
+    info_to_value.push(_info.id)
+    input_info_to_list.value = info_to_value
+    document.querySelector(`#info-to-active-${index}`).classList.add('d-none')
+    if(info_to_value.length > 0) info_to_list.classList.remove('d-none')
+}
+function removeInfoTo(rand, index, id) {
+    const info_to_list = document.querySelector('#station-info-to-list')
+    const info_active = document.querySelectorAll('.info-to-active-on')
+
+    let _index = info_to_value.findIndex(item => item === id)
+    info_to_value.splice(_index, 1)
+    input_info_to_list.value = info_to_value
+
+    info_active.forEach((item, index) => {
+        if(item.id === rand) item.remove()
+    })
+    document.querySelector(`#info-to-active-${index}`).classList.remove('d-none')
+    if(info_to_value.length <= 0) info_to_list.classList.add('d-none')
+}
+
+
+// View Info
+
+function viewInfo(info_id, type) {
+    let _info = station_info.find((item, index) => { return item.id === info_id })
+    let info_type = type === 'to' ? 'Master Info To : ' : 'Master Info From : '
+
+    document.querySelector('#station-info-modal-title').innerHTML = `<strong>${info_type}</strong> ${_info.name}`
+    document.querySelector('#station-info-modal-content').innerHTML = _info.text
+    $('#modal-station-info').modal('show')
+}
+
+
+function setMasterInfo() {
+    const info_from_list = document.querySelector('#station-info-from-list')
+    const info_to_list = document.querySelector('#station-info-to-list')
+    
+    info_lines.forEach((_info, index) => {
+        let rand = generateString(8)
+        let li = document.createElement('li')
+
+        if(_info.pivot.type === 'from') {
+            info_from_list.classList.remove('d-none')
+            li.classList.add('info-from-active-on')
+            li.id = rand
+            li.innerHTML = `${_info.name}
+                            <i class="${info_icon} ms-2 text-primary cursor-pointer" title="View" onClick="viewInfo('${_info.id}', 'from')"></i>
+                            <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoFrom('${rand}', ${index}, '${_info.id}')"></i>`
+            info_from_list.appendChild(li)
+
+            info_from_value.push(_info.id)
+            input_info_from_list.value = info_from_value
+        }
+        if(_info.pivot.type === 'to') {
+            info_to_list.classList.remove('d-none')
+            li.classList.add('info-to-active-on')
+            li.id = rand
+            li.innerHTML = `${_info.name}
+                            <i class="${info_icon} ms-2 text-primary cursor-pointer" title="View" onClick="viewInfo('${_info.id}', 'to')"></i>
+                            <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoTo('${rand}', ${index}, '${_info.id}')"></i>`
+            info_to_list.appendChild(li)
+
+            info_to_value.push(_info.id)
+            input_info_to_list.value = info_to_value
+        }
+    })
 }

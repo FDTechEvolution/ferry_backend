@@ -53,7 +53,7 @@
                                         </svg>
                                     </a>
                                 </td>
-                                <td>{!! $info_status[$info['status']] !!}</td>
+                                <td>{!! $info_status[$info['isactive']] !!}</td>
                                 <td>
                                     <x-action-edit 
                                         class="me-2"

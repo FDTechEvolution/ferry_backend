@@ -332,6 +332,7 @@ function removeInfoTo(rand, index, id) {
     info_active.forEach((item, index) => {
         if(item.id === rand) item.remove()
     })
+    // console.log(index)
     document.querySelector(`#info-to-active-${index}`).classList.remove('d-none')
     if(info_to_value.length <= 0) info_to_list.classList.add('d-none')
 }
@@ -358,6 +359,7 @@ function setMasterInfo() {
         let li = document.createElement('li')
 
         if(_info.pivot.type === 'from') {
+            clearInfoDropdown('ul-dropdown-info-from', _info.name)
             info_from_list.classList.remove('d-none')
             li.classList.add('info-from-active-on')
             li.id = rand
@@ -370,6 +372,7 @@ function setMasterInfo() {
             input_info_from_list.value = info_from_value
         }
         if(_info.pivot.type === 'to') {
+            clearInfoDropdown('ul-dropdown-info-to', _info.name)
             info_to_list.classList.remove('d-none')
             li.classList.add('info-to-active-on')
             li.id = rand
@@ -381,5 +384,14 @@ function setMasterInfo() {
             info_to_value.push(_info.id)
             input_info_to_list.value = info_to_value
         }
+    })
+}
+
+function clearInfoDropdown(element_id, _name) {
+    const ul = document.querySelector(`#${element_id}`)
+    let _li = ul.querySelectorAll('li')
+    _li.forEach((item) => {
+        let name = item.innerText.replace(/^\s+|\s+$/gm,'')
+        if(name === _name) item.classList.add('d-none')
     })
 }

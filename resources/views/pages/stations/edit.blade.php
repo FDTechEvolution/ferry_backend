@@ -17,25 +17,25 @@
                         <div class="row">
                             <div class="col-6 px-4 border-end">
                                 <div class="mb-3 row">
-                                    <label for="station-name" class="col-sm-4 col-form-label-sm text-start">Station Name* :</label>
+                                    <label class="col-sm-4 col-form-label-sm text-start">Station Name* :</label>
                                     <div class="col-sm-8">
                                         <input type="text" required class="form-control form-control-sm" id="edit-station-name" name="name" value="{{ $station['name'] }}">
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label for="station-pier" class="col-sm-4 col-form-label-sm text-start">Station Pier :</label>
+                                    <label class="col-sm-4 col-form-label-sm text-start">Station Pier :</label>
                                     <div class="col-sm-8">
                                         <input type="text" class="form-control form-control-sm" id="edit-station-pier" name="pier" value="{{ $station['piername'] }}">
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label for="station-nickname" class="col-sm-4 col-form-label-sm text-start">Station Nickname* :</label>
+                                    <label class="col-sm-4 col-form-label-sm text-start">Station Nickname* :</label>
                                     <div class="col-sm-5">
                                         <input type="text" required class="form-control form-control-sm" id="edit-station-nickname" name="nickname" value="{{ $station['nickname'] }}">
                                     </div>
                                 </div>
                                 <div class="mb-4 row">
-                                    <label for="edit-station-info-from" class="col-sm-4 col-form-label-sm text-start">Master Info From :</label>
+                                    <label class="col-sm-4 col-form-label-sm text-start">Master Info From :</label>
                                     <div class="col-sm-8">
                                         <div class="dropdown">
                                             <a class="btn btn-outline-dark btn-sm dropdown-toggle w-100" href="#" role="button" id="dropdownInfoFrom" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,6">
@@ -51,7 +51,7 @@
                                                 </span>
                                             </a>
 
-                                            <ul class="dropdown-menu shadow-lg p-1 w-100" aria-labelledby="dropdownInfoFrom">
+                                            <ul class="dropdown-menu shadow-lg p-1 w-100" id="ul-dropdown-info-from" aria-labelledby="dropdownInfoFrom">
                                                 @foreach($info as $index => $item)
                                                     <li id="info-from-active-{{ $index }}">
                                                         <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addMasterInfoFrom({{ $index }})">
@@ -67,7 +67,7 @@
                                     <input type="hidden" name="station_info_from_list" id="input-station-info-from-list">
                                 </div>
                                 <div class="mb-4 row">
-                                    <label for="edit-station-info-to" class="col-sm-4 col-form-label-sm text-start">Master Info To :</label>
+                                    <label class="col-sm-4 col-form-label-sm text-start">Master Info To :</label>
                                     <div class="col-sm-8">
                                         <div class="dropdown">
                                             <a class="btn btn-outline-dark btn-sm dropdown-toggle w-100" href="#" role="button" id="dropdownInfoTo" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,6">
@@ -83,7 +83,7 @@
                                                 </span>
                                             </a>
 
-                                            <ul class="dropdown-menu shadow-lg p-1 w-100" aria-labelledby="dropdownInfoTo">
+                                            <ul class="dropdown-menu shadow-lg p-1 w-100" id="ul-dropdown-info-to" aria-labelledby="dropdownInfoTo">
                                                 @foreach($info as $index => $item)
                                                     <li id="info-to-active-{{ $index }}">
                                                         <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addMasterInfoTo({{ $index }})">
@@ -99,7 +99,7 @@
                                     <input type="hidden" name="station_info_to_list" id="input-station-info-to-list">
                                 </div>
                                 <div class="mb-4 row">
-                                    <label for="station-shuttle-bus" class="col-sm-4 col-form-label-sm text-start">
+                                    <label class="col-sm-4 col-form-label-sm text-start">
                                         Shuttle bus :
                                         <label class="d-flex align-items-center mb-2">
                                             <input class="d-none-cloaked" type="checkbox" id="station-shuttle-bus-status" name="shuttle_status" value="1" checked>
@@ -114,7 +114,7 @@
                                     </div>
                                 </div>
                                 <div class="mb-4 row">
-                                    <label for="station-longtail-boat" class="col-sm-4 col-form-label-sm text-start">
+                                    <label class="col-sm-4 col-form-label-sm text-start">
                                         Longtail boat :
                                         <label class="d-flex align-items-center mb-2">
                                             <input class="d-none-cloaked" type="checkbox" id="station-longtail-boat-status" name="longtail_status" value="1" checked>
@@ -142,7 +142,7 @@
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label for="station-sort" class="col-sm-4 col-form-label-sm text-start">Section* :</label>
+                                    <label class="col-sm-4 col-form-label-sm text-start">Section* :</label>
                                     <div class="col-sm-8">
                                         <select required class="form-select form-select-sm" id="edit-station-section" name="section">
                                             <option value="" disabled>-- Select --</option>
@@ -153,7 +153,7 @@
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label for="station-sort" class="col-sm-4 col-form-label-sm text-start">Sort* :</label>
+                                    <label class="col-sm-4 col-form-label-sm text-start">Sort* :</label>
                                     <div class="col-sm-8">
                                         <select required class="form-select form-select-sm" id="edit-station-sort" name="sort">
                                             <option value="" disabled>-- Select --</option>

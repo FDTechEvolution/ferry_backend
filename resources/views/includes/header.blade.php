@@ -23,7 +23,7 @@
 
       <!-- logo : mobile only -->
       <a class="navbar-brand d-inline-block d-lg-none mx-2" href="index.html">
-        <img src="assets/images/logo/logo_sm.svg" width="38" height="38" alt="...">
+        <!-- <img src="assets/images/logo/logo_sm.svg" width="38" height="38" alt="..."> -->
       </a>
 
     </div>

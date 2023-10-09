@@ -21,9 +21,9 @@
 @section('content')
 <div class="row mt-4">
     <div class="col-12">
-        <form novalidate class="bs-validate" id="route-create-form" method="POST" action="{{ route('route-store') }}">
+        <form novalidate class="bs-validate" id="route-update-form" method="POST" action="{{ route('route-update') }}">
             @csrf
-            <fieldset id="route-create">
+            <fieldset id="route-update">
                 <div class="row bg-transparent mt-5">
                     <div class="col-sm-12 w-75 mx-auto">
 
@@ -53,24 +53,24 @@
                                     </div>
                                 </div>
                                 <div class="mb-0 pb-0 row">
-                                    <label class="col-sm-4 col-form-label-sm text-start">More detail</label>
+                                    <label class="col-sm-4 pb-0 col-form-label-sm text-start">More detail</label>
                                 </div>
                                 <div class="mb-2 row">
                                     <div class="col-2">
                                         <label class="col-form-label-sm text-start fw-bold">Depart Time</label>
-                                        <input type="time" name="depart_time" class="form-control form-control-sm" value="{{ $route['dapart_time'] }}">
+                                        <input type="time" name="depart_time" class="form-control form-control-sm" value="{{ date('H:i', strtotime($route['depart_time'])) }}">
                                     </div>
                                     <div class="col-2">
                                         <label class="col-form-label-sm text-start fw-bold">Arrive Time</label>
-                                        <input type="time" name="arrive_time" class="form-control form-control-sm">
+                                        <input type="time" name="arrive_time" class="form-control form-control-sm" value="{{ date('H:i', strtotime($route['arrive_time'])) }}">
                                     </div>
                                     <div class="col-2">
                                         <label for="regular-price" class="col-form-label-sm text-start fw-bold">Regular Price</label>
-                                        <input type="number" class="form-control form-control-sm" id="regular-price" name="regular_price" value="{{ $route['regular_price'] }}">
+                                        <input type="number" class="form-control form-control-sm" id="regular-price" name="regular_price" value="{{ intval($route['regular_price']) }}">
                                     </div>
                                     <div class="col-2">
                                         <label for="child-price" class="col-form-label-sm text-start fw-bold">Child</label>
-                                        <input type="number" class="form-control form-control-sm" id="child-price" name="child_price" value="{{ $route['child_price'] }}">
+                                        <input type="number" class="form-control form-control-sm" id="child-price" name="child_price" value="{{ intval($route['child_price']) }}">
                                     </div>
                                     <div class="col-2">
                                         <label for="extra" class="col-form-label-sm text-start fw-bold">Extra</label>
@@ -88,7 +88,7 @@
 
                                 <div class="row mb-4">
                                     <div class="col-3">
-                                        <label for="icon" class="col-form-label-sm text-start fw-bold">Icon <small class="text-danger d-none" id="icon-notice">MAX!</small></label>
+                                        <label class="col-form-label-sm text-start fw-bold">Icon <small class="text-danger d-none" id="icon-notice">MAX!</small></label>
                                         <div class="dropdown">
                                             <a class="btn btn-outline-dark btn-sm dropdown-toggle" href="#" role="button" id="dropdownIcons" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,6">
                                                 Select icon
@@ -116,7 +116,7 @@
                                         </div>
                                     </div>
                                     <div class="col-9 show-icon">
-                                        <label for="icon" class="col-form-label-sm text-start fw-bold"></label>
+                                        <label class="col-form-label-sm text-start fw-bold"></label>
                                         <ul class="list-group list-group-horizontal">
                                         </ul>
                                         <input type="hidden" name="icons" id="route-add-icon" value="">
@@ -127,9 +127,9 @@
                                     <div class="col-4">
                                         <label class="d-flex align-items-center mb-1">
                                             <span class="user-select-none fw-bold me-2">Master From </span>
-                                            <input class="d-none-cloaked" type="checkbox" name="master_from_on" value="1">
+                                            <input class="d-none-cloaked" type="checkbox" id="master-from-switch" name="master_from_on" value="1">
                                             <i class="switch-icon switch-icon-primary switch-icon-xs"></i>
-                                            <span class="ms-1 user-select-none">Off</span>
+                                            <span class="ms-1 user-select-none" id="master-from-text">Off</span>
                                         </label>
                                         <select class="form-select" size="4" name="manter_from" aria-label="size 3 select example">
                                             <option selected>Open this select menu</option>
@@ -142,9 +142,9 @@
                                     <div class="col-4">
                                         <label class="d-flex align-items-center mb-1">
                                             <span class="user-select-none fw-bold me-2">Master To </span>
-                                            <input class="d-none-cloaked" type="checkbox" name="master_to_on" value="1">
+                                            <input class="d-none-cloaked" type="checkbox" id="master-to-switch" name="master_to_on" value="1">
                                             <i class="switch-icon switch-icon-primary switch-icon-xs"></i>
-                                            <span class="ms-1 user-select-none">Off</span>
+                                            <span class="ms-1 user-select-none" id="master-to-text">Off</span>
                                         </label>
                                         <select class="form-select" size="4" name="master_to" aria-label="size 3 select example">
                                             <option selected>Open this select menu</option>
@@ -189,20 +189,21 @@
                                     <label class="col-sm-2 text-start fw-bold">Status :</label>
                                     <div class="col-sm-2">
                                         <label class="d-flex align-items-center mb-3">
-                                            <input class="d-none-cloaked" type="checkbox" name="status" value="1" checked>
+                                            <input class="d-none-cloaked" type="checkbox" id="route-status-switch" name="status" value="1" checked>
                                             <i class="switch-icon switch-icon-primary"></i>
-                                            <span class="px-3 user-select-none">On</span>
+                                            <span class="px-3 user-select-none" id="route-status-text">On</span>
                                         </label>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="col-12 mt-4">
+                                <input type="hidden" name="route_id" value="{{ $route['id'] }}">
                                 <x-button-submit-loading 
                                     class="btn-lg w--20 me-4 button-orange-bg"
-                                    :form_id="_('route-create-form')"
-                                    :fieldset_id="_('route-create')"
-                                    :text="_('Add')"
+                                    :form_id="_('route-update-form')"
+                                    :fieldset_id="_('route-update')"
+                                    :text="_('Edit')"
                                 />
                                 <a href="{{ route('route-index') }}" class="btn btn-secondary btn-lg w--20">Cancel</a>
                                 <small id="user-create-error-notice" class="text-danger mt-3"></small>
@@ -227,6 +228,11 @@
 @section('script')
 <script>
     const icons = {{ Js::from($icons) }}
+    const route_icons = {{ Js::from($route['icons']) }}
 </script>
 <script src="{{ asset('assets/js/app/route_control.js') }}"></script>
+
+<script>
+    setRouteIcon()
+</script>
 @stop

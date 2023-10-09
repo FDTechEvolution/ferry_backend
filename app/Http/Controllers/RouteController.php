@@ -24,7 +24,7 @@ class RouteController extends Controller
     ];
 
     public function index() {
-        $routes = Route::with('station_from', 'station_to', 'icons')->get();
+        $routes = Route::where('status', 'CO')->with('station_from', 'station_to', 'icons')->get();
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
 
@@ -46,9 +46,7 @@ class RouteController extends Controller
     public function edit(string $id = null) {
         $route = Route::find($id);
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
-        $icons = $route->icons;
-
-        Log::debug($route->toArray());
+        $icons = DB::table('icons')->where('type', $this->Type)->get();
 
         return view('pages.route_control.edit', ['route' => $route, 'icons' => $icons, 'stations' => $stations]);
     }
@@ -93,7 +91,47 @@ class RouteController extends Controller
         return true;
     }
 
+    public function update(Request $request) {
+        $request->validate([
+            'station_from' => 'required|string|min:36|max:36',
+            'station_to' => 'required|string|min:36|max:36',
+            'regular_price' => 'integer|nullable',
+            'child_price' => 'integer|nullable'
+        ]);
+
+        $route = Route::find($request->route_id);
+            $route->station_from_id = $request->station_from;
+            $route->station_to_id = $request->station_to;
+            $route->depart_time = $request->depart_time;
+            $route->arrive_time = $request->arrive_time;
+            $route->regular_price = $request->regular_price;
+            $route->child_price = $request->child_price;
+            $route->isactive = isset($request->status) ? 'Y' : 'N';
+        if($route->save()) {
+            $result = $this->routeIconDestroy($request->icons, $request->route_id);
+            if($result) return redirect()->route('route-index')->withSuccess('Route updated...');
+        }
+        else return redirect()->route('route-index')->withFail('Something is wrong. Please try again.');
+    }
+
+    private function routeIconDestroy($icons, $route_id) {
+        $_icons = preg_split('/\,/', $icons);
+
+        RouteIcon::where('route_id', $route_id)->delete();
+        foreach($_icons as $index => $icon) {
+            RouteIcon::create([
+                'route_id' => $route_id,
+                'icon_id' => $icon
+            ]);
+        }
+
+        return true;
+    }
+
     public function destroy(string $id = null) {
-        return redirect()->route('route-index')->withSuccess('Route deleted...');
+        $route = Route::find($id);
+        $route->status = 'VO';
+        if($route->save()) return redirect()->route('route-index')->withSuccess('Route deleted...');
+        else return redirect()->route('route-index')->withFail('Something is wrong. Please try again.');
     }
 }

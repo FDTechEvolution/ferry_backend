@@ -22,4 +22,4 @@
 <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
 <!-- favicon -->
-<link rel="shortcut icon" href="favicon.ico">
+<link rel="shortcut icon" href="{{ asset('favicon.ico') }}">

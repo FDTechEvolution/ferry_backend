@@ -17,7 +17,8 @@ class Route extends Model
         'arrive_time',
         'regular_price',
         'child_price',
-        'isactive'
+        'isactive',
+        'status'
     ];
 
     protected $hidden = [

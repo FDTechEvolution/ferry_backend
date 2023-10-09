@@ -128,9 +128,9 @@
                                     <div class="col-4">
                                         <label class="d-flex align-items-center mb-1">
                                             <span class="user-select-none fw-bold me-2">Master From </span>
-                                            <input class="d-none-cloaked" type="checkbox" name="master_from_on" value="1">
+                                            <input class="d-none-cloaked" type="checkbox" id="master-from-switch" name="master_from_on" value="1">
                                             <i class="switch-icon switch-icon-primary switch-icon-xs"></i>
-                                            <span class="ms-1 user-select-none">Off</span>
+                                            <span class="ms-1 user-select-none" id="master-from-text">Off</span>
                                         </label>
                                         <select class="form-select" size="4" name="manter_from" aria-label="size 3 select example">
                                             <option selected>Open this select menu</option>
@@ -143,9 +143,9 @@
                                     <div class="col-4">
                                         <label class="d-flex align-items-center mb-1">
                                             <span class="user-select-none fw-bold me-2">Master To </span>
-                                            <input class="d-none-cloaked" type="checkbox" name="master_to_on" value="1">
+                                            <input class="d-none-cloaked" type="checkbox" id="master-to-switch" name="master_to_on" value="1">
                                             <i class="switch-icon switch-icon-primary switch-icon-xs"></i>
-                                            <span class="ms-1 user-select-none">Off</span>
+                                            <span class="ms-1 user-select-none" id="master-to-text">Off</span>
                                         </label>
                                         <select class="form-select" size="4" name="master_to" aria-label="size 3 select example">
                                             <option selected>Open this select menu</option>
@@ -190,9 +190,9 @@
                                     <label class="col-sm-2 text-start fw-bold">Status :</label>
                                     <div class="col-sm-2">
                                         <label class="d-flex align-items-center mb-3">
-                                            <input class="d-none-cloaked" type="checkbox" name="status" value="1" checked>
+                                            <input class="d-none-cloaked" type="checkbox" id="route-status-switch" name="status" value="1" checked>
                                             <i class="switch-icon switch-icon-primary"></i>
-                                            <span class="px-3 user-select-none">On</span>
+                                            <span class="px-3 user-select-none" id="route-status-text">On</span>
                                         </label>
                                     </div>
                                 </div>

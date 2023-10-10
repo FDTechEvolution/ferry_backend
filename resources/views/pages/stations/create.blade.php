@@ -38,7 +38,10 @@
                                     <label class="col-sm-4 col-form-label-sm text-start">Master Info From :</label>
                                     <div class="col-sm-8">
                                         <div class="dropdown">
-                                            <a class="btn btn-outline-dark btn-sm dropdown-toggle w-100" href="#" role="button" id="dropdownInfoFrom" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,6">
+                                            <a class="btn btn-outline-dark btn-sm w-100" href="#" role="button" data-bs-toggle="modal" data-bs-target="#modal-master-info-from">
+                                                Select Info From
+                                            </a>
+                                            <!-- <a class="btn btn-outline-dark btn-sm dropdown-toggle w-100" href="#" role="button" id="dropdownInfoFrom" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,6">
                                                 Select Info From
                                                 <span class="group-icon">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -49,9 +52,9 @@
                                                         <line x1="6" y1="6" x2="18" y2="18"></line>
                                                     </svg>
                                                 </span>
-                                            </a>
+                                            </a> -->
 
-                                            <ul class="dropdown-menu shadow-lg p-1 w-100" aria-labelledby="dropdownInfoFrom">
+                                            <!-- <ul class="dropdown-menu shadow-lg p-1 w-100" aria-labelledby="dropdownInfoFrom">
                                                 @foreach($info as $index => $item)
                                                     <li id="info-from-active-{{ $index }}">
                                                         <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addMasterInfoFrom({{ $index }})">
@@ -59,7 +62,7 @@
                                                         </a>
                                                     </li>
                                                 @endforeach
-                                            </ul>
+                                            </ul> -->
                                         </div>
                                         <ul class="mb-0 py-2 d-none" id="station-info-from-list" style="background-color: #fff; border-radius: 0 0 3px 3px;">
                                         </ul>
@@ -70,7 +73,10 @@
                                     <label class="col-sm-4 col-form-label-sm text-start">Master Info To :</label>
                                     <div class="col-sm-8">
                                         <div class="dropdown">
-                                            <a class="btn btn-outline-dark btn-sm dropdown-toggle w-100" href="#" role="button" id="dropdownInfoTo" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,6">
+                                            <a class="btn btn-outline-dark btn-sm w-100" href="#" role="button" data-bs-toggle="modal" data-bs-target="#modal-master-info-to">
+                                                Select Info From
+                                            </a>
+                                            <!-- <a class="btn btn-outline-dark btn-sm dropdown-toggle w-100" href="#" role="button" id="dropdownInfoTo" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,6">
                                                 Select Info To
                                                 <span class="group-icon">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -91,7 +97,7 @@
                                                         </a>
                                                     </li>
                                                 @endforeach
-                                            </ul>
+                                            </ul> -->
                                         </div>
                                         <ul class="mb-0 py-2 d-none" id="station-info-to-list" style="background-color: #fff; border-radius: 0 0 3px 3px;">
                                         </ul>
@@ -212,21 +218,21 @@
 @stop
 
 @section('modal')
-<div class="modal fade" id="modal-station-info" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel3" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-scrollable modal-xl">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="station-info-modal-title"></h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body" id="station-info-modal-content">
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-			</div>
-		</div>
-	</div>
-</div>
+<x-modal-info />
+
+<x-modal-data-list 
+    :header="_('Master Info From List')"
+    :data="$info"
+    :modal_id="_('modal-master-info-from')"
+    :type="_('from')"
+/>
+
+<x-modal-data-list 
+    :header="_('Master Info To List')"
+    :data="$info"
+    :modal_id="_('modal-master-info-to')"
+    :type="_('to')"
+/>
 @stop
 
 @section('script')

@@ -255,7 +255,7 @@ function updateStationEditData(index) {
 
 const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 function generateString(length) {
-    let result = ' ';
+    let result = '';
     const charactersLength = characters.length;
     for ( let i = 0; i < length; i++ ) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
@@ -267,22 +267,32 @@ function generateString(length) {
 // Add / Remove Master Info From
 const input_info_from_list = document.querySelector('#input-station-info-from-list')
 let info_from_value = []
-function addMasterInfoFrom(index) {
-    const info_from_list = document.querySelector('#station-info-from-list')
-    let _info = station_info.find((item, key) => { return key === index })
-    let rand = generateString(8)
-    let li = document.createElement('li')
-    li.classList.add('info-from-active-on')
-    li.id = rand
-    li.innerHTML = `${_info.name} 
-                    <i class="${info_icon} ms-2 text-primary cursor-pointer" title="View" onClick="viewInfo('${_info.id}', 'from')"></i>
-                    <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoFrom('${rand}', ${index}, '${_info.id}')"></i>`
-    info_from_list.appendChild(li)
+let rand_from = []
+function addMasterInfoFrom(e, index) {
+    if(e.checked) {
+        const info_from_list = document.querySelector('#station-info-from-list')
+        let _info = station_info.find((item, key) => { return key === index })
+        let rand = generateString(8)
+        let li = document.createElement('li')
+        li.classList.add('info-from-active-on')
+        li.id = rand
+        li.innerHTML = `${_info.name} 
+                        <i class="${info_icon} ms-2 text-primary cursor-pointer" title="View" onClick="viewInfo('${_info.id}', 'from')"></i>
+                        <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoFrom('${rand}', ${index}, '${_info.id}')"></i>`
+        info_from_list.appendChild(li)
 
-    info_from_value.push(_info.id)
-    input_info_from_list.value = info_from_value
-    document.querySelector(`#info-from-active-${index}`).classList.add('d-none')
-    if(info_from_value.length > 0) info_from_list.classList.remove('d-none')
+        info_from_value.push(_info.id)
+        input_info_from_list.value = info_from_value
+        // document.querySelector(`#info-from-active-${index}`).classList.add('d-none')
+        if(info_from_value.length > 0) info_from_list.classList.remove('d-none')
+        e.setAttribute('data-rand', rand)
+        e.setAttribute('data-id', _info.id)
+    }
+    else{
+        let get_rand = e.getAttribute('data-rand')
+        let get_id = e.getAttribute('data-id')
+        removeInfoFrom(get_rand, index, get_id)
+    }
 }
 function removeInfoFrom(rand, index, id) {
     const info_from_list = document.querySelector('#station-info-from-list')
@@ -295,7 +305,8 @@ function removeInfoFrom(rand, index, id) {
     info_active.forEach((item, index) => {
         if(item.id === rand) item.remove()
     })
-    document.querySelector(`#info-from-active-${index}`).classList.remove('d-none')
+    // document.querySelector(`#info-from-active-${index}`).classList.remove('d-none')
+    document.querySelector(`#input-from-checked-${index}`).checked = false
     if(info_from_value.length <= 0) info_from_list.classList.add('d-none')
 }
 
@@ -304,22 +315,31 @@ function removeInfoFrom(rand, index, id) {
 // Add / Remove Master Info To
 const input_info_to_list = document.querySelector('#input-station-info-to-list')
 let info_to_value = []
-function addMasterInfoTo(index) {
-    const info_to_list = document.querySelector('#station-info-to-list')
-    let _info = station_info.find((item, key) => { return key === index })
-    let rand = generateString(8)
-    let li = document.createElement('li')
-    li.classList.add('info-to-active-on')
-    li.id = rand
-    li.innerHTML = `${_info.name} 
-                    <i class="${info_icon} ms-2 text-primary cursor-pointer" title="View" onClick="viewInfo('${_info.id}', 'to')"></i>
-                    <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoTo('${rand}', ${index}, '${_info.id}')"></i>`
-                    info_to_list.appendChild(li)
+function addMasterInfoTo(e, index) {
+    if(e.checked) {
+        const info_to_list = document.querySelector('#station-info-to-list')
+        let _info = station_info.find((item, key) => { return key === index })
+        let rand = generateString(8)
+        let li = document.createElement('li')
+        li.classList.add('info-to-active-on')
+        li.id = rand
+        li.innerHTML = `${_info.name} 
+                        <i class="${info_icon} ms-2 text-primary cursor-pointer" title="View" onClick="viewInfo('${_info.id}', 'to')"></i>
+                        <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoTo('${rand}', ${index}, '${_info.id}')"></i>`
+                        info_to_list.appendChild(li)
 
-    info_to_value.push(_info.id)
-    input_info_to_list.value = info_to_value
-    document.querySelector(`#info-to-active-${index}`).classList.add('d-none')
-    if(info_to_value.length > 0) info_to_list.classList.remove('d-none')
+        info_to_value.push(_info.id)
+        input_info_to_list.value = info_to_value
+        // document.querySelector(`#info-to-active-${index}`).classList.add('d-none')
+        if(info_to_value.length > 0) info_to_list.classList.remove('d-none')
+        e.setAttribute('data-rand', rand)
+        e.setAttribute('data-id', _info.name)
+    }
+    else{
+        let get_rand = e.getAttribute('data-rand')
+        let get_id = e.getAttribute('data-id')
+        removeInfoTo(get_rand, index, get_id)
+    }
 }
 function removeInfoTo(rand, index, id) {
     const info_to_list = document.querySelector('#station-info-to-list')
@@ -333,7 +353,8 @@ function removeInfoTo(rand, index, id) {
         if(item.id === rand) item.remove()
     })
     // console.log(index)
-    document.querySelector(`#info-to-active-${index}`).classList.remove('d-none')
+    // document.querySelector(`#info-to-active-${index}`).classList.remove('d-none')
+    document.querySelector(`#input-to-checked-${index}`).checked = false
     if(info_to_value.length <= 0) info_to_list.classList.add('d-none')
 }
 
@@ -359,26 +380,28 @@ function setMasterInfo() {
         let li = document.createElement('li')
 
         if(_info.pivot.type === 'from') {
-            let index_remove = clearInfoDropdown('ul-dropdown-info-from', _info.name)
+            // let index_remove = clearInfoDropdown('ul-dropdown-info-from', _info.name)
+            let index_checked = setDataInfoChecked(_info.name, rand, _info.id, 'from')
             info_from_list.classList.remove('d-none')
             li.classList.add('info-from-active-on')
             li.id = rand
             li.innerHTML = `${_info.name}
                             <i class="${info_icon} ms-2 text-primary cursor-pointer" title="View" onClick="viewInfo('${_info.id}', 'from')"></i>
-                            <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoFrom('${rand}', ${index_remove}, '${_info.id}')"></i>`
+                            <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoFrom('${rand}', ${index_checked}, '${_info.id}')"></i>`
             info_from_list.appendChild(li)
 
             info_from_value.push(_info.id)
             input_info_from_list.value = info_from_value
         }
         if(_info.pivot.type === 'to') {
-            let index_remove = clearInfoDropdown('ul-dropdown-info-to', _info.name)
+            // let index_remove = clearInfoDropdown('ul-dropdown-info-to', _info.name)
+            let index_checked = setDataInfoChecked(_info.name, rand, _info.id, 'to')
             info_to_list.classList.remove('d-none')
             li.classList.add('info-to-active-on')
             li.id = rand
             li.innerHTML = `${_info.name}
                             <i class="${info_icon} ms-2 text-primary cursor-pointer" title="View" onClick="viewInfo('${_info.id}', 'to')"></i>
-                            <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoTo('${rand}', ${index_remove}, '${_info.id}')"></i>`
+                            <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoTo('${rand}', ${index_checked}, '${_info.id}')"></i>`
             info_to_list.appendChild(li)
 
             info_to_value.push(_info.id)
@@ -398,5 +421,23 @@ function clearInfoDropdown(element_id, _name) {
             _index = index
         }
     })
+    return _index
+}
+
+function setDataInfoChecked(name, rand, id, type) {
+    const _tbody = document.querySelector('#modal-data-list-tbody')
+    let _tr = _tbody.querySelectorAll('.tr-master-list')
+    let _index = ''
+    _tr.forEach((item, index) => {
+        let input_checked = type === 'from' ? document.querySelector(`#input-from-checked-${index}`) : document.querySelector(`#input-to-checked-${index}`)
+        let td = item.getElementsByTagName('td')
+        if(td[1].innerText === name) {
+            input_checked.checked = true
+            input_checked.setAttribute('data-rand', rand)
+            input_checked.setAttribute('data-id', id)
+            _index = index
+        }
+    })
+    
     return _index
 }

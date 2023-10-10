@@ -36,4 +36,9 @@ class Route extends Model
     public function icons() {
         return $this->belongsToMany(Icon::class, 'route_icons', 'route_id', 'icon_id');
     }
+
+    public function station_lines() {
+        return $this->belongsToMany(StationInfomation::class, 'route_station_info_lines', 'route_id', 'station_infomation_id')
+                    ->withPivot('type');
+    }
 }

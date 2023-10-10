@@ -34,10 +34,10 @@
                                 <div class="mb-4 w-75 row">
                                     <label class="col-sm-3 col-form-label-sm text-start fw-bold">Station From* :</label>
                                     <div class="col-sm-9">
-                                        <select required class="form-select form-select-sm" name="station_from">
-                                            <option value="">--- Choose ---</option>
+                                        <select required class="form-select form-select-sm" id="station-from-selected" name="station_from">
+                                            <option value="" selected disabled>--- Choose ---</option>
                                             @foreach($stations as $station)
-                                                <option value="{{ $station['id'] }}">{{ $station['name'] }} @if($station['piername'] != '') [ {{ $station['piername'] }} ] @endif</option>
+                                                <option value="{{ $station['id'] }}">{{ $station['name'] }} @if($station['piername'] != '') [{{ $station['piername'] }}] @endif</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -45,8 +45,8 @@
                                 <div class="mb-4 w-75 row">
                                     <label class="col-sm-3 col-form-label-sm text-start fw-bold">Station To* :</label>
                                     <div class="col-sm-9">
-                                        <select required class="form-select form-select-sm" name="station_to">
-                                            <option value="">--- Choose ---</option>
+                                        <select required class="form-select form-select-sm" id="station-to-selected" name="station_to">
+                                            <option value="" selected disabled>--- Choose ---</option>
                                             @foreach($stations as $station)
                                                 <option value="{{ $station['id'] }}">{{ $station['name'] }} @if($station['piername'] != '') [{{ $station['piername'] }}] @endif</option>
                                             @endforeach
@@ -89,7 +89,7 @@
 
                                 <div class="row mb-4">
                                     <div class="col-3">
-                                        <label for="icon" class="col-form-label-sm text-start fw-bold">Icon <small class="text-danger d-none" id="icon-notice">MAX!</small></label>
+                                        <label class="col-form-label-sm text-start fw-bold">Icon <small class="text-danger d-none" id="icon-notice">MAX!</small></label>
                                         <div class="dropdown">
                                             <a class="btn btn-outline-dark btn-sm dropdown-toggle w-100" href="#" role="button" id="dropdownIcons" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,6">
                                                 Select icon
@@ -117,7 +117,7 @@
                                         </div>
                                     </div>
                                     <div class="col-9 show-icon">
-                                        <label for="icon" class="col-form-label-sm text-start fw-bold"></label>
+                                        <label class="col-form-label-sm text-start fw-bold"></label>
                                         <ul class="list-group list-group-horizontal">
                                         </ul>
                                         <input type="hidden" name="icons" id="route-add-icon" value="">
@@ -132,12 +132,11 @@
                                             <i class="switch-icon switch-icon-primary switch-icon-xs"></i>
                                             <span class="ms-1 user-select-none" id="master-from-text">Off</span>
                                         </label>
-                                        <select class="form-select" size="4" name="manter_from" aria-label="size 3 select example">
-                                            <option selected>Open this select menu</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </select>
+                                        <ul class="list-group" id="master-from-choose">
+                                            <li class="list-group-item">
+                                                Please Choose Station From.
+                                            </li>
+                                        </ul>
                                     </div>
 
                                     <div class="col-4">
@@ -147,12 +146,11 @@
                                             <i class="switch-icon switch-icon-primary switch-icon-xs"></i>
                                             <span class="ms-1 user-select-none" id="master-to-text">Off</span>
                                         </label>
-                                        <select class="form-select" size="4" name="master_to" aria-label="size 3 select example">
-                                            <option selected>Open this select menu</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </select>
+                                        <ul class="list-group" id="master-to-choose">
+                                            <li class="list-group-item">
+                                                Please Choose Station To.
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
 
@@ -225,9 +223,15 @@
 </style>
 @stop
 
+@section('modal')
+<x-modal-info />
+@stop
+
 @section('script')
 <script>
     const icons = {{ Js::from($icons) }}
+    const stations = {{ Js::from($stations) }}
+    // const info_lines = {{ Js::from($station['info_line']) }}
 </script>
 <script src="{{ asset('assets/js/app/route_control.js') }}"></script>
 @stop

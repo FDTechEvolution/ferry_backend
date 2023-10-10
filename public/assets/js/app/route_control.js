@@ -4,6 +4,8 @@ const btn_cancel_create = document.querySelector('#btn-cancel-create')
 const master_from_switch = document.querySelector('#master-from-switch')
 const master_to_switch = document.querySelector('#master-to-switch')
 const route_status_switch = document.querySelector('#route-status-switch')
+const station_from_selected = document.querySelector('#station-from-selected')
+const station_to_selected = document.querySelector('#station-to-selected')
 
 if(btn_create) {
     btn_create.addEventListener('click', () => {
@@ -45,6 +47,117 @@ if(route_status_switch) {
     })
 }
 
+// Create Master From
+if(station_from_selected) {
+    station_from_selected.addEventListener('change', (e) => {
+        let res = stations.find((item) => { return item.id === e.target.value })
+        let infos = res.info_line.filter((item) => { return item.pivot.type === 'from' })
+        setMasterStationList(infos, '#master-from-choose', 'from', e.target.value)
+    })
+}
+
+// Create Master To
+if(station_to_selected) {
+    station_to_selected.addEventListener('change', (e) => {
+        let res = stations.find((item) => { return item.id === e.target.value })
+        let infos = res.info_line.filter((item) => { return item.pivot.type === 'to' })
+        setMasterStationList(infos, '#master-to-choose', 'to', e.target.value)
+    })
+}
+
+function setMasterStationList(infos, element_id, type, station_id) {
+    const master_list = document.querySelector(element_id)
+    let li_list = master_list.querySelectorAll('li')
+    li_list.forEach((li) => { li.remove() })
+
+    let li_name = type === 'from' ? 'master_from[]' : 'master_to[]'
+
+    if(infos.length <= 0) setNoDataList(element_id)
+    infos.forEach((info, index) => {
+        let _li = document.createElement('li')
+        let _input = document.createElement('input')
+        let _label = document.createElement('label')
+        let _icon = document.createElement('i')
+
+        _li.classList.add('list-group-item')
+
+        _input.setAttribute('name', li_name)
+        _input.setAttribute('type', 'checkbox')
+        _input.classList.add('form-check-input')
+        _input.classList.add('me-1')
+        _input.value = info.id
+        _input.id = `input-${type}-${index}`
+
+        _label.classList.add('ms-2')
+        _label.setAttribute('for', `input-${type}-${index}`)
+        _label.innerHTML = info.name
+
+        _icon.classList.add('fi')
+        _icon.classList.add('fi-squared-info')
+        _icon.classList.add('ms-2')
+        _icon.classList.add('text-primary')
+        _icon.classList.add('cursor-pointer')
+        _icon.setAttribute('onClick', `showStationInfo('${info.id}', '${station_id}', '${type}')`)
+
+        _li.appendChild(_input)
+        _li.appendChild(_label)
+        _li.appendChild(_icon)
+        master_list.appendChild(_li)
+    })
+
+    if(typeof route !== 'undefined') {
+        masterInfoListChecked('#master-from-choose', 'from', station_id)
+        masterInfoListChecked('#master-to-choose', 'to', station_id)
+    }
+}
+
+function setNoDataList(element_id) {
+    const ul = document.querySelector(element_id)
+    let _li = document.createElement('li')
+    let _span = document.createElement('span')
+
+    _li.classList.add('list-group-item')
+    _span.classList.add('ms-2')
+    _span.innerHTML = 'No Data List.'
+
+    _li.appendChild(_span)
+    ul.appendChild(_li)
+}
+
+function setMasterInfoListData() {
+    let info_from = getStationInfoByType(route.station_from_id, 'from')
+    let info_to = getStationInfoByType(route.station_to_id, 'to')
+    setMasterStationList(info_from, '#master-from-choose', 'from', route.station_from_id)
+    setMasterStationList(info_to, '#master-to-choose', 'to', route.station_to_id)
+}
+
+function masterInfoListChecked(element_id, type, station_id) {
+    const master_list = document.querySelector(element_id)
+    let _station_id = type === 'from' ? route.station_from_id : route.station_to_id
+    let input_list = master_list.querySelectorAll('li input')
+    input_list.forEach((_input) => {
+        route.station_lines.find((item) => {
+            if(station_id === _station_id) {
+                if(item.pivot.type === type && _input.value === item.id) _input.checked = true
+            }
+        })
+    })
+}
+
+function getStationInfoByType(station_id, type) {
+    let res = stations.find((item) => { return item.id === station_id })
+    return res.info_line.filter((item) => { return item.pivot.type === type })
+}
+
+function showStationInfo(info_id, station_id, type) {
+    let info_type = type === 'to' ? 'Master To : ' : 'Master From : '
+    let res = stations.find((item) => { return item.id === station_id })
+    let info = res.info_line.find((item) => { return item.id === info_id })
+        
+    document.querySelector('#station-info-modal-title').innerHTML = `<strong>${info_type}</strong> ${info.name}`
+    document.querySelector('#station-info-modal-content').innerHTML = info.text
+    $('#modal-station-info').modal('show')
+}
 
 function setClassListAdd(element_id) {
     document.querySelector(`#${element_id}`).classList.add('d-none')

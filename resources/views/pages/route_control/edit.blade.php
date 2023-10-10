@@ -29,12 +29,12 @@
 
                         <div class="row">
                             <div class="col-12 px-4">
-                                <h1 class="fw-bold text-main-color-2 mb-4">Add new Route</h1>
+                                <h1 class="fw-bold text-main-color-2 mb-4">Edit route</h1>
 
                                 <div class="mb-4 w-75 row">
                                     <label class="col-sm-3 col-form-label-sm text-start fw-bold">Station From* :</label>
                                     <div class="col-sm-9">
-                                        <select required class="form-select form-select-sm" name="station_from">
+                                        <select required class="form-select form-select-sm" id="station-from-selected" name="station_from">
                                             @foreach($stations as $station)
                                                 <option value="{{ $station['id'] }}" @selected($station['id'] == $route['station_from_id'])>{{ $station['name'] }} @if($station['piername'] != '') [ {{ $station['piername'] }} ] @endif</option>
                                             @endforeach
@@ -44,8 +44,7 @@
                                 <div class="mb-4 w-75 row">
                                     <label class="col-sm-3 col-form-label-sm text-start fw-bold">Station To* :</label>
                                     <div class="col-sm-9">
-                                        <select required class="form-select form-select-sm" name="station_to">
-                                            <option value="">--- Choose ---</option>
+                                        <select required class="form-select form-select-sm" id="station-to-selected" name="station_to">
                                             @foreach($stations as $station)
                                                 <option value="{{ $station['id'] }}" @selected($station['id'] == $route['station_to_id'])>{{ $station['name'] }} @if($station['piername'] != '') [{{ $station['piername'] }}] @endif</option>
                                             @endforeach
@@ -90,7 +89,7 @@
                                     <div class="col-3">
                                         <label class="col-form-label-sm text-start fw-bold">Icon <small class="text-danger d-none" id="icon-notice">MAX!</small></label>
                                         <div class="dropdown">
-                                            <a class="btn btn-outline-dark btn-sm dropdown-toggle" href="#" role="button" id="dropdownIcons" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,6">
+                                            <a class="btn btn-outline-dark btn-sm dropdown-toggle w-100" href="#" role="button" id="dropdownIcons" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,6">
                                                 Select icon
                                                 <span class="group-icon">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -103,7 +102,7 @@
                                                 </span>
                                             </a>
 
-                                            <ul class="dropdown-menu shadow-lg p-1" aria-labelledby="dropdownIcons">
+                                            <ul class="dropdown-menu shadow-lg p-1 w-100" aria-labelledby="dropdownIcons">
                                                 @foreach($icons as $index => $icon)
                                                     <li id="icon-active-{{ $index }}">
                                                         <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteIcon({{ $index }})">
@@ -131,12 +130,11 @@
                                             <i class="switch-icon switch-icon-primary switch-icon-xs"></i>
                                             <span class="ms-1 user-select-none" id="master-from-text">Off</span>
                                         </label>
-                                        <select class="form-select" size="4" name="manter_from" aria-label="size 3 select example">
-                                            <option selected>Open this select menu</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </select>
+                                        <ul class="list-group" id="master-from-choose">
+                                            <li class="list-group-item">
+                                                Please Choose Station From.
+                                            </li>
+                                        </ul>
                                     </div>
 
                                     <div class="col-4">
@@ -146,12 +144,11 @@
                                             <i class="switch-icon switch-icon-primary switch-icon-xs"></i>
                                             <span class="ms-1 user-select-none" id="master-to-text">Off</span>
                                         </label>
-                                        <select class="form-select" size="4" name="master_to" aria-label="size 3 select example">
-                                            <option selected>Open this select menu</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </select>
+                                        <ul class="list-group" id="master-to-choose">
+                                            <li class="list-group-item">
+                                                Please Choose Station To.
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
 
@@ -225,14 +222,22 @@
 </style>
 @stop
 
+@section('modal')
+<x-modal-info />
+@stop
+
 @section('script')
 <script>
     const icons = {{ Js::from($icons) }}
+    const stations = {{ Js::from($stations) }}
+    const route = {{ Js::from($route) }}
     const route_icons = {{ Js::from($route['icons']) }}
+    const info_lines = {{ Js::from($route['station_lines']) }}
 </script>
 <script src="{{ asset('assets/js/app/route_control.js') }}"></script>
 
 <script>
     setRouteIcon()
+    setMasterInfoListData()
 </script>
 @stop

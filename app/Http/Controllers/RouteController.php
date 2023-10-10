@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Station;
 use App\Models\Route;
 use App\Models\RouteIcon;
+use App\Models\RouteStationInfoLine;
 
 class RouteController extends Controller
 {
@@ -35,7 +36,7 @@ class RouteController extends Controller
     }
 
     public function create() {
-        $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
+        $stations = Station::where('isactive', 'Y')->where('status', 'CO')->with('info_line')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
 
         return view('pages.route_control.create', 
@@ -45,7 +46,9 @@ class RouteController extends Controller
 
     public function edit(string $id = null) {
         $route = Route::find($id);
-        $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
+        $route->station_lines;
+
+        $stations = Station::where('isactive', 'Y')->where('status', 'CO')->with('info_line')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
 
         return view('pages.route_control.edit', ['route' => $route, 'icons' => $icons, 'stations' => $stations]);
@@ -60,21 +63,27 @@ class RouteController extends Controller
         ]);
 
         $route = Route::create([
-                    'station_from_id' => $request->station_from,
-                    'station_to_id' => $request->station_to,
-                    'depart_time' => $request->depart_time,
-                    'arrive_time' => $request->arrive_time,
-                    'regular_price' => $request->regular_price,
-                    'child_price' => $request->child_price,
-                    'isactive' => isset($request->status) ? 'Y' : 'N'
-                ]);
+            'station_from_id' => $request->station_from,
+            'station_to_id' => $request->station_to,
+            'depart_time' => $request->depart_time,
+            'arrive_time' => $request->arrive_time,
+            'regular_price' => $request->regular_price,
+            'child_price' => $request->child_price,
+            'isactive' => isset($request->status) ? 'Y' : 'N'
+        ]);
 
         if($route) {
             $result = $this->routeIconStore($request->icons, $route->id);
 
-            if($result) return redirect()->route('route-index')->withSuccess('Route created...');
-            else return redirect()->route('route-index')->withFail('Something is wrong. Please try again.');
+            if($result) {
+                if(isset($request->master_from)) $this->storeRouteStationInfoLine($route->id, $request->master_from, 'from');
+                if(isset($request->master_to)) $this->storeRouteStationInfoLine($route->id, $request->master_to, 'to');
+                return redirect()->route('route-index')->withSuccess('Route created...');
+            }
+            else return redirect()->back()->withFail('Something is wrong. Please try again.');
         }
+
+        return redirect()->back()->withFail('Something is wrong. Please try again.');
     }
 
     private function routeIconStore(string $icons = null, string $route_id = null) {
@@ -89,6 +98,16 @@ class RouteController extends Controller
         }
 
         return true;
+    }
+
+    private function storeRouteStationInfoLine(string $route_id = null, array $info_lines = [], string $type = null) {
+        foreach($info_lines as $info) {
+            RouteStationInfoLine::create([
+                'route_id' => $route_id,
+                'station_infomation_id' => $info,
+                'type' => $type
+            ]);
+        }
     }
 
     public function update(Request $request) {
@@ -108,24 +127,25 @@ class RouteController extends Controller
             $route->child_price = $request->child_price;
             $route->isactive = isset($request->status) ? 'Y' : 'N';
         if($route->save()) {
-            $result = $this->routeIconDestroy($request->icons, $request->route_id);
-            if($result) return redirect()->route('route-index')->withSuccess('Route updated...');
+            $this->routeIconDestroy($request->route_id);
+            $result = $this->routeIconStore($request->icons, $request->route_id);
+
+            if($result) {
+                $this->clearAllRouteStationInfoLine($request->route_id);
+                if(isset($request->master_from)) $this->storeRouteStationInfoLine($route->id, $request->master_from, 'from');
+                if(isset($request->master_to)) $this->storeRouteStationInfoLine($route->id, $request->master_to, 'to');
+                return redirect()->route('route-index')->withSuccess('Route updated...');
+            }
         }
         else return redirect()->route('route-index')->withFail('Something is wrong. Please try again.');
     }
 
-    private function routeIconDestroy($icons, $route_id) {
-        $_icons = preg_split('/\,/', $icons);
+    private function clearAllRouteStationInfoLine(string $route_id = null) {
+        RouteStationInfoLine::where('route_id', $route_id)->delete();
+    }
 
+    private function routeIconDestroy($route_id) {
         RouteIcon::where('route_id', $route_id)->delete();
-        foreach($_icons as $index => $icon) {
-            RouteIcon::create([
-                'route_id' => $route_id,
-                'icon_id' => $icon
-            ]);
-        }
-
-        return true;
     }
 
     public function destroy(string $id = null) {

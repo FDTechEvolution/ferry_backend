@@ -4,8 +4,8 @@
     <h1 class="ms-2 mb-0" id="station-page-title"><span class="text-main-color-2">Station</span> manager</h1>
     <x-a-href-green :text="_('Add')" :href="route('create-station')" :target="_('_self')" class="ms-3 btn-sm w--10" />
     <x-button-orange :type="_('button')" :text="_('Edit')" class="ms-3 btn-sm w--10" id="btn-station-edit"/>
-    <x-button-green :type="_('button')" :text="_('Add Section')" class="ms-3 btn-sm w--15" id="btn-section-create" />
-    <x-button-orange :type="_('button')" :text="_('Manage Section')" class="ms-3 btn-sm w--15" id="btn-section-manage" />
+    <x-a-href-green :text="_('Add Section')" :href="route('create-section')" :target="_('_self')" class="ms-3 btn-sm w--15" />
+    <x-a-href-orange :text="_('Manage Section')" :href="route('manage-section')" :target="_('_self')" class="ms-3 btn-sm w--15" />
 @stop
 
 @section('content')
@@ -105,12 +105,6 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-        <div id="to-section-create" class="m-auto d-none">
-            @include('pages.stations.section_create')
-        </div>
-        <div id="to-section-manage" class="m-auto d-none">
-            @include('pages.stations.section_manage')
         </div>
     </div>
 </div>

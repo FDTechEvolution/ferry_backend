@@ -77,9 +77,9 @@ if(btn_section_calcel_create) {
 }
 
 if(btn_section_cancel_manage) {
-    btn_section_cancel_manage.addEventListener('click', () => {
-        toMainMenu()
-    })
+    // btn_section_cancel_manage.addEventListener('click', () => {
+    //     toMainMenu()
+    // })
 }
 
 if(btn_station_cancel_edit) {
@@ -190,18 +190,18 @@ function toMainMenu() {
 }
 
 function toSectionManage() {
-    setClassListAdd('to-station-list')
-    setClassListAdd('to-section-create')
+    // setClassListAdd('to-station-list')
+    // setClassListAdd('to-section-create')
     setClassListAdd('to-section-edit')
-    setClassListAdd('btn-station-create')
-    setClassListAdd('btn-station-edit')
-    setClassListAdd('btn-section-create')
-    setClassListAdd('btn-section-manage')
+    // setClassListAdd('btn-station-create')
+    // setClassListAdd('btn-station-edit')
+    // setClassListAdd('btn-section-create')
+    // setClassListAdd('btn-section-manage')
     
-    setClassListRemove('to-section-manage')
+    // setClassListRemove('to-section-manage')
     setClassListRemove('to-section-list')
     setClassListRemove('btn-section-cancel-manage')
-    station_title.innerHTML = `<span class="text-main-color-2">Manage</span> section`
+    // station_title.innerHTML = `<span class="text-main-color-2">Manage</span> section`
 }
 
 function setClassListAdd(element_id) {
@@ -359,26 +359,26 @@ function setMasterInfo() {
         let li = document.createElement('li')
 
         if(_info.pivot.type === 'from') {
-            clearInfoDropdown('ul-dropdown-info-from', _info.name)
+            let index_remove = clearInfoDropdown('ul-dropdown-info-from', _info.name)
             info_from_list.classList.remove('d-none')
             li.classList.add('info-from-active-on')
             li.id = rand
             li.innerHTML = `${_info.name}
                             <i class="${info_icon} ms-2 text-primary cursor-pointer" title="View" onClick="viewInfo('${_info.id}', 'from')"></i>
-                            <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoFrom('${rand}', ${index}, '${_info.id}')"></i>`
+                            <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoFrom('${rand}', ${index_remove}, '${_info.id}')"></i>`
             info_from_list.appendChild(li)
 
             info_from_value.push(_info.id)
             input_info_from_list.value = info_from_value
         }
         if(_info.pivot.type === 'to') {
-            clearInfoDropdown('ul-dropdown-info-to', _info.name)
+            let index_remove = clearInfoDropdown('ul-dropdown-info-to', _info.name)
             info_to_list.classList.remove('d-none')
             li.classList.add('info-to-active-on')
             li.id = rand
             li.innerHTML = `${_info.name}
                             <i class="${info_icon} ms-2 text-primary cursor-pointer" title="View" onClick="viewInfo('${_info.id}', 'to')"></i>
-                            <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoTo('${rand}', ${index}, '${_info.id}')"></i>`
+                            <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoTo('${rand}', ${index_remove}, '${_info.id}')"></i>`
             info_to_list.appendChild(li)
 
             info_to_value.push(_info.id)
@@ -390,8 +390,13 @@ function setMasterInfo() {
 function clearInfoDropdown(element_id, _name) {
     const ul = document.querySelector(`#${element_id}`)
     let _li = ul.querySelectorAll('li')
-    _li.forEach((item) => {
+    let _index = ''
+    _li.forEach((item, index) => {
         let name = item.innerText.replace(/^\s+|\s+$/gm,'')
-        if(name === _name) item.classList.add('d-none')
+        if(name === _name) {
+            item.classList.add('d-none')
+            _index = index
+        }
     })
+    return _index
 }

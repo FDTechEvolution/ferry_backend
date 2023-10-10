@@ -39,13 +39,23 @@ class StationsController extends Controller
         return view('pages.stations.create', ['sections' => $sections, 'info' => $info]);
     }
 
+    public function sectionCreate() {
+        $sections = Section::where('isactive', 'Y')->orderBy('created_at', 'DESC')->get();
+        
+        return view('pages.stations.section_create', ['sections' => $sections]);
+    }
+
+    public function sectionManage() {
+        $sections = Section::where('isactive', 'Y')->orderBy('created_at', 'DESC')->get();
+        
+        return view('pages.stations.section_manage', ['sections' => $sections]);
+    }
+
     public function edit(string $id = null) {
         $station = Station::find($id);
         $station->info_line;
         $sections = Section::where('isactive', 'Y')->orderBy('created_at', 'DESC')->get();
         $info = StationInfomation::where('status', 'Y')->get();
-
-        Log::debug($station->toArray());
 
         return view('pages.stations.edit', ['station' => $station, 'sections' => $sections, 'info' => $info]);
     }
@@ -125,12 +135,13 @@ class StationsController extends Controller
             'info_to' => 'string|nullable'
         ]);
 
-        if (!$this->checkStationName($request->name, $request->edit_id))
+        if (!$this->checkStationName($request->name, $request->id))
             return redirect()->route('stations-index')->withFail('Station name is exist. Please check.');
-        if (!$this->checkNickname($request->nickname, $request->edit_id))
+
+        if (!$this->checkNickname($request->nickname, $request->id))
             return redirect()->route('stations-index')->withFail('Station nickname is exist. Please check.');
 
-        $station = Station::find($request->edit_id);
+        $station = Station::find($request->id);
         if (isset($station)) {
             $station->name = $request->name;
             $station->piername = $request->pier;
@@ -141,13 +152,21 @@ class StationsController extends Controller
             $station->sort = $request->sort;
             $station->isactive = isset($request->isactive) ? 'Y' : 'N';
 
-            if ($station->save())
+            if ($station->save()) {
+                $this->clearAllInfoLine($station->id);
+                if($request->station_info_from_list != '') $this->storeInfoLine($station->id, $request->station_info_from_list, 'from');
+                if($request->station_info_to_list != '') $this->storeInfoLine($station->id, $request->station_info_to_list, 'to');
                 return redirect()->route('stations-index')->withSuccess('Station updated...');
+            }
             else
                 return redirect()->route('stations-index')->withFail('Something is wrong. Please try again.');
         }
 
         return redirect()->route('stations-index')->withFail('Station record not exist. Please check.');
+    }
+
+    private function clearAllInfoLine(string $station_id = null) {
+        StationInfoLine::where('station_id', $station_id)->delete();
     }
 
     public function destroy(string $id = null)
@@ -169,8 +188,6 @@ class StationsController extends Controller
 
             return redirect()->route('stations-index')->withSuccess('Station deleted...');
         }
-
-            
     }
 
     public function storeSection(Request $request)
@@ -182,11 +199,11 @@ class StationsController extends Controller
         if ($this->checkSectionName($request->name)) {
             $section = Section::create(['name' => $request->name]);
             if ($section)
-                return redirect()->route('stations-index')->withSuccess('Section created...');
+                return redirect()->route('manage-section')->withSuccess('Section created...');
             else
-                return redirect()->route('stations-index')->withFail('Something is wrong. Please try again.');
+                return redirect()->route('create-section')->withFail('Something is wrong. Please try again.');
         }
-        return redirect()->route('stations-index')->withFail('Section name is exist.');
+        return redirect()->route('create-section')->withFail('Section name is exist.');
     }
 
     public function updateSection(Request $request)
@@ -200,13 +217,13 @@ class StationsController extends Controller
             if (isset($section)) {
                 $section->name = $request->name;
                 if ($section->save())
-                    return redirect()->route('stations-index')->withSuccess('Section created...');
+                    return redirect()->route('manage-section')->withSuccess('Section created...');
                 else
-                    return redirect()->route('stations-index')->withFail('Something is wrong. Please try again.');
+                    return redirect()->route('manage-section')->withFail('Something is wrong. Please try again.');
             }
-            return redirect()->route('stations-index')->withFail('Section record not exist. Please check again.');
+            return redirect()->route('manage-section')->withFail('Section record not exist. Please check again.');
         }
-        return redirect()->route('stations-index')->withFail('Section name is exist.');
+        return redirect()->route('manage-section')->withFail('Section name is exist.');
     }
 
     public function destroySection(string $id = null)
@@ -216,11 +233,11 @@ class StationsController extends Controller
         if (!isset($_station)) {
             $section->isactive = 'N';
             if ($section->save())
-                return redirect()->route('stations-index')->withSuccess('Section deleted...');
+                return redirect()->route('manage-section')->withSuccess('Section deleted...');
             else
-                return redirect()->route('stations-index')->withFail('Something is wrong. Please try again.');
+                return redirect()->route('manage-section')->withFail('Something is wrong. Please try again.');
         }
-        return redirect()->route('stations-index')->withWarning('Section is in use. Can not delete this item...');
+        return redirect()->route('manage-section')->withWarning('Section is in use. Can not delete this item...');
     }
 
     private function checkSectionName(string $name = null, string $section_id = null)

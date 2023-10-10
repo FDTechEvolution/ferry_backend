@@ -63,7 +63,10 @@ Route::middleware('auth')->group(function() {
         Route::post('/update-station', 'update')->name('station-update');
 
         // section
+        Route::get('/section-create', 'sectionCreate')->name('create-section');
         Route::get('/delete-section/{id}', 'destroySection')->name('section-delete');
+        Route::get('/section-manage', 'sectionManage')->name('manage-section');
+
         Route::post('/create-section', 'storeSection')->name('section-create');
         Route::post('/update-section', 'updateSection')->name('section-update');
     });

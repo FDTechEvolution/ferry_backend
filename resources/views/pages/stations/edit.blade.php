@@ -192,7 +192,7 @@
                             </div>
 
                             <div class="col-12 text-center mt-4">
-                                <input type="hidden" name="edit_id" id="edit-station-id">
+                                <input type="hidden" name="id" id="edit-station-id" value="{{ $station['id'] }}">
                                 <x-button-submit-loading 
                                     class="btn-lg w--10 me-5"
                                     :form_id="_('station-edit-form')"

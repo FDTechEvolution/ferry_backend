@@ -95,17 +95,22 @@ Route::middleware('auth')->group(function() {
 
     Route::controller(ActivitiesController::class)->group(function() {
         Route::get('/activity', 'index')->name('activity-index');
-        Route::get('/activity-create', 'create')->name('activity-create');
+        Route::get('/activity/create', 'create')->name('activity-create');
+        Route::get('/activity/edit/{id}', 'edit')->name('activity-edit');
+        Route::get('/activity/delete/{id}', 'destroy')->name('activity-delete');
+
+        Route::post('/activity/store', 'store')->name('activity-store');
+        Route::post('/activity/update', 'update')->name('activity-update');
     });
 
     Route::controller(RouteController::class)->group(function() {
         Route::get('/route-control', 'index')->name('route-index');
-        Route::get('/route-create', 'create')->name('route-create');
-        Route::get('/route-edit/{id}', 'edit')->name('route-edit');
-        Route::get('/route-delete/{id}', 'destroy')->name('route-delete');
+        Route::get('/route/create', 'create')->name('route-create');
+        Route::get('/route/edit/{id}', 'edit')->name('route-edit');
+        Route::get('/route/delete/{id}', 'destroy')->name('route-delete');
 
-        Route::post('/route-store', 'store')->name('route-store');
-        Route::post('/route-update', 'update')->name('route-update');
+        Route::post('/route/store', 'store')->name('route-store');
+        Route::post('/route/update', 'update')->name('route-update');
     });
 });
 

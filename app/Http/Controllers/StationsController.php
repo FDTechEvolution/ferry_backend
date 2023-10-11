@@ -53,6 +53,10 @@ class StationsController extends Controller
 
     public function edit(string $id = null) {
         $station = Station::find($id);
+
+        if(is_null($station) || $station->status != 'CO') 
+            return redirect()->route('stations-index')->withFail('This station not exist.');
+
         $station->info_line;
         $sections = Section::where('isactive', 'Y')->orderBy('created_at', 'DESC')->get();
         $info = StationInfomation::where('status', 'Y')->get();

@@ -46,7 +46,11 @@
 
         <!-- has avatar -->
         <a href="return javascript(void)" id="dropdownAccountOptions" class="dropdown-toggle text-dark" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-haspopup="true" aria-label="Account options"><i class="fi fi-arrow-down-full me-1 text-secondary"></i> {{ Auth::user()->username }}
-          <img src="../assets/images/avatar/{{ Auth::user()->image != '' ? Auth::user()->image : 'blank-profile-picture.png' }}" class="rounded-circle shadow ms-2" style="width: 42px; margin-top: -5px;" />
+          @if(Auth::user()->image != '')
+            <img src="{{ asset('assets/images/avatar/'.Auth::user()->image) }}" class="rounded-circle shadow ms-2" style="width: 42px; margin-top: -5px;" />
+          @else
+            <img src="{{ asset('assets/images/avatar/blank-profile-picture.png') }}" class="rounded-circle shadow ms-2" style="width: 42px; margin-top: -5px;" />
+          @endif
         </a>
 
         <!-- no avatar -->

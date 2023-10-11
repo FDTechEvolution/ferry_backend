@@ -46,8 +46,11 @@ class RouteController extends Controller
 
     public function edit(string $id = null) {
         $route = Route::find($id);
-        $route->station_lines;
 
+        if(is_null($route) || $route->status != 'CO') 
+            return redirect()->route('route-index')->withFail('This route not exist.');
+
+        $route->station_lines;
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->with('info_line')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
 

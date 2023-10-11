@@ -37,6 +37,9 @@ class StationInfomationsController extends Controller
     public function edit(string $id = null) {
         $info = StationInfomation::find($id);
 
+        if(is_null($info) || $info->status != 'Y') 
+            return redirect()->route('stations-info-index')->withFail('This station infomation not exist.');
+
         return view('pages.station_infomations.edit', ['info' => $info]);
     }
 

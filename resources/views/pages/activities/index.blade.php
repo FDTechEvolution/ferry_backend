@@ -44,7 +44,25 @@
                         </tr>
                     </thead>
                     <tbody>
-                        
+                        @foreach($activities as $index => $activity)
+                            <tr class="text-center">
+                                <td>{{ $index +1 }}</td>
+                                <td class="text-start">{{ $activity['name'] }}</td>
+                                <td>{{ number_format($activity['price']) }}</td>
+                                <td></td>
+                                <td>
+                                    <x-action-edit 
+                                        class="me-2"
+                                        :url="route('activity-edit', ['id' => $activity['id']])"
+                                        id="btn-station-edit"
+                                    />
+                                    <x-action-delete 
+                                        :url="route('activity-delete', ['id' => $activity['id']])"
+                                        :message="_('Are you sure? Delete '. $activity['name'] .'?')"
+                                    />
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

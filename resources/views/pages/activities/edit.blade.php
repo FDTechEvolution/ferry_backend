@@ -1,16 +1,16 @@
 @extends('layouts.default')
 
 @section('page-title')
-    <h1 class="ms-2 mb-0" id="activity-page-title"><span class="text-main-color-2">Add</span> Activity manage</h1>
+    <h1 class="ms-2 mb-0" id="activity-page-title"><span class="text-main-color-2">Edit</span> Activity</h1>
 @stop
 
 @section('content')
 <div class="row mt-4">
     <div class="col-12">
 
-        <form novalidate class="bs-validate" id="activity-create-form" method="POST" action="{{ route('activity-store') }}" enctype="multipart/form-data">
+        <form novalidate class="bs-validate" id="activity-edit-form" method="POST" action="{{ route('activity-update') }}" enctype="multipart/form-data">
             @csrf
-            <fieldset id="activity-create">
+            <fieldset id="activity-edit">
                 <div class="row bg-transparent mt-5">
                     <div class="col-sm-12 w--80 mx-auto">
 
@@ -21,13 +21,13 @@
                                 <div class="mb-4 row">
                                     <label for="activity-name" class="col-sm-3 col-form-label-sm text-start">Activity Name* :</label>
                                     <div class="col-sm-9">
-                                        <input type="text" required class="form-control form-control-sm" id="activity-name" name="name" value="">
+                                        <input type="text" required class="form-control form-control-sm" id="activity-name" name="name" value="{{ $activity['name'] }}">
                                     </div>
                                 </div>
                                 <div class="mb-4 row">
                                     <label for="activity-price" class="col-sm-3 col-form-label-sm text-start">Price* :</label>
                                     <div class="col-sm-9">
-                                        <input type="number" required class="form-control form-control-sm w--40" id="activity-price" name="price" value="">
+                                        <input type="number" required class="form-control form-control-sm w--40" id="activity-price" name="price" value="{{ intval($activity['price']) }}">
                                     </div>
                                 </div>
                                 <div class="mb-4 row">
@@ -54,7 +54,7 @@
 
                                                 "placeholder": "Type here..."
                                             }'>
-                                            <p></p>
+                                            {!! $activity['detail'] !!}
                                         </div>
                                     </div>
                                 </div>
@@ -156,8 +156,37 @@
                                                 </a>
                                             </div>
                                         </div>
+
+                                        @if($activity['image_id'] != '')
+                                            <div class="row" id="current-image">
+                                                <div class="col-10">
+                                                    <div class="position-relative hide-empty mt-2">
+                                                        <div class="d-flex clearfix position-relative show-hover-container shadow-md mb-2 rounded">
+                                                            <div class="position-relative d-inline-block bg-cover" id="edit-image-cover">
+                                                                <img src="" id="edit-image-src" class="animate-bouncein mw-100">
+                                                            </div>
+                                                            <div class="flex-fill d-flex min-w-0 align-items-center" style="padding-left:15px;padding-right:15px;">
+                                                                <span class="text-truncate d-block line-height-1">Current picture</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2 text-center">
+                                                    <!-- remove button -->
+                                                    <a href="JavaScript:void(0);" title="Delete Images" data-bs-toggle="tooltip" onClick="deleteCurrentImage('current-image', 'restore-image')" class="btn btn-secondary mt-4 text-center">
+                                                        <i class="fi fi-close mx-auto"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <svg id="restore-image" title="Restore Images" data-bs-toggle="tooltip" onClick="restoreCurrentImage('current-image', 'restore-image', '{{ $activity['image_id'] }}')" width="18px" height="18px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-counterclockwise d-none cursor-pointer" viewBox="0 0 16 16">  
+                                                <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"></path>  
+                                                <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"></path>
+                                            </svg>
+                                        @endif
                                     </div>
                                 </div>
+                                <input type="hidden" name="current_image" id="is-current-image" value="{{ $activity['image_id'] }}">
+                                <input type="hidden" name="id" value="{{ $activity['id'] }}">
                             </div>
 
                             <div class="col-5">
@@ -181,9 +210,9 @@
                             <div class="col-12 text-center mt-4">
                                 <x-button-submit-loading 
                                     class="btn-lg w--20 me-5"
-                                    :form_id="_('activity-create-form')"
-                                    :fieldset_id="_('activity-create')"
-                                    :text="_('Add')"
+                                    :form_id="_('activity-edit-form')"
+                                    :fieldset_id="_('activity-edit')"
+                                    :text="_('Edit')"
                                 />
                                 <a href="{{ route('activity-index') }}" class="btn btn-secondary btn-lg w--20">Cancel</a>
                                 <small id="user-create-error-notice" class="text-danger mt-3"></small>
@@ -196,6 +225,17 @@
         </form>
     </div>
 </div>
+
+@if($activity['image_id'] != '')
+<style>
+    #edit-image-cover {
+        background-image: url("{{ asset($activity['image']['path'].'/'.$activity['image']['name']) }}");
+        width: 80px; 
+        height: 80px; 
+        min-width: 80px;
+    }
+</style>
+@endif
 
 <style>
     .ql-editor, .ql-container.ql-snow {

@@ -64,7 +64,7 @@
                                                 @endforeach
                                             </ul> -->
                                         </div>
-                                        <ul class="mb-0 py-2 d-none" id="station-info-from-list" style="background-color: #fff; border-radius: 0 0 3px 3px;">
+                                        <ul class="mb-0 py-2 slimscroll-custom d-none" id="station-info-from-list">
                                         </ul>
                                     </div>
                                     <input type="hidden" name="station_info_from_list" id="input-station-info-from-list">
@@ -99,7 +99,7 @@
                                                 @endforeach
                                             </ul> -->
                                         </div>
-                                        <ul class="mb-0 py-2 d-none" id="station-info-to-list" style="background-color: #fff; border-radius: 0 0 3px 3px;">
+                                        <ul class="mb-0 py-2 slimscroll-custom d-none" id="station-info-to-list">
                                         </ul>
                                     </div>
                                     <input type="hidden" name="station_info_to_list" id="input-station-info-to-list">
@@ -215,6 +215,15 @@
         </form>
     </div>
 </div>
+
+<style>
+    #station-info-to-list, #station-info-from-list {
+        background-color: #fff; 
+        border-radius: 0 0 3px 3px;
+        max-height: 120px;
+        overflow-y: auto;
+    }
+</style>
 @stop
 
 @section('modal')

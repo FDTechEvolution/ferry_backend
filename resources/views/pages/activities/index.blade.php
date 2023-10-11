@@ -1,9 +1,8 @@
 @extends('layouts.default')
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 
 @section('page-title')
     <h1 class="ms-2 mb-0" id="activity-page-title">Activity manage</h1>
-    <x-button-green :type="_('button')" :text="_('Add')" class="ms-3 btn-sm w--10" id="btn-activity-create" />
+    <x-a-href-green :text="_('Add')" :href="route('activity-create')" :target="_('_self')" class="ms-3 btn-sm" />
 @stop
 
 @section('content')
@@ -49,12 +48,6 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-        <div id="to-activity-create" class="m-auto d-none">
-            @include('pages.activities.create')
-        </div>
-        <div id="to-activity-edit" class="m-auto d-none">
-            
         </div>
     </div>
 </div>

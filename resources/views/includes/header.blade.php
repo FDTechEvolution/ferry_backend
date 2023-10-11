@@ -36,6 +36,8 @@
     </div>
     <!-- /navbar : navigation -->
 
+        @yield('page-option')
+
     <!-- options -->
     <ul class="list-inline list-unstyled mb-0 d-flex align-items-end">
 

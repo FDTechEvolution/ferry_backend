@@ -95,6 +95,7 @@ Route::middleware('auth')->group(function() {
 
     Route::controller(ActivitiesController::class)->group(function() {
         Route::get('/activity', 'index')->name('activity-index');
+        Route::get('/activity-create', 'create')->name('activity-create');
     });
 
     Route::controller(RouteController::class)->group(function() {

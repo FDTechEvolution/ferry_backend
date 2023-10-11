@@ -20,6 +20,12 @@ a.dt-button.dropdown-item.buttons-print {
     line-height: 2.2rem;
     border-bottom-color: #dbdbdb;
 }
+table.table-datatable-custom {
+    width: 100% !important;
+}
+div.dataTables_wrapper div.dataTables_filter input {
+    width: 100% !important;
+}
 /* -------------------------- */
 
 /* Custom Css */
@@ -119,4 +125,22 @@ a.dt-button.dropdown-item.buttons-print {
     visibility: hidden;
     opacity: 0;
     transition: visibility 0s 0.5s, opacity 0.5s linear;
+}
+
+.justify-center-custom {
+    justify-content: inherit !important;
+}
+
+
+
+
+
+/* Mobile ----------------------------------- */
+@media (min-width: 576px) {
+    div.dataTables_wrapper div.dataTables_filter input {
+        width: auto;
+    }
+    .justify-center-custom {
+        justify-content: center !important;
+    }
 }

@@ -15,4 +15,8 @@ class ActivitiesController extends Controller
     public function index() {
         return view('pages.activities.index');
     }
+
+    public function create() {
+        return view('pages.activities.create');
+    }
 }

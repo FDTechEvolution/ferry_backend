@@ -2,25 +2,41 @@
 
 @section('page-title')
     <h1 class="ms-2 mb-0" id="route-page-title"><span class="text-main-color-2">Route</span> control</h1>
-    <a href="{{ route('route-create') }}" class="btn button-green-bg border-radius-10 ms-3 btn-sm w--10">Add</a>
-    <div class="route-search d-none">
-        <div class="mb-3">
-            <label for="station-from" class="form-label">Station From* </label>
-            <input type="text" class="form-control" id="station-from">
+    <a href="{{ route('route-create') }}" class="btn button-green-bg border-radius-10 ms-3 btn-sm w--15">Add</a>
+@stop
+
+@section('page-option')
+<div class="route-search d-none">
+    <div class="row pt-2">
+        <div class="col-9">
+            <div class="mb-1 row">
+                    <label for="station-search-from" class="col-form-label form-label-sm col-sm-4 custom-padding">Station From* </label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control form-control-sm" id="station-search-from">
+                    </div>
+            </div>
+            <div class="mb-1 row">
+                    <label for="station-search-to" class="col-form-label form-label-sm col-sm-4 custom-padding">Station to </label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control form-control-sm col-sm-10" id="station-search-to">
+                    </div>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="station-to" class="form-label">Station to </label>
-            <input type="text" class="form-control" id="station-to">
+        <div class="col-3">
+            <x-button-orange 
+                :type="_('button')"
+                :text="_('search')"
+            />
         </div>
-        <x-button-orange 
-            :type="_('button')"
-            :text="_('search')"
-        />
     </div>
+</div>
 @stop
 
 @section('content')
 <div class="row mt-4">
+    <div class="col-12">
+        
+    </div>
 
     <div class="col-12">
         <div id="to-route-list">
@@ -56,7 +72,7 @@
                             <th class="text-start">Station To</th>
                             <th class="text-center">Depart</th>
                             <th class="text-center">Arrive</th>
-                            <th class="text-center" style="width: 120px;">Icon</th>
+                            <th class="text-center fix-width-120">Icon</th>
                             <th class="text-center">Price</th>
                             <th class="text-center">status</th>
                             <th class="text-center">Action</th>
@@ -83,7 +99,7 @@
                                 <td>{{ date('H:i', strtotime($route['depart_time'])) }}</td>
                                 <td>{{ date('H:i', strtotime($route['arrive_time'])) }}</td>
                                 <td>
-                                    <div class="row mx-auto" style="justify-content: center;">
+                                    <div class="row mx-auto justify-center-custom">
                                         @foreach($route['icons'] as $icon)
                                         <div class="col-sm-4 px-0" style="max-width: 40px;">
                                             <img src="{{ $icon['path'] }}" class="w-100">
@@ -111,8 +127,18 @@
             </div>
         </div>
     </div>
-
 </div>
+
+<style>
+    .custom-padding {
+        padding-top: 9px;
+        padding-bottom: 8px;
+    }
+    .fix-width-120 {
+        width: 120px;
+    }
+    
+</style>
 @stop
 
 @section('script')

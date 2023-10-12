@@ -25,8 +25,8 @@ class ReviewsController extends Controller
         return view('pages.reviews.create');
     }
 
-    public function edit(){
-
+    public function edit(Reviews $review){
+        return view('pages.reviews.edit',['review'=>$review]);
     }
 
 
@@ -55,8 +55,21 @@ class ReviewsController extends Controller
         }
     }
 
-    public function update($id = null){
+    public function update(Reviews $review){
+        request()->validate([
+            'title' => 'required|string',
+            'reviewname' => 'required|string',
+            'body'=>'required|string'
+        ]);
 
+        $review->title = request()->get('title');
+        $review->reviewname = request()->get('reviewname');
+        $review->body = request()->get('body');
+        $review->rating = request()->get('rating');
+
+        $review->save();
+
+        return redirect()->route('review-index')->withSuccess('Review is updated...');
     }
 
     public function destroy(string $id = null) {

@@ -58,9 +58,8 @@
                                 <td>
                                     <x-action-edit 
                                         class="me-2"
-                                        :url="_('javascript:void(0)')"
+                                        :url="route('review-edit',['review'=> $item])"
                                         id="btn-station-edit"
-                                        onClick="updateStationInfoEditData({{ $index }})"
                                     />
                                     <x-action-delete 
                                         :url="route('review-delete', ['id' => $item['id']])"

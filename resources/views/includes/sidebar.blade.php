@@ -127,6 +127,13 @@
         </ul>
       </li>
       <li class="nav-item">
+        <a class="nav-link" href="{{ route('review-index') }}">
+          <i class="fi fi-arrow-right"></i>
+          <span>Review Mange</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
           <a class="nav-link" href="#">
               <i class="fi fi-arrow-right"></i>
               <span>Report</span>

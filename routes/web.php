@@ -10,6 +10,7 @@ use App\Http\Controllers\MealsController;
 use App\Http\Controllers\ActivitiesController;
 use App\Http\Controllers\StationInfomationsController;
 use App\Http\Controllers\RouteController;
+use App\Http\Controllers\ReviewsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -114,6 +115,16 @@ Route::middleware('auth')->group(function() {
 
         Route::post('/route/store', 'store')->name('route-store');
         Route::post('/route/update', 'update')->name('route-update');
+    });
+
+    Route::controller(ReviewsController::class)->group(function(){
+        Route::get('/review','index')->name('review-index');
+
+        Route::get('/review/create','create')->name('review-create');
+        Route::post('/review/store','store')->name('review-store');
+
+        Route::get('/review/edit/{id}','edit')->name('review-edit');
+        Route::get('/review/delete/{id}','destroy')->name('review-delete');
     });
 });
 

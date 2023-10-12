@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Models\Activity;
 use App\Models\Image;
+use App\Models\Icon;
 
 class ActivitiesController extends Controller
 {
@@ -16,6 +17,7 @@ class ActivitiesController extends Controller
     }
 
     protected $PathImage = '/assets/images/activity';
+    protected $Type = 'activity';
 
     public function index() {
         $activity = Activity::where('status', 'CO')->get();
@@ -24,7 +26,9 @@ class ActivitiesController extends Controller
     }
 
     public function create() {
-        return view('pages.activities.create');
+        $icons = Icon::where('type', $this->Type)->get();
+
+        return view('pages.activities.create', ['icons' => $icons]);
     }
 
     public function edit(string $id = null) {

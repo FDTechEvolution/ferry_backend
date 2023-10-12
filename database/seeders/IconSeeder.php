@@ -14,14 +14,19 @@ class IconSeeder extends Seeder
      */
     public function run(): void
     {
-        $icon_name = ['ico-boat.png', 'ico-ferry.png', 'ico-speed-boat.png', 'ico-van.png'];
+        $icon_name = [
+            'Driving' => 'ico-driving.png', 
+            'Fishing' => 'ico-fishing.png', 
+            'Surfing' => 'ico-surfing.png', 
+            'Swimming' => 'ico-swimming.png'
+        ];
 
-        foreach($icon_name as $icon) {
+        foreach($icon_name as $key => $icon) {
             DB::table('icons')->insert([
                 'id' => Str::uuid(),
-                'name' => $icon,
-                'path' => '/icon/route/',
-                'type' => 'route'
+                'name' => $key,
+                'path' => '/icon/activity/'.$icon,
+                'type' => 'activity'
             ]);
         }
     }

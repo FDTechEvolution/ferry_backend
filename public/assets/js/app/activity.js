@@ -41,3 +41,12 @@ function restoreCurrentImage(element_id, element_restore, image_id) {
     document.querySelector(`#${element_restore}`).classList.add('d-none')
     current_image.value = image_id
 }
+
+function selectActivityIcon(index) {
+    const icon_selected = document.querySelector('#icon-selected')
+    const icon_id = document.querySelector('#icon-id')
+    let icon = icons.find((item, key) => { return key === index })
+    
+    icon_selected.src = icon.path
+    icon_id.value = icon.id
+}

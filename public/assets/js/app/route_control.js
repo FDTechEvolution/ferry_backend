@@ -52,7 +52,7 @@ if(station_from_selected) {
     station_from_selected.addEventListener('change', (e) => {
         let res = stations.find((item) => { return item.id === e.target.value })
         let infos = res.info_line.filter((item) => { return item.pivot.type === 'from' })
-        setMasterStationList(infos, '#master-from-choose', 'from', e.target.value)
+        // setMasterStationList(infos, '#master-from-choose', 'from', e.target.value)
     })
 }
 

@@ -79,6 +79,9 @@ Route::middleware('auth')->group(function() {
 
         Route::post('/station-info-create', 'store')->name('station-info-create');
         Route::post('/update-station-info', 'update')->name('station-info-update');
+
+        // AJAX
+        Route::post('/ajax/create-station-info', 'createStationInfo')->name('ajax-create-station-info');
     });
 
     Route::controller(MealsController::class)->group(function() {

@@ -35,7 +35,6 @@
                         <tr>
                             <th class="text-center w--15">Choose</th>
                             <th class="text-start">Name</th>
-                            <th class="text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody id="modal-data-list-tbody">
@@ -48,7 +47,6 @@
                                         <input class="form-check-input form-check-input-primary station-check mt-2" id="input-to-checked-{{ $index }}" type="checkbox" value="" onClick="addMasterInfoTo(this, {{ $index }})"></td>
                                     @endif
                                 <td data-id="name" class="text-start">{{ $item['name'] }}</td>
-                                <td>xxxx</td>
                             </tr>
                         @endforeach
                     </tbody>

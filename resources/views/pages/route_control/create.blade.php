@@ -132,12 +132,12 @@
                                             <i class="switch-icon switch-icon-primary switch-icon-xs"></i>
                                             <span class="ms-1 user-select-none" id="master-from-text">Off</span>
                                         </label>
-                                        <ul class="list-group" id="master-from-choose">
-                                            <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#modal-info-select">Select/Add Information</button>
-                                            <!-- <li class="list-group-item">
-                                                
-                                            </li> -->
-                                        </ul>
+
+                                        <x-modal-route-select-infomation 
+                                            :header="_('Master From')"
+                                            :select_id="_('station-from-selected')"
+                                            :type="_('from')"
+                                        />
                                     </div>
 
                                     <div class="col-4">
@@ -147,11 +147,12 @@
                                             <i class="switch-icon switch-icon-primary switch-icon-xs"></i>
                                             <span class="ms-1 user-select-none" id="master-to-text">Off</span>
                                         </label>
-                                        <ul class="list-group" id="master-to-choose">
-                                            <li class="list-group-item">
-                                                Please Choose Station To.
-                                            </li>
-                                        </ul>
+
+                                        <x-modal-route-select-infomation 
+                                            :header="_('Master To')"
+                                            :select_id="_('station-to-selected')"
+                                            :type="_('to')"
+                                        />
                                     </div>
                                 </div>
 
@@ -162,12 +163,12 @@
                                             <i class="fi fi-round-plus text-main-color-2 ms-2"></i>
                                             <i class="fi fi-round-close text-main-color-2 ms-2"></i>
                                         </label>
-                                        <select class="form-select" size="4" name="info_from" aria-label="size 3 select example">
-                                            <option selected>Open this select menu</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </select>
+
+                                        <x-modal-route-select-infomation 
+                                            :header="_('Infomation From')"
+                                            :select_id="_('station-from-selected')"
+                                            :type="_('from')"
+                                        />
                                     </div>
 
                                     <div class="col-4">
@@ -176,12 +177,12 @@
                                             <i class="fi fi-round-plus text-main-color-2 ms-2"></i>
                                             <i class="fi fi-round-close text-main-color-2 ms-2"></i>
                                         </label>
-                                        <select class="form-select" size="4" name="info_to" aria-label="size 3 select example">
-                                            <option selected>Open this select menu</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </select>
+
+                                        <x-modal-route-select-infomation 
+                                            :header="_('Infomation To')"
+                                            :select_id="_('station-to-selected')"
+                                            :type="_('to')"
+                                        />
                                     </div>
                                 </div>
 
@@ -227,21 +228,7 @@
 @section('modal')
 <x-modal-info />
 
-<div class="modal fade" id="modal-info-select" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel3" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-scrollable modal-xl">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="station-info-modal-title"></h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body" id="station-info-modal-content">
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-			</div>
-		</div>
-	</div>
-</div>
+<x-modal-create-infomation />
 @stop
 
 @section('script')

@@ -98,4 +98,8 @@ class StationInfomationsController extends Controller
         }
         return redirect()->route('stations-info-index')->withFail('Something is wrong. Please try again.');
     }
+
+    public function createStationInfo(Request $request) {
+        return response()->json(['status' => 'success']);
+    }
 }

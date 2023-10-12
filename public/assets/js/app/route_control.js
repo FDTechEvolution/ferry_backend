@@ -4,8 +4,11 @@ const btn_cancel_create = document.querySelector('#btn-cancel-create')
 const master_from_switch = document.querySelector('#master-from-switch')
 const master_to_switch = document.querySelector('#master-to-switch')
 const route_status_switch = document.querySelector('#route-status-switch')
-const station_from_selected = document.querySelector('#station-from-selected')
+
 const station_to_selected = document.querySelector('#station-to-selected')
+
+const info_icon = 'fi fi-squared-info'
+const remove_icon = 'fi fi-round-close'
 
 if(btn_create) {
     btn_create.addEventListener('click', () => {
@@ -48,21 +51,56 @@ if(route_status_switch) {
 }
 
 // Create Master From
-if(station_from_selected) {
-    station_from_selected.addEventListener('change', (e) => {
-        let res = stations.find((item) => { return item.id === e.target.value })
-        let infos = res.info_line.filter((item) => { return item.pivot.type === 'from' })
-        // setMasterStationList(infos, '#master-from-choose', 'from', e.target.value)
-    })
-}
+
 
 // Create Master To
-if(station_to_selected) {
-    station_to_selected.addEventListener('change', (e) => {
-        let res = stations.find((item) => { return item.id === e.target.value })
-        let infos = res.info_line.filter((item) => { return item.pivot.type === 'to' })
-        setMasterStationList(infos, '#master-to-choose', 'to', e.target.value)
-    })
+// if(station_to_selected) {
+//     station_to_selected.addEventListener('change', (e) => {
+//         document.querySelector('#btn-master-to-select').disabled = false
+//         let res = stations.find((item) => { return item.id === e.target.value })
+//         let infos = res.info_line.filter((item) => { return item.pivot.type === 'to' })
+//         if(infos.length > 0) {
+//             setInfomationListSelect(infos, 'to', e.target.value)
+//         }
+//         else {
+//             let ul = clearInfomationList('station-infomation-list')
+
+//             let _li = document.createElement('li')
+//             let _label = document.createElement('label')
+
+//             _li.setAttribute('class', 'list-group-item border-0 border-bottom rounded-0')
+
+//             _label.classList.add('ms-2')
+//             _label.innerHTML = 'No infomation list.'
+
+//             _li.appendChild(_label)
+//             ul.appendChild(_li)
+//         }
+//         // setMasterStationList(infos, '#master-to-choose', 'to', e.target.value)
+//     })
+// }
+
+
+
+
+
+function addMasterInfoFrom(e, index, station_id) {
+    if(e.checked) {
+        const choosed = document.querySelector('#master-from-selected')
+        let _station = stations.find((item) => { return item.id === station_id })
+        let _info = _station.info_line.find((item) => { return item.id === e.value })
+        let rand = generateString(8)
+        let li = document.createElement('li')
+        li.setAttribute('class', 'info-from-active-on list-group-item')
+        li.id = rand
+        li.innerHTML = `${_info.name} 
+                        <i class="${info_icon} ms-2 text-primary cursor-pointer" title="View" onClick="viewInfo('${_info.id}', 'from')"></i>
+                        <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoFrom('${rand}', ${index}, '${_info.id}')"></i>`
+        choosed.appendChild(li)
+    }
+    else {
+        console.log('uncheck')
+    }
 }
 
 function setMasterStationList(infos, element_id, type, station_id) {

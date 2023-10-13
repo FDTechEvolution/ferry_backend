@@ -72,16 +72,19 @@
                                         <input type="number" class="form-control form-control-sm" id="child-price" name="child_price" value="{{ intval($route['child_price']) }}">
                                     </div>
                                     <div class="col-2">
-                                        <label for="extra" class="col-form-label-sm text-start fw-bold">Extra</label>
-                                        <select class="form-control form-control-sm" id="extra" name="extra">
-
-                                        </select>
+                                        <label for="infant-price" class="col-form-label-sm text-start fw-bold">Infant</label>
+                                        <input type="number" class="form-control form-control-sm" id="infant-price" name="infant_price" value="{{ intval($route['infant_price']) }}">
                                     </div>
-                                    <div class="col-2">
-                                        <label for="infant" class="col-form-label-sm text-start fw-bold">Infant</label>
-                                        <select class="form-control form-control-sm" id="infant" name="infant">
-                                            
-                                        </select>
+                                </div>
+
+                                <div class="row mb-4">
+                                    <div class="col-4">
+                                        <label class="col-form-label-sm text-start fw-bold">Activity</label>
+                                        <button type="button" class="btn btn-outline-dark btn-sm w-100">Select Activity</button>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="col-form-label-sm text-start fw-bold">Meal</label>
+                                        <button type="button" class="btn btn-outline-dark btn-sm w-100">Select Meal</button>
                                     </div>
                                 </div>
 
@@ -130,11 +133,18 @@
                                             <i class="switch-icon switch-icon-primary switch-icon-xs"></i>
                                             <span class="ms-1 user-select-none" id="master-from-text">Off</span>
                                         </label>
-                                        <ul class="list-group" id="master-from-choose">
-                                            <li class="list-group-item">
-                                                Please Choose Station From.
-                                            </li>
-                                        </ul>
+
+                                        <input type="hidden" id="master-from-selected" name="master_from_selected" value=''>
+                                        <x-modal-route-edit-infomation 
+                                            :header="_('Master From')"
+                                            :select_id="_('station-from-selected')"
+                                            :type="_('from')"
+                                            :ismaster="_('Y')"
+                                            :input_id="_('master-from-selected')"
+                                            :data="$route['station_lines']"
+                                            :stations="$stations"
+                                        />
+                                        
                                     </div>
 
                                     <div class="col-4">
@@ -144,11 +154,18 @@
                                             <i class="switch-icon switch-icon-primary switch-icon-xs"></i>
                                             <span class="ms-1 user-select-none" id="master-to-text">Off</span>
                                         </label>
-                                        <ul class="list-group" id="master-to-choose">
-                                            <li class="list-group-item">
-                                                Please Choose Station To.
-                                            </li>
-                                        </ul>
+
+                                        <input type="hidden" id="master-to-selected" name="master_to_selected" value=''>
+                                        <x-modal-route-edit-infomation 
+                                            :header="_('Master To')"
+                                            :select_id="_('station-to-selected')"
+                                            :type="_('to')"
+                                            :ismaster="_('Y')"
+                                            :input_id="_('master-to-selected')"
+                                            :data="$route['station_lines']"
+                                            :stations="$stations"
+                                        />
+                                        
                                     </div>
                                 </div>
 
@@ -159,12 +176,17 @@
                                             <i class="fi fi-round-plus text-main-color-2 ms-2"></i>
                                             <i class="fi fi-round-close text-main-color-2 ms-2"></i>
                                         </label>
-                                        <select class="form-select" size="4" name="info_from" aria-label="size 3 select example">
-                                            <option selected>Open this select menu</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </select>
+
+                                        <input type="hidden" id="info-from-selected" name="info_from_selected" value=''>
+                                        <x-modal-route-edit-infomation 
+                                            :header="_('Infomation From')"
+                                            :select_id="_('station-from-selected')"
+                                            :type="_('from')"
+                                            :ismaster="_('N')"
+                                            :input_id="_('info-from-selected')"
+                                            :data="$route['station_lines']"
+                                            :stations="$stations"
+                                        />
                                     </div>
 
                                     <div class="col-4">
@@ -173,12 +195,18 @@
                                             <i class="fi fi-round-plus text-main-color-2 ms-2"></i>
                                             <i class="fi fi-round-close text-main-color-2 ms-2"></i>
                                         </label>
-                                        <select class="form-select" size="4" name="info_to" aria-label="size 3 select example">
-                                            <option selected>Open this select menu</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </select>
+                                        
+                                        <input type="hidden" id="info-to-selected" name="info_to_selected" value=''>
+                                        <x-modal-route-edit-infomation 
+                                            :header="_('Infomation To')"
+                                            :select_id="_('station-to-selected')"
+                                            :type="_('to')"
+                                            :ismaster="_('N')"
+                                            :input_id="_('info-to-selected')"
+                                            :data="$route['station_lines']"
+                                            :stations="$stations"
+                                        />
+                                        
                                     </div>
                                 </div>
 
@@ -238,6 +266,7 @@
 
 <script>
     setRouteIcon()
-    setMasterInfoListData()
+    // setInfomationDataList()
+    // setMasterInfoListData()
 </script>
 @stop

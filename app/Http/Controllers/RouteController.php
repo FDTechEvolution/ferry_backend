@@ -10,6 +10,8 @@ use App\Models\Station;
 use App\Models\Route;
 use App\Models\RouteIcon;
 use App\Models\RouteStationInfoLine;
+use App\Models\Activity;
+use App\Models\Addon;
 
 class RouteController extends Controller
 {
@@ -38,9 +40,11 @@ class RouteController extends Controller
     public function create() {
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->with('info_line')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
+        $activities = Activity::where('status', 'CO')->get();
+        $meals = Addon::where('type', 'MEAL')->where('status', 'CO')->get();
 
         return view('pages.route_control.create', 
-                    ['stations' => $stations, 'icons' => $icons]
+                    ['stations' => $stations, 'icons' => $icons, 'activities' => $activities, 'meals' => $meals]
                 );
     }
 
@@ -72,6 +76,7 @@ class RouteController extends Controller
             'arrive_time' => $request->arrive_time,
             'regular_price' => $request->regular_price,
             'child_price' => $request->child_price,
+            'infant_price' => $request->infant_price,
             'isactive' => isset($request->status) ? 'Y' : 'N'
         ]);
 
@@ -79,13 +84,16 @@ class RouteController extends Controller
             $result = $this->routeIconStore($request->icons, $route->id);
 
             if($result) {
-                if(isset($request->master_from)) $this->storeRouteStationInfoLine($route->id, $request->master_from, 'from');
-                if(isset($request->master_to)) $this->storeRouteStationInfoLine($route->id, $request->master_to, 'to');
+                if(isset($request->master_from_selected)) $this->storeRouteStationInfoLine($route->id, $request->master_from_selected, 'from', 'Y');
+                if(isset($request->master_to_selected)) $this->storeRouteStationInfoLine($route->id, $request->master_to_selected, 'to', 'Y');
+                if(isset($request->info_from_selected)) $this->storeRouteStationInfoLine($route->id, $request->info_from_selected, 'from', 'N');
+                if(isset($request->info_to_selected)) $this->storeRouteStationInfoLine($route->id, $request->info_to_selected, 'to', 'N');
                 return redirect()->route('route-index')->withSuccess('Route created...');
             }
             else return redirect()->back()->withFail('Something is wrong. Please try again.');
         }
 
+        // Log::debug($request);
         return redirect()->back()->withFail('Something is wrong. Please try again.');
     }
 
@@ -103,12 +111,15 @@ class RouteController extends Controller
         return true;
     }
 
-    private function storeRouteStationInfoLine(string $route_id = null, array $info_lines = [], string $type = null) {
-        foreach($info_lines as $info) {
+    private function storeRouteStationInfoLine(string $route_id = null, string $info_lines = null, string $type = null, string $ismaster = null) {
+        $infos = preg_split('/\,/', $info_lines);
+
+        foreach($infos as $info) {
             RouteStationInfoLine::create([
                 'route_id' => $route_id,
                 'station_infomation_id' => $info,
-                'type' => $type
+                'type' => $type,
+                'ismaster' => $ismaster
             ]);
         }
     }

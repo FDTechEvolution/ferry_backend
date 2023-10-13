@@ -39,6 +39,6 @@ class Route extends Model
 
     public function station_lines() {
         return $this->belongsToMany(StationInfomation::class, 'route_station_info_lines', 'route_id', 'station_infomation_id')
-                    ->withPivot('type');
+                    ->withPivot('type', 'ismaster');
     }
 }

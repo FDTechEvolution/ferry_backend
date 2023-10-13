@@ -67,7 +67,7 @@
                 >
                     <thead>
                         <tr>
-                            <th class="text-center d-none" style="width: 60px;">Choose</th>
+                            <th class="text-center" style="width: 60px;">Choose</th>
                             <th class="text-start">Station From</th>
                             <th class="text-start">Station To</th>
                             <th class="text-center">Depart</th>
@@ -81,7 +81,7 @@
                     <tbody>
                         @foreach($routes as $index => $route)
                             <tr class="text-center">
-                                <td class="d-none">
+                                <td>
                                     <input class="form-check-input form-check-input-primary" type="checkbox" value="" id="route-check-{{ $index }}">
                                 </td>
                                 <td class="text-start" style="line-height: 1.2rem;">

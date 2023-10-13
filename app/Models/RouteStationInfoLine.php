@@ -13,7 +13,8 @@ class RouteStationInfoLine extends Model
     protected $fillable = [
         'route_id',
         'station_infomation_id',
-        'type'
+        'type',
+        'ismaster'
     ];
 
     protected $hidden = [

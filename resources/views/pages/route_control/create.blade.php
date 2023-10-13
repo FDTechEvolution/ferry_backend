@@ -54,7 +54,7 @@
                                     </div>
                                 </div>
                                 <div class="mb-0 pb-0 row">
-                                    <label class="col-sm-4 col-form-label-sm text-start">More detail</label>
+                                    <label class="col-sm-4 col-form-label-sm text-start pb-0">More detail</label>
                                 </div>
                                 <div class="mb-2 row">
                                     <div class="col-2">
@@ -74,16 +74,19 @@
                                         <input type="number" class="form-control form-control-sm" id="child-price" name="child_price">
                                     </div>
                                     <div class="col-2">
-                                        <label for="extra" class="col-form-label-sm text-start fw-bold">Extra</label>
-                                        <select class="form-control form-control-sm" id="extra" name="extra">
-
-                                        </select>
+                                        <label for="infant-price" class="col-form-label-sm text-start fw-bold">Infant</label>
+                                        <input type="number" class="form-control form-control-sm" id="infant-price" name="infant_price">
                                     </div>
-                                    <div class="col-2">
-                                        <label for="infant" class="col-form-label-sm text-start fw-bold">Infant</label>
-                                        <select class="form-control form-control-sm" id="infant" name="infant">
-                                            
-                                        </select>
+                                </div>
+
+                                <div class="row mb-4">
+                                    <div class="col-4">
+                                        <label class="col-form-label-sm text-start fw-bold">Activity</label>
+                                        <button type="button" class="btn btn-outline-dark btn-sm w-100">Select Activity</button>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="col-form-label-sm text-start fw-bold">Meal</label>
+                                        <button type="button" class="btn btn-outline-dark btn-sm w-100">Select Meal</button>
                                     </div>
                                 </div>
 
@@ -137,7 +140,9 @@
                                             :header="_('Master From')"
                                             :select_id="_('station-from-selected')"
                                             :type="_('from')"
+                                            :input_id="_('master-from-selected')"
                                         />
+                                        <input type="hidden" id="master-from-selected" name="master_from_selected" value=''>
                                     </div>
 
                                     <div class="col-4">
@@ -152,7 +157,9 @@
                                             :header="_('Master To')"
                                             :select_id="_('station-to-selected')"
                                             :type="_('to')"
+                                            :input_id="_('master-to-selected')"
                                         />
+                                        <input type="hidden" id="master-to-selected" name="master_to_selected" value=''>
                                     </div>
                                 </div>
 
@@ -168,7 +175,9 @@
                                             :header="_('Infomation From')"
                                             :select_id="_('station-from-selected')"
                                             :type="_('from')"
+                                            :input_id="_('info-from-selected')"
                                         />
+                                        <input type="hidden" id="info-from-selected" name="info_from_selected" value=''>
                                     </div>
 
                                     <div class="col-4">
@@ -182,7 +191,9 @@
                                             :header="_('Infomation To')"
                                             :select_id="_('station-to-selected')"
                                             :type="_('to')"
+                                            :input_id="_('info-to-selected')"
                                         />
+                                        <input type="hidden" id="info-to-selected" name="info_to_selected" value=''>
                                     </div>
                                 </div>
 

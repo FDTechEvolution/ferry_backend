@@ -245,8 +245,7 @@
 @section('script')
 <script>
     const icons = {{ Js::from($icons) }}
-    const stations = {{ Js::from($stations) }}
-    // const info_lines = {{ Js::from($station['info_line']) }}
+    let stations = ''
 </script>
 <script src="{{ asset('assets/js/app/route_control.js') }}"></script>
 @stop

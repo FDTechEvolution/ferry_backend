@@ -83,6 +83,7 @@ Route::middleware('auth')->group(function() {
 
         // AJAX
         Route::post('/ajax/create-station-info', 'createStationInfo')->name('ajax-create-station-info');
+        Route::get('/ajax/get-station-info', 'getStationInfo')->name('ajax-get-station-info');
     });
 
     Route::controller(MealsController::class)->group(function() {

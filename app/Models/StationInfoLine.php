@@ -19,4 +19,8 @@ class StationInfoLine extends Model
     protected $hidden = [
         
     ];
+
+    public function info() {
+        return $this->belongsTo(StationInfomation::class);
+    }
 }

@@ -5,6 +5,7 @@
     $list_id = uniqid();
     $button_id = uniqid();
     $ul_id = uniqid();
+    $btn_create = uniqid();
 @endphp
 
 <button type="button" class="btn btn-outline-dark btn-sm w-100 btn-infomation-select" id="btn-{{ $button_id }}" data-bs-toggle="modal" data-bs-target="#modal-{{ $modal_id }}" disabled>Select/Add Information</button>
@@ -15,7 +16,7 @@
 		<div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title w-75">{{ $header }}
-                    <button type="button" class="btn btn-sm button-orange-bg w-25 ms-3" data-bs-toggle="modal" data-bs-target="#create-infomation">Add</button>
+                    <button type="button" class="btn btn-sm button-orange-bg w-25 ms-3" data-bs-toggle="modal" data-bs-target="#create-infomation" id="btn-{{ $btn_create }}">Add</button>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -25,6 +26,7 @@
                         No infomation list.
                     </li>
                 </ul>
+                <i class="fi fi-loading-dots fi-spin mt-2 ms-6 d-none" id="icon-update-info-loading"></i>
             </div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -42,8 +44,9 @@ if(document.querySelector(`#{{ $select_id }}`)) {
         const type = `{{ $type }}`
         const ul_id = `{{ $ul_id }}`
         const input_id = `{{ $input_id }}`
+        const button_create = `{{ $btn_create }}`
 
-        // const _input_value = document.querySelector(`input-${input_id}`)
+        document.querySelector(`#btn-${button_create}`).setAttribute('onClick', `setModalCreateId('${button_id}', '${e.target.value}', '${type}', '${list_id}', '${ul_id}', '${input_id}')`)
         document.querySelector(`#btn-${button_id}`).disabled = false
         let res = stations.find((item) => { return item.id === e.target.value })
         let infos = res.info_line.filter((item) => { return item.pivot.type === type })
@@ -69,9 +72,11 @@ if(document.querySelector(`#{{ $select_id }}`)) {
 }
 
 function setInfomationListSelect(infos, type, station_id, list_id, ul_id, input_id) {
+    saveAllListId(type, list_id, ul_id, input_id)
     let li_name = type === 'from' ? 'master_from[]' : 'master_to[]'
     let ul = document.querySelector(`#list-${list_id}`)
     infos.forEach((info, index) => {
+        // console.log(info)
         let _li = document.createElement('li')
         let _input = document.createElement('input')
         let _label = document.createElement('label')
@@ -112,11 +117,13 @@ function addMasterInfoList(e, index, station_id, type, ul_id, input_id) {
     if(e.checked) {
         const _ul = document.querySelector(`#master-${ul_id}`)
         let res = stations.find((item) => { return item.id === station_id })
+        // let res = await getInfoStation(e.target.value, type)
         let _info = res.info_line.find((item) => { return item.id === e.value })
 
         let rand = generateString(8)
         let li = document.createElement('li')
         li.setAttribute('class', 'list-group-item info-from-active-on')
+        li.setAttribute('data-id', _info.id)
         li.id = rand
         li.innerHTML = `${_info.name} 
                         <i class="${info_icon} ms-2 text-primary cursor-pointer" title="View" onClick="viewInfo('${_info.id}', 'from')"></i>
@@ -146,5 +153,36 @@ function removeInfoFrom(rand, index, info_id, ul_id, input_id, type) {
     _input.value = input_value
 
     _checked.checked = false
+}
+
+async function loadNewInfomation(station_id, type, list_id, ul_id, input_id) {
+    await getInfoStation()
+    let res = await stations.find((item) => { return item.id === station_id })
+    let infos = await res.info_line.filter((item) => { return item.pivot.type === type })
+
+    let is_type = type === 'from' ? from_list_id : to_list_id
+    is_type.forEach(async (item) => {
+        await clearInfomationList(item.list)
+        await setInfomationListSelect(infos, type, station_id, item.list, item.ul, item.input)
+        await setPreviousCheckedList(infos, item.ul, item.list)
+    })
+}
+
+function setPreviousCheckedList(infos, ul_id, list_id) {
+    const _ul = document.querySelector(`#master-${ul_id}`)
+    const _li = _ul.querySelectorAll('li')
+    const _ul_list = document.querySelector(`#list-${list_id}`)
+    const _li_list = _ul_list.querySelectorAll('li input')
+
+    _li.forEach((li) => {
+        let get_id = li.getAttribute('data-id')
+        let get_rand = li.id
+        _li_list.forEach((item) => {
+            if(item.value === get_id) {
+                item.checked = true
+                item.setAttribute('data-rand', get_rand)
+            }
+        })
+    })
 }
 </script>

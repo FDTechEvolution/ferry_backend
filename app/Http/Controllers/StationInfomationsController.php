@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 use App\Models\StationInfomation;
+use App\Models\StationInfoLine;
+use App\Models\Station;
 
 class StationInfomationsController extends Controller
 {
@@ -100,6 +102,42 @@ class StationInfomationsController extends Controller
     }
 
     public function createStationInfo(Request $request) {
-        return response()->json(['status' => 'success']);
+        $request->validate([
+            'name' => 'required|string',
+            'detail' => 'required'
+        ]);
+
+        // Log::debug($request);
+        
+        if(!$this->checkInfoName($request->name, $request->type))
+            return response()->json(['message' => 'Station infomation name is exist. Pleast check.', 'status' => 'dupplicate']);
+
+        $info = StationInfomation::create([
+            'name' => $request->name,
+            'text' => $request->detail
+        ]);
+
+        if($info) {
+            $result = $this->createStationInfoLine($request->station_id, $info->id, $request->station_type);
+            if($result) return response()->json(['status' => 'success']);
+        }
+        return response()->json(['message' => 'Something is wrong. Please try again.', 'status' => 'fail']);
+    }
+
+    private function createStationInfoLine($station_id, $station_info_id, $type) {
+        $info_line = StationInfoLine::create([
+            'station_id' => $station_id,
+            'station_infomation_id' => $station_info_id,
+            'type' => $type
+        ]);
+
+        if($info_line) return true;
+        return false;
+    }
+
+    public function getStationInfo() {
+        $stations = Station::where('isactive', 'Y')->where('status', 'CO')->with('info_line')->get();
+        // $info = StationInfoLine::where('station_id', $station_id)->where('type', $type)->with('info')->get();
+        return response()->json(['data' => $stations, 'status' => 'success']);
     }
 }

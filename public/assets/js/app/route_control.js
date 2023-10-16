@@ -325,3 +325,57 @@ function generateString(length) {
 
     return result;
 }
+
+let _button_id = ''
+let _station_id = ''
+let _type = ''
+let _list_id = ''
+let _ul_id = ''
+let _input_id = ''
+function setModalCreateId(button_id, station_id, type, list_id, ul_id, input_id) {
+    _button_id = button_id
+    _station_id = station_id
+    _type = type
+    _list_id = list_id
+    _ul_id = ul_id
+    _input_id = input_id
+    document.querySelector('#station-id-info').value = station_id
+    document.querySelector('#station-type-info').value = type
+}
+
+function cancelModalCreateInfomation() {
+    document.querySelector(`#btn-${_button_id}`).click()
+}
+
+// loading station with ajax
+getInfoStation()
+async function getInfoStation() {
+    document.querySelector('#icon-update-info-loading').classList.remove('d-none')
+    let response = await fetch(`/ajax/get-station-info`)
+    let res = await response.json()
+
+    if(res.status === 'success') {
+        stations = res.data
+        document.querySelector('#icon-update-info-loading').classList.add('d-none')
+    }
+}
+let from_list_id = []
+let to_list_id = []
+function saveAllListId(type, list_id, ul_id, input_id) {
+    if(type === 'from') {
+        let _from = {
+            'list': list_id,
+            'ul': ul_id,
+            'input': input_id
+        }
+        from_list_id.push(_from)
+    }
+    if(type === 'to') {
+        let _to = {
+            'list': list_id,
+            'ul': ul_id,
+            'input': input_id
+        }
+        to_list_id.push(_to)
+    }
+}

@@ -51,6 +51,8 @@ if(document.querySelector(`#{{ $select_id }}`)) {
         let res = stations.find((item) => { return item.id === e.target.value })
         let infos = res.info_line.filter((item) => { return item.pivot.type === type })
         clearInfomationList(list_id)
+        clearInfomationSelected(ul_id)
+        clearInfomationInput(input_id)
         if(infos.length > 0) {
             setInfomationListSelect(infos, type, e.target.value, list_id, ul_id, input_id)
         }
@@ -106,12 +108,6 @@ function setInfomationListSelect(infos, type, station_id, list_id, ul_id, input_
     })
 }
 
-function clearInfomationList(list_id) {
-    const ul = document.querySelector(`#list-${list_id}`)
-    const lis = ul.querySelectorAll('li')
-    lis.forEach((li) => { li.remove() })
-}
-
 function addMasterInfoList(e, index, station_id, type, ul_id, input_id) {
     const _input = document.querySelector(`#${input_id}`)
     if(e.checked) {
@@ -126,7 +122,7 @@ function addMasterInfoList(e, index, station_id, type, ul_id, input_id) {
         li.setAttribute('data-id', _info.id)
         li.id = rand
         li.innerHTML = `${_info.name} 
-                        <i class="${info_icon} ms-2 text-primary cursor-pointer" title="View" onClick="viewInfo('${_info.id}', 'from')"></i>
+                        <i class="${info_icon} ms-2 text-primary cursor-pointer" title="View" onClick="showStationInfo('${_info.id}', '${station_id}', '${type}')"></i>
                         <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoFrom('${rand}', ${index}, '${_info.id}', '${ul_id}', '${input_id}', '${type}')"></i>`
         _ul.appendChild(li)
 
@@ -161,7 +157,10 @@ async function loadNewInfomation(station_id, type, list_id, ul_id, input_id) {
     let infos = await res.info_line.filter((item) => { return item.pivot.type === type })
 
     let is_type = type === 'from' ? from_list_id : to_list_id
-    is_type.forEach(async (item) => {
+    let unique_list = [
+        ...new Map(is_type.map((item) => [item["input"], item])).values(),
+    ];
+    unique_list.forEach(async (item) => {
         await clearInfomationList(item.list)
         await setInfomationListSelect(infos, type, station_id, item.list, item.ul, item.input)
         await setPreviousCheckedList(infos, item.ul, item.list)

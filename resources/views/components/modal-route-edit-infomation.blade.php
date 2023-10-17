@@ -5,6 +5,7 @@
     $list_id = uniqid();
     $button_id = uniqid();
     $ul_id = uniqid();
+    $btn_create = uniqid();
 @endphp
 
 <button type="button" class="btn btn-outline-dark btn-sm w-100 btn-infomation-select" id="btn-{{ $button_id }}" data-bs-toggle="modal" data-bs-target="#modal-{{ $modal_id }}">Select/Add Information</button>
@@ -15,7 +16,7 @@
 		<div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title w-75">{{ $header }}
-                    <button type="button" class="btn btn-sm button-orange-bg w-25 ms-3" data-bs-toggle="modal" data-bs-target="#create-infomation">Add</button>
+                    <button type="button" class="btn btn-sm button-orange-bg w-25 ms-3" data-bs-toggle="modal" data-bs-target="#create-infomation" id="btn-{{ $btn_create }}">Add</button>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -39,20 +40,24 @@ setInfomationListData()
 
 if(document.querySelector(`#{{ $select_id }}`)) {
     document.querySelector(`#{{ $select_id }}`).addEventListener('change', (e) => {
-        const stations = {{ Js::from($stations) }}
         const list_id = `{{ $list_id }}`
         const button_id = `{{ $button_id }}`
         const type = `{{ $type }}`
         const ul_id = `{{ $ul_id }}`
         const input_id = `{{ $input_id }}`
+        const button_create = `{{ $btn_create }}`
+        const ismaster = `{{ $ismaster }}`
 
-        // const _input_value = document.querySelector(`input-${input_id}`)
+        document.querySelector(`#btn-${button_create}`).setAttribute('onClick', `setModalCreateId('${button_id}', '${e.target.value}', '${type}', '${list_id}', '${ul_id}', '${input_id}')`)
         document.querySelector(`#btn-${button_id}`).disabled = false
         let res = stations.find((item) => { return item.id === e.target.value })
         let infos = res.info_line.filter((item) => { return item.pivot.type === type })
-        clearInfomationList(list_id)
+        clearInfomationList2(list_id)
+        clearInfomationSelected2(ul_id)
+        clearInfomationInput2(input_id)
         if(infos.length > 0) {
-            setInfomationListSelect(infos, type, e.target.value, list_id, ul_id, input_id)
+            setInfomationListSelect(infos, type, e.target.value, list_id, ul_id, input_id, false)
+            setInfomationOnChange(e.target.value, type, ismaster, list_id, ul_id, input_id)
         }
         else {
             let ul = document.querySelector(`#list-${list_id}`)
@@ -71,7 +76,8 @@ if(document.querySelector(`#{{ $select_id }}`)) {
     })
 }
 
-function setInfomationListSelect(infos, type, station_id, list_id, ul_id, input_id) {
+function setInfomationListSelect(infos, type, station_id, list_id, ul_id, input_id, _new) {
+    saveAllList(type, list_id, ul_id, input_id)
     let li_name = type === 'from' ? 'master_from[]' : 'master_to[]'
     let ul = document.querySelector(`#list-${list_id}`)
     infos.forEach((info, index) => {
@@ -88,7 +94,7 @@ function setInfomationListSelect(infos, type, station_id, list_id, ul_id, input_
         _input.setAttribute('class', 'form-check-input me-1')
         _input.value = info.id
         _input.id = `input-${rand}`
-        _input.setAttribute('onClick', `addMasterInfoList(this, '${station_id}', '${type}', '${ul_id}', '${input_id}')`)
+        _input.setAttribute('onClick', `addMasterInfoList(this, '${station_id}', '${type}', '${ul_id}', '${input_id}', ${_new})`)
 
         _label.classList.add('ms-2')
         _label.setAttribute('for', `input-${rand}`)
@@ -104,28 +110,23 @@ function setInfomationListSelect(infos, type, station_id, list_id, ul_id, input_
     })
 }
 
-function clearInfomationList(list_id) {
-    const ul = document.querySelector(`#list-${list_id}`)
-    const lis = ul.querySelectorAll('li')
-    lis.forEach((li) => { li.remove() })
-}
-
-function addMasterInfoList(e, station_id, type, ul_id, input_id) {
+function addMasterInfoList(e, station_id, type, ul_id, input_id, _new) {
     const _input = document.querySelector(`#${input_id}`)
     if(e.checked) {
-        const stations = {{ Js::from($stations) }}
+        let _stations = !_new ? {{ Js::from($stations) }} : stations
         const info_icon = 'fi fi-squared-info'
         const remove_icon = 'fi fi-round-close'
         const _ul = document.querySelector(`#master-${ul_id}`)
-        let res = stations.find((item) => { return item.id === station_id })
+        let res = _stations.find((item) => { return item.id === station_id })
         let _info = res.info_line.find((item) => { return item.id === e.value })
 
         let rand = generateString(8)
         let li = document.createElement('li')
         li.setAttribute('class', 'list-group-item info-from-active-on')
+        li.setAttribute('data-id', _info.id)
         li.id = rand
         li.innerHTML = `${_info.name} 
-                        <i class="${info_icon} ms-2 text-primary cursor-pointer" title="View" onClick="viewInfo('${_info.id}', 'from')"></i>
+                        <i class="${info_icon} ms-2 text-primary cursor-pointer" title="View" onClick="showStationInfo('${_info.id}', '${station_id}', '${type}')"></i>
                         <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoFrom('${rand}', '${_info.id}', '${ul_id}', '${input_id}', '${type}')"></i>`
         _ul.appendChild(li)
 
@@ -163,12 +164,31 @@ function setInfomationListData() {
     const input_id = `{{ $input_id }}`
     const type = `{{ $type }}`
     const ismaster = `{{ $ismaster }}`
+    const button_id = `{{ $button_id }}`
+    const button_create = `{{ $btn_create }}`
+
+    // console.log(document.querySelector(`#{{ $select_id }}`).value)
 
     const res = stations.find((item) => { return item.id === station_id })
     const infos = res.info_line.filter((item) => { return item.pivot.type === type })
     const info_selected = station_lines.filter((item) => { return item.pivot.type === type && item.pivot.ismaster === ismaster })
-    setInfomationListSelect(infos, type, station_id, list_id, ul_id, input_id)
+    clearInfomationList2(list_id)
+    setInfomationListSelect(infos, type, station_id, list_id, ul_id, input_id, false)
     setInfomationListSelected(info_selected, station_id, type, ul_id, input_id, list_id)
+    document.querySelector(`#btn-${button_create}`).setAttribute('onClick', `setModalCreateId('${button_id}', '${station_id}', '${type}', '${list_id}', '${ul_id}', '${input_id}')`)
+}
+
+async function setInfomationOnChange(station_id, type, ismaster, list_id, ul_id, input_id) {
+    let current_station_id = type === 'from' ? station_from_id : station_to_id
+    if(current_station_id === station_id) {
+        let response = await fetch(`/ajax/get-route-info/${route_id}/${station_id}/${type}`)
+        let res = await response.json()
+        
+        if(res.data !== null) {
+            let info_selected = res.data.station_lines.filter((item) => { return item.pivot.type === type && item.pivot.ismaster === ismaster })
+            setInfomationListSelected(info_selected, station_id, type, ul_id, input_id, list_id)
+        }
+    }
 }
 
 function setInfomationListSelected(info_selected, station_id, type, ul_id, input_id, list_id) {
@@ -190,5 +210,58 @@ function generateString(length) {
     }
 
     return result;
+}
+
+async function loadNewInfomation(station_id, type, list_id, ul_id, input_id) {
+    await getInfoStation()
+    let res = await stations.find((item) => { return item.id === station_id })
+    let infos = await res.info_line.filter((item) => { return item.pivot.type === type })
+
+    let is_type = type === 'from' ? from_list : to_list
+    let unique_list = [
+        ...new Map(is_type.map((item) => [item["input"], item])).values(),
+    ];
+    unique_list.forEach(async (item) => {
+        await clearInfomationList2(item.list)
+        await setInfomationListSelect(infos, type, station_id, item.list, item.ul, item.input, true)
+        await setPreviousCheckedList(infos, item.ul, item.list)
+    })
+}
+
+function setPreviousCheckedList(infos, ul_id, list_id) {
+    const _ul = document.querySelector(`#master-${ul_id}`)
+    const _li = _ul.querySelectorAll('li')
+    const _ul_list = document.querySelector(`#list-${list_id}`)
+    const _li_list = _ul_list.querySelectorAll('li input')
+
+    _li.forEach((li) => {
+        let get_id = li.getAttribute('data-id')
+        let get_rand = li.id
+        _li_list.forEach((item) => {
+            if(item.value === get_id) {
+                item.checked = true
+                item.setAttribute('data-rand', get_rand)
+            }
+        })
+    })
+}
+
+function clearInfomationList2(list_id) {
+    const ul = document.querySelector(`#list-${list_id}`)
+    const lis = ul.querySelectorAll('li')
+    lis.forEach((li) => { 
+        li.remove() 
+    })
+}
+
+function clearInfomationSelected2(ul_id) {
+    const ul = document.querySelector(`#master-${ul_id}`)
+    const lis = ul.querySelectorAll('li')
+    lis.forEach((li) => { li.remove() })
+}
+
+function clearInfomationInput2(input_id) {
+    const _input = document.querySelector(`#${input_id}`)
+    _input.value = ''
 }
 </script>

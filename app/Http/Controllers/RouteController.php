@@ -38,7 +38,7 @@ class RouteController extends Controller
     }
 
     public function create() {
-        $stations = Station::where('isactive', 'Y')->where('status', 'CO')->with('info_line')->get();
+        $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
         $activities = Activity::where('status', 'CO')->get();
         $meals = Addon::where('type', 'MEAL')->where('status', 'CO')->get();
@@ -167,5 +167,15 @@ class RouteController extends Controller
         $route->status = 'VO';
         if($route->save()) return redirect()->route('route-index')->withSuccess('Route deleted...');
         else return redirect()->route('route-index')->withFail('Something is wrong. Please try again.');
+    }
+
+    public function getRouteInfo(string $route_id = null, string $station_id = null, string $type = null) {
+        $routes = null;
+        if($type == 'from')
+            $routes = Route::where('id', $route_id)->where('station_from_id', $station_id)->with('station_lines')->first();
+        if($type == 'to')
+            $routes = Route::where('id', $route_id)->where('station_to_id', $station_id)->with('station_lines')->first();
+
+        return response()->json(['data' => $routes, 'status' => 'success']);
     }
 }

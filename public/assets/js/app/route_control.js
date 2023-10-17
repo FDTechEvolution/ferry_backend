@@ -350,13 +350,14 @@ function cancelModalCreateInfomation() {
 // loading station with ajax
 getInfoStation()
 async function getInfoStation() {
-    document.querySelector('#icon-update-info-loading').classList.remove('d-none')
+    const _loading = document.querySelector('#icon-update-info-loading')
+    if(_loading) _loading.classList.remove('d-none')
     let response = await fetch(`/ajax/get-station-info`)
     let res = await response.json()
 
     if(res.status === 'success') {
         stations = res.data
-        document.querySelector('#icon-update-info-loading').classList.add('d-none')
+        if(_loading) _loading.classList.add('d-none')
     }
 }
 let from_list_id = []
@@ -378,4 +379,21 @@ function saveAllListId(type, list_id, ul_id, input_id) {
         }
         to_list_id.push(_to)
     }
+}
+
+function clearInfomationList(list_id) {
+    const ul = document.querySelector(`#list-${list_id}`)
+    const lis = ul.querySelectorAll('li')
+    lis.forEach((li) => { li.remove() })
+}
+
+function clearInfomationSelected(ul_id) {
+    const ul = document.querySelector(`#master-${ul_id}`)
+    const lis = ul.querySelectorAll('li')
+    lis.forEach((li) => { li.remove() })
+}
+
+function clearInfomationInput(input_id) {
+    const _input = document.querySelector(`#${input_id}`)
+    _input.value = ''
 }

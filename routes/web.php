@@ -116,6 +116,9 @@ Route::middleware('auth')->group(function() {
 
         Route::post('/route/store', 'store')->name('route-store');
         Route::post('/route/update', 'update')->name('route-update');
+
+        // AJAX
+        Route::get('/ajax/get-route-info/{route_id}/{station_id}/{type}', 'getRouteInfo')->name('get-route-info');
     });
 
     Route::controller(ReviewsController::class)->group(function(){

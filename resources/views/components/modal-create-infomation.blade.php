@@ -118,6 +118,7 @@ $("#btn-infomation-create").click(function(e){
         },
         complete: function(response){
             loading.classList.add('d-none')
+            btn_infomation_create.disabled = btn_infomation_cancel.disabled = false
             // if(_type === 'from') $('#station-from-selected').val(_station_id)
             // if(_type === 'to') $('#station-to-selected').val(_station_id)
         }

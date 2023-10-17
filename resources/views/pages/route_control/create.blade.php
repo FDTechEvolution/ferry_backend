@@ -131,7 +131,7 @@
                                     <div class="col-4">
                                         <label class="d-flex align-items-center mb-1">
                                             <span class="user-select-none fw-bold me-2">Master From </span>
-                                            <input class="d-none-cloaked" type="checkbox" id="master-from-switch" name="master_from_on" value="1">
+                                            <input class="d-none-cloaked" type="checkbox" id="master-from-switch" name="master_from_on" value="1" checked>
                                             <i class="switch-icon switch-icon-primary switch-icon-xs"></i>
                                             <span class="ms-1 user-select-none" id="master-from-text">Off</span>
                                         </label>
@@ -148,7 +148,7 @@
                                     <div class="col-4">
                                         <label class="d-flex align-items-center mb-1">
                                             <span class="user-select-none fw-bold me-2">Master To </span>
-                                            <input class="d-none-cloaked" type="checkbox" id="master-to-switch" name="master_to_on" value="1">
+                                            <input class="d-none-cloaked" type="checkbox" id="master-to-switch" name="master_to_on" value="1" checked>
                                             <i class="switch-icon switch-icon-primary switch-icon-xs"></i>
                                             <span class="ms-1 user-select-none" id="master-to-text">Off</span>
                                         </label>

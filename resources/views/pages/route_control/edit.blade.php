@@ -19,6 +19,28 @@
 @stop
 
 @section('content')
+<script>
+let from_list = []
+let to_list = []
+function saveAllList(type, list_id, ul_id, input_id) {
+    if(type === 'from') {
+        let _from = {
+            'list': list_id,
+            'ul': ul_id,
+            'input': input_id
+        }
+        from_list.push(_from)
+    }
+    if(type === 'to') {
+        let _to = {
+            'list': list_id,
+            'ul': ul_id,
+            'input': input_id
+        }
+        to_list.push(_to)
+    }
+}
+</script>
 <div class="row mt-4">
     <div class="col-12">
         <form novalidate class="bs-validate" id="route-update-form" method="POST" action="{{ route('route-update') }}">
@@ -252,15 +274,20 @@
 
 @section('modal')
 <x-modal-info />
+
+<x-modal-create-infomation />
 @stop
 
 @section('script')
 <script>
     const icons = {{ Js::from($icons) }}
-    const stations = {{ Js::from($stations) }}
+    let stations = ''
     const route = {{ Js::from($route) }}
     const route_icons = {{ Js::from($route['icons']) }}
     const info_lines = {{ Js::from($route['station_lines']) }}
+    const route_id = {{ Js::from($route['id']) }}
+    const station_from_id = {{ Js::from($route['station_from_id']) }}
+    const station_to_id = {{ Js::from($route['station_to_id']) }}
 </script>
 <script src="{{ asset('assets/js/app/route_control.js') }}"></script>
 

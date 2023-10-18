@@ -507,3 +507,34 @@ function setMealData() {
         _li.classList.add('d-none')
     })
 }
+
+
+// Action Route Selected
+let id_selected = []
+function routeSelectedAction(e) {
+    const div_action = document.querySelector('.btn-route-selected-action')
+    const input_delete = document.querySelector('#input-delete-selected')
+    const btn_delete = document.querySelector('#btn-confirm-route-selected-delete')
+    if(e.checked) {
+        id_selected.push(e.value)
+        btn_delete.classList.remove('a-href-disabled')
+    }
+    else {
+        let selected = document.querySelectorAll('.route-selected-action')
+        let result = false
+        selected.forEach((item) => { if(item.checked) result = true })
+
+        let _index = id_selected.findIndex(item => item === e.value)
+        id_selected.splice(_index, 1)
+
+        if(!result) {
+            btn_delete.classList.add('a-href-disabled')
+        }
+    }
+
+    input_delete.value = id_selected
+}
+
+function confirmRouteSelectedDelete() {
+    document.querySelector('#form-route-selected-delete').submit()
+}

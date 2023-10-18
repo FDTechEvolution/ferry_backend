@@ -41,7 +41,53 @@
     <div class="col-12">
         <div id="to-route-list">
             <div class="card-body w--90 mx-auto">
-                <h1>Route control</h1>
+                <div class="row datatable-title">
+                    <div class="col-6">
+                        <h1>Route control</h1>
+                    </div>
+                    <div class="col-6 text-end">
+                        <div class="btn-route-selected-action row">
+                            <div class="col-2 offset-8">
+                                <button class="btn btn-sm btn-outline-dark w-100 me-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Print All Select"><i class="fi fi-print me-0"></i></button>
+                            </div>
+                            <div class="col-2">
+                                <form novalidate class="bs-validate" id="form-route-selected-delete" method="POST" action="{{ route('route-selected-delete') }}">
+                                    @csrf
+                                    <input type="hidden" name="route_selected" id="input-delete-selected" value="">
+                                </form>
+                                <a href="#"
+                                    class="js-ajax-confirm btn btn-sm btn-outline-dark w-100 a-href-disabled"
+                                    id="btn-confirm-route-selected-delete"
+                                    data-ajax-confirm-type="danger"
+
+                                    data-bs-toggle="tooltip" 
+                                    data-bs-placement="top" 
+                                    title="Delete All Select"
+
+                                    data-ajax-confirm-mode="ajax"
+                                    data-ajax-confirm-method="GET"
+
+                                    data-ajax-confirm-size="modal-md"
+                                    data-ajax-confirm-centered="false"
+
+                                    data-ajax-confirm-title="Please Confirm"
+                                    data-ajax-confirm-body="Please confirm delete routes!"
+
+                                    data-ajax-confirm-btn-yes-class="btn-sm btn-danger"
+                                    data-ajax-confirm-btn-yes-text="Yes, delete"
+                                    data-ajax-confirm-btn-yes-icon="fi fi-check"
+
+                                    data-ajax-confirm-btn-no-class="btn-sm btn-light"
+                                    data-ajax-confirm-btn-no-text="Cancel"
+                                    data-ajax-confirm-btn-no-icon="fi fi-close"
+
+                                    data-ajax-confirm-callback-function="confirmRouteSelectedDelete">
+                                    <i class="fi fi-thrash me-0"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <table class="table-datatable table table-datatable-custom" id="route-datatable" 
                     data-lng-empty="No data available in table"
                     data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
@@ -82,7 +128,7 @@
                         @foreach($routes as $index => $route)
                             <tr class="text-center">
                                 <td>
-                                    <input class="form-check-input form-check-input-primary" type="checkbox" value="" id="route-check-{{ $index }}">
+                                    <input class="form-check-input form-check-input-primary route-selected-action" type="checkbox" value="{{ $route['id'] }}" id="route-check-{{ $index }}" onClick="routeSelectedAction(this)">
                                 </td>
                                 <td class="text-start" style="line-height: 1.2rem;">
                                     {{ $route['station_from']['name'] }}
@@ -137,7 +183,11 @@
     .fix-width-120 {
         width: 120px;
     }
-    
+    .a-href-disabled {
+        pointer-events: none;
+        cursor: default;
+        opacity: 0.5;
+    }
 </style>
 @stop
 

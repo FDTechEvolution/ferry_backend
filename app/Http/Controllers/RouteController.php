@@ -226,4 +226,17 @@ class RouteController extends Controller
 
         return response()->json(['data' => $routes, 'status' => 'success']);
     }
+
+    public function destroySelected(Request $request) {
+        $routes = preg_split('/\,/', $request->route_selected);
+
+        foreach($routes as $route) {
+            $_route = Route::find($route);
+            $_route->isactive = 'N';
+            $_route->status = 'VO';
+            $_route->save();
+        }
+
+        return redirect()->route('route-index')->withSuccess('Route updated...');
+    }
 }

@@ -102,11 +102,63 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                 <div class="row mb-4">
                                     <div class="col-4">
                                         <label class="col-form-label-sm text-start fw-bold">Activity</label>
-                                        <button type="button" class="btn btn-outline-dark btn-sm w-100">Select Activity</button>
+                                        <div class="dropdown">
+                                            <a class="btn btn-outline-dark btn-sm dropdown-toggle w-100" href="#" role="button" id="dropdownActivity" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,6">
+                                                Select activity
+                                                <span class="group-icon">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                                    </svg>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                    </svg>
+                                                </span>
+                                            </a>
+
+                                            <ul class="dropdown-menu shadow-lg p-1 w-100" id="ul-activity-active" aria-labelledby="dropdownActivity">
+                                                @foreach($activities as $index => $activity)
+                                                    <li id="activity-active-{{ $index }}" data-id="{{ $activity['id'] }}">
+                                                        <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteActivity({{ $index }})">
+                                                            <img src="{{ asset($activity->icon->path) }}" class="me-2" width="24" height="24">
+                                                            <span>{{ $activity->name }}</span>
+                                                        </a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                        <ul class="list-group" id="ul-activity-selected">
+                                        </ul>
                                     </div>
                                     <div class="col-4">
                                         <label class="col-form-label-sm text-start fw-bold">Meal</label>
-                                        <button type="button" class="btn btn-outline-dark btn-sm w-100">Select Meal</button>
+                                        <div class="dropdown">
+                                            <a class="btn btn-outline-dark btn-sm dropdown-toggle w-100" href="#" role="button" id="dropdownMeal" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,6">
+                                                Select meal
+                                                <span class="group-icon">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                                    </svg>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                    </svg>
+                                                </span>
+                                            </a>
+
+                                            <ul class="dropdown-menu shadow-lg p-1 w-100" aria-labelledby="dropdownMeal">
+                                                @foreach($meals as $index => $meal)
+                                                    <li id="meal-active-{{ $index }}" data-id="{{ $meal['id'] }}">
+                                                        <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteMeal({{ $index }})">
+                                                            <img src="{{ asset('icon/meal/icon/'.$meal->image_icon) }}" class="me-2" width="24" height="24">
+                                                            <span>{{ $meal->name }}</span>
+                                                        </a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                        <ul class="list-group" id="ul-meal-selected">
+                                        </ul>
                                     </div>
                                 </div>
 
@@ -195,8 +247,6 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                     <div class="col-4">
                                         <label class="d-flex align-items-center mb-1 fw-bold">
                                             Infomation From 
-                                            <i class="fi fi-round-plus text-main-color-2 ms-2"></i>
-                                            <i class="fi fi-round-close text-main-color-2 ms-2"></i>
                                         </label>
 
                                         <input type="hidden" id="info-from-selected" name="info_from_selected" value=''>
@@ -214,8 +264,6 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                     <div class="col-4">
                                         <label class="d-flex align-items-center mb-1 fw-bold">
                                             Infomation To 
-                                            <i class="fi fi-round-plus text-main-color-2 ms-2"></i>
-                                            <i class="fi fi-round-close text-main-color-2 ms-2"></i>
                                         </label>
                                         
                                         <input type="hidden" id="info-to-selected" name="info_to_selected" value=''>
@@ -288,11 +336,17 @@ function saveAllList(type, list_id, ul_id, input_id) {
     const route_id = {{ Js::from($route['id']) }}
     const station_from_id = {{ Js::from($route['station_from_id']) }}
     const station_to_id = {{ Js::from($route['station_to_id']) }}
+    const activities = {{ Js::from($activities) }}
+    const meals = {{ Js::from($meals) }}
+    const route_activity = {{ Js::from($route['activity_lines']) }}
+    const route_meal = {{ Js::from($route['meal_lines']) }}
 </script>
 <script src="{{ asset('assets/js/app/route_control.js') }}"></script>
 
 <script>
     setRouteIcon()
+    setActivityData()
+    setMealData()
     // setInfomationDataList()
     // setMasterInfoListData()
 </script>

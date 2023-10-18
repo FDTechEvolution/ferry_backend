@@ -397,3 +397,113 @@ function clearInfomationInput(input_id) {
     const _input = document.querySelector(`#${input_id}`)
     _input.value = ''
 }
+
+
+
+// Activity action
+function addRouteActivity(index) {
+    const ul = document.querySelector('#ul-activity-selected')
+    const activity = activities.find((item, key) => { return key === index })
+    
+    let rand = generateString(8)
+    let li = document.createElement('li')
+    li.setAttribute('class', 'list-group-item')
+    li.setAttribute('data-id', activity.id)
+    li.id = `activity-${rand}`
+    li.innerHTML = `<img src="${activity.icon.path}" width="24" height="24" class="ms-2"> 
+                    ${activity.name} <small>(${parseInt(activity.price)} ฿)</small>
+                    <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeActivity('${rand}', '${activity.id}')"></i>
+                    <input type="hidden" name="activity_id[]" value="${activity.id}">`
+    ul.appendChild(li)
+
+    const _li = document.querySelector(`#activity-active-${index}`)
+    _li.classList.add('d-none')
+}
+
+function removeActivity(rand, id) {
+    const ul = document.querySelector('#ul-activity-selected')
+    let li = ul.querySelectorAll('li')
+
+    li.forEach((item) => {
+        if(item.id === `activity-${rand}`) item.remove()
+    })
+
+    const _li = document.querySelector(`[data-id="${id}"]`)
+    _li.classList.remove('d-none')
+}
+
+function setActivityData() {
+    const ul = document.querySelector('#ul-activity-selected')
+    
+    route_activity.forEach((activity, index) => {
+        let rand = generateString(8)
+        let li = document.createElement('li')
+        li.setAttribute('class', 'list-group-item')
+        li.id = `activity-${rand}`
+        li.innerHTML = `<img src="${activity.icon.path}" width="24" height="24" class="ms-2"> 
+                        ${activity.name} <small>(${parseInt(activity.price)} ฿)</small>
+                        <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeActivity('${rand}', '${activity.id}')"></i>
+                        <input type="hidden" name="activity_id[]" value="${activity.id}">`
+        ul.appendChild(li)
+
+        const _li = document.querySelector(`[data-id="${activity.id}"]`)
+        _li.classList.add('d-none')
+    })
+
+    // route_activity.forEach((activity, index) => {
+    //     console.log(activity.getAttribute('data-id'))
+    // })
+}
+
+
+// Meal action
+function addRouteMeal(index) {
+    const ul = document.querySelector('#ul-meal-selected')
+    const meal = meals.find((item, key) => { return key === index })
+
+    let rand = generateString(8)
+    let li = document.createElement('li')
+    li.setAttribute('class', 'list-group-item')
+    li.setAttribute('data-id', meal.id)
+    li.id = `meal-${rand}`
+    li.innerHTML = `<img src="/icon/meal/icon/${meal.image_icon}" width="24" height="24" class="ms-2"> 
+                    ${meal.name} <small>(${parseInt(meal.amount)} ฿)</small>
+                    <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeMeal('${rand}', '${meal.id}')"></i>
+                    <input type="hidden" name="meal_id[]" value="${meal.id}">`
+    ul.appendChild(li)
+
+    const _li = document.querySelector(`[data-id="${meal.id}"]`)
+    _li.classList.add('d-none')
+}
+
+function removeMeal(rand, id) {
+    const ul = document.querySelector('#ul-meal-selected')
+    let li = ul.querySelectorAll('li')
+
+    li.forEach((item) => {
+        if(item.id === `meal-${rand}`) item.remove()
+    })
+
+    const _li = document.querySelector(`[data-id="${id}"]`)
+    _li.classList.remove('d-none')
+}
+
+function setMealData() {
+    const ul = document.querySelector('#ul-meal-selected')
+
+    route_meal.forEach((meal, index) => {
+        let rand = generateString(8)
+        let li = document.createElement('li')
+        li.setAttribute('class', 'list-group-item')
+        li.setAttribute('data-id', meal.id)
+        li.id = `meal-${rand}`
+        li.innerHTML = `<img src="/icon/meal/icon/${meal.image_icon}" width="24" height="24" class="ms-2"> 
+                        ${meal.name} <small>(${parseInt(meal.amount)} ฿)</small>
+                        <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeMeal('${rand}', '${meal.id}')"></i>
+                        <input type="hidden" name="meal_id[]" value="${meal.id}">`
+        ul.appendChild(li)
+
+        const _li = document.querySelector(`[data-id="${meal.id}"]`)
+        _li.classList.add('d-none')
+    })
+}

@@ -12,6 +12,8 @@ use App\Models\RouteIcon;
 use App\Models\RouteStationInfoLine;
 use App\Models\Activity;
 use App\Models\Addon;
+use App\Models\RouteActivity;
+use App\Models\RouteMeal;
 
 class RouteController extends Controller
 {
@@ -21,6 +23,7 @@ class RouteController extends Controller
     }
 
     protected $Type = 'route';
+    protected $Addon = 'MEAL';
     protected $_Status = [
         'Y' => '<span class="text-success">On</span>',
         'N' => '<span class="text-danger">Off</span>'
@@ -40,8 +43,8 @@ class RouteController extends Controller
     public function create() {
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
-        $activities = Activity::where('status', 'CO')->get();
-        $meals = Addon::where('type', 'MEAL')->where('status', 'CO')->get();
+        $activities = Activity::where('status', 'CO')->with('icon')->get();
+        $meals = Addon::where('type', $this->Addon)->where('status', 'CO')->get();
 
         return view('pages.route_control.create', 
                     ['stations' => $stations, 'icons' => $icons, 'activities' => $activities, 'meals' => $meals]
@@ -55,10 +58,16 @@ class RouteController extends Controller
             return redirect()->route('route-index')->withFail('This route not exist.');
 
         $route->station_lines;
+        $route->activity_lines;
+        $route->meal_lines;
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->with('info_line')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
+        $activities = Activity::where('status', 'CO')->with('icon')->get();
+        $meals = Addon::where('type', $this->Addon)->where('status', 'CO')->get();
 
-        return view('pages.route_control.edit', ['route' => $route, 'icons' => $icons, 'stations' => $stations]);
+        return view('pages.route_control.edit', [
+            'route' => $route, 'icons' => $icons, 'stations' => $stations, 'activities' => $activities, 'meals' => $meals
+        ]);
     }
 
     public function store(Request $request) {
@@ -66,7 +75,8 @@ class RouteController extends Controller
             'station_from' => 'required|string|min:36|max:36',
             'station_to' => 'required|string|min:36|max:36',
             'regular_price' => 'integer|nullable',
-            'child_price' => 'integer|nullable'
+            'child_price' => 'integer|nullable',
+            'infant_price' => 'integer|nullable'
         ]);
 
         $route = Route::create([
@@ -82,6 +92,8 @@ class RouteController extends Controller
 
         if($route) {
             $result = $this->routeIconStore($request->icons, $route->id);
+            if(isset($request->activity_id)) $this->routeActivityStore($request->activity_id, $route->id);
+            if(isset($request->meal_id)) $this->routeMealStore($request->meal_id, $route->id);
 
             if($result) {
                 if(isset($request->master_from_selected)) $this->storeRouteStationInfoLine($route->id, $request->master_from_selected, 'from', 'Y');
@@ -111,6 +123,32 @@ class RouteController extends Controller
         return true;
     }
 
+    private function routeActivityStore($activities, $route_id) {
+        foreach($activities as $activity) {
+            RouteActivity::create([
+                'route_id' => $route_id,
+                'activity_id' => $activity
+            ]);
+        }
+    }
+
+    private function routeMealStore($meals, $route_id) {
+        foreach($meals as $meal) {
+            RouteMeal::create([
+                'route_id' => $route_id,
+                'addon_id' => $meal
+            ]);
+        }
+    }
+
+    private function routeActivityDestroy($route_id) {
+        RouteActivity::where('route_id', $route_id)->delete();
+    }
+
+    private function routeMealDestroy($route_id) {
+        RouteMeal::where('route_id', $route_id)->delete();
+    }
+
     private function storeRouteStationInfoLine(string $route_id = null, string $info_lines = null, string $type = null, string $ismaster = null) {
         $infos = preg_split('/\,/', $info_lines);
 
@@ -129,8 +167,11 @@ class RouteController extends Controller
             'station_from' => 'required|string|min:36|max:36',
             'station_to' => 'required|string|min:36|max:36',
             'regular_price' => 'integer|nullable',
-            'child_price' => 'integer|nullable'
+            'child_price' => 'integer|nullable',
+            'infant_price' => 'integer|nullable',
         ]);
+
+        // Log::debug($request);
 
         $route = Route::find($request->route_id);
             $route->station_from_id = $request->station_from;
@@ -139,15 +180,22 @@ class RouteController extends Controller
             $route->arrive_time = $request->arrive_time;
             $route->regular_price = $request->regular_price;
             $route->child_price = $request->child_price;
+            $route->infant_price = $request->infant_price;
             $route->isactive = isset($request->status) ? 'Y' : 'N';
         if($route->save()) {
             $this->routeIconDestroy($request->route_id);
             $result = $this->routeIconStore($request->icons, $request->route_id);
+            $this->routeActivityDestroy($request->route_id);
+            if(isset($request->activity_id)) $this->routeActivityStore($request->activity_id, $request->route_id);
+            $this->routeMealDestroy($request->route_id);
+            if(isset($request->meal_id)) $this->routeMealStore($request->meal_id, $request->route_id);
 
             if($result) {
                 $this->clearAllRouteStationInfoLine($request->route_id);
-                if(isset($request->master_from)) $this->storeRouteStationInfoLine($route->id, $request->master_from, 'from');
-                if(isset($request->master_to)) $this->storeRouteStationInfoLine($route->id, $request->master_to, 'to');
+                if(isset($request->master_from_selected)) $this->storeRouteStationInfoLine($route->id, $request->master_from_selected, 'from', 'Y');
+                if(isset($request->master_to_selected)) $this->storeRouteStationInfoLine($route->id, $request->master_to_selected, 'to', 'Y');
+                if(isset($request->info_from_selected)) $this->storeRouteStationInfoLine($route->id, $request->info_from_selected, 'from', 'N');
+                if(isset($request->info_to_selected)) $this->storeRouteStationInfoLine($route->id, $request->info_to_selected, 'to', 'N');
                 return redirect()->route('route-index')->withSuccess('Route updated...');
             }
         }

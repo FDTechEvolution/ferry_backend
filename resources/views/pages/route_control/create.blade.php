@@ -82,11 +82,63 @@
                                 <div class="row mb-4">
                                     <div class="col-4">
                                         <label class="col-form-label-sm text-start fw-bold">Activity</label>
-                                        <button type="button" class="btn btn-outline-dark btn-sm w-100">Select Activity</button>
+                                        <div class="dropdown">
+                                            <a class="btn btn-outline-dark btn-sm dropdown-toggle w-100" href="#" role="button" id="dropdownActivity" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,6">
+                                                Select activity
+                                                <span class="group-icon">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                                    </svg>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                    </svg>
+                                                </span>
+                                            </a>
+
+                                            <ul class="dropdown-menu shadow-lg p-1 w-100" aria-labelledby="dropdownActivity">
+                                                @foreach($activities as $index => $activity)
+                                                    <li id="activity-active-{{ $index }}">
+                                                        <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteActivity({{ $index }})">
+                                                            <img src="{{ asset($activity->icon->path) }}" class="me-2" width="24" height="24">
+                                                            <span>{{ $activity->name }}</span>
+                                                        </a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                        <ul class="list-group" id="ul-activity-selected">
+                                        </ul>
                                     </div>
                                     <div class="col-4">
                                         <label class="col-form-label-sm text-start fw-bold">Meal</label>
-                                        <button type="button" class="btn btn-outline-dark btn-sm w-100">Select Meal</button>
+                                        <div class="dropdown">
+                                            <a class="btn btn-outline-dark btn-sm dropdown-toggle w-100" href="#" role="button" id="dropdownMeal" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,6">
+                                                Select meal
+                                                <span class="group-icon">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                                    </svg>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                    </svg>
+                                                </span>
+                                            </a>
+
+                                            <ul class="dropdown-menu shadow-lg p-1 w-100" aria-labelledby="dropdownMeal">
+                                                @foreach($meals as $index => $meal)
+                                                    <li id="meal-active-{{ $index }}">
+                                                        <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteMeal({{ $index }})">
+                                                            <img src="{{ asset('icon/meal/icon/'.$meal->image_icon) }}" class="me-2" width="24" height="24">
+                                                            <span>{{ $meal->name }}</span>
+                                                        </a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                        <ul class="list-group" id="ul-meal-selected">
+                                        </ul>
                                     </div>
                                 </div>
 
@@ -167,8 +219,6 @@
                                     <div class="col-4">
                                         <label class="d-flex align-items-center mb-1 fw-bold">
                                             Infomation From 
-                                            <i class="fi fi-round-plus text-main-color-2 ms-2"></i>
-                                            <i class="fi fi-round-close text-main-color-2 ms-2"></i>
                                         </label>
 
                                         <x-modal-route-select-infomation 
@@ -183,8 +233,6 @@
                                     <div class="col-4">
                                         <label class="d-flex align-items-center mb-1 fw-bold">
                                             Infomation To 
-                                            <i class="fi fi-round-plus text-main-color-2 ms-2"></i>
-                                            <i class="fi fi-round-close text-main-color-2 ms-2"></i>
                                         </label>
 
                                         <x-modal-route-select-infomation 
@@ -245,6 +293,8 @@
 @section('script')
 <script>
     const icons = {{ Js::from($icons) }}
+    const activities = {{ Js::from($activities) }}
+    const meals = {{ Js::from($meals) }}
     let stations = ''
 </script>
 <script src="{{ asset('assets/js/app/route_control.js') }}"></script>

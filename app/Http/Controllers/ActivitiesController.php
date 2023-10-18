@@ -33,12 +33,14 @@ class ActivitiesController extends Controller
 
     public function edit(string $id = null) {
         $activity = Activity::find($id);
+        $icons = Icon::where('type', $this->Type)->get();
 
         if(is_null($activity) || $activity->status != 'CO') 
             return redirect()->route('activity-index')->withFail('This activity not exist.');
             
         $activity->image;
-        return view('pages.activities.edit', ['activity' => $activity]);
+        $activity->icon;
+        return view('pages.activities.edit', ['activity' => $activity, 'icons' => $icons]);
     }
 
     public function store(Request $request) {
@@ -61,7 +63,8 @@ class ActivitiesController extends Controller
             'name' => $request->name,
             'price' => $request->price,
             'detail' => $request->detail,
-            'image_id' => $image_id
+            'image_id' => $image_id,
+            'icon_id' => $request->icon_id
         ]);
 
         if($activity) 
@@ -139,7 +142,6 @@ class ActivitiesController extends Controller
 
     private function removeImage($image_id) {
         $image = Image::find($image_id);
-        Log::debug($image);
         if($image) {
             unlink(public_path().$image->path.'/'.$image->name);
             $image->delete();

@@ -15,6 +15,7 @@ class Activity extends Model
         'price',
         'detail',
         'image_id',
+        'icon_id',
         'status'
     ];
 
@@ -24,5 +25,9 @@ class Activity extends Model
 
     public function image() {
         return $this->hasOne(Image::class, 'id', 'image_id');
+    }
+
+    public function icon() {
+        return $this->hasOne(Icon::class, 'id', 'icon_id');
     }
 }

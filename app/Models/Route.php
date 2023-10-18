@@ -17,6 +17,7 @@ class Route extends Model
         'arrive_time',
         'regular_price',
         'child_price',
+        'infant_price',
         'isactive',
         'status'
     ];
@@ -40,5 +41,13 @@ class Route extends Model
     public function station_lines() {
         return $this->belongsToMany(StationInfomation::class, 'route_station_info_lines', 'route_id', 'station_infomation_id')
                     ->withPivot('type', 'ismaster');
+    }
+
+    public function activity_lines() {
+        return $this->belongsToMany(Activity::class, 'route_activities', 'route_id', 'activity_id')->with('icon');
+    }
+
+    public function meal_lines() {
+        return $this->belongsToMany(Addon::class, 'route_meals', 'route_id', 'addon_id');
     }
 }

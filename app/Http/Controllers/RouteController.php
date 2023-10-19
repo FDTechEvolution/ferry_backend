@@ -239,4 +239,19 @@ class RouteController extends Controller
 
         return redirect()->route('route-index')->withSuccess('Route updated...');
     }
+
+    public function pdfSelected(Request $request) {
+        if(!isset($request->route_selected) || $request->isMethod('get'))
+            return redirect()->route('route-index')->withFail('No route selected.');
+
+        $routes = preg_split('/\,/', $request->route_selected);
+        $_routes = [];
+
+        foreach($routes as $route) {
+            $_route = Route::find($route);
+            array_push($_routes, $_route);
+        }
+
+        return view('pages.route_control.pdf', ['routes' => $_routes]);
+    }
 }

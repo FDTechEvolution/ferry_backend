@@ -512,12 +512,14 @@ function setMealData() {
 // Action Route Selected
 let id_selected = []
 function routeSelectedAction(e) {
-    const div_action = document.querySelector('.btn-route-selected-action')
     const input_delete = document.querySelector('#input-delete-selected')
+    const input_pdf = document.querySelector('#input-pdf-selected')
     const btn_delete = document.querySelector('#btn-confirm-route-selected-delete')
+    const btn_pdf = document.querySelector('#btn-confirm-route-selected-pdf')
     if(e.checked) {
         id_selected.push(e.value)
         btn_delete.classList.remove('a-href-disabled')
+        btn_pdf.classList.remove('a-href-disabled')
     }
     else {
         let selected = document.querySelectorAll('.route-selected-action')
@@ -529,10 +531,12 @@ function routeSelectedAction(e) {
 
         if(!result) {
             btn_delete.classList.add('a-href-disabled')
+            btn_pdf.classList.add('a-href-disabled')
         }
     }
 
     input_delete.value = id_selected
+    input_pdf.value = id_selected
 }
 
 function confirmRouteSelectedDelete() {

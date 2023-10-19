@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InformationsController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\AuthController;
@@ -133,6 +134,18 @@ Route::middleware('auth')->group(function() {
         Route::post('/review/update/{review}','update')->name('review-update');
 
         Route::get('/review/delete/{id}','destroy')->name('review-delete');
+    });
+
+    Route::controller(InformationsController::class)->group(function(){
+        Route::get('/information','index')->name('information-index');
+
+        Route::get('/information/create','create')->name('information-create');
+        Route::post('/information/store','store')->name('information-store');
+
+        Route::get('/information/edit/{information}','edit')->name('information-edit');
+        Route::post('/information/update/{information}','update')->name('information-update');
+
+        Route::get('/information/delete/{id}','destroy')->name('information-delete');
     });
 });
 

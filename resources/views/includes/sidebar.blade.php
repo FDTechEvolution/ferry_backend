@@ -146,7 +146,7 @@
           </a>
       </li>
       <li class="nav-item">
-          <a class="nav-link" href="#">
+          <a class="nav-link" href="{{ route('information-index') }}">
               <i class="fi fi-arrow-right"></i>
               <span>Infomation</span>
           </a>

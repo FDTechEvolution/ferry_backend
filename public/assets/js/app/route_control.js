@@ -542,3 +542,77 @@ function routeSelectedAction(e) {
 function confirmRouteSelectedDelete() {
     document.querySelector('#form-route-selected-delete').submit()
 }
+
+const filter_from = document.querySelector('#filter-station-from')
+const filter_to = document.querySelector('#filter-station-to')
+let _routes = []
+
+if(filter_from) {
+    filter_from.addEventListener('keyup', (e) => {
+        $('#route-datatable').dataTable().fnClearTable()
+        _routes = []
+
+        let is_routes = routes.filter((item, key) => { return item.station_from.name.toLowerCase().includes(e.target.value.toLowerCase()) })
+        is_routes.forEach((route, index) => {
+            let obj = {
+                choose: `<input class="form-check-input form-check-input-primary route-selected-action" type="checkbox" value="${route.id}" id="route-check-${index}" onClick="routeSelectedAction(this)">`,
+                station_from: `${route.station_from.name} ${checkPierStation(route.station_from.piername)}`,
+                station_to: `${route.station_to.name} ${checkPierStation(route.station_to.piername)}`,
+                depart: `${route.depart_time}`,
+                arrive: `${route.arrive_time}`,
+                icon: 'icon',
+                price: `${route.regular_price}`,
+                status: 'status',
+                action: 'action'
+            }
+            _routes.push(obj)
+        })
+        updateDatatableData()
+    })
+}
+
+function checkPierStation(pier) {
+    return pier !== null ? `<small class="text-secondary fs-d-80">(${pier})</small>` : ''
+}
+
+if(filter_to) {
+    filter_to.addEventListener('change', (e) => {
+
+    })
+}
+
+function updateDatatableData() {
+    $('#route-datatable').dataTable({
+        columnDefs: [{
+            'defaultContent': '-',
+            'targets': '_all',
+        }],
+        columns: [
+            { data: 'choose' },
+            { data: 'station_from' },
+            { data: 'station_to' },
+            { data: 'depart' },
+            { data: 'arrive' },
+            { data: 'icon' },
+            { data: 'price' },
+            { data: 'status' },
+            { data: 'action' }
+        ],
+        data: _routes,
+        destroy: true,
+        searching: false,
+        ordering: false,
+        language : {
+            sLengthMenu: "_MENU_",
+            paginate: {
+                previous: "<",
+                next: ">"
+            }
+        },
+        pageLength: 15,
+        lengthMenu: [
+            [10, 15, 30, 50, 100, -1],
+            [10, 15, 30, 50, 100, 'All']
+        ]
+    })
+}

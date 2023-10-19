@@ -49,9 +49,7 @@
                 data-lng-all="All"
                 data-export-pdf-disable-mobile="true"
                 data-export='["csv", "pdf", "xls"]'
-                data-options='["copy", "print"]'
-
-                data-custom-config='{}'>
+                data-options='["copy", "print"]'>
                 <thead>
                     <tr>
                         <th class="text-start">Station From</th>

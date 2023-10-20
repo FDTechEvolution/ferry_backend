@@ -28,8 +28,9 @@ class StationInfomationsController extends Controller
     public function index() {
         $info = StationInfomation::where('status', 'Y')->get();
         $info_status = $this->_Status;
+        $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
 
-        return view('pages.station_infomations.index', ['s_info' => $info, 'info_status' => $info_status]);
+        return view('pages.station_infomations.index', ['s_info' => $info, 'info_status' => $info_status, 'stations' => $stations]);
     }
 
     public function create() {
@@ -51,15 +52,27 @@ class StationInfomationsController extends Controller
             'detail' => 'required'
         ]);
         
-        if(!$this->checkInfoName($request->name, $request->type)) return redirect()->route('stations-info-index')->withFail('Station infomation name is exist. Pleast check.');
+        if(!$this->checkInfoName($request->name, $request->type)) 
+            return redirect()->route('stations-info-index')->withFail('Station infomation name is exist. Pleast check.');
 
         $info = StationInfomation::create([
             'name' => $request->name,
             'text' => $request->detail
         ]);
 
-        if($info) return redirect()->route('stations-info-index')->withSuccess('Station infomation created...');
+        if($info) {
+            if($request->station_id !== '') $this->setInfoToStation($info->id, $request->station_id, $request->master_info);
+            return redirect()->route('stations-info-index')->withSuccess('Station infomation created...');
+        }
         else return redirect()->route('stations-info-index')->withFail('Something is wrong. Please try again.');
+    }
+
+    private function setInfoToStation($info_id, $station_id, $master_info) {
+        StationInfoLine::create([
+            'station_id' => $station_id,
+            'station_infomation_id' => $info_id,
+            'type' => $master_info
+        ]);
     }
 
     private function checkInfoName(string $name = null, string $type = null, string $info_id = null) {

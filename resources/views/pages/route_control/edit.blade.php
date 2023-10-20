@@ -78,16 +78,16 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                 </div>
                                 <div class="mb-2 row">
                                     <div class="col-2">
-                                        <label class="col-form-label-sm text-start fw-bold">Depart Time</label>
-                                        <input type="time" name="depart_time" class="form-control form-control-sm" value="{{ date('H:i', strtotime($route['depart_time'])) }}">
+                                        <label class="col-form-label-sm text-start fw-bold">Depart Time*</label>
+                                        <input required type="time" name="depart_time" class="form-control form-control-sm" value="{{ date('H:i', strtotime($route['depart_time'])) }}">
                                     </div>
                                     <div class="col-2">
-                                        <label class="col-form-label-sm text-start fw-bold">Arrive Time</label>
-                                        <input type="time" name="arrive_time" class="form-control form-control-sm" value="{{ date('H:i', strtotime($route['arrive_time'])) }}">
+                                        <label class="col-form-label-sm text-start fw-bold">Arrive Time*</label>
+                                        <input required type="time" name="arrive_time" class="form-control form-control-sm" value="{{ date('H:i', strtotime($route['arrive_time'])) }}">
                                     </div>
                                     <div class="col-2">
-                                        <label for="regular-price" class="col-form-label-sm text-start fw-bold">Regular Price</label>
-                                        <input type="number" class="form-control form-control-sm" id="regular-price" name="regular_price" value="{{ intval($route['regular_price']) }}">
+                                        <label for="regular-price" class="col-form-label-sm text-start fw-bold">Regular Price*</label>
+                                        <input required type="number" class="form-control form-control-sm" id="regular-price" name="regular_price" value="{{ intval($route['regular_price']) }}">
                                     </div>
                                     <div class="col-2">
                                         <label for="child-price" class="col-form-label-sm text-start fw-bold">Child</label>
@@ -181,10 +181,9 @@ function saveAllList(type, list_id, ul_id, input_id) {
 
                                             <ul class="dropdown-menu shadow-lg p-1 w-100" aria-labelledby="dropdownIcons">
                                                 @foreach($icons as $index => $icon)
-                                                    <li id="icon-active-{{ $index }}">
+                                                    <li id="icon-active-{{ $index }}" class="text-center">
                                                         <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteIcon({{ $index }})">
-                                                            <img src="{{ asset($icon->path) }}" class="me-2" width="24" height="24">
-                                                            <span>{{ $icon->name }}</span>
+                                                            <img src="{{ asset($icon->path) }}" class="me-2" width="42" height="42">
                                                         </a>
                                                     </li>
                                                 @endforeach

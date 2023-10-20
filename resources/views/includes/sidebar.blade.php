@@ -60,7 +60,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="{{ route('time-table-index') }}">
           <i class="fi fi-arrow-right"></i>
           <span>Time Table</span>
         </a>

@@ -212,6 +212,7 @@ class RouteController extends Controller
 
     public function destroy(string $id = null) {
         $route = Route::find($id);
+        $route->isactive = 'N';
         $route->status = 'VO';
         if($route->save()) return redirect()->route('route-index')->withSuccess('Route deleted...');
         else return redirect()->route('route-index')->withFail('Something is wrong. Please try again.');

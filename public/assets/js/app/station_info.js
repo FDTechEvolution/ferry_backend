@@ -2,6 +2,8 @@ let page_title = document.querySelector('#station-info-page-title')
 let btn_create = document.querySelector('#btn-station-info-create')
 let btn_calcel_create = document.querySelector('#btn-cancel-create')
 let btn_cancel_edit = document.querySelector('#btn-cancel-edit')
+const station_select_create = document.querySelector('#station-select-create')
+const station_master_create = document.querySelector('#station-master-create')
 
 if(btn_create) {
     btn_create.addEventListener('click', () => {
@@ -31,6 +33,19 @@ if(btn_cancel_edit) {
         setClassListRemove('to-station-info-list')
         setClassListRemove('btn-station-info-create')
         page_title.innerHTML = `<span class="text-main-color-2">Station</span> infomation`
+    })
+}
+
+if(station_select_create) {
+    station_select_create.addEventListener('change', (e) => {
+        if(e.target.value !== '') {
+            station_master_create.disabled = false
+            station_master_create.required = true
+        }
+        else {
+            station_master_create.disabled = true
+            station_master_create.required = false
+        }
     })
 }
 

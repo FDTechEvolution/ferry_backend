@@ -545,39 +545,50 @@ function confirmRouteSelectedDelete() {
 
 const filter_from = document.querySelector('#filter-station-from')
 const filter_to = document.querySelector('#filter-station-to')
+let keyup_from = ''
+let keyup_to = ''
 let _routes = []
 
 if(filter_from) {
     filter_from.addEventListener('keyup', (e) => {
+        keyup_from = e.target.value
         $('#route-datatable').dataTable().fnClearTable()
         _routes = []
 
-        let is_routes = routes.filter((item, key) => { return item.station_from.name.toLowerCase().includes(e.target.value.toLowerCase()) })
-        is_routes.forEach((route, index) => {
-            let obj = {
-                choose: `<input class="form-check-input form-check-input-primary route-selected-action" type="checkbox" value="${route.id}" id="route-check-${index}" onClick="routeSelectedAction(this)">`,
-                station_from: `${route.station_from.name} ${checkPierStation(route.station_from.piername)}`,
-                station_to: `${route.station_to.name} ${checkPierStation(route.station_to.piername)}`,
-                depart: `${route.depart_time}`,
-                arrive: `${route.arrive_time}`,
-                icon: 'icon',
-                price: `${route.regular_price}`,
-                status: 'status',
-                action: 'action'
-            }
-            _routes.push(obj)
-        })
+        searchRouteStation()
         updateDatatableData()
     })
 }
 
-function checkPierStation(pier) {
-    return pier !== null ? `<small class="text-secondary fs-d-80">(${pier})</small>` : ''
+if(filter_to) {
+    filter_to.addEventListener('keyup', (e) => {
+        keyup_to = e.target.value
+        $('#route-datatable').dataTable().fnClearTable()
+        _routes = []
+
+        searchRouteStation()
+        updateDatatableData()
+    })
 }
 
-if(filter_to) {
-    filter_to.addEventListener('change', (e) => {
-
+function searchRouteStation(e) {
+    let is_routes = routes.filter((item, key) => { 
+        return item.station_from.name.toLowerCase().includes(keyup_from.toLowerCase()) && 
+                item.station_to.name.toLowerCase().includes(keyup_to.toLowerCase())
+    })
+    is_routes.forEach((route, index) => {
+        let obj = {
+            choose: `<input class="form-check-input form-check-input-primary route-selected-action" type="checkbox" value="${route.id}" id="route-check-${index}" onClick="routeSelectedAction(this)">`,
+            station_from: route.station_from,
+            station_to: route.station_to,
+            depart: route.depart_time,
+            arrive: route.arrive_time,
+            icon: route.icons,
+            price: route.regular_price,
+            status: route.status,
+            action: route.id
+        }
+        _routes.push(obj)
     })
 }
 
@@ -588,15 +599,86 @@ function updateDatatableData() {
             'targets': '_all',
         }],
         columns: [
-            { data: 'choose' },
-            { data: 'station_from' },
-            { data: 'station_to' },
-            { data: 'depart' },
-            { data: 'arrive' },
-            { data: 'icon' },
-            { data: 'price' },
-            { data: 'status' },
-            { data: 'action' }
+            {
+                data: 'choose',
+                className: "text-center"
+            },
+            { 
+                data: 'station_from',
+                className: "text-start lh--1-2",
+                render: (data) => {
+                    let pier =  data.piername !== null ? `<small class="text-secondary fs-d-80">(${data.piername})</small>` : ''
+                    return `${data.name} ${pier}`
+                }
+            },
+            { 
+                data: 'station_to',
+                className: "text-start lh--1-2",
+                render: (data) => {
+                    let pier =  data.piername !== null ? `<small class="text-secondary fs-d-80">(${data.piername})</small>` : ''
+                    return `${data.name} ${pier}`
+                }
+            },
+            { 
+                data: 'depart',
+                className: "text-center",
+                render: (data) => {
+                    let _depart = data.split(':')
+                    return `${_depart[0]}:${_depart[1]}`
+                }
+            },
+            { 
+                data: 'arrive',
+                className: "text-center",
+                render: (data) => {
+                    let _arrive = data.split(':')
+                    return `${_arrive[0]}:${_arrive[1]}`
+                }
+            },
+            { 
+                data: 'icon',
+                className: "text-center",
+                render: (data) => {
+                    let _icon = ''
+                    data.forEach((icon) => {
+                        _icon = _icon + `<div class="col-sm-4 px-0" style="max-width: 40px;"><img src="${icon.path}" class="w-100"></div>`
+                    })
+                    return `<div class="row mx-auto justify-center-custom">
+                                ${_icon}
+                            </div>`
+                }
+            },
+            { 
+                data: 'price',
+                className: "text-center",
+                render: (data) => {
+                    let _price = data.split('.')
+                    return _price[0]
+                }
+            },
+            { 
+                data: 'status',
+                className: "text-center",
+                render: (data) => {
+                    return data === 'CO' ? `<span class="text-success">On</span>` : `<span class="text-danger">Off</span>`
+                }
+            },
+            { 
+                data: 'action',
+                className: "text-center",
+                render: (data) => {
+                    return `<a href="/route/edit/${data}" class="text-primary me-2" id="btn-route-edit">
+                                <svg width="18px" height="18px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">  
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>  
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"></path>
+                                </svg>
+                            </a>
+                            <svg class="text-danger cursor-pointer" onClick="setConfirmDelete('${data}')" width="18px" height="18px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">  
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>  
+                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
+                            </svg>`
+                }
+            }
         ],
         data: _routes,
         destroy: true,
@@ -615,4 +697,14 @@ function updateDatatableData() {
             [10, 15, 30, 50, 100, 'All']
         ]
     })
+}
+
+function setConfirmDelete(id) {
+    const currentUrl = window.location.origin;
+    const _confirm = document.querySelector('#confirm-delete-hidden')
+    _confirm.click()
+
+    const confirm_id = document.querySelector('#sow_ajax_confirm')
+    const confirm_link = confirm_id.querySelector('.btn-confirm-yes')
+    confirm_link.href = `${currentUrl}/route/delete/${id}`
 }

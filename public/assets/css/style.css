@@ -35,6 +35,9 @@ div.dataTables_wrapper div.dataTables_filter input {
 .bg-transparent {
     background-color: transparent;
 }
+.bg-main-color {
+    background-color: #ff6100;
+}
 .text-main-color {
     color: #0a3961;
 }

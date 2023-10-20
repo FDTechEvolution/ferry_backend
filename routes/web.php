@@ -12,6 +12,7 @@ use App\Http\Controllers\ActivitiesController;
 use App\Http\Controllers\StationInfomationsController;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\ReviewsController;
+use App\Http\Controllers\TimeTableController;
 
 /*
 |--------------------------------------------------------------------------
@@ -146,6 +147,12 @@ Route::middleware('auth')->group(function() {
         Route::post('/information/update/{information}','update')->name('information-update');
 
         Route::get('/information/delete/{id}','destroy')->name('information-delete');
+    });
+
+    Route::controller(TimeTableController::class)->group(function() {
+        Route::get('/time-table', 'index')->name('time-table-index');
+
+        Route::post('/time-table/create', 'store')->name('time-table-create');
     });
 });
 

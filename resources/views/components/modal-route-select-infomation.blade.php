@@ -8,7 +8,7 @@
     $btn_create = uniqid();
 @endphp
 
-<button type="button" class="btn btn-outline-dark btn-sm w-100 btn-infomation-select" id="btn-{{ $button_id }}" data-bs-toggle="modal" data-bs-target="#modal-{{ $modal_id }}" disabled>Select/Add Information</button>
+<button type="button" class="btn btn-outline-dark btn-sm w-100 btn-infomation-select" id="btn-{{ $button_id }}" data-bs-toggle="modal" data-bs-target="#modal-{{ $modal_id }}" disabled>Select/Add</button>
 <ul class="list-group" id="master-{{ $ul_id }}"></ul>
 
 <div class="modal fade" id="modal-{{ $modal_id }}" style="z-index: 1059;" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel3" aria-hidden="true">

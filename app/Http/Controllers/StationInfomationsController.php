@@ -52,8 +52,8 @@ class StationInfomationsController extends Controller
             'detail' => 'required'
         ]);
         
-        if(!$this->checkInfoName($request->name, $request->type)) 
-            return redirect()->route('stations-info-index')->withFail('Station infomation name is exist. Pleast check.');
+        //if(!$this->checkInfoName($request->name, $request->type)) 
+            //return redirect()->route('stations-info-index')->withFail('Station infomation name is exist. Pleast check.');
 
         $info = StationInfomation::create([
             'name' => $request->name,

@@ -15,6 +15,29 @@
                         </div>
 
                         <div class="mb-3 row">
+                            <label for="station-select-create" class="col-sm-2 col-form-label-sm text-start">Station :</label>
+                            <div class="col-sm-8">
+                                <select class="form-select form-select-sm" id="station-select-create" name="station_id">
+                                    <option value="" selected>-- No Station --</option>
+                                    @foreach($stations as $station)
+                                        <option value="{{ $station->id }}">{{ $station->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label for="station-master-create" class="col-sm-2 col-form-label-sm text-start">Master Info :</label>
+                            <div class="col-sm-8">
+                                <select class="form-select form-select-sm" id="station-master-create" name="master_info" disabled>
+                                    <option value="" selected disabled>-- Select --</option>
+                                    <option value="from">From</option>
+                                    <option value="to">To</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row mb-8">
                             <label class="col-sm-2 col-form-label-sm text-start">Detail* :</label>
                             <div class="col-sm-8">
                                 <div class="quill-editor"
@@ -43,27 +66,8 @@
                             </div>
                         </div>
                         
-                        <div class="mb-3 row mt-6 pt-3">
-                            <label for="station-select-create" class="col-sm-2 col-form-label-sm text-start">Station :</label>
-                            <div class="col-sm-8">
-                                <select class="form-select form-select-sm" id="station-select-create" name="station_id">
-                                    <option value="" selected>-- No Station --</option>
-                                    @foreach($stations as $station)
-                                        <option value="{{ $station->id }}">{{ $station->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <label for="station-master-create" class="col-sm-2 col-form-label-sm text-start">Master Info :</label>
-                            <div class="col-sm-8">
-                                <select class="form-select form-select-sm" id="station-master-create" name="master_info" disabled>
-                                    <option value="" selected disabled>-- Select --</option>
-                                    <option value="from">From</option>
-                                    <option value="to">To</option>
-                                </select>
-                            </div>
-                        </div>
+                        
+                        
                     </div>
                     <div class="col-12 text-center">
                         <x-button-submit-loading 

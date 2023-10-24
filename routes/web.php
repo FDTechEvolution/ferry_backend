@@ -13,6 +13,7 @@ use App\Http\Controllers\StationInfomationsController;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\TimeTableController;
+use App\Http\Controllers\RouteMapController;
 
 /*
 |--------------------------------------------------------------------------
@@ -158,7 +159,18 @@ Route::middleware('auth')->group(function() {
         Route::post('/time-table/update', 'update')->name('time-table-update');
 
         // AJAX
-        Route::get('/ajax/time-table/show-in-homepage/{table_id}/{isactive}', 'updateShowInHomepage')->name('show-in-homepage');
+        Route::get('/ajax/time-table/show-in-homepage/{id}', 'updateShowInHomepage')->name('show-in-homepage');
+    });
+
+    Route::controller(RouteMapController::class)->group(function() {
+        Route::get('/route-map', 'index')->name('route-map-index');
+        Route::get('/route-map/delete/{id}', 'destroy')->name('route-map-delete');
+
+        Route::post('/route-map/create', 'store')->name('route-map-create');
+        Route::post('/route-map/update', 'update')->name('route-map-update');
+
+        // AJAX
+        Route::get('/ajax/route-map/show-in-homepage/{id}', 'updateShowInHomepage')->name('route-map-show');
     });
 });
 

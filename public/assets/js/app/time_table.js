@@ -59,8 +59,7 @@ function resetImage() {
 }
 
 async function showInHomepage(e) {
-    let isactive = e.checked ? 'Y' : 'N'
-    let response = await fetch(`/ajax/time-table/show-in-homepage/${e.value}/${isactive}`)
+    let response = await fetch(`/ajax/time-table/show-in-homepage/${e.value}`)
     let res = await response.json()
 
     if(res.status === 'success') $.SOW.core.toast.show('success', '', res.msg, 'top-end', 0, true);

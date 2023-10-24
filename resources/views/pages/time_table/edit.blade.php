@@ -8,7 +8,7 @@
         @csrf
         <fieldset id="time-table-update">
             <div class="mb-4 row">
-                <label class="col-sm-1 col-form-label-sm text-start text-light fw-bold">Picture :</label>
+                <label class="col-sm-1 col-form-label-sm text-start text-light fw-bold">Picture* :</label>
                 <div class="col-sm-5">
                     <label class="btn btn-light btn-sm cursor-pointer position-relative w-100 rounded border" style="background-color: #fff;">
                         <input type="file" name="file_picture"
@@ -76,7 +76,7 @@
 
                 <label class="col-sm-1 offset-1 col-form-label-sm text-end text-light fw-bold">Sort :</label>
                 <div class="col-2">
-                    <input type="number" class="form-control form-control-sm" id="time-table-sort-edit" name="sort">
+                    <input type="number" class="form-control form-control-sm text-center" id="time-table-sort-edit" name="sort">
                 </div>
             </div>
             <div class="mb-2 row">

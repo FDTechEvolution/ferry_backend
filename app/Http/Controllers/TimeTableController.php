@@ -108,9 +108,9 @@ class TimeTableController extends Controller
     }
 
 
-    public function updateShowInHomepage(string $table_id = null, string $isactive = null) {
-        $table = TimeTable::find($table_id);
-        $table->isactive = $isactive;
+    public function updateShowInHomepage(string $id = null) {
+        $table = TimeTable::find($id);
+        $table->isactive = $table->isactive == 'Y' ? 'N' : 'Y';
 
         if($table->save()) return response()->json(['msg' => 'news show in homepage updated.', 'status' => 'success']);
         else return response()->json(['msg' => 'Something is wrong. Please try again.', 'status' => 'fail']);

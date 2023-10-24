@@ -1,18 +1,18 @@
 @extends('layouts.default')
 
 @section('page-title')
-<h1 class="ms-2 mb-0 text-main-color-2">Time Table</h1>
+<h1 class="ms-2 mb-0 text-main-color-2">Route Map</h1>
 @stop
 
 @section('content')
 <div class="row">
     <div class="col-12">
-        <div class="card bg-main-color" id="create-time-table-detail">
-            @include('pages.time_table.create')
+        <div class="card bg-main-color" id="create-route-map">
+            @include('pages.route_map.create')
         </div>
 
-        <div class="card bg-main-color d-none" id="edit-time-table-detail">
-            @include('pages.time_table.edit')
+        <div class="card bg-main-color d-none" id="edit-route-map">
+            @include('pages.route_map.edit')
         </div>
 
         <div class="card mt-3">
@@ -57,7 +57,7 @@
                     data-custom-config='{}'>
                     <thead>
                         <tr>
-                            <th class="text-center">Pic Time Table</th>
+                            <th class="text-center">Pic Route Map</th>
                             <th class="text-center">Title</th>
                             <th class="text-center">Choose News Show In Homepage</th>
                             <th class="text-center">Sort</th>
@@ -65,31 +65,31 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($time_tables as $index => $table)
+                        @foreach($route_maps as $index => $map)
                             <tr class="text-center align-middle">
                                 <td style="max-width: 100px;">
-                                    <a class="fancybox" href="{{ asset($table->image->path.'/'.$table->image->name) }}">
-                                        <img src="{{ asset($table->image->path.'/'.$table->image->name) }}" class="w-100">
+                                    <a class="fancybox" href="{{ asset($map->image->path.'/'.$map->image->name) }}">
+                                        <img src="{{ asset($map->image->path.'/'.$map->image->name) }}" class="w-100">
                                     </a>
                                 </td>
-                                <td>{{ $table->detail }}</td>
+                                <td>{{ $map->detail }}</td>
                                 <td>
                                     <label class="align-items-center text-center">
-                                        <input class="d-none-cloaked" type="checkbox" name="switch-checkbox" value="{{ $table->id }}" @checked($table->isactive == 'Y') onClick="showInHomepage(this)">
+                                        <input class="d-none-cloaked" type="checkbox" name="switch-checkbox" value="{{ $map->id }}" @checked($map->isactive == 'Y') onClick="showInHomepage(this)">
                                         <i class="switch-icon switch-icon-primary"></i>
                                     </label>
                                 </td>
-                                <td>{{ $table->sort }}</td>
+                                <td>{{ $map->sort }}</td>
                                 <td>
                                     <x-action-edit 
                                         class="me-2"
                                         :url="_('javascript:void(0)')"
-                                        id="btn-time-table-edit"
+                                        id="btn-route-map-edit"
                                         onClick="updateEditData({{ $index }})"
                                     />
                                     <x-action-delete 
-                                        :url="route('time-table-delete', ['id' => $table->id])"
-                                        :message="_('Are you sure? Delete this time table ?')"
+                                        :url="route('route-map-delete', ['id' => $map->id])"
+                                        :message="_('Are you sure? Delete this route map ?')"
                                     />
                                 </td>
                             </tr>
@@ -110,8 +110,7 @@
 
 @section('script')
 <script>
-    const time_tables = {{ Js::from($time_tables) }}
+    const route_maps = {{ Js::from($route_maps) }}
 </script>
-
-<script src="{{ asset('assets/js/app/time_table.js') }}"></script>
+<script src="{{ asset('assets/js/app/route_map.js') }}"></script>
 @stop

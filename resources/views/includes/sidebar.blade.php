@@ -66,7 +66,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="{{ route('route-map-index') }}">
           <i class="fi fi-arrow-right"></i>
           <span>Route Map</span>
         </a>

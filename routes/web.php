@@ -151,8 +151,14 @@ Route::middleware('auth')->group(function() {
 
     Route::controller(TimeTableController::class)->group(function() {
         Route::get('/time-table', 'index')->name('time-table-index');
+        Route::get('/time-table/edit/{id}', 'edit')->name('time-table-edit');
+        Route::get('/time-table/delete/{id}', 'destroy')->name('time-table-delete');
 
         Route::post('/time-table/create', 'store')->name('time-table-create');
+        Route::post('/time-table/update', 'update')->name('time-table-update');
+
+        // AJAX
+        Route::get('/ajax/time-table/show-in-homepage/{table_id}/{isactive}', 'updateShowInHomepage')->name('show-in-homepage');
     });
 });
 

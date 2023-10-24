@@ -18,20 +18,30 @@ class TimeTableController extends Controller
     protected $Path = '/assets/images/time_table';
 
     public function index() {
-        $time_tables = TimeTable::where('status', 'CO')->with('image')->get();
+        $time_tables = TimeTable::where('status', 'CO')->orderBy('sort', 'ASC')->with('image')->get();
 
         return view('pages.time_table.index', ['time_tables' => $time_tables]);
+    }
+
+    public function edit(string $id = null) {
+        $time = TimeTable::find($id);
+        
+        if(is_null($time) || $time->status != 'CO') 
+            return redirect()->route('time-table-index')->withFail('This time table not exist.');
+
+        $time->image;
+        return view('pages.time_table.edit', ['time' => $time]);
     }
 
     public function store(Request $request) {
         $request->validate([
             'sort' => 'integer|nullable',
             'detail' => 'string|nullable',
-            'file_picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
+            'file_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
         $image_id = $this->storeImage($request->file_picture);
-        if($request->sort == '') $_sort = TimeTable::max('sort');
+        if($request->sort == '') $_sort = TimeTable::where('status', 'CO')->max('sort');
 
         $time_table = TimeTable::create([
             'detail' => $request->detail,
@@ -40,6 +50,39 @@ class TimeTableController extends Controller
         ]);
 
         if($time_table) return redirect()->route('time-table-index')->withSuccess('Time table created.');
+        else return redirect()->route('time-table-index')->withFail('Something is wrong. Please try again.');
+    }
+
+    public function update(Request $request) {
+        $request->validate([
+            'sort' => 'integer|nullable',
+            'detail' => 'string|nullable',
+            'file_picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable'
+        ]);
+
+        $table = TimeTable::find($request->_id);
+        $table->image;
+
+        $image_id = null;
+        if ($request->hasFile('file_picture')) {
+            $image_id = $this->storeImage($request->file_picture);
+            $this->destroyImage($table->image_id, $table->image);
+        }
+        if($request->sort == '') $_sort = TimeTable::where('status', 'CO')->max('sort');
+
+        $table->detail = $request->detail;
+        $table->sort = $request->sort != '' ? $request->sort : $_sort+1;
+        if($image_id != null) $table->image_id = $image_id;
+
+        if($table->save()) return redirect()->route('time-table-index')->withSuccess('Time table updated.');
+        else return redirect()->route('time-table-index')->withFail('Something is wrong. Please try again.');
+    }
+
+    public function destroy(string $id = null) {
+        $table = TimeTable::find($id);
+
+        $this->destroyImage($table->image_id, $table->image);
+        if($table->delete()) return redirect()->route('time-table-index')->withSuccess('Time table deleted.');
         else return redirect()->route('time-table-index')->withFail('Something is wrong. Please try again.');
     }
 
@@ -55,5 +98,21 @@ class TimeTableController extends Controller
             $image->move(public_path($this->Path), $slug_image);
             return $img->id;
         }
+    }
+
+    private function destroyImage($image_id, $_image) {
+        $image = Image::find($image_id)->delete();
+        if($image) {
+            unlink(public_path().$_image->path.'/'.$_image->name);
+        }
+    }
+
+
+    public function updateShowInHomepage(string $table_id = null, string $isactive = null) {
+        $table = TimeTable::find($table_id);
+        $table->isactive = $isactive;
+
+        if($table->save()) return response()->json(['msg' => 'news show in homepage updated.', 'status' => 'success']);
+        else return response()->json(['msg' => 'Something is wrong. Please try again.', 'status' => 'fail']);
     }
 }

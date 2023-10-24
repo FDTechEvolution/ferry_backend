@@ -7,85 +7,15 @@
 @section('content')
 <div class="row">
     <div class="col-12">
-        <div class="card bg-main-color">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-12">
-                        <h2 class="text-light">Add Details</h2>
-                    </div>
-                </div>
-                <form novalidate class="bs-validate" id="time-table-create-form" method="POST" action="{{ route('time-table-create') }}" enctype="multipart/form-data">
-                    @csrf
-                    <div class="mb-4 row">
-                        <label class="col-sm-1 col-form-label-sm text-start text-light fw-bold">Picture :</label>
-                        <div class="col-sm-5">
-                            <label class="btn btn-light btn-sm cursor-pointer position-relative w-100 rounded border" style="background-color: #fff;">
-                                <input type="file" name="file_picture"
-                                    data-file-ext="jepg, jpg, png, gif"
-                                    data-file-max-size-kb-per-file="2048"
-                                    data-file-max-size-kb-total="2048"
-                                    data-file-max-total-files="100"
-                                    data-file-ext-err-msg="Allowed:"
-                                    data-file-exist-err-msg="File already exists:"
-                                    data-file-size-err-item-msg="File too large!"
-                                    data-file-size-err-total-msg="Total allowed size exceeded!"
-                                    data-file-size-err-max-msg="Maximum allowed files:"
-                                    data-file-toast-position="bottom-center"
-                                    data-file-preview-container=".js-file-input-container-multiple-list-static-picture"
-                                    data-file-preview-img-height="80"
-                                    data-file-btn-clear="a.js-file-input-btn-multiple-list-static-remove-picture"
-                                    data-file-preview-show-info="true"
-                                    data-file-preview-list-type="list"
-                                    class="custom-file-input absolute-full cursor-pointer"
-                                    title="jpeg, jpg, png, gif (2MB) [size : 800 x 388 px]" data-bs-toggle="tooltip"
-                                    required
-                                >
-
-                                <span class="group-icon cursor-pointer">
-                                    <i class="fi fi-arrow-upload"></i>
-                                    <i class="fi fi-circle-spin fi-spin"></i>
-                                </span>
-
-                                <span class="cursor-pointer">Upload image</span>
-                            </label>
-
-                            <div class="row">
-                                <div class="col-10">
-                                    <div class="js-file-input-container-multiple-list-static-picture position-relative hide-empty mt-2"><!-- container --></div>
-                                </div>
-                                <div class="col-2 text-center">
-                                    <!-- remove button -->
-                                    <a href="javascript:void(0)" title="Clear Images" data-bs-toggle="tooltip" class="js-file-input-btn-multiple-list-static-remove-picture hide btn btn-secondary mt-4 text-center">
-                                        <i class="fi fi-close mx-auto"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <label class="col-sm-1 offset-1 col-form-label-sm text-end text-light fw-bold">Sort :</label>
-                        <div class="col-2">
-                            <input type="number" class="form-control form-control-sm" name="sort">
-                        </div>
-                    </div>
-                    <div class="mb-2 row">
-                        <label class="col-sm-1 col-form-label-sm text-start text-light fw-bold">Detail :</label>
-                        <div class="col-5">
-                            <textarea class="form-control" rows="2" name="detail"></textarea>
-                        </div>
-                        <div class="col-6 justify-content-end d-flex">
-                            <x-button-green
-                                class="btn-sm w--15 align-self-end me-2"
-                                :type="_('submit')"
-                                :text="_('Save')"
-                            />
-                            <button class="btn btn-light btn-sm w--15 align-self-end border-radius-10">Reset</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+        <div class="card bg-main-color" id="create-time-table-detail">
+            @include('pages.time_table.create')
         </div>
 
-        <div class="card">
+        <div class="card bg-main-color d-none" id="edit-time-table-detail">
+            @include('pages.time_table.edit')
+        </div>
+
+        <div class="card mt-3">
             <div class="card-body">
                 <table class="table-datatable table table-datatable-custom"
                     data-lng-empty="No data available in table"
@@ -129,31 +59,37 @@
                         <tr>
                             <th class="text-center">Pic Time Table</th>
                             <th class="text-center">Title</th>
-                            <th class="text-center">Choose News Show Im Homepage</th>
+                            <th class="text-center">Choose News Show In Homepage</th>
                             <th class="text-center">Sort</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($time_tables as $table)
-                            <tr class="text-center">
-                                <td style="max-width: 150px;">
+                        @foreach($time_tables as $index => $table)
+                            <tr class="text-center align-middle">
+                                <td style="max-width: 100px;">
                                     <a class="fancybox" href="{{ asset($table->image->path.'/'.$table->image->name) }}">
                                         <img src="{{ asset($table->image->path.'/'.$table->image->name) }}" class="w-100">
                                     </a>
                                 </td>
                                 <td>{{ $table->detail }}</td>
-                                <td>{{ $table->isactive }}</td>
+                                <td>
+                                    <label class="align-items-center text-center mb-3">
+                                        <input class="d-none-cloaked" type="checkbox" name="switch-checkbox" value="{{ $table->id }}" @checked($table->isactive == 'Y') onClick="showInHomepage(this)">
+                                        <i class="switch-icon switch-icon-primary"></i>
+                                    </label>
+                                </td>
                                 <td>{{ $table->sort }}</td>
                                 <td>
                                     <x-action-edit 
                                         class="me-2"
-                                        :url="_('#')"
-                                        id="btn-route-edit"
+                                        :url="_('javascript:void(0)')"
+                                        id="btn-time-table-edit"
+                                        onClick="updateEditData({{ $index }})"
                                     />
                                     <x-action-delete 
-                                        :url="_('#')"
-                                        :message="_('Are you sure? Delete this route ?')"
+                                        :url="route('time-table-delete', ['id' => $table->id])"
+                                        :message="_('Are you sure? Delete this time table ?')"
                                     />
                                 </td>
                             </tr>
@@ -173,4 +109,9 @@
 @stop
 
 @section('script')
+<script>
+    const time_tables = {{ Js::from($time_tables) }}
+</script>
+
+<script src="{{ asset('assets/js/app/time_table.js') }}"></script>
 @stop

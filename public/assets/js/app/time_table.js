@@ -65,3 +65,20 @@ async function showInHomepage(e) {
     if(res.status === 'success') $.SOW.core.toast.show('success', '', res.msg, 'top-end', 0, true);
     else $.SOW.core.toast.show('danger', '', res.msg, 'top-end', 0, true);
 }
+
+function getImageUpload(current_id) {
+    let _currect_id = document.querySelector(`#${current_id}`)
+    _currect_id.classList.add('hidden-element')
+    setTimeout(() => {
+        _currect_id.classList.add('d-none')
+    }, 500);
+}
+
+function restoreCurrentImageByUpload(current_id) {
+    let _currect_id = document.querySelector(`#${current_id}`)
+    _currect_id.classList.remove('d-none')
+    _currect_id.classList.add('visible-element')
+    setTimeout(() => {
+        _currect_id.classList.remove('hidden-element')
+    }, 200);
+}

@@ -29,6 +29,7 @@
                             data-file-preview-list-type="list"
                             class="custom-file-input absolute-full cursor-pointer"
                             title="jpeg, jpg, png, gif (2MB) [size : 800 x 388 px]" data-bs-toggle="tooltip"
+                            onChange="getImageUpload('current-image')"
                         >
 
                         <span class="group-icon cursor-pointer">
@@ -45,7 +46,7 @@
                         </div>
                         <div class="col-2 text-center">
                             <!-- remove button -->
-                            <a href="javascript:void(0)" title="Clear Images" data-bs-toggle="tooltip" class="js-file-input-btn-multiple-list-static-remove-picture hide btn btn-secondary mt-4 text-center">
+                            <a href="javascript:void(0)" title="Clear Images" data-bs-toggle="tooltip" onClick="restoreCurrentImageByUpload('current-image')" class="js-file-input-btn-multiple-list-static-remove-picture hide btn btn-secondary mt-4 text-center">
                                 <i class="fi fi-close mx-auto"></i>
                             </a>
                         </div>

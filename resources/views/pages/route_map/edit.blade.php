@@ -31,6 +31,7 @@
                                     data-file-preview-list-type="list"
                                     class="custom-file-input absolute-full cursor-pointer"
                                     title="jpeg, jpg, png, gif (2MB)" data-bs-toggle="tooltip"
+                                    onChange="getImageUpload('current-image')"
                                 >
 
                                 <span class="group-icon cursor-pointer">
@@ -47,7 +48,7 @@
                                 </div>
                                 <div class="col-2 text-center">
                                     <!-- remove button -->
-                                    <a href="javascript:void(0)" title="Clear Images" data-bs-toggle="tooltip" id="remove-picture-edit" class="js-file-input-btn-multiple-list-static-remove-picture hide btn btn-secondary mt-4 text-center">
+                                    <a href="javascript:void(0)" title="Clear Images" data-bs-toggle="tooltip" onClick="restoreCurrentImageByUpload('current-image')" id="remove-picture-edit" class="js-file-input-btn-multiple-list-static-remove-picture hide btn btn-secondary mt-4 text-center">
                                         <i class="fi fi-close mx-auto"></i>
                                     </a>
                                 </div>
@@ -92,6 +93,7 @@
                                     data-file-preview-list-type="list"
                                     class="custom-file-input absolute-full cursor-pointer"
                                     title="jpeg, jpg, png, gif (2MB) [size : 1200 x 434 px]" data-bs-toggle="tooltip"
+                                    onChange="getImageUpload('current-banner')"
                                 >
 
                                 <span class="group-icon cursor-pointer">
@@ -108,7 +110,7 @@
                                 </div>
                                 <div class="col-2 text-center">
                                     <!-- remove button -->
-                                    <a href="javascript:void(0)" title="Clear Images" data-bs-toggle="tooltip" id="remove-banner-edit" class="js-file-input-btn-multiple-list-static-remove-banner hide btn btn-secondary mt-4 text-center">
+                                    <a href="javascript:void(0)" title="Clear Images" data-bs-toggle="tooltip" onClick="restoreCurrentImageByUpload('current-banner')" id="remove-banner-edit" class="js-file-input-btn-multiple-list-static-remove-banner hide btn btn-secondary mt-4 text-center">
                                         <i class="fi fi-close mx-auto"></i>
                                     </a>
                                 </div>
@@ -133,7 +135,7 @@
                                         <i class="fi fi-close mx-auto"></i>
                                     </a>
                                 </div>
-                                <input type="hidden" name="_image_banner" id="has-banner" value="0">
+                                <input type="hidden" name="_banner" id="has-banner" value="0">
                             </div>
                             <svg id="restore-banner" title="Restore Images" data-bs-toggle="tooltip" onClick="restoreCurrentImage('current-banner', 'has-banner', 'restore-banner')" width="18px" height="18px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-counterclockwise d-none cursor-pointer" viewBox="0 0 16 16">  
                                 <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"></path>  
@@ -146,7 +148,7 @@
                         <label class="col-sm-3 col-form-label-sm text-start text-light fw-bold">Picture Thumb :</label>
                         <div class="col-sm-9">
                             <label class="btn btn-light btn-sm cursor-pointer position-relative w-100 rounded border" style="background-color: #fff;">
-                                <input type="file" name="file_banner"
+                                <input type="file" name="file_thumb"
                                     data-file-ext="jepg, jpg, png, gif"
                                     data-file-max-size-kb-per-file="1024"
                                     data-file-max-size-kb-total="1024"
@@ -164,6 +166,7 @@
                                     data-file-preview-list-type="list"
                                     class="custom-file-input absolute-full cursor-pointer"
                                     title="jpeg, jpg, png, gif (1MB) [size : 800 x 500 px]" data-bs-toggle="tooltip"
+                                    onChange="getImageUpload('current-thumb')"
                                 >
 
                                 <span class="group-icon cursor-pointer">
@@ -180,7 +183,7 @@
                                 </div>
                                 <div class="col-2 text-center">
                                     <!-- remove button -->
-                                    <a href="javascript:void(0)" title="Clear Images" data-bs-toggle="tooltip" id="remove-thumb-edit" class="js-file-input-btn-multiple-list-static-remove-thumb hide btn btn-secondary mt-4 text-center">
+                                    <a href="javascript:void(0)" title="Clear Images" data-bs-toggle="tooltip" onClick="restoreCurrentImageByUpload('current-thumb')" id="remove-thumb-edit" class="js-file-input-btn-multiple-list-static-remove-thumb hide btn btn-secondary mt-4 text-center">
                                         <i class="fi fi-close mx-auto"></i>
                                     </a>
                                 </div>
@@ -205,7 +208,7 @@
                                         <i class="fi fi-close mx-auto"></i>
                                     </a>
                                 </div>
-                                <input type="hidden" name="_image_thumb" id="has-thumb" value="0">
+                                <input type="hidden" name="_thumb" id="has-thumb" value="0">
                             </div>
                             <svg id="restore-thumb" title="Restore Images" data-bs-toggle="tooltip" onClick="restoreCurrentImage('current-thumb', 'has-thumb', 'restore-thumb')" width="18px" height="18px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-counterclockwise d-none cursor-pointer" viewBox="0 0 16 16">  
                                 <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"></path>  

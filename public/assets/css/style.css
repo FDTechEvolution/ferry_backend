@@ -122,7 +122,8 @@ div.dataTables_wrapper div.dataTables_filter input {
 .visible-element {
     visibility: visible;
     opacity: 1;
-    transition: opacity 0.5s linear;
+    /* transition: visibility 0s 0.5s, opacity 0.5s linear; */
+    transition: all 0.5s ease-in-out;
 }
 .hidden-element {
     visibility: hidden;

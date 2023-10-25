@@ -68,25 +68,54 @@ class RouteMapController extends Controller
             'file_thumb' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
+        Log::debug($request);
+
         $image_id = null;
         $banner_id = null;
         $thumb_id = null;
 
         $route_map = RouteMap::find($request->route_map_id);
+        $route_map->image;
+        $route_map->banner;
+        $route_map->thumb;
         
-        if($request->hasFile('file_picture'))
+        // check upload new image
+        if($request->hasFile('file_picture')) {
             $image_id = $this->storeImage($request->file_picture, $this->ImagePath);
-
-        if($request->hasFile('file_banner'))
+            $this->destroyImage($route_map->image_id, $route_map->image);
+        }
+        if($request->hasFile('file_banner')) {
             $banner_id = $this->storeImage($request->file_banner, $this->BannerPath);
-
-        if($request->hasFile('file_thumb'))
+            if($route_map->image_banner_id != null) $this->destroyImage($route_map->image_banner_id, $route_map->banner);
+        }
+        if($request->hasFile('file_thumb')) {
             $thumb_id = $this->storeImage($request->file_thumb, $this->ThumbPath);
+            if($route_map->image_thumb_id != null) $this->destroyImage($route_map->image_thumb_id, $route_map->thumb);
+        }
+        // end check upload new image
+
+        // check remove image
+        if(!$request->_banner && $banner_id == null) $this->destroyImage($route_map->image_banner_id, $route_map->banner);
+        if(!$request->_thumb && $thumb_id == null) $this->destroyImage($route_map->image_thumb_id, $route_map->thumb);
+        // end check remove image
 
         if($request->sort == '')
             $_sort = RouteMap::where('status', 'CO')->max('sort');
 
-        return redirect()->route('route-map-index')->withSuccess('Route map updated.');
+        $route_map->detail = $request->detail;
+        $route_map->sort = $request->sort != '' ? $request->sort : $_sort+1;
+        if($image_id != null) $route_map->image_id = $image_id;
+        $route_map->image_banner_id = $this->checkImageUpload($request->_banner, $banner_id, $route_map->image_banner_id);
+        $route_map->image_thumb_id = $this->checkImageUpload($request->_thumb, $thumb_id, $route_map->image_thumb_id);
+
+        if($route_map->save()) return redirect()->route('route-map-index')->withSuccess('Route map updated.');
+        else return redirect()->route('time-table-index')->withFail('Something is wrong. Please try again.');
+    }
+
+    function checkImageUpload($_image, $image_id, $current_id) {
+        if($image_id != null) return $image_id;
+        if(!$_image && $image_id == null) return null;
+        return $current_id;
     }
 
     public function destroy(string $id = null) {

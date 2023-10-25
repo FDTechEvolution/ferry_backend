@@ -15,7 +15,7 @@ class TimeTableController extends Controller
         $this->middleware('auth');
     }
 
-    protected $Path = '/assets/images/time_table';
+    protected $Path = '/uploads/time_table';
 
     public function index() {
         $time_tables = TimeTable::where('status', 'CO')->orderBy('sort', 'ASC')->with('image')->get();

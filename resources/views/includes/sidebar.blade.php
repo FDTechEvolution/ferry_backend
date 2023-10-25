@@ -119,7 +119,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{{ route('slide-index') }}">
               <i class="fi fi-arrow-right"></i>
               Slide
             </a>

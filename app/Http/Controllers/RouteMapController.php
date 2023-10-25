@@ -15,9 +15,9 @@ class RouteMapController extends Controller
         $this->middleware('auth');
     }
 
-    protected $ImagePath = '/assets/images/route_map';
-    protected $BannerPath = '/assets/images/route_map/banner';
-    protected $ThumbPath = '/assets/images/route_map/thumb';
+    protected $ImagePath = '/uploads/route_map';
+    protected $BannerPath = '/uploads/route_map/banner';
+    protected $ThumbPath = '/uploads/route_map/thumb';
 
     public function index() {
         $route_maps = RouteMap::where('status', 'CO')->orderBy('sort', 'ASC')->with('banner', 'thumb')->get();
@@ -68,7 +68,7 @@ class RouteMapController extends Controller
             'file_thumb' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        Log::debug($request);
+        // Log::debug($request);
 
         $image_id = null;
         $banner_id = null;

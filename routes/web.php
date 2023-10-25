@@ -14,6 +14,7 @@ use App\Http\Controllers\RouteController;
 use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\TimeTableController;
 use App\Http\Controllers\RouteMapController;
+use App\Http\Controllers\SlideController;
 
 /*
 |--------------------------------------------------------------------------
@@ -171,6 +172,17 @@ Route::middleware('auth')->group(function() {
 
         // AJAX
         Route::get('/ajax/route-map/show-in-homepage/{id}', 'updateShowInHomepage')->name('route-map-show');
+    });
+
+    Route::controller(SlideController::class)->group(function() {
+        Route::get('/media/slide', 'index')->name('slide-index');
+        Route::get('/media/slide/delete/{id}', 'destroy')->name('slide-delete');
+
+        Route::post('/media/slide/create', 'store')->name('slide-create');
+        Route::post('/media/slide/edit', 'update')->name('slide-update');
+
+        // AJAX
+        Route::get('/ajax/slide/show-in-homepage/{id}', 'updateShowInHomepage')->name('slide-show');
     });
 });
 

@@ -131,5 +131,10 @@
             display: none !important;
         }
     }
+    @media (max-width: 412px) {
+        body.layout-admin #middle {
+            margin-top: 10px !important;
+        }
+    }
 </style>
 @stop

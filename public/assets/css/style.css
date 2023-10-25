@@ -5,6 +5,9 @@ body.layout-admin #middle {
 .table>:not(caption)>*>* {
     background-color: #fff0 !important;
 }
+.navbar {
+    flex-wrap: nowrap;
+}
 /* --------------------------- */
 
 /* Datatable Css replace */
@@ -165,5 +168,26 @@ div.dataTables_wrapper div.dataTables_filter input {
     }
     .justify-center-custom {
         justify-content: center !important;
+    }
+}
+
+@media (max-width: 540px) {
+    #navbarMainNav {
+        width: 100%;
+        display: flex !important;
+        position: absolute;
+        top: 80px;
+    }
+    .w--10, .w--15, .w--20 {
+        width: auto !important;
+    }
+    .w-sm-100 {
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 960px) {
+    .w--10, .w--15, .w--20 {
+        width: auto !important;
     }
 }

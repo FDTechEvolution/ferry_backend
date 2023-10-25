@@ -1,11 +1,17 @@
 @extends('layouts.default')
 
 @section('page-title')
-    <h1 class="ms-2 mb-0" id="station-page-title"><span class="text-main-color-2">Station</span> manager</h1>
-    <x-a-href-green :text="_('Add')" :href="route('create-station')" :target="_('_self')" class="ms-3 btn-sm w--10" />
-    <x-button-orange :type="_('button')" :text="_('Edit')" class="ms-3 btn-sm w--10" id="btn-station-edit"/>
-    <x-a-href-green :text="_('Add Section')" :href="route('create-section')" :target="_('_self')" class="ms-3 btn-sm w--15" />
-    <x-a-href-orange :text="_('Manage Section')" :href="route('manage-section')" :target="_('_self')" class="ms-3 btn-sm w--15" />
+    <div class="row ms-md-2 d-md-flex flex-md-wrap flex-lg-nowrap">
+        <div class="col-12 col-md-7 col-lg-5">
+            <h1 class="ms-2 mb-0" id="station-page-title"><span class="text-main-color-2">Station</span> manager</h1>
+        </div>
+        <div class="col-12 col-md-12 col-lg-12">
+            <x-a-href-green :text="_('Add')" :href="route('create-station')" :target="_('_self')" class="ms-lg-3 btn-sm w--10 mb-2" />
+            <x-button-orange :type="_('button')" :text="_('Edit')" class="ms-1 ms-lg-3 btn-sm w--10 mb-2" id="btn-station-edit"/>
+            <x-a-href-green :text="_('Add Section')" :href="route('create-section')" :target="_('_self')" class="ms-1 ms-lg-3 mb-2 btn-sm w--20" />
+            <x-a-href-orange :text="_('Manage Section')" :href="route('manage-section')" :target="_('_self')" class="ms-1 ms-lg-3 mb-2 btn-sm w--20" />
+        </div>
+    </div>
 @stop
 
 @section('content')
@@ -108,6 +114,14 @@
         </div>
     </div>
 </div>
+
+<style>
+    @media (max-width: 412px) {
+        body.layout-admin #middle {
+            margin-top: 140px !important;
+        }
+    }
+</style>
 @stop
 
 @section('modal')

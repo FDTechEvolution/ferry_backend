@@ -1,7 +1,7 @@
 <form novalidate class="bs-validate" id="user-edit-form" method="POST" onSubmit="return checkValidate()" action="{{ route('user-update') }}" enctype="multipart/form-data">
     @csrf
     <div class="row bg-transparent mt-5">
-        <div class="col-sm-12 w-75 mx-auto">
+        <div class="col-11 col-lg-8 mx-auto">
             <h1 class="fw-bold text-second-color mb-4">Edit account</h1>
             
             <div class="mb-3 row">
@@ -36,7 +36,7 @@
                 </div>
             </div>
             <div class="mb-3 row">
-                <label for="role" class="col-sm-2 col-form-label-sm text-start">Role :</label>
+                <label class="col-sm-2 col-form-label-sm text-start">Role :</label>
                 <div class="col-sm-10">
                     <select class="form-select form-select-sm" name="role" id="edit-role">
                         <option value="" selected disabled>-- select --</option>

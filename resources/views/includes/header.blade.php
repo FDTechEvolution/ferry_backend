@@ -29,7 +29,7 @@
     </div>
 
     <!-- navbar : navigation -->
-    <div class="collapse navbar-collapse" id="navbarMainNav">
+    <div class="collapse navbar-collapse d-md-flex d-sm-none" id="navbarMainNav">
 
         @yield('page-title')
 
@@ -47,7 +47,7 @@
         <!-- has avatar -->
         <a href="return javascript(void)" id="dropdownAccountOptions" class="dropdown-toggle text-dark" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-haspopup="true" aria-label="Account options"><i class="fi fi-arrow-down-full me-1 text-secondary"></i> {{ Auth::user()->username }}
           @if(Auth::user()->image != '')
-            <img src="{{ asset('assets/images/avatar/'.Auth::user()->image) }}" class="rounded-circle shadow ms-2" style="width: 42px; margin-top: -5px;" />
+            <img src="{{ asset('assets/images/avatar/'.Auth::user()->image) }}" class="rounded-circle shadow ms-2" style="width: 46px; height: 48px; margin-top: -5px;" />
           @else
             <img src="{{ asset('assets/images/avatar/blank-profile-picture.png') }}" class="rounded-circle shadow ms-2" style="width: 42px; margin-top: -5px;" />
           @endif
@@ -109,11 +109,11 @@
       </li>
 
       <!-- navigation toggler (mobile) -->
-      <li class="list-inline-item d-inline-block d-lg-none">
+      <!-- <li class="list-inline-item d-inline-block d-lg-none">
         <button class="btn p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMainNav" aria-controls="navbarMainNav" aria-expanded="false" aria-label="Toggle navigation">
           <i class="fi fi-bars m-0"></i>
         </button>
-      </li>
+      </li> -->
 
     </ul>
     <!-- /options -->

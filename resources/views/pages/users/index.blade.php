@@ -1,14 +1,13 @@
 @extends('layouts.default')
 
 @section('page-title')
-    <h1 class="ms-2 me-5 mb-0" id="account-page-title"><span class="text-main-color-2">Account</span></h1>
-    <x-button-green :type="_('button')" :text="_('Add')" class="ms-5 btn-sm w--10" id="btn-user-create" />
-    <x-button-orange :type="_('button')" :text="_('Edit')" class="ms-3 btn-sm w--10 d-none" id="btn-user-edit"/>
+    <h1 class="ms-2 me-2 mb-0" id="account-page-title"><span class="text-main-color-2">Account</span></h1>
+    <x-button-green :type="_('button')" :text="_('Add')" class="ms-2 btn-sm w--15" id="btn-user-create" />
+    <x-button-orange :type="_('button')" :text="_('Edit')" class="ms-2 btn-sm w--15 d-none" id="btn-user-edit"/>
 @stop
 
 @section('content')
 <div class="row mt-4">
-
     <div class="col-12">
         <div id="to-user-list">
             <div class="card-body">
@@ -93,7 +92,7 @@
                 </table>
             </div>
         </div>
-        <div id="to-user-create" class="w--80 m-auto d-none">
+        <div id="to-user-create" class="m-auto d-none">
             @include('pages.users.create')
         </div>
         <div id="to-user-edit" class="m-auto d-none">

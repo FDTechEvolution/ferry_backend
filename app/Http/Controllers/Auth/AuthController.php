@@ -11,6 +11,7 @@ use Illuminate\Auth\Events\PasswordReset;
 
 use App\Models\User;
 use App\Models\UserLog;
+use App\Models\Role;
 
 class AuthController extends Controller
 {
@@ -101,7 +102,8 @@ class AuthController extends Controller
 
     public function dashboard() {
         if(Auth::check()) {
-            return view('dashboard');
+            $role = Role::find(Auth::user()->role_id);
+            return view('dashboard', ['role' => $role->name]);
         }
 
         return redirect()->route('login');

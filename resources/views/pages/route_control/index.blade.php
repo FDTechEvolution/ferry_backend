@@ -16,13 +16,13 @@
             <div class="card-body w--90 mx-auto">
                 <h1>Route control</h1>
                 <div class="row mb-2 border-bottom pb-2">
-                    <div class="col-3">
+                    <div class="col-12 mb-2 col-lg-3">
                         <input type="text" class="form-control form-control-sm" id="filter-station-from" value="" placeholder="Station From">
                     </div>
-                    <div class="col-3">
+                    <div class="col-12 mb-2 col-lg-3">
                         <input type="text" class="form-control form-control-sm" id="filter-station-to" value="" placeholder="Station To">
                     </div>
-                    <div class="col-1 offset-4">
+                    <div class="col-6 col-lg-1 offset-lg-4">
                         <form novalidate class="bs-validate" method="POST" target="_blank" action="{{ route('route-selected-pdf') }}">
                             @csrf
                             <input type="hidden" name="route_selected" id="input-pdf-selected" value="">
@@ -34,7 +34,7 @@
                             </button>
                         </form>
                     </div>
-                    <div class="col-1">
+                    <div class="col-6 col-lg-1">
                         <form novalidate class="bs-validate" id="form-route-selected-delete" method="POST" action="{{ route('route-selected-delete') }}">
                             @csrf
                             <input type="hidden" name="route_selected" id="input-delete-selected" value="">

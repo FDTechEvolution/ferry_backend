@@ -15,6 +15,7 @@ use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\TimeTableController;
 use App\Http\Controllers\RouteMapController;
 use App\Http\Controllers\SlideController;
+use App\Http\Controllers\PromotionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -183,6 +184,11 @@ Route::middleware('auth')->group(function() {
 
         // AJAX
         Route::get('/ajax/slide/show-in-homepage/{id}', 'updateShowInHomepage')->name('slide-show');
+    });
+
+    Route::controller(PromotionController::class)->group(function() {
+        Route::get('/promotion', 'index')->name('promotion-index');
+        Route::get('/promotion/create', 'create')->name('promotion-create');
     });
 });
 

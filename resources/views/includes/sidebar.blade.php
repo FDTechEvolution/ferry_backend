@@ -30,7 +30,7 @@
     <ul class="nav flex-column">
 
       <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="{{ route('booking-index') }}">
           <i class="fi fi-arrow-right"></i>
           <span>Booking</span>
         </a>

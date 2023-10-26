@@ -33,10 +33,12 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
+        //dd($credentials);
+
         $user = User::where(['username' => $credentials['username']])->with('role')->first();
         if($user) {
             $result = $this->checkUserCondition($user);
-            if(!$result) return back()->withFail('Your provided credentials do not match in our records.');
+            if(!$result) return back()->withFail('Your provided credentials do not match in our records. P');
             else {
                 // return redirect()->route('dashboard');
                 if(Auth::attempt($credentials))
@@ -54,10 +56,13 @@ class AuthController extends Controller
             }
         }
         
-        return back()->withFail('Your provided credentials do not match in our records.');
+        return back()->withFail('Your provided credentials do not match in our records. U');
     }
 
     private function checkUserCondition($user) {
+
+        return true;
+        
         if($user->role->name == 'Admin' || $user->role->name == 'Agent') {
             if($user->isactive && $user->status == 'CO') return true;
         }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BookingsController;
 use App\Http\Controllers\InformationsController;
 use Illuminate\Support\Facades\Route;
 
@@ -196,6 +197,14 @@ Route::middleware('auth')->group(function() {
         Route::get('/fare-manage', 'index')->name('fare-index');
 
         Route::post('/fare-manage/update', 'update')->name('fare-update');
+    });
+
+
+    Route::controller(BookingsController::class)->group(function() {
+        Route::get('/booking', 'index')->name('booking-index');
+
+        Route::get('/booking/route', 'route')->name('booking-route');
+        Route::get('/booking/create', 'create')->name('booking-create');
     });
 });
 

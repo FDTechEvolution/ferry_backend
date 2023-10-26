@@ -39,7 +39,7 @@ div.dataTables_wrapper div.dataTables_filter input {
     background-color: transparent;
 }
 .bg-main-color {
-    background-color: #ff6100;
+    background-color: #ff6100 !important;
 }
 .text-main-color {
     color: #0a3961;

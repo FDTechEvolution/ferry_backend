@@ -7,8 +7,7 @@
             <div class="mb-3 row">
                 <label for="username" class="col-sm-2 col-form-label-sm text-start">Username* :</label>
                 <div class="col-sm-10 ps-3">
-                    <img id="edit-user-avatar" src="" class="rounded-circle shadow ms-2" style="width: 42px; height: 38px;" />
-                    <span class="mb-0 ms-2" id="edit-username-data" style="line-height: 40px;"></span>
+                <input type="text" required class="form-control form-control-sm" id="edit-username" name="username" value="">
                 </div>
             </div>
             <div class="mb-3 row">
@@ -57,7 +56,7 @@
             <input type="hidden" name="id" id="user-edit-id" />
         </div>
         <div class="col-12 text-center mt-4">
-            <x-button-green :type="_('submit')" :text="_('Edit')" class="btn-lg w--10 me-2" />
+            <x-button-green :type="_('submit')" :text="_('Save')" class="btn-lg w--10 me-2" />
             <button type="button" class="btn btn-secondary btn-lg w--10" id="btn-cancel-edit">Cancel</button>
             <small id="user-create-error-notice" class="text-danger mt-3"></small>
         </div>

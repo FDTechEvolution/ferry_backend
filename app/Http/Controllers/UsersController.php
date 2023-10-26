@@ -81,6 +81,7 @@ class UsersController extends Controller
     public function update(Request $request) {
         $request->validate([
             'firstname' => 'required|string',
+            'username'=> 'required|string',
             'lastname' => 'required|string',
             'office' => 'required|string',
             'email' => 'required|email',
@@ -102,6 +103,7 @@ class UsersController extends Controller
 
         if($user->image != '') unlink(public_path().'/assets/images/avatar/'. $user->image);
 
+        $user->username = $request->username;
         $user->firstname = $request->firstname;
         $user->lastname = $request->lastname;
         $user->role_id = $request->role;

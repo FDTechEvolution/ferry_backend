@@ -67,9 +67,9 @@ function updateEditData(index) {
     let data = document.querySelectorAll(`.user-data-${index}`)
     let user_id = document.querySelector(`#id-${index}`)
     let role_id = document.querySelector(`#role-${index}`)
-    let username = document.querySelector(`#user-data-username-${index}`)
-    let image = document.querySelector(`#image-${index}`)
-    let element_ids = ['edit-firstname', 'edit-lastname', 'edit-office', 'edit-email']
+    //let username = document.querySelector(`#user-data-username-${index}`)
+    //let image = document.querySelector(`#image-${index}`)
+    let element_ids = ['edit-username','edit-firstname', 'edit-lastname', 'edit-office', 'edit-email']
     let role_select = document.querySelector('#edit-role')
     let options = role_select.getElementsByTagName('option')
 
@@ -81,9 +81,9 @@ function updateEditData(index) {
         if(option.value === role_id.value) options[index].selected = true
     })
 
-    document.querySelector('#edit-username-data').innerHTML = username.innerText
+    //document.querySelector('#edit-username-data').innerHTML = username.innerText
     document.querySelector('#user-edit-id').value = user_id.value
-    document.querySelector('#edit-user-avatar').src = `../assets/images/avatar/${image.value !== '' ? image.value : 'blank-profile-picture.png'}`
+    //document.querySelector('#edit-user-avatar').src = `../assets/images/avatar/${image.value !== '' ? image.value : 'blank-profile-picture.png'}`
 
     setClassListRemove('to-user-edit')
     setClassListAdd('to-user-create')

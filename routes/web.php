@@ -16,6 +16,7 @@ use App\Http\Controllers\TimeTableController;
 use App\Http\Controllers\RouteMapController;
 use App\Http\Controllers\SlideController;
 use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\FareController;
 
 /*
 |--------------------------------------------------------------------------
@@ -189,6 +190,12 @@ Route::middleware('auth')->group(function() {
     Route::controller(PromotionController::class)->group(function() {
         Route::get('/promotion', 'index')->name('promotion-index');
         Route::get('/promotion/create', 'create')->name('promotion-create');
+    });
+
+    Route::controller(FareController::class)->group(function() {
+        Route::get('/fare-manage', 'index')->name('fare-index');
+
+        Route::post('/fare-manage/update', 'update')->name('fare-update');
     });
 });
 

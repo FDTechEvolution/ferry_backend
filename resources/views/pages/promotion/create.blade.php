@@ -49,7 +49,7 @@
                                 <div class="mb-3 row">
                                     <div class="col-sm-12 col-lg-6">
                                         <div class="row mb-3">
-                                            <label class="col-sm-12 col-lg-5 col-form-label-sm text-light fw-bold">Depart Date Start</label>
+                                            <label class="col-sm-12 col-lg-5 col-form-label-sm text-light fw-bold text-lg-end">Depart Date Start</label>
                                             <div class="col-sm-12 col-lg-7">
                                                 <input type="text" name="depart_start" class="form-control form-control-sm datepicker"
                                                     data-show-weeks="true"
@@ -107,13 +107,68 @@
                                 <div class="row mb-3">
                                     <div class="col-sm-12 col-lg-5">
                                         <div class="row mb-3">
-                                            <label class="col-sm-12 col-lg-3 col-form-label-sm text-light fw-bold text-center">Age</label>
+                                            <label class="col-sm-12 col-lg-3 col-form-label-sm text-light fw-bold text-end">Age</label>
                                             <div class="col-sm-12 col-lg-4">
-                                                <input type="number" class="form-control form-control-sm" name="age_min">
+                                                <input type="number" class="form-control form-control-sm text-center" name="age_min">
                                             </div>
                                             <label class="col-sm-12 col-lg-1 col-form-label-sm text-light fw-bold text-lg-center">-</label>
                                             <div class="col-sm-12 col-lg-4">
-                                                <input type="number" class="form-control form-control-sm" name="age_max">
+                                                <input type="number" class="form-control form-control-sm text-center" name="age_max">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label class="col-sm-12 col-lg-3 col-form-label-sm text-light fw-bold text-end">Extra</label>
+                                            <div class="col-sm-12 col-lg-9">
+                                                <select class="form-select form-select-sm" name="extra">
+                                                    <option value="">-- No Extra --</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-lg-7">
+                                        <div class="row mb-2">
+                                            <label class="col-sm-12 col-lg-3 col-form-label-sm text-light fw-bold text-end">Station From</label>
+                                            <div class="col-sm-12 col-lg-9">
+                                                <select class="form-select form-select-sm" name="station_from">
+                                                    <option value="">-- No Station --</option>
+                                                    @foreach($stations as $station)
+                                                        <option value="{{ $station->id }}">{{ $station->name }} @if($station->piername != null) ({{$station->piername}}) @endif</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label class="col-sm-12 col-lg-3 col-form-label-sm text-light fw-bold text-end">Station To</label>
+                                            <div class="col-sm-12 col-lg-9">
+                                                <select class="form-select form-select-sm" name="station_to">
+                                                    <option value="">-- No Station --</option>
+                                                    @foreach($stations as $station)
+                                                        <option value="{{ $station->id }}">{{ $station->name }} @if($station->piername != null) ({{$station->piername}}) @endif</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-2">
+                                            <label class="col-sm-12 col-lg-3 col-form-label-sm text-light fw-bold text-end">Route From</label>
+                                            <div class="col-sm-12 col-lg-9">
+                                                <select class="form-select form-select-sm" name="route_from">
+                                                    <option value="">-- No Route --</option>
+                                                    @foreach($routes as $route)
+                                                        <option value="{{ $route->id }}">{{ $route->station_from->name }} -> {{ $route->station_to->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label class="col-sm-12 col-lg-3 col-form-label-sm text-light fw-bold text-end">Route To</label>
+                                            <div class="col-sm-12 col-lg-9">
+                                                <select class="form-select form-select-sm" name="route_to">
+                                                    <option value="">-- No Route --</option>
+                                                    @foreach($routes as $route)
+                                                        <option value="{{ $route->id }}">{{ $route->station_from->name }} -> {{ $route->station_to->name }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                     </div>

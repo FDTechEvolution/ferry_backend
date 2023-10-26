@@ -7,7 +7,7 @@
 			</div>
 			<div class="modal-body">
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-sm-12 col-lg-8">
                         <form id="form-upload-icon" enctype="multipart/form-data">
                             <fieldset id="fieldset-upload-icon">
                                 <input type="hidden" name="_token" id="icon-token" value="{{ csrf_token() }}">
@@ -67,7 +67,7 @@
                             </fieldset>
                         </form>
                     </div>
-                    <div class="col-4 border-start">
+                    <div class="col-sm-12 col-lg-4 border-start">
                         <strong>Icon List : </strong>
                         <ul id="show-meal-icon-list"></ul>
 

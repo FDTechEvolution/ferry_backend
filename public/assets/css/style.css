@@ -76,6 +76,13 @@ div.dataTables_wrapper div.dataTables_filter input {
 .w--90 {
     width: 90%;
 }
+.w--100 {
+    width: 100%;
+}
+
+.mx-w--100 {
+    max-width: 100px !important;
+}
 
 /* Font size */
 .fs-d-80 {
@@ -159,7 +166,10 @@ div.dataTables_wrapper div.dataTables_filter input {
     background: #555; 
 }
 
-
+.icon-size {
+    width: 36px;
+    height: 36px;
+}
 
 /* Mobile ----------------------------------- */
 @media (min-width: 576px) {
@@ -183,6 +193,19 @@ div.dataTables_wrapper div.dataTables_filter input {
     }
     .w-sm-100 {
         width: 100% !important;
+    }
+    .w-sm--200 {
+        width: 100px !important;
+    }
+    .table-datatable-custom tbody tr td {
+        line-height: 1.6rem !important;
+    }
+    .mx-w--100 {
+        max-width: none !important;
+    }
+    .icon-size {
+        width: 48px;
+        height: 48px;
     }
 }
 

@@ -9,7 +9,7 @@
     @csrf
     <fieldset id="fs-review-create">
     <div class="row mt-4"> 
-        <div class="col-md-8 col-sm-10 col-12">
+        <div class="col-md-8 col-sm-10 col-12 mx-auto">
             <div class="mb-3 row">
                 <label for="title" class="col-sm-4 col-form-label">Topic Name<span class="text-danger">*</span></label>
                 <div class="col-sm-8">

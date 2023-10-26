@@ -1,32 +1,32 @@
 <form novalidate class="bs-validate" id="meal-create-form" method="POST" action="{{ route('meal-create') }}" enctype="multipart/form-data">
     @csrf
     <fieldset id="meal-create">
-        <div class="row bg-transparent mt-5">
-            <div class="col-sm-12 w-75 mx-auto">
+        <div class="row bg-transparent mt-lg-5">
+            <div class="col-sm-12 col-lg-9 mx-auto">
 
                 <div class="row">
-                    <div class="col-7 px-4">
+                    <div class="col-sm-12 col-md-7 col-lg-7 px-4">
                         <h1 class="fw-bold text-second-color mb-4"><span>Add new Meal</h1>
 
-                        <div class="mb-4 row">
+                        <div class="mb-3 row">
                             <label for="meal-name" class="col-sm-3 col-form-label-sm text-start">Meal Name* :</label>
                             <div class="col-sm-9">
                                 <input type="text" required class="form-control form-control-sm" id="meal-name" name="name" value="">
                             </div>
                         </div>
-                        <div class="mb-4 row">
+                        <div class="mb-3 row">
                             <label for="meal-price" class="col-sm-3 col-form-label-sm text-start">Price* :</label>
                             <div class="col-sm-9">
                                 <input type="number" required class="form-control form-control-sm w--40" id="meal-price" name="price" value="">
                             </div>
                         </div>
-                        <div class="mb-4 row">
+                        <div class="mb-3 row">
                             <label for="meal-detail" class="col-sm-3 col-form-label-sm text-start">Detail Meal :</label>
                             <div class="col-sm-9">
                                 <textarea class="form-control form-control-sm" id="meal-detail" name="detail" row="3"></textarea>
                             </div>
                         </div>
-                        <div class="mb-4 row">
+                        <div class="mb-3 row">
                             <label for="meal-detail" class="col-sm-3 col-form-label-sm text-start">Icon :</label>
                             <label class="col-sm-1 col-form-label-sm text-start pe-1">
                                 <img src="../assets/images/no_image_icon.svg" id="icon-image-show" width="22" height="22">
@@ -44,7 +44,7 @@
                                 </a>
                             </label>
                         </div>
-                        <div class="mb-4 row">
+                        <div class="mb-3 row">
                             <label for="meal-detail" class="col-sm-3 col-form-label-sm text-start">Picture :</label>
                             <div class="col-sm-9">
                                 <label class="btn btn-light btn-sm cursor-pointer position-relative w-100 rounded border" style="background-color: #fff;">
@@ -91,7 +91,7 @@
                         </div>
                     </div>
 
-                    <div class="col-5">
+                    <div class="col-sm-12 col-md-5 col-lg-5">
                         <div class="bg-light p-4 rounded">
                             <p>View</p>
                             <div class="form-check ms-3 mb-3">

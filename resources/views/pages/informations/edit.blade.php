@@ -9,7 +9,7 @@
     @csrf
     <fieldset id="fs-information-update">
     <div class="row mt-4"> 
-        <div class="col-md-8 col-sm-10 col-12">
+        <div class="col-md-8 col-sm-10 col-12 mx-auto px-4">
             <div class="mb-3 row">
                 <label for="title" class="col-sm-4 col-form-label">Title<span class="text-danger">*</span></label>
                 <div class="col-sm-8">
@@ -36,12 +36,12 @@
             <div>
                 <div class="col-12 text-center mt-4">
                     <x-button-submit-loading 
-                                        class="btn-lg w--10 me-5"
+                                        class="btn-lg w--15 me-5"
                                         :form_id="_('frm-information-update')"
                                         :fieldset_id="_('fs-information-update')"
                                         :text="_('Save')"
                                     />
-                    <a href="{{ route('information-index') }}" class="btn btn-secondary btn-lg w--10">Cancel</a>
+                    <a href="{{ route('information-index') }}" class="btn btn-secondary btn-lg w--15">Cancel</a>
                     <small id="" class="text-danger mt-3"></small>
                 </div>
             </div>

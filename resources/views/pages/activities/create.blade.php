@@ -11,26 +11,26 @@
         <form novalidate class="bs-validate" id="activity-create-form" method="POST" action="{{ route('activity-store') }}" enctype="multipart/form-data">
             @csrf
             <fieldset id="activity-create">
-                <div class="row bg-transparent mt-5">
-                    <div class="col-sm-12 w--80 mx-auto">
+                <div class="row bg-transparent mt-lg-5">
+                    <div class="col-sm-12 col-lg-10 mx-auto">
 
                         <div class="row">
-                            <div class="col-7 px-4">
+                            <div class="col-sm-12 col-md-8 col-lg-7 px-4">
                                 <h1 class="fw-bold text-second-color mb-4"><span>Add new Activity manage</h1>
 
-                                <div class="mb-4 row">
+                                <div class="mb-3 row">
                                     <label for="activity-name" class="col-sm-3 col-form-label-sm text-start">Activity Name* :</label>
                                     <div class="col-sm-9">
                                         <input type="text" required class="form-control form-control-sm" id="activity-name" name="name" value="">
                                     </div>
                                 </div>
-                                <div class="mb-4 row">
+                                <div class="mb-3 row">
                                     <label for="activity-price" class="col-sm-3 col-form-label-sm text-start">Price* :</label>
                                     <div class="col-sm-9">
                                         <input type="number" required class="form-control form-control-sm w--40" id="activity-price" name="price" value="">
                                     </div>
                                 </div>
-                                <div class="mb-4 row">
+                                <div class="mb-3 row">
                                     <label class="col-sm-3 col-form-label-sm text-start">Detail Activity :</label>
                                     <div class="col-sm-9">
                                         <div class="quill-editor"
@@ -58,10 +58,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="mb-4 pt-4 row mt-6">
+                                <div class="mb-3 pt-4 row mt-6">
                                     <label class="col-sm-3 col-form-label-sm text-start">Icon :</label>
-                                    <div class="col-sm-1 text-center align-self-center">
-                                        <img src="{{ asset('icon/no_image_icon.svg') }}" id="icon-selected" width="24" height="24">
+                                    <div class="col-sm-1 text-lg-center align-self-center">
+                                        <img src="{{ asset('icon/no_image_icon.svg') }}" id="icon-selected" class="icon-size">
                                     </div>
                                     <div class="col-sm-8">
                                         <div class="dropdown">
@@ -82,7 +82,7 @@
                                                 @foreach($icons as $index => $icon)
                                                 <li>
                                                     <a class="dropdown-item rounded" href="javascript:void(0)" onClick="selectActivityIcon({{ $index }})">
-                                                        <img src="{{ asset($icon->path) }}" class="me-2" width="24" height="24">
+                                                        <img src="{{ asset($icon->path) }}" class="me-2 icon-size">
                                                         <span>{{ $icon['name'] }}</span>
                                                     </a>
                                                 </li>
@@ -92,7 +92,7 @@
                                     </div>
                                     <input type="hidden" name="icon_id" id="icon-id" value="">
                                 </div>
-                                <div class="mb-4 row">
+                                <div class="mb-3 row">
                                     <label class="col-sm-3 col-form-label-sm text-start">Picture :</label>
                                     <div class="col-sm-9">
                                         <label class="btn btn-light btn-sm cursor-pointer position-relative w-100 rounded border" style="background-color: #fff;">
@@ -139,7 +139,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-5">
+                            <div class="col-sm-12 col-md-4 col-lg-5">
                                 <div class="bg-light p-4 rounded">
                                     <p>View</p>
                                     <div class="form-check ms-3 mb-3">

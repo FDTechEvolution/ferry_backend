@@ -72,10 +72,10 @@
                 </table>
             </div>
         </div>
-        <div id="to-station-info-create" class="m-auto d-none">
+        <div id="to-station-info-create" class="mx-auto d-none">
             @include('pages.station_infomations.create')
         </div>
-        <div id="to-station-info-edit" class="m-auto d-none">
+        <div id="to-station-info-edit" class="mx-auto d-none">
             @include('pages.station_infomations.edit')
         </div>
     </div>

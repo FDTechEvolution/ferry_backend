@@ -7,7 +7,7 @@
 
 @section('content') 
 <div class="row mt-4"> 
-    <div class="col-12">
+    <div class="col-sm-12 col-md-11 col-lg-10 mx-auto">
     <div id="to-station-info-list">
             <div class="card-body">
                 <table class="table-datatable table table-datatable-custom" id="station-info-datatable" 

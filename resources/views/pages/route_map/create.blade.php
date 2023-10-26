@@ -8,10 +8,10 @@
         @csrf
         <fieldset id="route-map-create">
             <div class="mb-4 row">
-                <div class="col-6">
+                <div class="col-sm-12 col-lg-6">
                     <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label-sm text-start text-light fw-bold">Picture Full* :</label>
-                        <div class="col-sm-9">
+                        <label class="col-sm-12 col-lg-3 col-form-label-sm text-start text-light fw-bold">Picture Full* :</label>
+                        <div class="col-sm-12 col-lg-9">
                             <label class="btn btn-light btn-sm cursor-pointer position-relative w-100 rounded border" style="background-color: #fff;">
                                 <input type="file" name="file_picture"
                                     data-file-ext="jepg, jpg, png, gif"
@@ -57,8 +57,8 @@
                     </div>
 
                     <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label-sm text-start text-light fw-bold">Picture Banner :</label>
-                        <div class="col-sm-9">
+                        <label class="col-sm-12 col-lg-3 col-form-label-sm text-start text-light fw-bold">Picture Banner :</label>
+                        <div class="col-sm-12 col-lg-9">
                             <label class="btn btn-light btn-sm cursor-pointer position-relative w-100 rounded border" style="background-color: #fff;">
                                 <input type="file" name="file_banner"
                                     data-file-ext="jepg, jpg, png, gif"
@@ -103,8 +103,8 @@
                     </div>
 
                     <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label-sm text-start text-light fw-bold">Picture Thumb :</label>
-                        <div class="col-sm-9">
+                        <label class="col-sm-12 col-lg-3 col-form-label-sm text-start text-light fw-bold">Picture Thumb :</label>
+                        <div class="col-sm-12 col-lg-9">
                             <label class="btn btn-light btn-sm cursor-pointer position-relative w-100 rounded border" style="background-color: #fff;">
                                 <input type="file" name="file_thumb"
                                     data-file-ext="jepg, jpg, png, gif"
@@ -148,16 +148,16 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-6">
+                <div class="col-sm-12 col-lg-6">
                     <div class="mb-3 row">
-                        <label class="col-sm-3 col-form-label-sm text-end text-light fw-bold">Detail :</label>
-                        <div class="col-9">
+                        <label class="col-sm-12 col-lg-3 col-form-label-sm text-lg-end text-light fw-bold">Detail :</label>
+                        <div class="col-sm-12 col-lg-9">
                             <textarea class="form-control" rows="2" name="detail"></textarea>
                         </div>
                     </div>
                     <div class="row">
-                        <label class="col-sm-3 col-form-label-sm text-end text-light fw-bold">Sort :</label>
-                        <div class="col-4">
+                        <label class="col-sm-12 col-lg-3 col-form-label-sm text-lg-end text-light fw-bold">Sort :</label>
+                        <div class="col-sm-12 col-lg-4">
                             <input type="number" class="form-control form-control-sm text-center" name="sort">
                         </div>
                     </div>

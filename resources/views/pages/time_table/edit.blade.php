@@ -8,8 +8,8 @@
         @csrf
         <fieldset id="time-table-update">
             <div class="mb-4 row">
-                <label class="col-sm-1 col-form-label-sm text-start text-light fw-bold">Picture* :</label>
-                <div class="col-sm-5">
+                <label class="col-sm-12 col-lg-1 col-form-label-sm text-start text-light fw-bold">Picture* :</label>
+                <div class="col-sm-12 col-lg-5">
                     <label class="btn btn-light btn-sm cursor-pointer position-relative w-100 rounded border" style="background-color: #fff;">
                         <input type="file" name="file_picture"
                             data-file-ext="jepg, jpg, png, gif"
@@ -75,17 +75,17 @@
                     <input type="hidden" name="_id" id="time-table-id-edit" value="">
                 </div>
 
-                <label class="col-sm-1 offset-1 col-form-label-sm text-end text-light fw-bold">Sort :</label>
-                <div class="col-2">
+                <label class="col-sm-12 col-lg-1 offset-lg-1 col-form-label-sm text-lg-end text-light fw-bold">Sort :</label>
+                <div class="col-sm-12 col-lg-2">
                     <input type="number" class="form-control form-control-sm text-center" id="time-table-sort-edit" name="sort">
                 </div>
             </div>
             <div class="mb-2 row">
-                <label class="col-sm-1 col-form-label-sm text-start text-light fw-bold">Detail :</label>
-                <div class="col-5">
+                <label class="col-sm-12 col-lg-1 col-form-label-sm text-start text-light fw-bold">Detail :</label>
+                <div class="col-sm-12 col-lg-5 mb-3 mb-lg-0">
                     <textarea class="form-control" rows="2" name="detail" id="time-table-detail-edit"></textarea>
                 </div>
-                <div class="col-6 justify-content-end d-flex align-items-end">
+                <div class="col-sm-12 col-lg-6 justify-content-end d-flex align-items-end">
                     <x-button-submit-loading 
                         class="btn-sm w--20 me-2 button-green-bg border-radius-10"
                         :form_id="_('time-table-update-form')"

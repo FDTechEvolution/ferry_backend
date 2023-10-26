@@ -1,5 +1,6 @@
 const create_form = document.querySelector('#create-slide')
 const edit_form = document.querySelector('#edit-slide')
+const cancel_edit = document.querySelector('#btn-cancel-slide-edit')
 
 function updateEditData(index) {
     const slide = slides.find((item, key) => { return key === index })
@@ -9,6 +10,13 @@ function updateEditData(index) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     setDataToEditForm(slide)
+}
+
+if(cancel_edit) {
+    cancel_edit.addEventListener('click', () => {
+        create_form.classList.remove('d-none')
+        edit_form.classList.add('d-none')
+    })
 }
 
 function setDataToEditForm(slide) {
@@ -28,6 +36,11 @@ async function showInHomepage(e) {
 
     if(res.status === 'success') $.SOW.core.toast.show('success', '', res.msg, 'top-end', 0, true);
     else $.SOW.core.toast.show('danger', '', res.msg, 'top-end', 0, true);
+}
+
+function resetImage() {
+    const remove = document.querySelector('#remove-picture')
+    if(remove) remove.click()
 }
 
 function getImageUpload(current_id) {

@@ -1,8 +1,8 @@
 <form novalidate class="bs-validate" id="station-info-create-form" method="POST" action="{{ route('station-info-create') }}">
     @csrf
     <fieldset id="station-info-create">
-        <div class="row bg-transparent mt-5">
-            <div class="col-sm-12 w--80 mx-auto">
+        <div class="row bg-transparent mt-lg-5">
+            <div class="col-sm-12 col-lg-9 mx-auto">
                 <h1 class="fw-bold text-second-color mb-4">Add new station infomation</h1>
             
                 <div class="row">

@@ -8,9 +8,9 @@
 @section('content')
 <div class="row mt-4">
 
-    <div class="col-12">
+    <div class="col-sm-12 col-lg-10 mx-auto">
         <div id="to-meal-list">
-            <div class="card-body w--90 mx-auto">
+            <div class="card-body">
                 <table class="table-datatable table table-datatable-custom" id="meals-datatable" 
                     data-lng-empty="No data available in table"
                     data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"

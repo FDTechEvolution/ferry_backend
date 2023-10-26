@@ -59,7 +59,7 @@
                         <tr>
                             <th class="text-center">Pic Time Table</th>
                             <th class="text-center">Title</th>
-                            <th class="text-center">Choose News Show In Homepage</th>
+                            <th class="text-center">News Show In Homepage</th>
                             <th class="text-center">Sort</th>
                             <th class="text-center">Action</th>
                         </tr>
@@ -67,16 +67,16 @@
                     <tbody>
                         @foreach($time_tables as $index => $table)
                             <tr class="text-center align-middle">
-                                <td style="max-width: 100px;">
+                                <td class="mx-w--100">
                                     <a class="fancybox" href="{{ asset($table->image->path.'/'.$table->image->name) }}">
-                                        <img src="{{ asset($table->image->path.'/'.$table->image->name) }}" class="w-100">
+                                        <img src="{{ asset($table->image->path.'/'.$table->image->name) }}" class="w--100 w-sm--200">
                                     </a>
                                 </td>
                                 <td>{{ $table->detail }}</td>
                                 <td>
-                                    <label class="align-items-center text-center">
+                                    <label class="align-items-center col-form-label-sm text-center">
                                         <input class="d-none-cloaked" type="checkbox" name="switch-checkbox" value="{{ $table->id }}" @checked($table->isactive == 'Y') onClick="showInHomepage(this)">
-                                        <i class="switch-icon switch-icon-primary"></i>
+                                        <i class="switch-icon switch-icon-primary ms-3 ms-lg-0"></i>
                                     </label>
                                 </td>
                                 <td>{{ $table->sort }}</td>

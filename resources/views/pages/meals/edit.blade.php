@@ -1,11 +1,11 @@
 <form novalidate class="bs-validate" id="meal-edit-form" method="POST" action="{{ route('meal-update') }}" enctype="multipart/form-data">
     @csrf
     <fieldset id="meal-update">
-        <div class="row bg-transparent mt-5">
-            <div class="col-sm-12 w-75 mx-auto">
+        <div class="row bg-transparent mt-lg-5">
+            <div class="col-sm-12 col-lg-9 mx-auto">
 
                 <div class="row">
-                    <div class="col-7 px-4" id="edit-meal-input">
+                    <div class="col-sm-12 col-md-7 col-lg-7 px-4" id="edit-meal-input">
                         <h1 class="fw-bold text-second-color mb-4"><span>Edit Meal</h1>
 
                         <div class="mb-4 row">
@@ -118,7 +118,7 @@
                         </div>
                     </div>
 
-                    <div class="col-5">
+                    <div class="col-sm-12 col-md-5 col-lg-5">
                         <div class="bg-light p-4 rounded">
                             <p>View</p>
                             <div class="form-check ms-3 mb-3">

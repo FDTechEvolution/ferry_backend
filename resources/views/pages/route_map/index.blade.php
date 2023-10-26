@@ -59,7 +59,7 @@
                         <tr>
                             <th class="text-center">Pic Route Map</th>
                             <th class="text-center">Title</th>
-                            <th class="text-center">Choose News Show In Homepage</th>
+                            <th class="text-center">News Show In Homepage</th>
                             <th class="text-center">Sort</th>
                             <th class="text-center">Action</th>
                         </tr>
@@ -67,9 +67,9 @@
                     <tbody>
                         @foreach($route_maps as $index => $map)
                             <tr class="text-center align-middle">
-                                <td style="max-width: 100px;">
+                                <td class="mx-w--100">
                                     <a class="fancybox" href="{{ asset($map->image->path.'/'.$map->image->name) }}">
-                                        <img src="{{ asset($map->image->path.'/'.$map->image->name) }}" class="w-100">
+                                        <img src="{{ asset($map->image->path.'/'.$map->image->name) }}" class="w--100 w-sm--200">
                                     </a>
                                 </td>
                                 <td>{{ $map->detail }}</td>

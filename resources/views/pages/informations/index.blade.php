@@ -8,7 +8,7 @@
 
 @section('content') 
 <div class="row mt-4"> 
-    <div class="col-12">
+    <div class="col-12 col-md-11 col-lg-10 mx-auto">
     <div id="to-station-info-list">
             <div class="card-body">
                 <table class="table-datatable table table-datatable-custom" id="station-info-datatable" 
@@ -39,7 +39,7 @@
                             <th class="">Title</th>
                             <th class="">Position</th>
                             <th class="">Text/Message</th>
-                            <th></th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>

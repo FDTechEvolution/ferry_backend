@@ -44,7 +44,12 @@ class BookingsController extends Controller
     }
 
     public function create(){
-        return view('pages.bookings.create');
+        $departdate = request()->departdate;
+        $route_id = request()->route_id;
+
+        $route = Route::where('id', $route_id)->with('station_from', 'station_to', 'icons')->first();
+
+        return view('pages.bookings.create',['route'=>$route,'departdate'=>$departdate]);
     }
 
     public function store(Request $request){

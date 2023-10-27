@@ -82,7 +82,9 @@
                         <th>Depart</th>
                         <th>Arrive</th>
                         <th></th>
-                        <th>Price</th>
+                        <th class="text-end">Regular Price</th>
+                        <th class="text-end">Child</th>
+                        <th class="text-end">infant</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -113,7 +115,9 @@
                                         @endforeach
                                     </div>
                                 </td>
-                                <td>{{ number_format($route['regular_price']) }}</td>
+                                <td class="text-end">{{ number_format($route['regular_price']) }}</td>
+                                <td class="text-end">{{ number_format($route['child_price']) }}</td>
+                                <td class="text-end">{{ number_format($route['infant_price']) }}</td>
                                 <td class="text-end">
                                     <a href="{{route('booking-create')}}?route_id={{$route->id}}&departdate={{$departdate}}" class="btn btn-outline-success">Select</a>
                                 </td>

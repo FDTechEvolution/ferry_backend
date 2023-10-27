@@ -6,4 +6,30 @@
 @stop
 
 @section('content')
+<div class="section mb-3">
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Invoice</th>
+                            <th>Ticket No.</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Depart</th>
+                            <th>Arrive</th>
+                            <th></th>
+                            <th class="text-end">Price</th>
+                            <th class="text-end">Child</th>
+                            <th class="text-end">infant</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                <tbody id="">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 @stop

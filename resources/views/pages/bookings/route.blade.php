@@ -53,7 +53,7 @@
                     data-clear-btn="false"
                     data-autoclose="true"
                     data-date-start="today"
-                    data-format="DD/MM/YYYY">
+                    data-format="DD/MM/YYYY" value="{{date('d/m/Y')}}">
                 </div>
             </div>
         </div>
@@ -88,7 +88,7 @@
                         <th></th>
                     </tr>
                 </thead>
-            <tbody id="tbody-route">
+            <tbody id="">
                         @foreach($routes as $index => $route)
                             <tr class="">
                

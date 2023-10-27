@@ -12,6 +12,22 @@
             <h2 class="text-white">{{ $route['station_from']['name'] }} to  {{ $route['station_to']['name'] }}</h2>
         </div>
     </div>
+    <hr>
+    <div class="row text-white">
+        <div class="col-2">
+            <i class="fi fi-time"></i> Detart Time: {{date('H:i', strtotime($route['depart_time'])) }}
+        </div>
+        <div class="col-2">
+        <i class="fi fi-time"></i> Arrive Time: {{date('H:i', strtotime($route['arrive_time'])) }}
+        </div>
+
+        <div class="col-2">
+            Regular Price: {{number_format($route['regular_price'])}}THB
+        </div>
+        <div class="col-2">
+            Child Price: {{number_format($route['child_price'])}}THB
+        </div>
+    </div>
 </div>
 
 <div class="section mb-3">
@@ -23,7 +39,7 @@
                     <div class="row mb-3">
                         <label class="col-2 col-form-label-sm">Depart Date</label>
                         <div class="col-3">
-                            <input type="text" name="departdate" id="departdate" value="{{$departdate}}" class="form-control form-control-sm datepicker"
+                            <input required type="text" name="departdate" id="departdate" value="{{$departdate}}" class="form-control form-control-sm datepicker"
                             data-show-weeks="true"
                             data-today-highlight="true"
                             data-today-btn="true"
@@ -59,7 +75,7 @@
                     <div class="row mb-3">
                         <label class="col-2 col-form-label-sm">Customer Name</label>
                         <div class="col-4">
-                            <input type="text" class="form-control form-control-sm" name="reference" id="reference" />
+                            <input type="text" class="form-control form-control-sm" name="reference" id="reference" required />
                         </div>
                     </div>
 
@@ -73,17 +89,17 @@
                     <div class="row mb-3">
                         <label class="col-2 col-form-label-sm">Price</label>
                         <div class="col-2">
-                            <input type="text" class="form-control form-control-sm" name="reference" id="reference" />
+                            <input type="text" class="form-control form-control-sm" name="reference" id="reference" required />
                         </div>
 
                         <label class="col-2 col-form-label-sm text-end">Extra Price</label>
                         <div class="col-2">
-                            <input type="text" class="form-control form-control-sm" name="reference" id="reference" />
+                            <input type="text" class="form-control form-control-sm" name="reference" id="reference" value="0" required/>
                         </div>
 
                         <label class="col-2 col-form-label-sm text-end">Total Price</label>
                         <div class="col-2">
-                            <input type="text" class="form-control form-control-sm" name="reference" id="reference" disabled/>
+                            <input type="text" class="form-control form-control-sm" name="reference" id="reference" value="0" required disabled/>
                         </div>
                     </div>
                     <hr>
@@ -92,11 +108,11 @@
                         <label class="col-2 col-form-label-sm text-success">Pay</label>
                         <div class="col-3">
                             <div class="form-check mb-2">
-                                <input class="form-check-input form-check-input-danger" type="radio" name="payment" value="" id="" >
+                                <input class="form-check-input form-check-input-danger" type="radio" name="payment" value="" id="" required>
                                 <label class="form-check-label" for="checkDanger">Unpay</label>
                             </div>
                             <div class="form-check mb-2">
-                                <input class="form-check-input form-check-input-success" type="radio" name="payment" value="" id="" >
+                                <input class="form-check-input form-check-input-success" type="radio" name="payment" value="" id="" required>
                                 <label class="form-check-label" for="checkSuccess">Paid</label>
                             </div>
                         </div>

@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\AuthenticationController;
+use App\Http\Controllers\Api\StationsController;
+use App\Http\Controllers\Api\SlideController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,4 +25,13 @@ use App\Http\Controllers\Api\AuthenticationController;
 Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
     Route::post('login', [AuthenticationController::class, 'store']);
     Route::post('logout', [AuthenticationController::class, 'destroy'])->middleware('auth:api');
+});
+
+Route::group(['prefix' => 'v2'], function () {
+    Route::controller(StationsController::class)->group(function() {
+        Route::get('stations/get', 'getStations');
+    });
+    Route::controller(SlideController::class)->group(function() {
+        Route::get('slide/get', 'getSlide');
+    });
 });

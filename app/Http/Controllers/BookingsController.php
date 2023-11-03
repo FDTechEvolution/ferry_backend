@@ -18,8 +18,9 @@ class BookingsController extends Controller
     public function index()
     {
 
-        $routes = [];
-        return view('pages.bookings.index', ['routes' => $routes]);
+        $bookings = Bookings::with('route.station_from','route.station_to')->get();
+        //dd($bookings);
+        return view('pages.bookings.index', ['bookings' => $bookings]);
     }
 
     public function route()
@@ -51,12 +52,49 @@ class BookingsController extends Controller
         $route_id = request()->route_id;
 
         $route = Route::where('id', $route_id)->with('station_from', 'station_to', 'icons')->first();
+        $meals = (new MealsController)->getMeals();
 
-        return view('pages.bookings.create', ['route' => $route, 'departdate' => $departdate]);
+        return view('pages.bookings.create', ['route' => $route, 'departdate' => $departdate,'meals'=>$meals]);
     }
 
     public function store(Request $request)
     {
+        //dd($request->all());
 
+        $request->validate([
+            'departdate' => 'required|string',
+            'adult_passenger' => 'required|numeric',
+            'child_passenger' => 'required|numeric',
+            'infant_passenger' => 'required|numeric',
+            'fullname' => 'required|string',
+            'price' => 'required|numeric',
+            'extra_price' => 'required|numeric',
+            'total_price' => 'required|numeric',
+            'ispayment' => 'required|string',
+        ]);
+
+        
+
+        $date = strtotime($request->departdate);
+        $departdate = date('Y-m-d', $date); 
+        
+        //dd($departdate);
+        //save booking
+        $booking = Bookings::create([
+            'route_id'=> $request->route_id,
+            'departdate'=> $departdate,
+            'adult_passenger'=> $request->adult_passenger,
+            'child_passenger'=> $request->child_passenger,
+            'infant_passenger'=> $request->infant_passenger,
+            'totalamt'=> $request->total_price,
+            'extraamt'=> $request->extra_price,
+            'amount'=> $request->price,
+        ]);
+
+        if($booking) {
+            return redirect()->route('booking-index')->withSuccess('Save New Booking');
+        }
+
+        //return redirect()->route('booking-index')->withSuccess('Save New Booking');
     }
 }

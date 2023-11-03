@@ -34,9 +34,10 @@
 
 
     <div class="section mb-3">
-        <form novalidate class="bs-validate" id="booking-form" method="POST" action="{{ route('booking-route') }}">
+        <form novalidate class="bs-validate" id="booking-form" method="POST" action="{{ route('booking-store') }}">
+            @csrf
             <fieldset id="booking-ceate">
-                <input type="hidden" value="" name="route_id" id="route_id" />
+                <input type="hidden" value="{{$route['id']}}" name="route_id" id="route_id" />
                 <div class="row">
                     <div class="col-12 col-md-10 offset-md-1">
                         <div class="row mb-3">
@@ -78,7 +79,7 @@
                         <div class="row mb-3">
                             <label class="col-2 col-form-label-sm">Customer Name <span class="text-danger">*</span></label>
                             <div class="col-4">
-                                <input type="text" class="form-control form-control-sm" name="reference" id="reference"
+                                <input type="text" class="form-control form-control-sm" name="fullname" id="fullname"
                                     required />
                             </div>
                         </div>
@@ -86,7 +87,7 @@
                         <div class="row mb-3">
                             <label class="col-12 col-md-2 col-form-label-sm">Extra</label>
                             <div class="col-12 col-md-6">
-                                <button class="btn btn-sm rounded-circle btn-outline-ferry" type="button" title="add extra"><i class="fi fi-plus"></i></button>
+                                <button class="btn btn-sm rounded-circle btn-outline-ferry" type="button" title="add extra" data-bs-toggle="modal" data-bs-target="#modalCentered"><i class="fi fi-plus"></i></button>
                                 <div class="list-group">
                               
                                     
@@ -103,14 +104,14 @@
 
                             <label class="col-2 col-form-label-sm text-end">Extra Price</label>
                             <div class="col-2">
-                                <input type="text" class="form-control form-control-sm" name="reference" id="reference"
+                                <input type="text" class="form-control form-control-sm" name="extra_price" id="extra_price"
                                     value="0" value="0" />
                             </div>
 
                             <label class="col-2 col-form-label-sm text-end">Total Price</label>
                             <div class="col-2">
-                                <input type="text" class="form-control form-control-sm" name="reference" id="reference"
-                                    value="0" required disabled />
+                                <input type="text" class="form-control form-control-sm" name="total_price" id="total_price"
+                                    value="0" required readonly />
                             </div>
                         </div>
                         <hr>
@@ -119,13 +120,13 @@
                             <label class="col-2 col-form-label-sm text-success">Pay</label>
                             <div class="col-3">
                                 <div class="form-check mb-2">
-                                    <input class="form-check-input form-check-input-danger" type="radio" name="payment"
-                                        value="" id="" required>
+                                    <input class="form-check-input form-check-input-danger" type="radio" name="ispayment"
+                                        value="N" id="" required>
                                     <label class="form-check-label" for="checkDanger">Unpay</label>
                                 </div>
                                 <div class="form-check mb-2">
                                     <input class="form-check-input form-check-input-success" type="radio"
-                                        name="payment" value="" id="" required>
+                                        name="ispayment" value="Y" id="" required>
                                     <label class="form-check-label" for="checkSuccess">Paid</label>
                                 </div>
                             </div>
@@ -141,6 +142,7 @@
                                 <x-button-submit-loading class="btn-lg w--20 me-4 button-orange-bg" :form_id="_('booking-form')"
                                     :fieldset_id="_('booking-create')" :text="_('Save Booking')" />
                             </div>
+
                         </div>
 
                     </div>
@@ -149,4 +151,67 @@
         </form>
     </div>
 
+@stop
+
+
+@section('modal')
+<!-- Modal -->
+<div class="modal fade" id="modalCentered" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalCenteredLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modalCenteredLabel">Modal title</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<table class="table">
+                    <tbody>
+                        @foreach($meals as $index => $meal)
+                            <tr>
+                                <td>
+                                    <div class="avatar avatar-sm {{ !isset($meal['image_icon']) ? 'opacity-25' : 'opacity-100' }}" 
+                                        style="background-image:url({{ isset($meal['image_icon']) ? asset('assets/images/meal/icon/'.$meal['image_icon']) : asset('assets/images/no_image_icon.svg') }})">
+                                    </div>
+                                </td>
+                                <td class="text-start" data-id="name">{{ $meal['name'] }}</td>
+                                <td class="text-end">{{ number_format($meal['amount']) }}THB</td>
+                                <td class="text-end">
+                                    <button class="btn btn-outline-success btn-sm">Select</button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-ferry">Save</button>
+			</div>
+		</div>
+	</div>
+</div>
+@stop
+
+@section('script')
+<script>
+    function calculateTotalPrice(){
+        let price = isNaN($('#price').val())?0:$('#price').val();
+        let extra_price = isNaN($('#extra_price').val())?0:$('#extra_price').val();
+        let total_price = parseFloat(price)+parseFloat(extra_price);
+
+        $('#total_price').val(total_price); 
+    }
+
+    $(document).ready(function(){
+        calculateTotalPrice();
+
+        $('#price').on('keyup',function(){
+            calculateTotalPrice();
+        });
+
+        $('#extra_price').on('keyup',function(){
+            calculateTotalPrice();
+        });
+    });
+</script>
 @stop

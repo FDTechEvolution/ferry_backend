@@ -89,6 +89,7 @@ class BookingsController extends Controller
             'totalamt'=> $request->total_price,
             'extraamt'=> $request->extra_price,
             'amount'=> $request->price,
+            'ispayment'=>$request->ispayment
         ]);
 
         if($booking) {

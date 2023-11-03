@@ -18,7 +18,8 @@ class Bookings extends Model
         'totalamt',
         'extraamt',
         'amount',
-        'route_id'
+        'route_id',
+        'ispayment'
     ];
 
     public function user() {

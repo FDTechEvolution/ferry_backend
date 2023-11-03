@@ -1,49 +1,49 @@
 <form novalidate class="bs-validate" id="user-create-form" method="POST" onSubmit="return checkValidate()" action="{{ route('user-create') }}" enctype="multipart/form-data">
     @csrf
     <div class="row bg-transparent mt-2">
-        <div class="col-11 col-lg-8 mx-auto">
+        <div class="col-12 col-md-8 mx-auto">
             <h1 class="fw-bold text-second-color mb-4">Add new Account</h1>
             
             <div class="mb-3 row">
-                <label for="username" class="col-sm-2 col-form-label-sm text-start">Username* :</label>
+                <label for="username" class="col-sm-2 col-form-label-sm text-start">Username <span class="text-danger">*</span> :</label>
                 <div class="col-sm-10">
                     <input type="text" required class="form-control form-control-sm" id="username" name="username" value="">
                 </div>
             </div>
             <div class="mb-3 row">
-                <label for="password" class="col-sm-2 col-form-label-sm text-start">Password* :</label>
+                <label for="password" class="col-sm-2 col-form-label-sm text-start">Password <span class="text-danger">*</span> :</label>
                 <div class="col-sm-10">
                     <input type="password" required class="form-control form-control-sm" id="password" name="password" value="" minlength="6">
                 </div>
             </div>
             <div class="mb-3 row">
-                <label for="firstname" class="col-sm-2 col-form-label-sm text-start">Name* :</label>
+                <label for="firstname" class="col-sm-2 col-form-label-sm text-start">First Name <span class="text-danger">*</span> :</label>
                 <div class="col-sm-10">
                     <input type="text" required class="form-control form-control-sm" id="firstname" name="firstname" value="">
                 </div>
             </div>
             <div class="mb-3 row">
-                <label for="lastname" class="col-sm-2 col-form-label-sm text-start">Last name* :</label>
+                <label for="lastname" class="col-sm-2 col-form-label-sm text-start">Last name <span class="text-danger">*</span> :</label>
                 <div class="col-sm-10">
                     <input type="text" required class="form-control form-control-sm" id="lastname" name="lastname" value="">
                 </div>
             </div>
             <div class="mb-3 row">
-                <label for="office" class="col-sm-2 col-form-label-sm text-start">Office* :</label>
+                <label for="office" class="col-sm-2 col-form-label-sm text-start">Office <span class="text-danger">*</span> :</label>
                 <div class="col-sm-10">
                     <input type="text" required class="form-control form-control-sm" id="office" name="office" value="">
                 </div>
             </div>
             <div class="mb-3 row">
-                <label for="email" class="col-sm-2 col-form-label-sm text-start">email* :</label>
+                <label for="email" class="col-sm-2 col-form-label-sm text-start">Email <span class="text-danger">*</span> :</label>
                 <div class="col-sm-10">
                     <input type="email" required class="form-control form-control-sm" id="email" name="email" value="">
                 </div>
             </div>
             <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label-sm text-start">Role :</label>
+                <label class="col-sm-2 col-form-label-sm text-start">Role <span class="text-danger">*</span>:</label>
                 <div class="col-sm-10">
-                    <select class="form-select form-select-sm">
+                    <select class="form-select form-select-sm" name="role_id" id="role_id" required>
                         <option value="" selected disabled>-- select --</option>
                         @foreach($roles as $role)
                             <option value="{{ $role['id'] }}">{{ $role['name'] }}</option>

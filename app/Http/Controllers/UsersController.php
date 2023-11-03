@@ -34,7 +34,7 @@ class UsersController extends Controller
             'lastname' => 'required|string',
             'office' => 'required|string',
             'email' => 'required|email',
-            'role' => 'required|string',
+            'role_id' => 'required|string',
             'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048|nullable'
         ]);
 
@@ -55,8 +55,8 @@ class UsersController extends Controller
             'email' => $request->email,
             'username' => $request->username,
             'password' => Hash::make($request->password),
-            'role_id' => $request->role,
-            'isactive' => true,
+            'role_id' => $request->role_id,
+            'isactive' => 'Y',
             'status' => 'CO',
             'office' => $request->office,
             'image' => $slug_image

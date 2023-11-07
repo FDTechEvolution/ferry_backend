@@ -33,6 +33,12 @@ return [
 
     'api' => [
         'secret_key' => env('API_SECRET_KEY'),
+        'seven_key' => env('API_SEVEN_KEY'),
     ],
+
+    'token' => [
+        'secret_token' => env('API_SECRET_TOKEN'),
+        'seven_token' => env('API_SEVEN_TOKEN'),
+    ]
 
 ];

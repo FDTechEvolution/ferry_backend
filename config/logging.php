@@ -126,6 +126,20 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        'api-seven' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/api_seven.log'),
+            'level' => 'info',
+            'days' => 14,
+        ],
+
+        'api-cors' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/api_cors.log'),
+            'level' => 'info',
+            'days' => 14,
+        ],
     ],
 
 ];

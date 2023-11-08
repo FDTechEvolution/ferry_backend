@@ -15,4 +15,8 @@ class Customers extends Model
         'type'
     ];
 
+    public function bookings() {
+        return $this->belongsToMany(Bookings::class, 'booking_customers');
+    }
+
 }

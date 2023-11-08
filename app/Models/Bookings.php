@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Bookings extends Model
 {
@@ -19,12 +20,15 @@ class Bookings extends Model
         'extraamt',
         'amount',
         'route_id',
-        'ispayment'
+        'ispayment',
+        'user_id'
     ];
 
     public function user() {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
+
+
 
     public function route() {
         return $this->hasOne(Route::class, 'id', 'route_id');

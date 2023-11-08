@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BookingCustomers;
 use App\Models\Bookings;
+use App\Models\Customers;
 use App\Models\Station;
 use App\Models\Route;
+use Ramsey\Uuid\Uuid;
 
 use Illuminate\Http\Request;
 
@@ -18,7 +21,7 @@ class BookingsController extends Controller
     public function index()
     {
 
-        $bookings = Bookings::with('route.station_from','route.station_to')->get();
+        $bookings = Bookings::with('route.station_from','route.station_to','user')->get();
         //dd($bookings);
         return view('pages.bookings.index', ['bookings' => $bookings]);
     }
@@ -73,8 +76,6 @@ class BookingsController extends Controller
             'ispayment' => 'required|string',
         ]);
 
-        
-
         $date = strtotime($request->departdate);
         $departdate = date('Y-m-d', $date); 
         
@@ -89,10 +90,21 @@ class BookingsController extends Controller
             'totalamt'=> $request->total_price,
             'extraamt'=> $request->extra_price,
             'amount'=> $request->price,
-            'ispayment'=>$request->ispayment
+            'ispayment'=>$request->ispayment,
+            'user_id'=>$request->user_id
         ]);
 
         if($booking) {
+
+            //save customer
+            $customer = Customers::create([
+                'fullname'=>$request->fullname,
+                'type'=>'ADULT'
+            ]);
+
+            $booking->bookingCustomers()->attach($customer,["id" => (string) Uuid::uuid4()]);
+
+
             return redirect()->route('booking-index')->withSuccess('Save New Booking');
         }
 

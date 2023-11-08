@@ -22,6 +22,7 @@
                             <th>Date</th>
                             <th class="text-end">Price</th>
                             <th class="text-center">Status</th>
+                            <th>Admin</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
@@ -43,6 +44,11 @@
                                         <span class="text-danger">Unpay</span>
                                     @endif
 
+                                </td>
+                                <td>
+                                    @if (isset($item['user']['id']))
+                                        {{$item['user']['firstname']}}
+                                    @endif
                                 </td>
                                 <td class="text-center"></td>
                             <tr>

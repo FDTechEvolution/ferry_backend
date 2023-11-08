@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
+use App\Http\Resources\RouteResource;
 use App\Models\Route;
 
 class RouteController extends Controller
@@ -18,5 +20,23 @@ class RouteController extends Controller
                         ->get();
 
         return response()->json(['data' => $routes, 'status' => 'success']);
+    }
+
+    public function getAllRoute() {
+        $routes = Route::where('isactive', 'Y')->where('status', 'CO')
+                        ->with('station_from', 'station_to', 'activity_lines', 'meal_lines')
+                        ->get();
+
+        return response()->json(['data' => RouteResource::collection($routes)], 200);
+    }
+
+    public function getRouteById($id) {
+        $route = Route::findOrFail($id);
+        $route->station_from;
+        $route->station_to;
+        $route->activity_lines;
+        $route->meal_lines;
+
+        return response()->json(['data' => new RouteResource($route)], 200);
     }
 }

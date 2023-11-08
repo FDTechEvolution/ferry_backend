@@ -39,3 +39,10 @@ Route::middleware(['cors'])->prefix('v2')->group(function () {
         Route::get('route/search/{from}/{to}', 'searchRoute');
     });
 });
+
+Route::middleware(['seven'])->prefix('v3')->group(function() {
+    Route::controller(RouteController::class)->group(function() {
+        Route::get('route/all', 'getAllRoute');
+        Route::get('route/{id}', 'getRouteById');
+    });
+});

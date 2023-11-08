@@ -5,7 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SequentNumbers extends Model
+class Sequencenumbers extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'running'
+    ];
 }

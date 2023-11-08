@@ -9,6 +9,7 @@ use App\Models\Station;
 use App\Models\Route;
 use Ramsey\Uuid\Uuid;
 
+
 use Illuminate\Http\Request;
 
 class BookingsController extends Controller
@@ -22,6 +23,9 @@ class BookingsController extends Controller
     {
 
         $bookings = Bookings::with('route.station_from','route.station_to','user')->get();
+
+        
+        
         //dd($bookings);
         return view('pages.bookings.index', ['bookings' => $bookings]);
     }

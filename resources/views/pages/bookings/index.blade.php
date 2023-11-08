@@ -55,6 +55,8 @@
                         @endforeach
                     </tbody>
                 </table>
+
+                {{newSequenceNumber('INVOICE')}}
             </div>
         </div>
     </div>

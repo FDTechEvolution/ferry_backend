@@ -8,6 +8,7 @@ use App\Models\Customers;
 use App\Models\Station;
 use App\Models\Route;
 use Ramsey\Uuid\Uuid;
+use App\Helpers\BookingHelper;
 
 
 use Illuminate\Http\Request;
@@ -22,10 +23,10 @@ class BookingsController extends Controller
     public function index()
     {
 
-        $bookings = Bookings::with('route.station_from','route.station_to','user')->get();
+        $bookings = Bookings::with('route.station_from', 'route.station_to', 'user')->get();
 
-        
-        
+
+
         //dd($bookings);
         return view('pages.bookings.index', ['bookings' => $bookings]);
     }
@@ -60,8 +61,14 @@ class BookingsController extends Controller
 
         $route = Route::where('id', $route_id)->with('station_from', 'station_to', 'icons')->first();
         $meals = (new MealsController)->getMeals();
+        $activities = (new ActivitiesController)->getActivities();
 
-        return view('pages.bookings.create', ['route' => $route, 'departdate' => $departdate,'meals'=>$meals]);
+        $extras = [
+            'meals' => $meals,
+            'activities' => $activities,
+        ];
+
+        return view('pages.bookings.create', ['route' => $route, 'departdate' => $departdate, 'extras' => $extras]);
     }
 
     public function store(Request $request)
@@ -81,37 +88,39 @@ class BookingsController extends Controller
         ]);
 
         $date = strtotime($request->departdate);
-        $departdate = date('Y-m-d', $date); 
-        
-        //dd($departdate);
-        //save booking
-        $booking = Bookings::create([
-            'route_id'=> $request->route_id,
-            'departdate'=> $departdate,
-            'adult_passenger'=> $request->adult_passenger,
-            'child_passenger'=> $request->child_passenger,
-            'infant_passenger'=> $request->infant_passenger,
-            'totalamt'=> $request->total_price,
-            'extraamt'=> $request->extra_price,
-            'amount'=> $request->price,
-            'ispayment'=>$request->ispayment,
-            'user_id'=>$request->user_id
-        ]);
+        $departdate = date('Y-m-d', $date);
 
-        if($booking) {
+        $data = [
+            'booking' => [
+                'route_id' => $request->route_id,
+                'departdate' => $departdate,
+                'adult_passenger' => $request->adult_passenger,
+                'child_passenger' => $request->child_passenger,
+                'infant_passenger' => $request->infant_passenger,
+                'totalamt' => $request->total_price,
+                'extraamt' => $request->extra_price,
+                'amount' => $request->price,
+                'ispayment' => $request->ispayment,
+                'user_id' => $request->user_id,
+                'trip_type' => 'one-way',
+            ],
+            'customers' => [
+                [
+                    'fullname' => $request->fullname,
+                    'type' => 'ADULT',
+                    'passportno' => null,
+                    'email' => null,
+                    'mobile' => null,
+                    'fulladdress' => null,
+                ],
+            ],
 
-            //save customer
-            $customer = Customers::create([
-                'fullname'=>$request->fullname,
-                'type'=>'ADULT'
-            ]);
+        ];
 
-            $booking->bookingCustomers()->attach($customer,["id" => (string) Uuid::uuid4()]);
+        $booking = BookingHelper::createBooking($data);
 
 
-            return redirect()->route('booking-index')->withSuccess('Save New Booking');
-        }
+        return redirect()->route('booking-index')->withSuccess('Save New Booking');
 
-        //return redirect()->route('booking-index')->withSuccess('Save New Booking');
     }
 }

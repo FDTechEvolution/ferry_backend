@@ -21,7 +21,8 @@ class Bookings extends Model
         'amount',
         'route_id',
         'ispayment',
-        'user_id'
+        'user_id',
+        'ticketno'
     ];
 
     public function user() {
@@ -36,6 +37,14 @@ class Bookings extends Model
 
     public function bookingCustomers() {
         return $this->belongsToMany(Customers::class, 'booking_customers', 'booking_id', 'customer_id');
+    }
+
+    public function bookingExtraAddons() {
+        return $this->belongsToMany(Addon::class, 'booking_extras', 'booking_id', 'addon_id');
+    }
+
+    public function bookingExtraActivities() {
+        return $this->belongsToMany(Activity::class, 'booking_extras', 'booking_id', 'activity_id');
     }
 
     

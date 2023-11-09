@@ -12,7 +12,11 @@ class Customers extends Model
 
     protected $fillable = [
         'fullname',
-        'type'
+        'type',
+        'passportno',
+        'email',
+        'mobile',
+        'fulladdress'
     ];
 
     public function bookings() {

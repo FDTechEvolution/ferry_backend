@@ -19,6 +19,16 @@ class ActivitiesController extends Controller
     protected $PathImage = '/assets/images/activity';
     protected $Type = 'activity';
 
+    public static function getActivities($isactive = 'Y')
+    {
+        $activites = Activity::where('status', 'CO')
+            ->get();
+        
+        return $activites;
+    }
+
+
+
     public function index() {
         $activity = Activity::where('status', 'CO')->get();
 

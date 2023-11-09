@@ -13,6 +13,7 @@
                     <thead>
                         <tr>
                             <th>Invoice</th>
+                            <th>Ticket No</th>
                             <th>From</th>
                             <th>To</th>
                             <th>Adult</th>
@@ -30,6 +31,7 @@
                         @foreach ($bookings as $index => $item)
                             <tr>
                                 <td></td>
+                                <td><strong>{{$item['ticketno']}}</strong></td>
                                 <td>{{ $item['route']['station_from']['name'] }}</td>
                                 <td>{{ $item['route']['station_to']['name'] }}</td>
                                 <td>{{ $item['adult_passenger'] }}</td>
@@ -56,7 +58,7 @@
                     </tbody>
                 </table>
 
-                {{newSequenceNumber('INVOICE')}}
+                
             </div>
         </div>
     </div>

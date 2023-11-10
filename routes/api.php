@@ -44,5 +44,11 @@ Route::middleware(['seven'])->prefix('v3')->group(function() {
     Route::controller(RouteController::class)->group(function() {
         Route::get('route/all', 'getAllRoute');
         Route::get('route/{id}', 'getRouteById');
+        Route::get('route/from/{id}', 'getRouteByStationFrom');
+        Route::get('route/to/{id}', 'getRouteByStationTo');
+    });
+
+    Route::controller(StationsController::class)->group(function() {
+        Route::get('stations', 'getAllStation');
     });
 });

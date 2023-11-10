@@ -39,4 +39,22 @@ class RouteController extends Controller
 
         return response()->json(['data' => new RouteResource($route)], 200);
     }
+
+    public function getRouteByStationFrom($from_id) {
+        $routes = Route::where('station_from_id', $from_id)->where('isactive', 'Y')->where('status', 'CO')
+                        ->with('station_to')
+                        ->orderBy('regular_price', 'ASC')
+                        ->get();
+
+        return response()->json(['data' => RouteResource::collection($routes)], 200);
+    }
+
+    public function getRouteByStationTo($to_id) {
+        $routes = Route::where('station_to_id', $to_id)->where('isactive', 'Y')->where('status', 'CO')
+                        ->with('station_to')
+                        ->orderBy('regular_price', 'ASC')
+                        ->get();
+
+        return response()->json(['data' => RouteResource::collection($routes)], 200);
+    }
 }

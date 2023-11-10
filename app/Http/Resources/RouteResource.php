@@ -19,7 +19,7 @@ class RouteResource extends JsonResource
             'id' => $this->id,
             'depart_time' => date('h:i', strtotime($this->depart_time)),
             'arrive_time' => date('h:i', strtotime($this->arrive_time)),
-            'regular_price' => $this->regular_price,
+            'regular_price' => $this->regular_price - ($this->regular_price*0.2),
             'station_from' => [
                 'name' => $this->station_from->name,
                 'piername' => $this->station_from->piername,
@@ -50,7 +50,6 @@ class RouteResource extends JsonResource
                     ];
                 }
             }),
-            
         ];
     }
 }

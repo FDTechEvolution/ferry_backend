@@ -30,26 +30,27 @@ class RouteResource extends JsonResource
                 'piername' => $this->station_to->piername,
                 'nickname' => $this->station_to->nickname
             ],
-            'activities' => !$this->activity_lines ? '' : $this->activity_lines->map(function($activity) {
-                if($activity->status == 'CO') {
-                    return [
-                        'id' => $activity->id,
-                        'name' => $activity->name,
-                        'amount' => $activity->price,
-                        'detail' => $activity->detail
-                    ];
-                }
-            }),
-            'meals' => !$this->meal_lines ? '' : $this->meal_lines->map(function($meal) {
-                if($meal->isactive == 'Y' && $meal->status == 'CO') {
-                    return [
-                        'id' => $meal->id,
-                        'name' => $meal->name,
-                        'amount' => $meal->amount,
-                        'detail' => $meal->description
-                    ];
-                }
-            }),
+            // without Activity & Meal
+            // 'activities' => !$this->activity_lines ? '' : $this->activity_lines->map(function($activity) {
+            //     if($activity->status == 'CO') {
+            //         return [
+            //             'id' => $activity->id,
+            //             'name' => $activity->name,
+            //             'amount' => $activity->price,
+            //             'detail' => $activity->detail
+            //         ];
+            //     }
+            // }),
+            // 'meals' => !$this->meal_lines ? '' : $this->meal_lines->map(function($meal) {
+            //     if($meal->isactive == 'Y' && $meal->status == 'CO') {
+            //         return [
+            //             'id' => $meal->id,
+            //             'name' => $meal->name,
+            //             'amount' => $meal->amount,
+            //             'detail' => $meal->description
+            //         ];
+            //     }
+            // }),
         ];
     }
 }

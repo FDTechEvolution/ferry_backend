@@ -24,7 +24,7 @@ class RouteController extends Controller
 
     public function getAllRoute() {
         $routes = Route::where('isactive', 'Y')->where('status', 'CO')
-                        ->with('station_from', 'station_to', 'activity_lines', 'meal_lines')
+                        ->with('station_from', 'station_to')
                         ->get();
 
         return response()->json(['data' => RouteResource::collection($routes)], 200);
@@ -34,13 +34,11 @@ class RouteController extends Controller
         $route = Route::findOrFail($id);
         $route->station_from;
         $route->station_to;
-        $route->activity_lines;
-        $route->meal_lines;
 
         return response()->json(['data' => new RouteResource($route)], 200);
     }
 
-    public function getRouteByStationFrom($from_id) {
+    public function getRouteByStationFrom(string $from_id = null) {
         $routes = Route::where('station_from_id', $from_id)->where('isactive', 'Y')->where('status', 'CO')
                         ->with('station_to')
                         ->orderBy('regular_price', 'ASC')
@@ -49,12 +47,22 @@ class RouteController extends Controller
         return response()->json(['data' => RouteResource::collection($routes)], 200);
     }
 
-    public function getRouteByStationTo($to_id) {
+    public function getRouteByStationTo(string $to_id = null) {
         $routes = Route::where('station_to_id', $to_id)->where('isactive', 'Y')->where('status', 'CO')
                         ->with('station_to')
                         ->orderBy('regular_price', 'ASC')
                         ->get();
 
         return response()->json(['data' => RouteResource::collection($routes)], 200);
+    }
+
+    public function getRouteByStation(string $from = null, string $to = null) {
+        $route = Route::where('station_from_id', $from_id)->where('station_to_id', $to)
+                        ->where('isactive', 'Y')->where('status', 'CO')
+                        ->with('station_from', 'station_to')
+                        ->orderBy('regular_price', 'ASC')
+                        ->get();
+
+        return response()->json(['data' => new RouteResource($route)], 200);
     }
 }

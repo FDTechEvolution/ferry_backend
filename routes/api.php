@@ -40,15 +40,19 @@ Route::middleware(['cors'])->prefix('v2')->group(function () {
     });
 });
 
+
+// Route Api for 7seven
 Route::middleware(['seven'])->prefix('v3')->group(function() {
     Route::controller(RouteController::class)->group(function() {
-        Route::get('route/all', 'getAllRoute');
-        Route::get('route/{id}', 'getRouteById');
+        // Route::get('route/all', 'getAllRoute');
+        // Route::get('route/{id}', 'getRouteById');
         Route::get('route/from/{id}', 'getRouteByStationFrom');
         Route::get('route/to/{id}', 'getRouteByStationTo');
+        Route::get('route/get/{from}/{to}', 'getRouteByStation');
     });
 
     Route::controller(StationsController::class)->group(function() {
-        Route::get('stations', 'getAllStation');
+        // Route::get('stations/all', 'getAllStation');
+        Route::get('stations', 'getStationFromRoute');
     });
 });

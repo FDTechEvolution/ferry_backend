@@ -16,9 +16,11 @@
             <div class="mb-4 row">
                 <label class="col-4 col-form-label-sm text-start fw-bold text-white">Station From * :</label>
                 <div class="col-7">
+                   
                     <select required class="form-select form-select-sm" id="station-from-selected" name="station_from">
                         <option value="" selected disabled>--- Choose ---</option>
-                            @foreach($stations as $station)
+                            @foreach($stations['station_from'] as $station)
+                            
                                 <option value="{{ $station['id'] }}">{{ $station['name'] }} @if($station['piername'] != '') [{{ $station['piername'] }}] @endif</option>
                             @endforeach
                     </select>
@@ -32,7 +34,7 @@
                 <div class="col-7">
                     <select required class="form-select form-select-sm" id="station-from-selected" name="station_to">
                         <option value="" selected disabled>--- Choose ---</option>
-                            @foreach($stations as $station)
+                            @foreach($stations['station_to'] as $station)
                                 <option value="{{ $station['id'] }}">{{ $station['name'] }} @if($station['piername'] != '') [{{ $station['piername'] }}] @endif</option>
                             @endforeach
                     </select>

@@ -39,6 +39,10 @@ class Bookings extends Model
         return $this->belongsToMany(Customers::class, 'booking_customers', 'booking_id', 'customer_id');
     }
 
+    public function bookingRoutes() {
+        return $this->belongsToMany(Route::class, 'booking_routes', 'booking_id', 'route_id');
+    }
+
     public function bookingExtraAddons() {
         return $this->belongsToMany(Addon::class, 'booking_extras', 'booking_id', 'addon_id');
     }

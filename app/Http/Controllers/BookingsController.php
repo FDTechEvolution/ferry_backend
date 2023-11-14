@@ -23,7 +23,7 @@ class BookingsController extends Controller
     public function index()
     {
 
-        $bookings = Bookings::with('route.station_from', 'route.station_to', 'user')->get();
+        $bookings = Bookings::with('bookingRoutes.station_from','bookingRoutes.station_to','bookingCustomers', 'user')->get();
 
 
 
@@ -50,8 +50,8 @@ class BookingsController extends Controller
 
         //dd($routes);
 
-        $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
-        return view('pages.bookings.route', ['routes' => $routes, 'stations' => $stations, 'station_from' => $station_from, 'station_to' => $station_to, 'departdate' => $departdate]);
+        $station = StationsController::avaliableStation();
+        return view('pages.bookings.route', ['routes' => $routes, 'stations' => $station, 'station_from' => $station_from, 'station_to' => $station_to, 'departdate' => $departdate]);
     }
 
     public function create()
@@ -114,6 +114,14 @@ class BookingsController extends Controller
                     'fulladdress' => null,
                 ],
             ],
+            'routes'=>[
+                [
+                    'route_id' => $request->route_id,
+                    'traveldate' => $departdate,
+                    'amount' => $request->price,
+                    'type'=>'departure'
+                ]
+            ]
 
         ];
 

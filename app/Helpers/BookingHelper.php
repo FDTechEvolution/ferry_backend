@@ -2,6 +2,7 @@
 namespace App\Helpers;
 
 use App\Models\BookingCustomers;
+use App\Models\BookingRoutes;
 use App\Models\Bookings;
 use App\Models\Customers;
 use App\Models\Station;
@@ -70,7 +71,6 @@ class BookingHelper
         //Create booking
         $_b = $data['booking'];
         $booking = Bookings::create([
-            'route_id' => $_b['route_id'],
             'departdate' => $_b['departdate'],
             'adult_passenger' => $_b['adult_passenger'],
             'child_passenger' => $_b['child_passenger'],
@@ -107,6 +107,19 @@ class BookingHelper
         //Create extra
         if (isset($data["extras"])) {
             $_extra = $data['extras'];
+        }
+
+        //Routes
+        $_routes = $data['routes'];
+        foreach ($_routes as $key => $routeData) {
+            $bookingRoute = BookingRoutes::create([
+                'route_id' => $routeData['route_id'],
+                'traveldate' => $routeData['traveldate'],
+                'amount' => $routeData['amount'],
+                'type' => $routeData['type'],
+                'booking_id'=>$booking->id
+            ]);
+
         }
 
 

@@ -9,6 +9,7 @@ use App\Models\Station;
 use App\Models\Section;
 use App\Models\StationInfomation;
 use App\Models\StationInfoLine;
+use Illuminate\Support\Facades\DB;
 
 class StationsController extends Controller
 {
@@ -21,6 +22,19 @@ class StationsController extends Controller
         'Y' => '<span class="text-success">On</span>',
         'N' => '<span class="text-danger">Off</span>'
     ];
+
+    public static function avaliableStation(){
+        $sql = 'select s.id,s.name,s.piername,s.nickname from stations s join routes r on s.id = r.station_from_id left join sections sec on s.section_id = sec.id where r.isactive ="Y" group by s.id,s.name,s.piername,s.nickname order by sec.name ASC,s.name ASC';
+        $stationFroms = DB::select($sql);
+
+        $sql = 'select s.id,s.name,s.piername,s.nickname from stations s join routes r on s.id = r.station_to_id left join sections sec on s.section_id = sec.id where r.isactive ="Y" group by s.id,s.name,s.piername,s.nickname order by sec.name ASC,s.name ASC';
+        $stationTos = DB::select($sql);
+
+        return [
+            'station_from'=>json_decode(json_encode($stationFroms), true),
+            'station_to' => json_decode(json_encode($stationTos), true)
+        ];
+    }
 
     public function index()
     {

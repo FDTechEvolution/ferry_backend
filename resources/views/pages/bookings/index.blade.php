@@ -28,15 +28,16 @@
                         </tr>
                     </thead>
                     <tbody id="">
+                       
                         @foreach ($bookings as $index => $item)
                             <tr>
                                 <td></td>
                                 <td><strong>{{$item['ticketno']}}</strong></td>
-                                <td>{{ $item['route']['station_from']['name'] }}</td>
-                                <td>{{ $item['route']['station_to']['name'] }}</td>
+                                <td>{{ $item['bookingRoutes'][0]['station_from']['name'] }}</td>
+                                <td>{{ $item['bookingRoutes'][0]['station_to']['name'] }}</td>
                                 <td>{{ $item['adult_passenger'] }}</td>
-                                <td>{{ date('H:i', strtotime($item['route']['depart_time'])) }}</td>
-                                <td>{{ date('H:i', strtotime($item['route']['arrive_time'])) }}</td>
+                                <td>{{ date('H:i', strtotime($item['bookingRoutes'][0]['depart_time'])) }}</td>
+                                <td>{{ date('H:i', strtotime($item['bookingRoutes'][0]['arrive_time'])) }}</td>
                                 <td>{{ date('d/m/Y', strtotime($item['departdate']))}}</td>
                                 <td class="text-end">{{ number_format($item['totalamt']) }}</td>
                                 <td class="text-center">

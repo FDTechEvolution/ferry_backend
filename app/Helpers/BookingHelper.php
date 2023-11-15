@@ -132,17 +132,12 @@ class BookingHelper
             ]);
         }
 
-<<<<<<< Updated upstream
         if($booking->ispayment=='Y'){
             $b = new BookingHelper();
             $b->completeBooking($booking->id);
             
         }
 
-
-
-=======
->>>>>>> Stashed changes
         return $booking;
     }
 

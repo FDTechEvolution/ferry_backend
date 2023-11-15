@@ -20,6 +20,7 @@ class RouteResource extends JsonResource
             'depart_time' => date('h:i', strtotime($this->depart_time)),
             'arrive_time' => date('h:i', strtotime($this->arrive_time)),
             'regular_price' => $this->regular_price - ($this->regular_price*0.2),
+            'avaliable_seat' => 100,
             'station_from' => [
                 'name' => $this->station_from->name,
                 'piername' => $this->station_from->piername,

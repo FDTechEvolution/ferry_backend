@@ -10,6 +10,14 @@ class BookingCustomers extends Model
 {
     use HasFactory, HasUuids;
 
+    protected $fillable = [
+        'booking_id',
+        'customer_id'
+    ];
+
+    protected $hidden = [
+
+    ];
 
     /*
     public static function boot()

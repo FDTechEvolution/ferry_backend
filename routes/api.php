@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\AuthenticationController;
 use App\Http\Controllers\Api\StationsController;
 use App\Http\Controllers\Api\SlideController;
 use App\Http\Controllers\Api\RouteController;
+use App\Http\Controllers\Api\BookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,5 +55,17 @@ Route::middleware(['seven'])->prefix('v3')->group(function() {
     Route::controller(StationsController::class)->group(function() {
         // Route::get('stations/all', 'getAllStation');
         Route::get('stations', 'getStationFromRoute');
+    });
+
+    // Booking
+    Route::prefix('booking')->group(function() {
+        Route::controller(BookingController::Class)->group(function() {
+            Route::post('create', 'store');
+            Route::post('complete', 'complete');
+            Route::post('cancel', 'destroy');
+            Route::post('update', 'update');
+
+            Route::get('get/{id}', 'getBookingById');
+        });
     });
 });

@@ -44,7 +44,10 @@ class RouteController extends Controller
                         ->orderBy('regular_price', 'ASC')
                         ->get();
 
-        return response()->json(['data' => RouteResource::collection($routes)], 200);
+        if($routes)
+            return response()->json(['data' => RouteResource::collection($routes)], 200);
+        else
+            return response()->json(['data' => NULL], 200);
     }
 
     public function getRouteByStationTo(string $to_id = null) {
@@ -53,16 +56,22 @@ class RouteController extends Controller
                         ->orderBy('regular_price', 'ASC')
                         ->get();
 
-        return response()->json(['data' => RouteResource::collection($routes)], 200);
+        if($routes)
+            return response()->json(['data' => RouteResource::collection($routes)], 200);
+        else
+            return response()->json(['data' => NULL], 200);
     }
 
-    public function getRouteByStation(string $from = null, string $to = null) {
-        $route = Route::where('station_from_id', $from_id)->where('station_to_id', $to)
+    public function getRouteByStation(string $from_id = null, string $to_id = null) {
+        $route = Route::where('station_from_id', $from_id)->where('station_to_id', $to_id)
                         ->where('isactive', 'Y')->where('status', 'CO')
                         ->with('station_from', 'station_to')
                         ->orderBy('regular_price', 'ASC')
                         ->get();
 
-        return response()->json(['data' => new RouteResource($route)], 200);
+        if(isset($route))
+            return response()->json(['data' => RouteResource::collection($route)], 200);
+        else
+            return response()->json(['data' => NULL], 200);
     }
 }

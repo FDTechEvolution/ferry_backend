@@ -130,9 +130,9 @@ class BookingHelper
                 'type' => $routeData['type'],
                 'booking_id' => $booking->id,
             ]);
-
         }
 
+<<<<<<< Updated upstream
         if($booking->ispayment=='Y'){
             $b = new BookingHelper();
             $b->completeBooking($booking->id);
@@ -141,6 +141,8 @@ class BookingHelper
 
 
 
+=======
+>>>>>>> Stashed changes
         return $booking;
     }
 

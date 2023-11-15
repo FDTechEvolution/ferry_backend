@@ -7,16 +7,18 @@ use App\Models\Bookings;
 use App\Models\Customers;
 use App\Models\Station;
 use Ramsey\Uuid\Uuid;
+use App\Helpers\SequentNumber;
 
 
 class BookingHelper
 {
 
-    public static function status(){
+    public static function status()
+    {
         $status = [
-            'DR'=>'Draft',
-            'CO'=>'Completed',
-            'VO'=>'Canceled'
+            'DR' => 'Draft',
+            'CO' => 'Completed',
+            'VO' => 'Canceled',
         ];
     }
 
@@ -86,11 +88,10 @@ class BookingHelper
             'totalamt' => $_b['totalamt'],
             'extraamt' => $_b['extraamt'],
             'amount' => $_b['amount'],
-            'ispayment' => $_b['ispayment'],
-            'user_id' => $_b['user_id'],
+            'ispayment' => isset($_b['ispayment']) ? $_b['ispayment'] : 'N',
+            'user_id' => isset($_b['user_id']) ? $_b['user_id'] : NULL,
             'trip_type' => $_b['trip_type'],
-            'status'=> isset($_b['status'])?$_b['status']:'DR',
-            'bookingno'=>newSequenceNumber('BOOKING')
+            'bookingno' => newSequenceNumber('BOOKING'),
 
         ]);
 
@@ -127,13 +128,37 @@ class BookingHelper
                 'traveldate' => $routeData['traveldate'],
                 'amount' => $routeData['amount'],
                 'type' => $routeData['type'],
-                'booking_id'=>$booking->id
+                'booking_id' => $booking->id,
             ]);
 
         }
 
+        if($booking->ispayment=='Y'){
+            $b = new BookingHelper();
+            $b->completeBooking($booking->id);
+            
+        }
 
 
+
+        return $booking;
+    }
+
+    public function completeBooking($bookingId = null)
+    {
+        if(is_null($bookingId)){
+            return null;
+        }
+
+        $booking = Bookings::with('bookingCustomers')->where('id', $bookingId)->first();  
+        if(is_null($booking)){
+            return null;
+        } 
+
+        $booking->status = 'CO';
+        $booking->save();
+
+        //Create ticket
         return $booking;
     }
 }

@@ -12,6 +12,14 @@ use Ramsey\Uuid\Uuid;
 class BookingHelper
 {
 
+    public static function status(){
+        $status = [
+            'DR'=>'Draft',
+            'CO'=>'Completed',
+            'VO'=>'Canceled'
+        ];
+    }
+
     public static function getBookingInfo($booking_id)
     {
 
@@ -81,6 +89,8 @@ class BookingHelper
             'ispayment' => $_b['ispayment'],
             'user_id' => $_b['user_id'],
             'trip_type' => $_b['trip_type'],
+            'status'=> isset($_b['status'])?$_b['status']:'DR',
+            'bookingno'=>newSequenceNumber('BOOKING')
 
         ]);
 

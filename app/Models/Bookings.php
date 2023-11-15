@@ -22,7 +22,8 @@ class Bookings extends Model
         'route_id',
         'ispayment',
         'user_id',
-        'ticketno'
+        'status',
+        'bookingno'
     ];
 
     public function user() {

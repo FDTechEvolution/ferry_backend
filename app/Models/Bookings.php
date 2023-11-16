@@ -31,12 +31,6 @@ class Bookings extends Model
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
-
-
-    public function route() {
-        return $this->hasOne(Route::class, 'id', 'route_id');
-    }
-
     public function bookingCustomers() {
         return $this->belongsToMany(Customers::class, 'booking_customers', 'booking_id', 'customer_id');
     }
@@ -46,7 +40,7 @@ class Bookings extends Model
     }
 
     public function tickets() {
-        return $this->belongsTo(Tickets::class, 'ticket_id', 'id');
+        return $this->hasMany(Tickets::class,'booking_id', 'id');
     }
 
     public function bookingExtraAddons() {

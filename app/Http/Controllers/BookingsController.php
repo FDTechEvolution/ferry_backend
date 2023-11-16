@@ -23,7 +23,7 @@ class BookingsController extends Controller
     public function index()
     {
 
-        $bookings = Bookings::with('bookingRoutes.station_from','bookingRoutes.station_to','bookingCustomers', 'user')->get();
+        $bookings = Bookings::with('bookingRoutes.station_from','bookingRoutes.station_to','bookingCustomers', 'user','tickets')->get();
 
 
 

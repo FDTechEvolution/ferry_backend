@@ -12,7 +12,7 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>Invoice</th>
+                            <th>Booking No</th>
                             <th>Ticket No</th>
                             <th>From</th>
                             <th>To</th>
@@ -31,8 +31,8 @@
                        
                         @foreach ($bookings as $index => $item)
                             <tr>
-                                <td></td>
-                                <td><strong>{{$item['ticketno']}}</strong></td>
+                                <td>{{$item['bookingno']}}</td>
+                                <td><strong>{{isset($item['tickets'][0])?$item['tickets'][0]['ticketno']:''}}</strong></td>
                                 <td>{{ $item['bookingRoutes'][0]['station_from']['name'] }}</td>
                                 <td>{{ $item['bookingRoutes'][0]['station_to']['name'] }}</td>
                                 <td>{{ $item['adult_passenger'] }}</td>

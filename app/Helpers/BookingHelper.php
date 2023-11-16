@@ -92,6 +92,7 @@ class BookingHelper
             'user_id' => isset($_b['user_id']) ? $_b['user_id'] : NULL,
             'trip_type' => $_b['trip_type'],
             'bookingno' => newSequenceNumber('BOOKING'),
+            'book_channel' => isset($_b['book_channel']) ? $_b['book_channel'] : 'ONLINE',  
 
         ]);
 

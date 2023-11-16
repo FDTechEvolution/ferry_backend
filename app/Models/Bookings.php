@@ -23,7 +23,8 @@ class Bookings extends Model
         'ispayment',
         'user_id',
         'status',
-        'bookingno'
+        'bookingno',
+        'book_channel'
     ];
 
     public function user() {

@@ -164,7 +164,7 @@ class BookingHelper
             return null;
         }
 
-        $booking = Bookings::with('bookingCustomers')->where('id', $bookingId)->first();  
+        $booking = Bookings::where('id', $bookingId)->first();  
         if(is_null($booking)){
             return null;
         } 

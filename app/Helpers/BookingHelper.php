@@ -158,4 +158,21 @@ class BookingHelper
         //Create ticket
         return $booking;
     }
+
+    public static function voidBooking($bookingId = null){
+        if(is_null($bookingId)){
+            return null;
+        }
+
+        $booking = Bookings::with('bookingCustomers')->where('id', $bookingId)->first();  
+        if(is_null($booking)){
+            return null;
+        } 
+
+        $booking->status = 'VO';
+        $booking->save();
+
+        //Create ticket
+        return $booking;
+    }
 }

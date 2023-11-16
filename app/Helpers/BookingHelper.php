@@ -5,6 +5,7 @@ use App\Models\BookingCustomers;
 use App\Models\BookingRoutes;
 use App\Models\Bookings;
 use App\Models\Customers;
+use App\Models\Tickets;
 use App\Models\Station;
 use Ramsey\Uuid\Uuid;
 use App\Helpers\SequentNumber;
@@ -92,7 +93,7 @@ class BookingHelper
             'user_id' => isset($_b['user_id']) ? $_b['user_id'] : NULL,
             'trip_type' => $_b['trip_type'],
             'bookingno' => newSequenceNumber('BOOKING'),
-            'book_channel' => isset($_b['book_channel']) ? $_b['book_channel'] : 'ONLINE',  
+            'book_channel' => isset($_b['book_channel']) ? $_b['book_channel'] : 'ONLINE',
 
         ]);
 
@@ -133,10 +134,10 @@ class BookingHelper
             ]);
         }
 
-        if($booking->ispayment=='Y'){
+        if ($booking->ispayment == 'Y') {
             $b = new BookingHelper();
             $b->completeBooking($booking->id);
-            
+
         }
 
         return $booking;
@@ -144,31 +145,52 @@ class BookingHelper
 
     public function completeBooking($bookingId = null)
     {
-        if(is_null($bookingId)){
+        if (is_null($bookingId)) {
             return null;
         }
 
-        $booking = Bookings::with('bookingCustomers')->where('id', $bookingId)->first();  
-        if(is_null($booking)){
+        $booking = Bookings::with('bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingCustomers')->where('id', $bookingId)->first();
+        if (is_null($booking)) {
             return null;
-        } 
+        }
 
         $booking->status = 'CO';
         $booking->save();
 
         //Create ticket
+        $customers = $booking->bookingCustomers;
+        $routes = $booking->bookingRoutes;
+
+        foreach ($routes as $key => $route) {
+            foreach ($customers as $customer) {
+                $ticket = Tickets::create(
+                    [
+                        'ticketno' => newSequenceNumber('TICKET'),
+                        'station_from_id' => $route['station_from']['id'],
+                        'station_to_id' => $route['station_to']['id'],
+                        'status'=>'CO',
+                        'customer_id'=>$customer['id'],
+                        'booking_id'=>$booking['id']
+                    ],
+                );
+            }
+        }
+
+
+        $booking = Bookings::with('bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingCustomers','tickets')->where('id', $bookingId)->first();
         return $booking;
     }
 
-    public static function voidBooking($bookingId = null){
-        if(is_null($bookingId)){
+    public static function voidBooking($bookingId = null)
+    {
+        if (is_null($bookingId)) {
             return null;
         }
 
-        $booking = Bookings::where('id', $bookingId)->first();  
-        if(is_null($booking)){
+        $booking = Bookings::where('id', $bookingId)->first();
+        if (is_null($booking)) {
             return null;
-        } 
+        }
 
         $booking->status = 'VO';
         $booking->save();

@@ -46,7 +46,7 @@ class Bookings extends Model
     }
 
     public function tickets() {
-        return $this->belongsTo(Tickets::class, 'id', 'ticket_id');
+        return $this->belongsTo(Tickets::class, 'ticket_id', 'id');
     }
 
     public function bookingExtraAddons() {

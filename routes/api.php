@@ -39,6 +39,12 @@ Route::middleware(['cors'])->prefix('v2')->group(function () {
     Route::controller(RouteController::class)->group(function() {
         Route::get('route/search/{from}/{to}', 'searchRoute');
     });
+
+    Route::prefix('booking')->group(function() {
+        Route::controller(BookingController::Class)->group(function() {
+            Route::post('create', 'store');
+        });
+    });
 });
 
 

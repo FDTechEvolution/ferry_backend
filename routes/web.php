@@ -18,6 +18,7 @@ use App\Http\Controllers\RouteMapController;
 use App\Http\Controllers\SlideController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\FareController;
+use App\Http\Controllers\PrintController;
 
 /*
 |--------------------------------------------------------------------------
@@ -206,6 +207,11 @@ Route::middleware('auth')->group(function() {
         Route::get('/booking/route', 'route')->name('booking-route');
         Route::get('/booking/create', 'create')->name('booking-create');
         Route::post('/booking/store', 'store')->name('booking-store');
+    });
+
+    Route::controller(PrintController::class)->group(function() {
+        Route::get('/print/ticket/{id}', 'ticket')->name('print-ticket');
+
     });
 });
 

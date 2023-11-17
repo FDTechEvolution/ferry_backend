@@ -53,7 +53,11 @@
                                         {{$item['user']['firstname']}}
                                     @endif
                                 </td>
-                                <td class="text-center"></td>
+                                <td class="text-center">
+                                    <a href="{{route('print-ticket',['id'=>$item['id']])}}" class="btn btn-outline-secondary btn-sm transition-hover-top" rel="noopener" target="_blank">
+                                        <i class="fi fi-print m-0"></i>
+                                    </a>
+                                </td>
                             <tr>
                         @endforeach
                     </tbody>

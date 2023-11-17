@@ -15,93 +15,52 @@ use App\Helpers\BookingHelper;
 class BookingController extends Controller
 {
     public function store(Request $request) {
-        $route = $this->checkRoute($request->route_id);
+        $route = $this->getRoute($request->route_id[0]);
         if($route) {
-            $book_channel = $request->book_channel ?: 'SEVEN';
-            $child = $request->child_passenger ?: 0;
-            $infant = $request->infant_passenger ?: 0;
-            $_amount = $request->totalamount ? ($request->totalamount*$request->passenger) : $this->routeAmount($route, $request->passenger, $child, $infant);
+            $_amount = $this->routeAmount($request->route_id, $request->passenger, $request->child_passenger, $request->infant_passenger);
             $_extrameal = isset($request->meal_id) ? $this->extraMeal($request->meal_id, $request->meal_qty) : 0;
             $_extraactivity = isset($request->activity_id) ? $this->extraActivity($request->activity_id, $request->activity_qty) : 0;
-            $_customer = $this->setPassenger($request->fullname, $request->mobile, $request->passenger_type, $request->passportno, $request->email, $request->address);
-            $_totalamount = $_amount + $_extrameal + $_extraactivity;
+
+            $_booking = $this->setBooking($request->departdate, $request->passenger, $request->child_passenger, 
+                                            $request->infant_passenger, $request->trip_type, $request->book_channel, 
+                                            $_amount, $_extrameal, $_extraactivity);
+            $_customer = $this->setPassenger($request->fullname, $request->mobile, $request->passenger_type, 
+                                                $request->passportno, $request->email, $request->address);
+            $_route = $this->setRoutes($request->route_id, $request->departdate, $request->returndate, 
+                                        $request->passenger, $request->child_passenger, $request->infant_passenger);
 
             $data = [
-                'booking' => [
-                    'departdate' => $request->departdate,
-                    'adult_passenger' => $request->passenger,
-                    'child_passenger' => $child,
-                    'infant_passenger' => $infant,
-                    'totalamt' => $_totalamount,
-                    'extraamt' => ($_extrameal + $_extraactivity),
-                    'amount' => $_amount,
-                    'ispayment' => 'N',
-                    'user_id' => NULL,
-                    'trip_type' => NULL,
-                    'status' => 'DR',
-                    'book_channel' => $book_channel
-                ],
+                'booking' => $_booking,
                 'customers' => $_customer,
-                'routes' => [
-                    [
-                        'route_id' => $request->route_id,
-                        'traveldate' => $request->departdate,
-                        'amount' => $_amount,
-                        'type' => NULL
-                    ]
-                ]
+                'routes' => $_route
             ];
 
             $booking = BookingHelper::createBooking($data);
 
-            return response()->json(['result' => true, 'data' => $booking->id], 200);
+            return response()->json(['result' => true, 'data' => $booking], 200);
         }
         // Log::debug($request);
 
         return response()->json(['result' => false, 'data' => 'No Route.'], 200);
     }
 
-    private function checkRoute($route_id) {
-        $route = Route::find($route_id);
-        return isset($route) ? $route : false;
-    }
+    private function setBooking($departdate, $adult, $child, $infant, $trip_type, $book_channel, $amount, $extrameal, $extraactivity) {       
+        $booking = [
+            'departdate' => $departdate,
+            'adult_passenger' => $adult,
+            'child_passenger' => $child,
+            'infant_passenger' => $infant,
+            'totalamt' => ($amount + $extrameal + $extraactivity),
+            'extraamt' => ($extrameal + $extraactivity),
+            'amount' => $amount,
+            'ispayment' => 'N',
+            'user_id' => NULL,
+            'trip_type' => $trip_type,
+            'status' => 'DR',
+            'book_channel' => $book_channel
+        ];
 
-    private function checkBooking($booking_id) {
-        $booking = Bookings::find($booking_id);
-        return isset($booking) ?: false;
-    }
-
-    private function routeAmount($route, $adult, $child, $infant) {
-        $amount = 0;
-        $amount += $route->regular_price*$adult;
-        $amount += $route->child_price*$child;
-        $amount += $route->infant_price*$infant;
-
-        return $amount;
-    }
-
-    private function extraMeal($meal_id, $meal_qty) {
-        $meal_amount = 0;
-        foreach($meal_qty as $key => $qty) {
-            if($qty != 0) {
-                $meal = Addon::find($meal_id[$key]);
-                $meal_amount += $meal->amount*$qty;
-            }
-        }
-
-        return $meal_amount;
-    }
-
-    private function extraActivity($activity_id, $activity_qty) {
-        $acctivity_amount = 0;
-        foreach($activity_qty as $key => $qty) {
-            if($qty != 0) {
-                $activity = Activity::find($activity_id[$key]);
-                $acctivity_amount += $activity->price*$qty;
-            }
-        }
-
-        return $acctivity_amount;
+        return $booking;
     }
 
     private function setPassenger($fullname, $mobile, $type = NULL, $passport = NULL, $email = NULL, $address = NULL) {
@@ -144,6 +103,97 @@ class BookingController extends Controller
 
         return $customer;
     }
+
+    private function setRoutes($route_id, $departdate, $returndate = null, $adult, $child, $infant) {
+        $route = [];
+        $traveldate = $returndate != null ? [$departdate, $returndate] : $departdate;
+
+        if(is_array($traveldate)) {
+            foreach($route_id as $key => $_route) {
+                $amount = 0;
+                $r = $this->getRoute($_route);
+                $amount += $r->regular_price*$adult;
+                $amount += $r->child_price*$child;
+                $amount += $r->infant_price*$infant;
+                
+                array_push($route, [
+                    'route_id' => $_route,
+                    'traveldate' => $traveldate[$key],
+                    'amount' => $amount,
+                    'type' => NULL
+                ]);
+            }
+        }
+        else {
+            $amount = 0;
+            $r = $this->getRoute($route_id[0]);
+            $amount += $r->regular_price*$adult;
+            $amount += $r->child_price*$child;
+            $amount += $r->infant_price*$infant;
+
+            array_push($route, [
+                'route_id' => $route_id[0],
+                'traveldate' => $traveldate,
+                'amount' => $amount,
+                'type' => NULL
+            ]);
+        }
+
+        return $route;
+    }
+
+    private function getRoute($route_id) {
+        $route = Route::find($route_id);
+        return isset($route) ? $route : false;
+    }
+
+    private function checkBooking($booking_id) {
+        $booking = Bookings::find($booking_id);
+        return isset($booking) ?: false;
+    }
+
+    private function routeAmount($route, $adult, $child, $infant) {
+        $amount = 0;
+        foreach($route as $_route) {
+            $_r = $this->getRoute($_route);
+            $amount += $_r->regular_price*$adult;
+            $amount += $_r->child_price*$child;
+            $amount += $_r->infant_price*$infant;
+        }
+        
+        return $amount;
+    }
+
+    private function extraMeal($meal_id, $meal_qty) {
+        $meal_amount = 0;
+        foreach($meal_qty as $key => $meal) {
+            foreach($meal as $key2 => $qty) {
+                if($qty != 0) {
+                    $_meal = Addon::find($meal_id[$key][$key2]);
+                    $meal_amount += $_meal->amount*$qty;
+                }
+            }
+        }
+
+        return $meal_amount;
+    }
+
+    private function extraActivity($activity_id, $activity_qty) {
+        $acctivity_amount = 0;
+        foreach($activity_qty as $key => $activity) {
+            foreach($activity as $key2 => $qty) {
+                if($qty != 0) {
+                    $_activity = Activity::find($activity_id[$key][$key2]);
+                    $acctivity_amount += $_activity->price*$qty;
+                }
+            }
+        }
+
+        return $acctivity_amount;
+    }
+
+
+    // 7 Booking controller
 
     public function complete(Request $request) {
         if($this->checkBooking($request->booking_id)) {

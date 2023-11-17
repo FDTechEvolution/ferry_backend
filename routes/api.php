@@ -9,6 +9,9 @@ use App\Http\Controllers\Api\SlideController;
 use App\Http\Controllers\Api\RouteController;
 use App\Http\Controllers\Api\BookingController;
 
+// 7 Controller
+use App\Http\Controllers\Api\Seven\BookingController as SevenBooking;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -65,7 +68,7 @@ Route::middleware(['seven'])->prefix('v3')->group(function() {
 
     // Booking
     Route::prefix('booking')->group(function() {
-        Route::controller(BookingController::Class)->group(function() {
+        Route::controller(SevenBooking::Class)->group(function() {
             Route::post('create', 'store');
             Route::post('complete', 'complete');
             Route::post('cancel', 'destroy');

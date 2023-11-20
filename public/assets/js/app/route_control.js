@@ -4,6 +4,12 @@ const btn_cancel_create = document.querySelector('#btn-cancel-create')
 const master_from_switch = document.querySelector('#master-from-switch')
 const master_to_switch = document.querySelector('#master-to-switch')
 const route_status_switch = document.querySelector('#route-status-switch')
+const btn_shuttle_bus_create = document.querySelector('#btn-shuttle-bus-create')
+const btn_shuttle_bus_edit = document.querySelector('#btn-shuttle-bus-edit')
+const btn_shuttle_bus_cancel = document.querySelector('#btn-edit-shuttle-cancel')
+const btn_longtail_boat_create = document.querySelector('#btn-longtail-boat-create')
+const btn_longtail_boat_edit = document.querySelector('#btn-longtail-boat-edit')
+const btn_longtail_boat_cancel = document.querySelector('#btn-edit-longtail-cancel')
 
 const station_to_selected = document.querySelector('#station-to-selected')
 
@@ -50,9 +56,239 @@ if(route_status_switch) {
     })
 }
 
+
+// Shuttle bus //////////////////////////////////////////////////////////////////////////////////
+if(btn_shuttle_bus_create) {
+    btn_shuttle_bus_create.addEventListener('click', () => {
+        const ul = document.querySelector('#shuttle-bus-list')
+        const shuttle = document.querySelector('#shuttle-bus-input')
+        const name = shuttle.querySelector('#shuttle-bus-name')
+        const price = shuttle.querySelector('#shuttle-bus-price')
+        const description = shuttle.querySelector('textarea')
+
+        let rand = generateString(6)
+        let li = document.createElement('li')
+        li.setAttribute('class', `list-group-item c_${rand}`)
+        li.innerHTML = `<span class="_name">${name.value}</span> : <span class="_price">${price.value}</span> THB <i class="fi fi-pencil ms-2 text-success cursor-pointer" onClick="editShuttleBus('c_${rand}')"></i> <i class="fi fi-round-close ms-1 text-danger cursor-pointer" onClick="removeShuttleBus('c_${rand}')"></i>`
+        ul.appendChild(li)
+
+        let input_name = document.createElement('input')
+        input_name.setAttribute('class', `c_${rand}`)
+        input_name.setAttribute('type', 'hidden')
+        input_name.setAttribute('name', 'shuttle_bus_name[]')
+        input_name.value = name.value
+
+        let input_price = document.createElement('input')
+        input_price.setAttribute('class', `c_${rand}`)
+        input_price.setAttribute('type', 'hidden')
+        input_price.setAttribute('name', 'shuttle_bus_price[]')
+        input_price.value = price.value
+
+        let textarea = document.createElement('input')
+        textarea.setAttribute('class', `c_${rand}`)
+        textarea.setAttribute('type', 'hidden')
+        textarea.setAttribute('name', 'shuttle_bus_description[]')
+        textarea.value = description.value
+
+        const input_list = document.querySelector('.shuttle-bus-input-list')
+        input_list.appendChild(input_name)
+        input_list.appendChild(input_price)
+        input_list.appendChild(textarea)
+
+        name.value = price.value = description.value = ''
+    })
+}
+
+function removeShuttleBus(rand) {
+    const ul = document.querySelector('#shuttle-bus-list')
+    const shuttle_inputs = document.querySelector('.shuttle-bus-input-list')
+    const li = ul.querySelector(`.${rand}`)
+    li.remove()
+    const inputs = shuttle_inputs.querySelectorAll(`.${rand}`)
+    inputs.forEach((input) => { input.remove() })
+}
+
+function editShuttleBus(rand) {
+    const shuttle = document.querySelector('#shuttle-bus-input')
+    const name = shuttle.querySelector('#shuttle-bus-name')
+    const price = shuttle.querySelector('#shuttle-bus-price')
+    const description = shuttle.querySelector('textarea')
+
+    const shuttle_input = document.querySelector('.shuttle-bus-input-list')
+    const inputs = shuttle_input.querySelectorAll(`.${rand}`)
+    name.value = inputs[0].value
+    price.value = inputs[1].value
+    description.value = inputs[2].value
+
+    $('#create-shuttle-bus').modal('show')
+    swarpShuttleButton('edit', 'create')
+    document.querySelector('#shuttle-bus-edit-ref').value = rand
+}
+
+if(btn_shuttle_bus_edit) {
+    btn_shuttle_bus_edit.addEventListener('click', () => {
+        const ref = document.querySelector('#shuttle-bus-edit-ref').value
+        const ul = document.querySelector('#shuttle-bus-list')
+        const lis = ul.querySelectorAll(`li.${ref}`)
+
+        const shuttle = document.querySelector('#shuttle-bus-input')
+        const name = shuttle.querySelector('#shuttle-bus-name')
+        const price = shuttle.querySelector('#shuttle-bus-price')
+        const description = shuttle.querySelector('textarea')
+        const value_data = [name.value, price.value, description.value]
+
+        const shuttle_input = document.querySelector('.shuttle-bus-input-list')
+        const inputs = shuttle_input.querySelectorAll(`input.${ref}`)
+        
+        lis.forEach((li) => {
+            li.querySelector('span._name').innerHTML = value_data[0]
+            li.querySelector('span._price').innerHTML = value_data[1]
+        })
+
+        inputs.forEach((input, index) => { input.value = value_data[index] })
+        name.value = price.value = description.value = ''
+        swarpShuttleButton('create', 'edit')
+        $('#create-shuttle-bus').modal('hide')
+    })
+}
+
+if(btn_shuttle_bus_cancel) {
+    btn_shuttle_bus_cancel.addEventListener('click', () => {
+        const shuttle = document.querySelector('#shuttle-bus-input')
+        const name = shuttle.querySelector('#shuttle-bus-name')
+        const price = shuttle.querySelector('#shuttle-bus-price')
+        const description = shuttle.querySelector('textarea')
+
+        document.querySelector('#shuttle-bus-edit-ref').value = ''
+        name.value = price.value = description.value = ''
+        swarpShuttleButton('create', 'edit')
+    })
+}
+function swarpShuttleButton(rev, add) {
+    document.querySelector(`.${rev}-shuttle-btn`).classList.remove('d-none')
+    document.querySelector(`.${add}-shuttle-btn`).classList.add('d-none')
+}
+// End Shuttle bus ///////////////////////////////////////////////////////////////
+
+
+
+
+// Longtail boat //////////////////////////////////////////////////////////////////
+if(btn_longtail_boat_create) {
+    btn_longtail_boat_create.addEventListener('click', () => {
+        const ul = document.querySelector('#longtail-boat-list')
+        const longtail = document.querySelector('#longtail-boat-input')
+        const name = longtail.querySelector('#longtail-boat-name')
+        const price = longtail.querySelector('#longtail-boat-price')
+        const description = longtail.querySelector('textarea')
+
+        let rand = generateString(6)
+        let li = document.createElement('li')
+        li.setAttribute('class', `list-group-item c_${rand}`)
+        li.innerHTML = `<span class="_name">${name.value}</span> : <span class="_price">${price.value}</span> THB <i class="fi fi-pencil ms-2 text-success cursor-pointer" onClick="editLongtailBoat('c_${rand}')"></i> <i class="fi fi-round-close ms-1 text-danger cursor-pointer" onClick="removeLongtailBoat('c_${rand}')"></i>`
+        ul.appendChild(li)
+
+        let input_name = document.createElement('input')
+        input_name.setAttribute('class', `c_${rand}`)
+        input_name.setAttribute('type', 'hidden')
+        input_name.setAttribute('name', 'longtail_boat_name[]')
+        input_name.value = name.value
+
+        let input_price = document.createElement('input')
+        input_price.setAttribute('class', `c_${rand}`)
+        input_price.setAttribute('type', 'hidden')
+        input_price.setAttribute('name', 'longtail_boat_price[]')
+        input_price.value = price.value
+
+        let textarea = document.createElement('input')
+        textarea.setAttribute('class', `c_${rand}`)
+        textarea.setAttribute('type', 'hidden')
+        textarea.setAttribute('name', 'longtail_boat_description[]')
+        textarea.value = description.value
+
+        const input_list = document.querySelector('.longtail-boat-input-list')
+        input_list.appendChild(input_name)
+        input_list.appendChild(input_price)
+        input_list.appendChild(textarea)
+
+        name.value = price.value = description.value = ''
+    })
+}
+
+function removeLongtailBoat(rand) {
+    const ul = document.querySelector('#longtail-boat-list')
+    const longtail_input = document.querySelector('.longtail-boat-input-list')
+    const li = ul.querySelector(`.${rand}`)
+    li.remove()
+    const inputs = longtail_input.querySelectorAll(`.${rand}`)
+    inputs.forEach((input) => { input.remove() })
+}
+
+function editLongtailBoat(rand) {
+    const longtail = document.querySelector('#longtail-boat-input')
+    const name = longtail.querySelector('#longtail-boat-name')
+    const price = longtail.querySelector('#longtail-boat-price')
+    const description = longtail.querySelector('textarea')
+
+    const longtail_input = document.querySelector('.longtail-boat-input-list')
+    const inputs = longtail_input.querySelectorAll(`.${rand}`)
+    name.value = inputs[0].value
+    price.value = inputs[1].value
+    description.value = inputs[2].value
+
+    $('#create-longtail-boat').modal('show')
+    swarpLongtailButton('edit', 'create')
+    document.querySelector('#longtail-boat-edit-ref').value = rand
+}
+
+if(btn_longtail_boat_edit) {
+    btn_longtail_boat_edit.addEventListener('click', () => {
+        const ref = document.querySelector('#longtail-boat-edit-ref').value
+        const ul = document.querySelector('#longtail-boat-list')
+        const lis = ul.querySelectorAll(`li.${ref}`)
+
+        const longtail = document.querySelector('#longtail-boat-input')
+        const name = longtail.querySelector('#longtail-boat-name')
+        const price = longtail.querySelector('#longtail-boat-price')
+        const description = longtail.querySelector('textarea')
+        const value_data = [name.value, price.value, description.value]
+
+        const longtail_input = document.querySelector('.longtail-boat-input-list')
+        const inputs = longtail_input.querySelectorAll(`input.${ref}`)
+        
+        lis.forEach((li) => {
+            li.querySelector('span._name').innerHTML = value_data[0]
+            li.querySelector('span._price').innerHTML = value_data[1]
+        })
+
+        inputs.forEach((input, index) => { input.value = value_data[index] })
+        name.value = price.value = description.value = ''
+        swarpLongtailButton('create', 'edit')
+        $('#create-longtail-boat').modal('hide')
+    })
+}
+
+if(btn_longtail_boat_cancel) {
+    btn_longtail_boat_cancel.addEventListener('click', () => {
+        const longtail = document.querySelector('#longtail-boat-input')
+        const name = longtail.querySelector('#longtail-boat-name')
+        const price = longtail.querySelector('#longtail-boat-price')
+        const description = longtail.querySelector('textarea')
+
+        document.querySelector('#longtail-boat-edit-ref').value = ''
+        name.value = price.value = description.value = ''
+        swarpLongtailButton('create', 'edit')
+    })
+}
+
+function swarpLongtailButton(rev, add) {
+    document.querySelector(`.${rev}-longtail-btn`).classList.remove('d-none')
+    document.querySelector(`.${add}-longtail-btn`).classList.add('d-none')
+}
+// End Longtail boat ///////////////////////////////////////////////////////////////////
+
+
 // Create Master From
-
-
 // Create Master To
 // if(station_to_selected) {
 //     station_to_selected.addEventListener('change', (e) => {
@@ -284,10 +520,7 @@ function setRouteIcon() {
             let rand = generateString(8)
             icon_position.push(rand)
             let li = document.createElement('li')
-            li.classList.add('list-group-item')
-            li.classList.add('bg-transparent')
-            li.classList.add('border-0')
-            li.classList.add('icon-active-on')
+            li.setAttribute('class', 'list-group-item bg-transparent border-0 icon-active-on')
             li.id = rand
             li.setAttribute('style', 'max-width: 100px;')
 
@@ -295,12 +528,7 @@ function setRouteIcon() {
             ul.appendChild(li)
 
             let del = document.createElement('i')
-            del.classList.add('fi')
-            del.classList.add('fi-round-close')
-            del.classList.add('text-danger')
-            del.classList.add('cursor-pointer')
-            del.classList.add('icon-del-style')
-
+            del.setAttribute('fu fi-round-close text-danger cursor-pointer icon-del-style')
             del.setAttribute('onClick', `deleteIconSelected('${rand}', '${icon.id}')`)
             li.appendChild(del)
 
@@ -421,6 +649,7 @@ function addRouteActivity(index) {
 }
 
 function removeActivity(rand, id) {
+    const ul_ac = document.querySelector('#activity-dropdown')
     const ul = document.querySelector('#ul-activity-selected')
     let li = ul.querySelectorAll('li')
 
@@ -428,7 +657,7 @@ function removeActivity(rand, id) {
         if(item.id === `activity-${rand}`) item.remove()
     })
 
-    const _li = document.querySelector(`[data-id="${id}"]`)
+    const _li = ul_ac.querySelector(`[data-id="${id}"]`)
     _li.classList.remove('d-none')
 }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 use App\Models\Station;
 use App\Models\Route;
@@ -14,6 +15,8 @@ use App\Models\Activity;
 use App\Models\Addon;
 use App\Models\RouteActivity;
 use App\Models\RouteMeal;
+use App\Models\RouteShuttlebus;
+use App\Models\RouteLongtailboat;
 
 class RouteController extends Controller
 {
@@ -24,6 +27,8 @@ class RouteController extends Controller
 
     protected $Type = 'route';
     protected $Addon = 'MEAL';
+    protected $LongtailBoat = 'LBOAT';
+    protected $ShuttleBus = 'SBUS';
     protected $_Status = [
         'Y' => '<span class="text-success">On</span>',
         'N' => '<span class="text-danger">Off</span>'
@@ -92,6 +97,9 @@ class RouteController extends Controller
 
         if($route) {
             $result = $this->routeIconStore($request->icons, $route->id);
+            
+            if(isset($request->shuttle_bus_name)) $this->shuttlebusStore($request->shuttle_bus_name, $request->shuttle_bus_price, $request->shuttle_bus_description, $route->id);
+            if(isset($request->longtail_boat_name)) $this->longtailStore($request->longtail_boat_name, $request->longtail_boat_price, $request->longtail_boat_description, $route->id);
             if(isset($request->activity_id)) $this->routeActivityStore($request->activity_id, $route->id);
             if(isset($request->meal_id)) $this->routeMealStore($request->meal_id, $route->id);
 
@@ -106,7 +114,50 @@ class RouteController extends Controller
         }
 
         // Log::debug($request);
+        
         return redirect()->back()->withFail('Something is wrong. Please try again.');
+    }
+
+    private function shuttlebusStore($name, $price, $description, $route_id) {
+        foreach($name as $key => $n) {
+            $addon = Addon::create([
+                        'name' => $n,
+                        'isactive' => 'Y',
+                        'code' => Str::random(6),
+                        'type' => $this->ShuttleBus,
+                        'amount' => $price[$key],
+                        'description' => $description[$key],
+                        'status' => 'CO'
+                    ]);
+            
+            if($addon) {
+                RouteShuttlebus::create([
+                    'route_id' => $route_id,
+                    'addon_id' => $addon->id
+                ]);
+            }
+        }
+    }
+
+    private function longtailStore($name, $price, $description, $route_id) {
+        foreach($name as $key => $n) {
+            $addon = Addon::create([
+                        'name' => $n,
+                        'isactive' => 'Y',
+                        'code' => Str::random(6),
+                        'type' => $this->LongtailBoat,
+                        'amount' => $price[$key],
+                        'description' => $description[$key],
+                        'status' => 'CO'
+                    ]);
+
+            if($addon) {
+                RouteLongtailboat::create([
+                    'route_id' => $route_id,
+                    'addon_id' => $addon->id
+                ]);
+            }
+        }
     }
 
     private function routeIconStore(string $icons = null, string $route_id = null) {

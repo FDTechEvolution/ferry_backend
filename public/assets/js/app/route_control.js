@@ -634,7 +634,7 @@ function setRouteIcon() {
             ul.appendChild(li)
 
             let del = document.createElement('i')
-            del.setAttribute('fu fi-round-close text-danger cursor-pointer icon-del-style')
+            del.setAttribute('class', 'fi fi-round-close text-danger cursor-pointer icon-del-style')
             del.setAttribute('onClick', `deleteIconSelected('${rand}', '${icon.id}')`)
             li.appendChild(del)
 

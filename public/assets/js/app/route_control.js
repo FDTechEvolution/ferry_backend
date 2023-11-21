@@ -77,7 +77,7 @@ if(btn_shuttle_bus_create) {
             let rand = generateString(6)
             let li = document.createElement('li')
             li.setAttribute('class', `list-group-item c_${rand}`)
-            li.innerHTML = `<span class="_name">${name.value}</span> : <span class="_price">${price.value}</span> THB <i class="fi fi-pencil ms-2 text-success cursor-pointer" onClick="editShuttleBus('c_${rand}')"></i> <i class="fi fi-round-close ms-1 text-danger cursor-pointer" onClick="removeShuttleBus('c_${rand}')"></i>`
+            li.innerHTML = `<span class="_name">${name.value}</span> (<span class="_price">${parseInt(price.value).toLocaleString("en-US")}</span> ฿) <i class="fi fi-pencil ms-2 text-success cursor-pointer" onClick="editShuttleBus('c_${rand}')"></i> <i class="fi fi-round-close ms-1 text-danger cursor-pointer" onClick="removeShuttleBus('c_${rand}')"></i>`
             ul.appendChild(li)
 
             let input_name = document.createElement('input')
@@ -194,7 +194,7 @@ function setShuttleBus() {
         let rand = generateString(6)
         let li = document.createElement('li')
         li.setAttribute('class', `list-group-item c_${rand}`)
-        li.innerHTML = `<span class="_name">${shuttle.name}</span> : <span class="_price">${parseInt(shuttle.amount).toLocaleString("en-US")}</span> THB <i class="fi fi-pencil ms-2 text-success cursor-pointer" onClick="editShuttleBus('c_${rand}')"></i> <i class="fi fi-round-close ms-1 text-danger cursor-pointer" onClick="removeShuttleBus('c_${rand}')"></i>`
+        li.innerHTML = `<span class="_name">${shuttle.name}</span> (<span class="_price">${parseInt(shuttle.amount).toLocaleString("en-US")}</span> ฿) <i class="fi fi-pencil ms-2 text-success cursor-pointer" onClick="editShuttleBus('c_${rand}')"></i> <i class="fi fi-round-close ms-1 text-danger cursor-pointer" onClick="removeShuttleBus('c_${rand}')"></i>`
         ul.appendChild(li)
 
         let input_name = document.createElement('input')
@@ -246,7 +246,7 @@ if(btn_longtail_boat_create) {
             let rand = generateString(6)
             let li = document.createElement('li')
             li.setAttribute('class', `list-group-item c_${rand}`)
-            li.innerHTML = `<span class="_name">${name.value}</span> : <span class="_price">${price.value}</span> THB <i class="fi fi-pencil ms-2 text-success cursor-pointer" onClick="editLongtailBoat('c_${rand}')"></i> <i class="fi fi-round-close ms-1 text-danger cursor-pointer" onClick="removeLongtailBoat('c_${rand}')"></i>`
+            li.innerHTML = `<span class="_name">${name.value}</span> (<span class="_price fs-6">${price.value}</span> ฿) <i class="fi fi-pencil ms-2 text-success cursor-pointer" onClick="editLongtailBoat('c_${rand}')"></i> <i class="fi fi-round-close ms-1 text-danger cursor-pointer" onClick="removeLongtailBoat('c_${rand}')"></i>`
             ul.appendChild(li)
 
             let input_name = document.createElement('input')
@@ -364,7 +364,7 @@ function setLongtailBoat() {
         let rand = generateString(6)
         let li = document.createElement('li')
         li.setAttribute('class', `list-group-item c_${rand}`)
-        li.innerHTML = `<span class="_name">${boat.name}</span> : <span class="_price">${parseInt(boat.amount).toLocaleString("en-US")}</span> THB <i class="fi fi-pencil ms-2 text-success cursor-pointer" onClick="editLongtailBoat('c_${rand}')"></i> <i class="fi fi-round-close ms-1 text-danger cursor-pointer" onClick="removeLongtailBoat('c_${rand}')"></i>`
+        li.innerHTML = `<span class="_name">${boat.name}</span> (<span class="_price fs-6">${parseInt(boat.amount).toLocaleString("en-US")}</span> ฿) <i class="fi fi-pencil ms-2 text-success cursor-pointer" onClick="editLongtailBoat('c_${rand}')"></i> <i class="fi fi-round-close ms-1 text-danger cursor-pointer" onClick="removeLongtailBoat('c_${rand}')"></i>`
         ul.appendChild(li)
 
         let input_name = document.createElement('input')
@@ -377,7 +377,7 @@ function setLongtailBoat() {
         input_price.setAttribute('class', `c_${rand}`)
         input_price.setAttribute('type', 'hidden')
         input_price.setAttribute('name', 'longtail_boat_price[]')
-        input_price.value = boat.amount
+        input_price.value = parseInt(boat.amount)
 
         let textarea = document.createElement('input')
         textarea.setAttribute('class', `c_${rand}`)

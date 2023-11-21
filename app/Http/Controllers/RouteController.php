@@ -65,6 +65,8 @@ class RouteController extends Controller
         $route->station_lines;
         $route->activity_lines;
         $route->meal_lines;
+        $route->shuttle_bus;
+        $route->longtail_boat;
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->with('info_line')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
         $activities = Activity::where('status', 'CO')->with('icon')->get();
@@ -200,6 +202,22 @@ class RouteController extends Controller
         RouteMeal::where('route_id', $route_id)->delete();
     }
 
+    private function routeShuttleBusDestroy($route_id) {
+        $route_shuttlebus = RouteShuttlebus::where('route_id', $route_id);
+        foreach($route_shuttlebus as $shuttlebus) {
+            Addon::find($shuttlebus->addon_id)->delete();
+        }
+        $route_shuttlebus->delete();
+    }
+
+    private function routeLongtailBoatDestroy($route_id) {
+        $route_longtailboat = RouteLongtailboat::where('route_id', $route_id);
+        foreach($route_longtailboat as $longtailboat) {
+            Addon::find($longtailboat->addon_id)->delete();
+        }
+        $route_longtailboat->delete();
+    }
+
     private function storeRouteStationInfoLine(string $route_id = null, string $info_lines = null, string $type = null, string $ismaster = null) {
         $infos = preg_split('/\,/', $info_lines);
 
@@ -240,6 +258,12 @@ class RouteController extends Controller
             if(isset($request->activity_id)) $this->routeActivityStore($request->activity_id, $request->route_id);
             $this->routeMealDestroy($request->route_id);
             if(isset($request->meal_id)) $this->routeMealStore($request->meal_id, $request->route_id);
+
+            $this->routeShuttleBusDestroy($request->route_id);
+            $this->shuttlebusStore($request->shuttle_bus_name, $request->shuttle_bus_price, $request->shuttle_bus_description, $request->route_id);
+
+            $this->routeLongtailBoatDestroy($request->route_id);
+            $this->longtailStore($request->longtail_boat_name, $request->longtail_boat_price, $request->longtail_boat_description, $request->route_id);
 
             if($result) {
                 $this->clearAllRouteStationInfoLine($request->route_id);

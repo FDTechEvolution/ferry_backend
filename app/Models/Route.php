@@ -55,7 +55,7 @@ class Route extends Model
         return $this->belongsToMany(Addon::class, 'route_shuttlebuses', 'route_id', 'addon_id');
     }
 
-    public function longtai_boat() {
+    public function longtail_boat() {
         return $this->belongsToMany(Addon::class, 'route_longtailboats', 'route_id', 'addon_id');
     }
 }

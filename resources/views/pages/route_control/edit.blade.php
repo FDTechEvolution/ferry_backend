@@ -100,7 +100,7 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                 </div>
 
                                 <div class="row mb-4">
-                                    <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="col-sm-12 col-md-6 col-lg-3">
                                         <label class="col-form-label-sm text-start fw-bold">Activity</label>
                                         <div class="dropdown">
                                             <a class="btn btn-outline-dark btn-sm dropdown-toggle w-100" href="#" role="button" id="dropdownActivity" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,6">
@@ -116,9 +116,9 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                                 </span>
                                             </a>
 
-                                            <ul class="dropdown-menu shadow-lg p-1 w-100" id="ul-activity-active" aria-labelledby="dropdownActivity">
+                                            <ul class="dropdown-menu shadow-lg p-1 w-100" id="activity-dropdown" aria-labelledby="dropdownActivity">
                                                 @foreach($activities as $index => $activity)
-                                                    <li id="activity-active-{{ $index }}" data-id="{{ $activity['id'] }}">
+                                                    <li id="activity-active-{{ $index }}" data-id="{{ $activity->id }}">
                                                         <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteActivity({{ $index }})">
                                                             <img src="{{ asset($activity->icon->path) }}" class="me-2" width="24" height="24">
                                                             <span>{{ $activity->name }}</span>
@@ -130,7 +130,7 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                         <ul class="list-group" id="ul-activity-selected">
                                         </ul>
                                     </div>
-                                    <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="col-sm-12 col-md-6 col-lg-3">
                                         <label class="col-form-label-sm text-start fw-bold">Meal</label>
                                         <div class="dropdown">
                                             <a class="btn btn-outline-dark btn-sm dropdown-toggle w-100" href="#" role="button" id="dropdownMeal" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,6">
@@ -159,6 +159,22 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                         </div>
                                         <ul class="list-group" id="ul-meal-selected">
                                         </ul>
+                                    </div>
+                                    <div class="col-sm-12 col-md-6 col-lg-3">
+                                        <label class="col-form-label-sm text-start fw-bold">Shuttle bus</label>
+                                        <button type="button" class="btn btn-outline-dark btn-sm w-100" data-bs-toggle="modal" data-bs-target="#create-shuttle-bus">Add shuttle bus</button>
+                                        <x-modal-create-shuttle-bus />
+
+                                        <ul class="list-group" id="shuttle-bus-list"></ul>
+                                        <div class="shuttle-bus-input-list"></div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-6 col-lg-3">
+                                        <label class="col-form-label-sm text-start fw-bold">Longtail boat</label>
+                                        <button type="button" class="btn btn-outline-dark btn-sm w-100" data-bs-toggle="modal" data-bs-target="#create-longtail-boat">Add longtail boat</button>
+                                        <x-modal-create-longtail-boat />
+
+                                        <ul class="list-group" id="longtail-boat-list"></ul>
+                                        <div class="longtail-boat-input-list"></div>
                                     </div>
                                 </div>
 
@@ -339,6 +355,8 @@ function saveAllList(type, list_id, ul_id, input_id) {
     const meals = {{ Js::from($meals) }}
     const route_activity = {{ Js::from($route['activity_lines']) }}
     const route_meal = {{ Js::from($route['meal_lines']) }}
+    const shuttle_bus = {{ Js::from($route['shuttle_bus']) }}
+    const longtail_boat = {{ Js::from($route['longtail_boat']) }}
 </script>
 <script src="{{ asset('assets/js/app/route_control.js') }}"></script>
 
@@ -346,6 +364,8 @@ function saveAllList(type, list_id, ul_id, input_id) {
     setRouteIcon()
     setActivityData()
     setMealData()
+    setShuttleBus()
+    setLongtailBoat()
     // setInfomationDataList()
     // setMasterInfoListData()
 </script>

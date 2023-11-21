@@ -66,36 +66,45 @@ if(btn_shuttle_bus_create) {
         const price = shuttle.querySelector('#shuttle-bus-price')
         const description = shuttle.querySelector('textarea')
 
-        let rand = generateString(6)
-        let li = document.createElement('li')
-        li.setAttribute('class', `list-group-item c_${rand}`)
-        li.innerHTML = `<span class="_name">${name.value}</span> : <span class="_price">${price.value}</span> THB <i class="fi fi-pencil ms-2 text-success cursor-pointer" onClick="editShuttleBus('c_${rand}')"></i> <i class="fi fi-round-close ms-1 text-danger cursor-pointer" onClick="removeShuttleBus('c_${rand}')"></i>`
-        ul.appendChild(li)
+        if(name.value === '' || price.value === '') {
+            if(name.value === '') name.classList.add('border-danger')
+            if(price.value === '') price.classList.add('border-danger')
+        }
+        else {
+            name.classList.remove('border-danger')
+            price.classList.remove('border-danger')
 
-        let input_name = document.createElement('input')
-        input_name.setAttribute('class', `c_${rand}`)
-        input_name.setAttribute('type', 'hidden')
-        input_name.setAttribute('name', 'shuttle_bus_name[]')
-        input_name.value = name.value
+            let rand = generateString(6)
+            let li = document.createElement('li')
+            li.setAttribute('class', `list-group-item c_${rand}`)
+            li.innerHTML = `<span class="_name">${name.value}</span> : <span class="_price">${price.value}</span> THB <i class="fi fi-pencil ms-2 text-success cursor-pointer" onClick="editShuttleBus('c_${rand}')"></i> <i class="fi fi-round-close ms-1 text-danger cursor-pointer" onClick="removeShuttleBus('c_${rand}')"></i>`
+            ul.appendChild(li)
 
-        let input_price = document.createElement('input')
-        input_price.setAttribute('class', `c_${rand}`)
-        input_price.setAttribute('type', 'hidden')
-        input_price.setAttribute('name', 'shuttle_bus_price[]')
-        input_price.value = price.value
+            let input_name = document.createElement('input')
+            input_name.setAttribute('class', `c_${rand}`)
+            input_name.setAttribute('type', 'hidden')
+            input_name.setAttribute('name', 'shuttle_bus_name[]')
+            input_name.value = name.value
 
-        let textarea = document.createElement('input')
-        textarea.setAttribute('class', `c_${rand}`)
-        textarea.setAttribute('type', 'hidden')
-        textarea.setAttribute('name', 'shuttle_bus_description[]')
-        textarea.value = description.value
+            let input_price = document.createElement('input')
+            input_price.setAttribute('class', `c_${rand}`)
+            input_price.setAttribute('type', 'hidden')
+            input_price.setAttribute('name', 'shuttle_bus_price[]')
+            input_price.value = price.value
 
-        const input_list = document.querySelector('.shuttle-bus-input-list')
-        input_list.appendChild(input_name)
-        input_list.appendChild(input_price)
-        input_list.appendChild(textarea)
+            let textarea = document.createElement('input')
+            textarea.setAttribute('class', `c_${rand}`)
+            textarea.setAttribute('type', 'hidden')
+            textarea.setAttribute('name', 'shuttle_bus_description[]')
+            textarea.value = description.value
 
-        name.value = price.value = description.value = ''
+            const input_list = document.querySelector('.shuttle-bus-input-list')
+            input_list.appendChild(input_name)
+            input_list.appendChild(input_price)
+            input_list.appendChild(textarea)
+
+            name.value = price.value = description.value = ''
+        }
     })
 }
 
@@ -135,20 +144,29 @@ if(btn_shuttle_bus_edit) {
         const name = shuttle.querySelector('#shuttle-bus-name')
         const price = shuttle.querySelector('#shuttle-bus-price')
         const description = shuttle.querySelector('textarea')
-        const value_data = [name.value, price.value, description.value]
 
-        const shuttle_input = document.querySelector('.shuttle-bus-input-list')
-        const inputs = shuttle_input.querySelectorAll(`input.${ref}`)
-        
-        lis.forEach((li) => {
-            li.querySelector('span._name').innerHTML = value_data[0]
-            li.querySelector('span._price').innerHTML = value_data[1]
-        })
+        if(name.value === '' || price.value === '') {
+            if(name.value === '') name.classList.add('border-danger')
+            if(price.value === '') price.classList.add('border-danger')
+        }
+        else {
+            name.classList.remove('border-danger')
+            price.classList.remove('border-danger')
 
-        inputs.forEach((input, index) => { input.value = value_data[index] })
-        name.value = price.value = description.value = ''
-        swarpShuttleButton('create', 'edit')
-        $('#create-shuttle-bus').modal('hide')
+            const value_data = [name.value, price.value, description.value]
+            const shuttle_input = document.querySelector('.shuttle-bus-input-list')
+            const inputs = shuttle_input.querySelectorAll(`input.${ref}`)
+            
+            lis.forEach((li) => {
+                li.querySelector('span._name').innerHTML = value_data[0]
+                li.querySelector('span._price').innerHTML = value_data[1]
+            })
+
+            inputs.forEach((input, index) => { input.value = value_data[index] })
+            name.value = price.value = description.value = ''
+            swarpShuttleButton('create', 'edit')
+            $('#create-shuttle-bus').modal('hide')
+        }
     })
 }
 
@@ -168,6 +186,41 @@ function swarpShuttleButton(rev, add) {
     document.querySelector(`.${rev}-shuttle-btn`).classList.remove('d-none')
     document.querySelector(`.${add}-shuttle-btn`).classList.add('d-none')
 }
+
+function setShuttleBus() {
+    const ul = document.querySelector('#shuttle-bus-list')
+
+    shuttle_bus.forEach((shuttle) => {
+        let rand = generateString(6)
+        let li = document.createElement('li')
+        li.setAttribute('class', `list-group-item c_${rand}`)
+        li.innerHTML = `<span class="_name">${shuttle.name}</span> : <span class="_price">${parseInt(shuttle.amount).toLocaleString("en-US")}</span> THB <i class="fi fi-pencil ms-2 text-success cursor-pointer" onClick="editShuttleBus('c_${rand}')"></i> <i class="fi fi-round-close ms-1 text-danger cursor-pointer" onClick="removeShuttleBus('c_${rand}')"></i>`
+        ul.appendChild(li)
+
+        let input_name = document.createElement('input')
+        input_name.setAttribute('class', `c_${rand}`)
+        input_name.setAttribute('type', 'hidden')
+        input_name.setAttribute('name', 'shuttle_bus_name[]')
+        input_name.value = shuttle.name
+
+        let input_price = document.createElement('input')
+        input_price.setAttribute('class', `c_${rand}`)
+        input_price.setAttribute('type', 'hidden')
+        input_price.setAttribute('name', 'shuttle_bus_price[]')
+        input_price.value = parseInt(shuttle.amount)
+
+        let textarea = document.createElement('input')
+        textarea.setAttribute('class', `c_${rand}`)
+        textarea.setAttribute('type', 'hidden')
+        textarea.setAttribute('name', 'shuttle_bus_description[]')
+        textarea.value = shuttle.description
+
+        const input_list = document.querySelector('.shuttle-bus-input-list')
+        input_list.appendChild(input_name)
+        input_list.appendChild(input_price)
+        input_list.appendChild(textarea)
+    })
+}
 // End Shuttle bus ///////////////////////////////////////////////////////////////
 
 
@@ -182,36 +235,45 @@ if(btn_longtail_boat_create) {
         const price = longtail.querySelector('#longtail-boat-price')
         const description = longtail.querySelector('textarea')
 
-        let rand = generateString(6)
-        let li = document.createElement('li')
-        li.setAttribute('class', `list-group-item c_${rand}`)
-        li.innerHTML = `<span class="_name">${name.value}</span> : <span class="_price">${price.value}</span> THB <i class="fi fi-pencil ms-2 text-success cursor-pointer" onClick="editLongtailBoat('c_${rand}')"></i> <i class="fi fi-round-close ms-1 text-danger cursor-pointer" onClick="removeLongtailBoat('c_${rand}')"></i>`
-        ul.appendChild(li)
+        if(name.value === '' || price.value === '') {
+            if(name.value === '') name.classList.add('border-danger')
+            if(price.value === '') price.classList.add('border-danger')
+        }
+        else {
+            name.classList.remove('border-danger')
+            price.classList.remove('border-danger')
 
-        let input_name = document.createElement('input')
-        input_name.setAttribute('class', `c_${rand}`)
-        input_name.setAttribute('type', 'hidden')
-        input_name.setAttribute('name', 'longtail_boat_name[]')
-        input_name.value = name.value
+            let rand = generateString(6)
+            let li = document.createElement('li')
+            li.setAttribute('class', `list-group-item c_${rand}`)
+            li.innerHTML = `<span class="_name">${name.value}</span> : <span class="_price">${price.value}</span> THB <i class="fi fi-pencil ms-2 text-success cursor-pointer" onClick="editLongtailBoat('c_${rand}')"></i> <i class="fi fi-round-close ms-1 text-danger cursor-pointer" onClick="removeLongtailBoat('c_${rand}')"></i>`
+            ul.appendChild(li)
 
-        let input_price = document.createElement('input')
-        input_price.setAttribute('class', `c_${rand}`)
-        input_price.setAttribute('type', 'hidden')
-        input_price.setAttribute('name', 'longtail_boat_price[]')
-        input_price.value = price.value
+            let input_name = document.createElement('input')
+            input_name.setAttribute('class', `c_${rand}`)
+            input_name.setAttribute('type', 'hidden')
+            input_name.setAttribute('name', 'longtail_boat_name[]')
+            input_name.value = name.value
 
-        let textarea = document.createElement('input')
-        textarea.setAttribute('class', `c_${rand}`)
-        textarea.setAttribute('type', 'hidden')
-        textarea.setAttribute('name', 'longtail_boat_description[]')
-        textarea.value = description.value
+            let input_price = document.createElement('input')
+            input_price.setAttribute('class', `c_${rand}`)
+            input_price.setAttribute('type', 'hidden')
+            input_price.setAttribute('name', 'longtail_boat_price[]')
+            input_price.value = price.value
 
-        const input_list = document.querySelector('.longtail-boat-input-list')
-        input_list.appendChild(input_name)
-        input_list.appendChild(input_price)
-        input_list.appendChild(textarea)
+            let textarea = document.createElement('input')
+            textarea.setAttribute('class', `c_${rand}`)
+            textarea.setAttribute('type', 'hidden')
+            textarea.setAttribute('name', 'longtail_boat_description[]')
+            textarea.value = description.value
 
-        name.value = price.value = description.value = ''
+            const input_list = document.querySelector('.longtail-boat-input-list')
+            input_list.appendChild(input_name)
+            input_list.appendChild(input_price)
+            input_list.appendChild(textarea)
+
+            name.value = price.value = description.value = ''
+        }
     })
 }
 
@@ -251,20 +313,29 @@ if(btn_longtail_boat_edit) {
         const name = longtail.querySelector('#longtail-boat-name')
         const price = longtail.querySelector('#longtail-boat-price')
         const description = longtail.querySelector('textarea')
-        const value_data = [name.value, price.value, description.value]
 
-        const longtail_input = document.querySelector('.longtail-boat-input-list')
-        const inputs = longtail_input.querySelectorAll(`input.${ref}`)
-        
-        lis.forEach((li) => {
-            li.querySelector('span._name').innerHTML = value_data[0]
-            li.querySelector('span._price').innerHTML = value_data[1]
-        })
+        if(name.value === '' || price.value === '') {
+            if(name.value === '') name.classList.add('border-danger')
+            if(price.value === '') price.classList.add('border-danger')
+        }
+        else {
+            name.classList.remove('border-danger')
+            price.classList.remove('border-danger')
 
-        inputs.forEach((input, index) => { input.value = value_data[index] })
-        name.value = price.value = description.value = ''
-        swarpLongtailButton('create', 'edit')
-        $('#create-longtail-boat').modal('hide')
+            const value_data = [name.value, price.value, description.value]
+            const longtail_input = document.querySelector('.longtail-boat-input-list')
+            const inputs = longtail_input.querySelectorAll(`input.${ref}`)
+            
+            lis.forEach((li) => {
+                li.querySelector('span._name').innerHTML = value_data[0]
+                li.querySelector('span._price').innerHTML = value_data[1]
+            })
+
+            inputs.forEach((input, index) => { input.value = value_data[index] })
+            name.value = price.value = description.value = ''
+            swarpLongtailButton('create', 'edit')
+            $('#create-longtail-boat').modal('hide')
+        }
     })
 }
 
@@ -284,6 +355,41 @@ if(btn_longtail_boat_cancel) {
 function swarpLongtailButton(rev, add) {
     document.querySelector(`.${rev}-longtail-btn`).classList.remove('d-none')
     document.querySelector(`.${add}-longtail-btn`).classList.add('d-none')
+}
+
+function setLongtailBoat() {
+    const ul = document.querySelector('#longtail-boat-list')
+
+    longtail_boat.forEach((boat) => {
+        let rand = generateString(6)
+        let li = document.createElement('li')
+        li.setAttribute('class', `list-group-item c_${rand}`)
+        li.innerHTML = `<span class="_name">${boat.name}</span> : <span class="_price">${parseInt(boat.amount).toLocaleString("en-US")}</span> THB <i class="fi fi-pencil ms-2 text-success cursor-pointer" onClick="editLongtailBoat('c_${rand}')"></i> <i class="fi fi-round-close ms-1 text-danger cursor-pointer" onClick="removeLongtailBoat('c_${rand}')"></i>`
+        ul.appendChild(li)
+
+        let input_name = document.createElement('input')
+        input_name.setAttribute('class', `c_${rand}`)
+        input_name.setAttribute('type', 'hidden')
+        input_name.setAttribute('name', 'longtail_boat_name[]')
+        input_name.value = boat.name
+
+        let input_price = document.createElement('input')
+        input_price.setAttribute('class', `c_${rand}`)
+        input_price.setAttribute('type', 'hidden')
+        input_price.setAttribute('name', 'longtail_boat_price[]')
+        input_price.value = boat.amount
+
+        let textarea = document.createElement('input')
+        textarea.setAttribute('class', `c_${rand}`)
+        textarea.setAttribute('type', 'hidden')
+        textarea.setAttribute('name', 'longtail_boat_description[]')
+        textarea.value = boat.description
+
+        const input_list = document.querySelector('.longtail-boat-input-list')
+        input_list.appendChild(input_name)
+        input_list.appendChild(input_price)
+        input_list.appendChild(textarea)
+    })
 }
 // End Longtail boat ///////////////////////////////////////////////////////////////////
 

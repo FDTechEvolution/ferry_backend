@@ -203,19 +203,19 @@ class RouteController extends Controller
     }
 
     private function routeShuttleBusDestroy($route_id) {
-        $route_shuttlebus = RouteShuttlebus::where('route_id', $route_id);
+        $route_shuttlebus = RouteShuttlebus::where('route_id', $route_id)->get();
         foreach($route_shuttlebus as $shuttlebus) {
             Addon::find($shuttlebus->addon_id)->delete();
         }
-        $route_shuttlebus->delete();
+        RouteShuttlebus::where('route_id', $route_id)->delete();
     }
 
     private function routeLongtailBoatDestroy($route_id) {
-        $route_longtailboat = RouteLongtailboat::where('route_id', $route_id);
+        $route_longtailboat = RouteLongtailboat::where('route_id', $route_id)->get();
         foreach($route_longtailboat as $longtailboat) {
             Addon::find($longtailboat->addon_id)->delete();
         }
-        $route_longtailboat->delete();
+        RouteLongtailboat::where('route_id', $route_id)->delete();
     }
 
     private function storeRouteStationInfoLine(string $route_id = null, string $info_lines = null, string $type = null, string $ismaster = null) {

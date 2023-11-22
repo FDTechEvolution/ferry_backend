@@ -744,8 +744,8 @@ function addRouteActivity(index) {
     li.setAttribute('class', 'list-group-item')
     li.setAttribute('data-id', activity.id)
     li.id = `activity-${rand}`
-    li.innerHTML = `<img src="${activity.icon.path}" width="24" height="24" class="ms-2"> 
-                    ${activity.name} <small>(${parseInt(activity.price)} ฿)</small>
+    li.innerHTML = `<img src="${activity.icon.path}/${activity.icon.name}" width="24" height="24" class="ms-2"> 
+                    ${activity.name} <small>(${parseInt(activity.amount)} ฿)</small>
                     <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeActivity('${rand}', '${activity.id}')"></i>
                     <input type="hidden" name="activity_id[]" value="${activity.id}">`
     ul.appendChild(li)
@@ -775,8 +775,8 @@ function setActivityData() {
         let li = document.createElement('li')
         li.setAttribute('class', 'list-group-item')
         li.id = `activity-${rand}`
-        li.innerHTML = `<img src="${activity.icon.path}" width="24" height="24" class="ms-2"> 
-                        ${activity.name} <small>(${parseInt(activity.price)} ฿)</small>
+        li.innerHTML = `<img src="${activity.icon.path}/${activity.icon.name}" width="24" height="24" class="ms-2"> 
+                        ${activity.name} <small>(${parseInt(activity.amount)} ฿)</small>
                         <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeActivity('${rand}', '${activity.id}')"></i>
                         <input type="hidden" name="activity_id[]" value="${activity.id}">`
         ul.appendChild(li)
@@ -940,7 +940,7 @@ function updateDatatableData() {
             },
             { 
                 data: 'station_from',
-                className: "text-start lh--1-2",
+                className: "text-start",
                 render: (data) => {
                     let pier =  data.piername !== null ? `<small class="text-secondary fs-d-80">(${data.piername})</small>` : ''
                     return `${data.name} ${pier}`
@@ -948,7 +948,7 @@ function updateDatatableData() {
             },
             { 
                 data: 'station_to',
-                className: "text-start lh--1-2",
+                className: "text-start",
                 render: (data) => {
                     let pier =  data.piername !== null ? `<small class="text-secondary fs-d-80">(${data.piername})</small>` : ''
                     return `${data.name} ${pier}`

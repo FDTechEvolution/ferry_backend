@@ -26,7 +26,8 @@ class RouteController extends Controller
     }
 
     protected $Type = 'route';
-    protected $Addon = 'MEAL';
+    protected $Meal = 'MEAL';
+    protected $Activity = 'ACTV';
     protected $LongtailBoat = 'LBOAT';
     protected $ShuttleBus = 'SBUS';
     protected $_Status = [
@@ -48,8 +49,9 @@ class RouteController extends Controller
     public function create() {
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
-        $activities = Activity::where('status', 'CO')->with('icon')->get();
-        $meals = Addon::where('type', $this->Addon)->where('status', 'CO')->get();
+        // $activities = Activity::where('status', 'CO')->with('icon')->get();
+        $meals = Addon::where('type', $this->Meal)->where('isactive', 'Y')->where('status', 'CO')->get();
+        $activities = Addon::where('type', $this->Activity)->where('isactive', 'Y')->where('status', 'CO')->get();
 
         return view('pages.route_control.create', 
                     ['stations' => $stations, 'icons' => $icons, 'activities' => $activities, 'meals' => $meals]
@@ -69,8 +71,8 @@ class RouteController extends Controller
         $route->longtail_boat;
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->with('info_line')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
-        $activities = Activity::where('status', 'CO')->with('icon')->get();
-        $meals = Addon::where('type', $this->Addon)->where('status', 'CO')->get();
+        $activities = Addon::where('type', $this->Activity)->where('status', 'CO')->with('icon')->get();
+        $meals = Addon::where('type', $this->Meal)->where('status', 'CO')->get();
 
         return view('pages.route_control.edit', [
             'route' => $route, 'icons' => $icons, 'stations' => $stations, 'activities' => $activities, 'meals' => $meals
@@ -180,7 +182,7 @@ class RouteController extends Controller
         foreach($activities as $activity) {
             RouteActivity::create([
                 'route_id' => $route_id,
-                'activity_id' => $activity
+                'addon_id' => $activity
             ]);
         }
     }
@@ -260,10 +262,10 @@ class RouteController extends Controller
             if(isset($request->meal_id)) $this->routeMealStore($request->meal_id, $request->route_id);
 
             $this->routeShuttleBusDestroy($request->route_id);
-            $this->shuttlebusStore($request->shuttle_bus_name, $request->shuttle_bus_price, $request->shuttle_bus_description, $request->route_id);
+            if(isset($request->shuttle_bus_name)) $this->shuttlebusStore($request->shuttle_bus_name, $request->shuttle_bus_price, $request->shuttle_bus_description, $request->route_id);
 
             $this->routeLongtailBoatDestroy($request->route_id);
-            $this->longtailStore($request->longtail_boat_name, $request->longtail_boat_price, $request->longtail_boat_description, $request->route_id);
+            if(isset($request->longtail_boat_name)) $this->longtailStore($request->longtail_boat_name, $request->longtail_boat_price, $request->longtail_boat_description, $request->route_id);
 
             if($result) {
                 $this->clearAllRouteStationInfoLine($request->route_id);

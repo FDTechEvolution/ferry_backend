@@ -58,39 +58,50 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="mb-3 pt-4 row mt-6">
+                                <div class="mb-3 pt-5 row mt-6">
                                     <label class="col-sm-3 col-form-label-sm text-start">Icon :</label>
-                                    <div class="col-sm-1 text-lg-center align-self-center">
-                                        <img src="{{ asset('icon/no_image_icon.svg') }}" id="icon-selected" class="icon-size">
-                                    </div>
-                                    <div class="col-sm-8">
-                                        <div class="dropdown">
-                                            <a class="btn btn-outline-dark btn-sm dropdown-toggle w-100" href="#" role="button" id="dropdownIcons" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,6">
-                                                Select Icon
-                                                <span class="group-icon">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                        <polyline points="6 9 12 15 18 9"></polyline>
-                                                    </svg>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                                                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                                                    </svg>
-                                                </span>
-                                            </a>
+                                    <div class="col-sm-9">
+                                        <label class="btn btn-light btn-sm cursor-pointer position-relative w-100 rounded border" style="background-color: #fff;">
+                                            <input type="file" name="file_icon"
+                                                data-file-ext="jepg, jpg, png, gif, svg"
+                                                data-file-max-size-kb-per-file="1024"
+                                                data-file-max-size-kb-total="1024"
+                                                data-file-max-total-files="100"
+                                                data-file-ext-err-msg="Allowed:"
+                                                data-file-exist-err-msg="File already exists:"
+                                                data-file-size-err-item-msg="File too large!"
+                                                data-file-size-err-total-msg="Total allowed size exceeded!"
+                                                data-file-size-err-max-msg="Maximum allowed files:"
+                                                data-file-toast-position="bottom-center"
+                                                data-file-preview-container=".js-file-input-container-multiple-list-static-icon"
+                                                data-file-preview-img-height="80"
+                                                data-file-btn-clear="a.js-file-input-btn-multiple-list-static-remove-icon"
+                                                data-file-preview-show-info="true"
+                                                data-file-preview-list-type="list"
+                                                class="custom-file-input absolute-full cursor-pointer"
+                                                title="jpeg, jpg, png, gif, svg (1MB)" data-bs-toggle="tooltip"
+                                            >
 
-                                            <ul class="dropdown-menu shadow-lg p-1 w-100" aria-labelledby="dropdownIcons">
-                                                @foreach($icons as $index => $icon)
-                                                <li>
-                                                    <a class="dropdown-item rounded" href="javascript:void(0)" onClick="selectActivityIcon({{ $index }})">
-                                                        <img src="{{ asset($icon->path) }}" class="me-2 icon-size">
-                                                        <span>{{ $icon['name'] }}</span>
-                                                    </a>
-                                                </li>
-                                                @endforeach
-                                            </ul>
+                                            <span class="group-icon cursor-pointer">
+                                                <i class="fi fi-arrow-upload"></i>
+                                                <i class="fi fi-circle-spin fi-spin"></i>
+                                            </span>
+
+                                            <span class="cursor-pointer">Upload icon</span>
+                                        </label>
+
+                                        <div class="row">
+                                            <div class="col-10">
+                                                <div class="js-file-input-container-multiple-list-static-icon position-relative hide-empty mt-2"><!-- container --></div>
+                                            </div>
+                                            <div class="col-2 text-center">
+                                                <!-- remove button -->
+                                                <a href="#" title="Clear Images" data-bs-toggle="tooltip" class="js-file-input-btn-multiple-list-static-remove-icon hide btn btn-secondary mt-4 text-center">
+                                                    <i class="fi fi-close mx-auto"></i>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
-                                    <input type="hidden" name="icon_id" id="icon-id" value="">
                                 </div>
                                 <div class="mb-3 row">
                                     <label class="col-sm-3 col-form-label-sm text-start">Picture :</label>
@@ -143,13 +154,13 @@
                                 <div class="bg-light p-4 rounded">
                                     <p>View</p>
                                     <div class="form-check ms-3 mb-3">
-                                        <input class="form-check-input form-check-input-primary" type="checkbox" name="route_station" value="" id="route-station">
+                                        <input class="form-check-input form-check-input-primary" type="checkbox" name="route_station" value="1" id="route-station">
                                         <label class="form-check-label" for="route-station">
                                             Route station
                                         </label>
                                     </div>
                                     <div class="form-check ms-3 mb-3">
-                                        <input class="form-check-input form-check-input-primary" type="checkbox" name="main_menu" value="" id="main-menu">
+                                        <input class="form-check-input form-check-input-primary" type="checkbox" name="main_menu" value="1" id="main-menu">
                                         <label class="form-check-label" for="main-menu">
                                             Main menu
                                         </label>

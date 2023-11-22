@@ -100,7 +100,7 @@
                                                 @foreach($activities as $index => $activity)
                                                     <li id="activity-active-{{ $index }}" data-id="{{ $activity->id }}">
                                                         <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteActivity({{ $index }})">
-                                                            <img src="{{ asset($activity->icon->path) }}" class="me-2" width="24" height="24">
+                                                            <img src="{{ asset($activity->icon->path.'/'.$activity->icon->name) }}" class="me-2" width="24" height="24">
                                                             <span>{{ $activity->name }}</span>
                                                         </a>
                                                     </li>

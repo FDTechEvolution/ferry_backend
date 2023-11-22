@@ -50,3 +50,20 @@ function selectActivityIcon(index) {
     icon_selected.src = icon.path
     icon_id.value = icon.id
 }
+
+function getImageUpload(current_id) {
+    let _currect_id = document.querySelector(`#${current_id}`)
+    _currect_id.classList.add('hidden-element')
+    setTimeout(() => {
+        _currect_id.classList.add('d-none')
+    }, 500);
+}
+
+function restoreCurrentImageByUpload(current_id) {
+    let _currect_id = document.querySelector(`#${current_id}`)
+    _currect_id.classList.remove('d-none')
+    _currect_id.classList.add('visible-element')
+    setTimeout(() => {
+        _currect_id.classList.remove('hidden-element')
+    }, 200);
+}

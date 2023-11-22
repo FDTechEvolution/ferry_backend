@@ -210,7 +210,7 @@ Route::middleware('auth')->group(function() {
     });
 
     Route::controller(PrintController::class)->group(function() {
-        Route::get('/print/ticket/{id}', 'ticket')->name('print-ticket');
+        Route::get('/print/ticket/{bookingno}', 'ticket')->name('print-ticket');
 
     });
 });

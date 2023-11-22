@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('page-title')
-    <h1 class="ms-2 mb-0 text-main-color-2" id="promotion-page-title">Booking</h1>
+    <h1 class="ms-2 mb-0" id="promotion-page-title"><span class="text-main-color-2">Booking</span> Management</h1>
     <x-a-href-green :text="_('New')" :href="route('booking-route')" class="ms-3 btn-sm w--10" />
 @stop
 
@@ -14,10 +14,9 @@
                         <tr>
                             <th>Booking No</th>
                             <th>Ticket No</th>
-                            <th>From</th>
-                            <th>To</th>
-                            <th>Adult</th>
-
+                            <th>Type</th>
+                            <th>Route</th>
+                        
                             <th>Depart</th>
                             <th>Arrive</th>
                             <th>Date</th>
@@ -28,14 +27,16 @@
                         </tr>
                     </thead>
                     <tbody id="">
-                       
+                      
                         @foreach ($bookings as $index => $item)
                             <tr>
                                 <td>{{$item['bookingno']}}</td>
                                 <td><strong>{{isset($item['tickets'][0])?$item['tickets'][0]['ticketno']:''}}</strong></td>
-                                <td>{{ $item['bookingRoutes'][0]['station_from']['name'] }}</td>
-                                <td>{{ $item['bookingRoutes'][0]['station_to']['name'] }}</td>
-                                <td>{{ $item['adult_passenger'] }}</td>
+                                <td>{{$item['trip_type']}}</td>
+              
+                                <td>{{ $item['bookingRoutes'][0]['station_from']['nickname'] }}-{{ $item['bookingRoutes'][0]['station_to']['nickname'] }}</td>
+               
+                                
                                 <td>{{ date('H:i', strtotime($item['bookingRoutes'][0]['depart_time'])) }}</td>
                                 <td>{{ date('H:i', strtotime($item['bookingRoutes'][0]['arrive_time'])) }}</td>
                                 <td>{{ date('d/m/Y', strtotime($item['departdate']))}}</td>
@@ -53,9 +54,12 @@
                                         {{$item['user']['firstname']}}
                                     @endif
                                 </td>
-                                <td class="text-center">
-                                    <a href="{{route('print-ticket',['id'=>$item['id']])}}" class="btn btn-outline-secondary btn-sm transition-hover-top" rel="noopener" target="_blank">
+                                <td class="text-end">
+                                    <a href="{{route('print-ticket',['bookingno'=>$item['bookingno']])}}" class="btn btn-outline-secondary btn-sm transition-hover-top" rel="noopener" target="_blank">
                                         <i class="fi fi-print m-0"></i>
+                                    </a>
+                                    <a href="{{route('print-ticket',['bookingno'=>$item['bookingno']])}}" class="btn btn-outline-secondary btn-sm transition-hover-top" rel="noopener" target="_blank">
+                                        <i class="fi fi-pencil m-0"></i>
                                     </a>
                                 </td>
                             <tr>

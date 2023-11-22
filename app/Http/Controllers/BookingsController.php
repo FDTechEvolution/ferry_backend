@@ -87,8 +87,9 @@ class BookingsController extends Controller
             'ispayment' => 'required|string',
         ]);
 
-        $date = strtotime($request->departdate);
-        $departdate = date('Y-m-d', $date);
+        //$date = strtotime($request->departdate);
+        //$departdate = date('Y-m-d', $this->convertDate($request->departdate));
+        $departdate = $this->convertDate($request->departdate);
 
         $data = [
             'booking' => [
@@ -130,5 +131,20 @@ class BookingsController extends Controller
 
         return redirect()->route('booking-index')->withSuccess('Save New Booking');
 
+    }
+
+
+    public function convertDate($date = null) {
+        if(is_null($date) || $date == ''){
+            return null;
+        }
+
+        $ext = explode('/', $date);
+        if(sizeof($ext) <3){
+            return $date;
+        }
+
+        $converted = ($ext[2]) . '-' . $ext[1] . '-' . $ext[0];
+        return $converted;
     }
 }

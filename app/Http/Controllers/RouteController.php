@@ -17,6 +17,7 @@ use App\Models\RouteActivity;
 use App\Models\RouteMeal;
 use App\Models\RouteShuttlebus;
 use App\Models\RouteLongtailboat;
+use App\Models\BookingRoutes;
 
 class RouteController extends Controller
 {
@@ -36,7 +37,7 @@ class RouteController extends Controller
     ];
 
     public function index() {
-        $routes = Route::where('status', 'CO')->with('station_from', 'station_to', 'icons')->get();
+        $routes = Route::where('status', 'CO')->with('station_from', 'station_to', 'icons')->orderBy('created_at', 'DESC')->get();
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
 
@@ -289,10 +290,39 @@ class RouteController extends Controller
 
     public function destroy(string $id = null) {
         $route = Route::find($id);
-        $route->isactive = 'N';
-        $route->status = 'VO';
-        if($route->save()) return redirect()->route('route-index')->withSuccess('Route deleted...');
-        else return redirect()->route('route-index')->withFail('Something is wrong. Please try again.');
+        $route_used = BookingRoutes::where('route_id', $id)->first();
+
+        if(is_null($route) || $route->status != 'CO') 
+            return redirect()->route('route-index')->withFail('This route not exist.');
+
+        if(isset($route_used)) {
+            $route->isactive = 'N';
+            $route->status = 'VO';
+            if($route->save()) return redirect()->route('route-index')->withSuccess('Route deleted...');
+            else return redirect()->route('route-index')->withFail('Something is wrong. Please try again.');
+        }
+        else {
+            RouteActivity::where('route_id', $id)->delete();
+            RouteMeal::where('route_id', $id)->delete();
+            RouteIcon::where('route_id', $id)->delete();
+            RouteStationInfoLine::where('route_id', $id)->delete();
+
+            $shuttle_bus = RouteShuttlebus::where('route_id', $id)->get();
+            if(sizeof($shuttle_bus) > 0) {
+                foreach($shuttle_bus as $bus) { Addon::find($bus->addon_id)->delete(); }
+            }
+
+            $longtail_boat = RouteLongtailboat::where('route_id', $id)->get();
+            if(sizeof($longtail_boat) > 0) {
+                foreach($longtail_boat as $boat) { Addon::find($boat->addon_id)->delete(); }
+            }
+            
+            RouteShuttlebus::where('route_id', $id)->delete();
+            RouteLongtailboat::where('route_id', $id)->delete();
+            $route->delete();
+
+            return redirect()->route('route-index')->withSuccess('Route deleted...');
+        }
     }
 
     public function getRouteInfo(string $route_id = null, string $station_id = null, string $type = null) {

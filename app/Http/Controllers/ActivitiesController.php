@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
+use App\Models\Addon;
 use App\Models\Activity;
 use App\Models\Image;
 use App\Models\Icon;
@@ -16,8 +18,10 @@ class ActivitiesController extends Controller
         $this->middleware('auth');
     }
 
-    protected $PathImage = '/assets/images/activity';
+    protected $PathImage = '/image/activity';
+    protected $PathIcon = '/icon/activity';
     protected $Type = 'activity';
+    protected $AddonType = 'ACTV';
 
     public static function getActivities($isactive = 'Y')
     {
@@ -30,7 +34,8 @@ class ActivitiesController extends Controller
 
 
     public function index() {
-        $activity = Activity::where('status', 'CO')->get();
+        // $activity = Activity::where('status', 'CO')->get();
+        $activity = Addon::where('type', $this->AddonType)->where('status', 'CO')->get();
 
         return view('pages.activities.index', ['activities' => $activity]);
     }
@@ -42,15 +47,15 @@ class ActivitiesController extends Controller
     }
 
     public function edit(string $id = null) {
-        $activity = Activity::find($id);
-        $icons = Icon::where('type', $this->Type)->get();
+        $activity = Addon::find($id);
 
         if(is_null($activity) || $activity->status != 'CO') 
             return redirect()->route('activity-index')->withFail('This activity not exist.');
-            
+
         $activity->image;
         $activity->icon;
-        return view('pages.activities.edit', ['activity' => $activity, 'icons' => $icons]);
+
+        return view('pages.activities.edit', ['activity' => $activity]);
     }
 
     public function store(Request $request) {
@@ -58,23 +63,30 @@ class ActivitiesController extends Controller
             'name' => 'required|string',
             'price' => 'integer|nullable',
             'detail' => 'string|nullable',
+            'file_icon' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1024|nullable',
             'file_picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable'
         ]);
 
-        if(!$this->checkNameDupplicate($request->name))
-            return redirect()->back()->withFail('Activity name is exist. Please check.');
-
         $image_id = null;
+        $icon_id = null;
         if ($request->hasFile('file_picture')) {
             $image_id = $this->storeImage($request->file('file_picture'), $this->PathImage);
         }
+        if($request->hasFile('file_icon')) {
+            $icon_id = $this->storeImage($request->file('file_icon'), $this->PathIcon);
+        }
 
-        $activity = Activity::create([
+        $activity = Addon::create([
             'name' => $request->name,
-            'price' => $request->price,
-            'detail' => $request->detail,
+            'code' => Str::random(6),
+            'amount' => $request->price,
+            'type' => $this->AddonType,
+            'description' => $request->detail,
+            'isactive' => 'Y',
             'image_id' => $image_id,
-            'icon_id' => $request->icon_id
+            'image_icon_id' => $icon_id,
+            'is_route_station' => isset($request->route_station) ? 'Y' : 'N',
+            'is_main_menu' => isset($request->main_menu) ? 'Y' : 'N',
         ]);
 
         if($activity) 
@@ -88,31 +100,38 @@ class ActivitiesController extends Controller
             'name' => 'required|string',
             'price' => 'integer|nullable',
             'detail' => 'string|nullable',
+            'file_icon' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1024|nullable',
             'file_picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable'
         ]);
 
-        if(!$this->checkNameDupplicate($request->name, $request->id))
-            return redirect()->back()->withFail('Activity name is exist. Please check.');
-
-        $activity = Activity::find($request->id);
+        $activity = Addon::find($request->id);
         $current_image = null;
-        if($request->current_image == '')
-            $this->removeImage($activity->image_id);
-        else
-            $current_image = $request->current_image;
+        $current_icon = null;
+        if($request->current_image == '') $this->removeImage($activity->image_id);
+        else $current_image = $request->current_image;
+
+        if($request->current_icon == '') $this->removeImage($activity->image_icon_id);
+        else $current_icon = $request->current_icon;
 
         $image_id = null;
-        if ($request->hasFile('file_picture')) {
+        $icon_id = null;
+        if($request->hasFile('file_picture')) {
             $image_id = $this->storeImage($request->file('file_picture'), $this->PathImage);
-            if($current_image != null) {
-                $this->removeImage($activity->image_id);
-            }
+            if($current_image != null) $this->removeImage($activity->image_id);
+        }
+
+        if($request->hasFile('file_icon')) {
+            $icon_id = $this->storeImage($request->file('file_icon'), $this->PathIcon);
+            if($current_icon != null) $this->removeImage($activity->image_icon_id);
         }
 
         $activity->name = $request->name;
-        $activity->price = $request->price;
-        $activity->detail = $request->detail;
-        $activity->image_id = $image_id != null ? $image_id : $current_image;
+        $activity->amount = $request->price;
+        $activity->description = $request->detail;
+        $activity->image_id = $image_id ?: $current_image;
+        $activity->image_icon_id = $icon_id ?: $current_icon;
+        $activity->is_route_station = isset($request->route_station) ? 'Y' : 'N';
+        $activity->is_main_menu = isset($request->main_menu) ? 'Y' : 'N';
 
         if($activity->save())
             return redirect()->route('activity-index')->withSuccess(sprintf('Update Activity "%s"', $request->name));
@@ -121,8 +140,9 @@ class ActivitiesController extends Controller
     }
 
     public function destroy(string $id = null) {
-        $activity = Activity::find($id);
+        $activity = Addon::find($id);
         $activity->status = 'VO';
+        $activity->isactive = 'N';
 
         if($activity->save())
             return redirect()->route('activity-index')->withSuccess(sprintf('Deleted Activity "%s"', $activity->name));

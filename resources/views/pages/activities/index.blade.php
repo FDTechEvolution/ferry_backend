@@ -48,7 +48,7 @@
                             <tr class="text-center">
                                 <td>{{ $index +1 }}</td>
                                 <td class="text-start">{{ $activity['name'] }}</td>
-                                <td>{{ number_format($activity['price']) }}</td>
+                                <td>{{ number_format($activity['amount']) }}</td>
                                 <td></td>
                                 <td>
                                     <x-action-edit 

@@ -44,7 +44,7 @@ class Route extends Model
     }
 
     public function activity_lines() {
-        return $this->belongsToMany(Activity::class, 'route_activities', 'route_id', 'activity_id')->with('icon');
+        return $this->belongsToMany(Addon::class, 'route_activities', 'route_id', 'addon_id')->with('image', 'icon');
     }
 
     public function meal_lines() {

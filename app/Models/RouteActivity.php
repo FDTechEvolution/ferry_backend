@@ -12,7 +12,7 @@ class RouteActivity extends Model
 
     protected $fillable = [
         'route_id',
-        'activity_id'
+        'addon_id'
     ];
 
     protected $hidden = [

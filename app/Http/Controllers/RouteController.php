@@ -17,6 +17,7 @@ use App\Models\RouteActivity;
 use App\Models\RouteMeal;
 use App\Models\RouteShuttlebus;
 use App\Models\RouteLongtailboat;
+use App\Models\BookingRoutes;
 
 class RouteController extends Controller
 {
@@ -26,7 +27,8 @@ class RouteController extends Controller
     }
 
     protected $Type = 'route';
-    protected $Addon = 'MEAL';
+    protected $Meal = 'MEAL';
+    protected $Activity = 'ACTV';
     protected $LongtailBoat = 'LBOAT';
     protected $ShuttleBus = 'SBUS';
     protected $_Status = [
@@ -35,7 +37,7 @@ class RouteController extends Controller
     ];
 
     public function index() {
-        $routes = Route::where('status', 'CO')->with('station_from', 'station_to', 'icons')->get();
+        $routes = Route::where('status', 'CO')->with('station_from', 'station_to', 'icons')->orderBy('created_at', 'DESC')->get();
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
 
@@ -48,8 +50,9 @@ class RouteController extends Controller
     public function create() {
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
-        $activities = Activity::where('status', 'CO')->with('icon')->get();
-        $meals = Addon::where('type', $this->Addon)->where('status', 'CO')->get();
+        // $activities = Activity::where('status', 'CO')->with('icon')->get();
+        $meals = Addon::where('type', $this->Meal)->where('isactive', 'Y')->where('status', 'CO')->get();
+        $activities = Addon::where('type', $this->Activity)->where('isactive', 'Y')->where('status', 'CO')->get();
 
         return view('pages.route_control.create', 
                     ['stations' => $stations, 'icons' => $icons, 'activities' => $activities, 'meals' => $meals]
@@ -69,8 +72,8 @@ class RouteController extends Controller
         $route->longtail_boat;
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->with('info_line')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
-        $activities = Activity::where('status', 'CO')->with('icon')->get();
-        $meals = Addon::where('type', $this->Addon)->where('status', 'CO')->get();
+        $activities = Addon::where('type', $this->Activity)->where('status', 'CO')->with('icon')->get();
+        $meals = Addon::where('type', $this->Meal)->where('status', 'CO')->get();
 
         return view('pages.route_control.edit', [
             'route' => $route, 'icons' => $icons, 'stations' => $stations, 'activities' => $activities, 'meals' => $meals
@@ -180,7 +183,7 @@ class RouteController extends Controller
         foreach($activities as $activity) {
             RouteActivity::create([
                 'route_id' => $route_id,
-                'activity_id' => $activity
+                'addon_id' => $activity
             ]);
         }
     }
@@ -260,10 +263,10 @@ class RouteController extends Controller
             if(isset($request->meal_id)) $this->routeMealStore($request->meal_id, $request->route_id);
 
             $this->routeShuttleBusDestroy($request->route_id);
-            $this->shuttlebusStore($request->shuttle_bus_name, $request->shuttle_bus_price, $request->shuttle_bus_description, $request->route_id);
+            if(isset($request->shuttle_bus_name)) $this->shuttlebusStore($request->shuttle_bus_name, $request->shuttle_bus_price, $request->shuttle_bus_description, $request->route_id);
 
             $this->routeLongtailBoatDestroy($request->route_id);
-            $this->longtailStore($request->longtail_boat_name, $request->longtail_boat_price, $request->longtail_boat_description, $request->route_id);
+            if(isset($request->longtail_boat_name)) $this->longtailStore($request->longtail_boat_name, $request->longtail_boat_price, $request->longtail_boat_description, $request->route_id);
 
             if($result) {
                 $this->clearAllRouteStationInfoLine($request->route_id);
@@ -287,10 +290,39 @@ class RouteController extends Controller
 
     public function destroy(string $id = null) {
         $route = Route::find($id);
-        $route->isactive = 'N';
-        $route->status = 'VO';
-        if($route->save()) return redirect()->route('route-index')->withSuccess('Route deleted...');
-        else return redirect()->route('route-index')->withFail('Something is wrong. Please try again.');
+        $route_used = BookingRoutes::where('route_id', $id)->first();
+
+        if(is_null($route) || $route->status != 'CO') 
+            return redirect()->route('route-index')->withFail('This route not exist.');
+
+        if(isset($route_used)) {
+            $route->isactive = 'N';
+            $route->status = 'VO';
+            if($route->save()) return redirect()->route('route-index')->withSuccess('Route deleted...');
+            else return redirect()->route('route-index')->withFail('Something is wrong. Please try again.');
+        }
+        else {
+            RouteActivity::where('route_id', $id)->delete();
+            RouteMeal::where('route_id', $id)->delete();
+            RouteIcon::where('route_id', $id)->delete();
+            RouteStationInfoLine::where('route_id', $id)->delete();
+
+            $shuttle_bus = RouteShuttlebus::where('route_id', $id)->get();
+            if(sizeof($shuttle_bus) > 0) {
+                foreach($shuttle_bus as $bus) { Addon::find($bus->addon_id)->delete(); }
+            }
+
+            $longtail_boat = RouteLongtailboat::where('route_id', $id)->get();
+            if(sizeof($longtail_boat) > 0) {
+                foreach($longtail_boat as $boat) { Addon::find($boat->addon_id)->delete(); }
+            }
+            
+            RouteShuttlebus::where('route_id', $id)->delete();
+            RouteLongtailboat::where('route_id', $id)->delete();
+            $route->delete();
+
+            return redirect()->route('route-index')->withSuccess('Route deleted...');
+        }
     }
 
     public function getRouteInfo(string $route_id = null, string $station_id = null, string $type = null) {

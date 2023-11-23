@@ -31,8 +31,8 @@ use App\Http\Controllers\PrintController;
 |
 */
 
-Route::controller(AuthController::class)->group(function() {
-    Route::get('/', function() {
+Route::controller(AuthController::class)->group(function () {
+    Route::get('/', function () {
         return view('login');
     })->middleware('guest')->name('login');
     Route::get('/logout', 'logout')->name('logout');
@@ -41,7 +41,7 @@ Route::controller(AuthController::class)->group(function() {
     Route::post('/login', 'authenticate')->name('authenticate');
 });
 
-Route::controller(ForgotPasswordController::class)->group(function() {
+Route::controller(ForgotPasswordController::class)->group(function () {
     Route::get('/forgot-password', function () {
         return view('pages.auth.forgot_password');
     })->middleware('guest')->name('forgot-password');
@@ -53,8 +53,8 @@ Route::controller(ForgotPasswordController::class)->group(function() {
     Route::post('/reset-password', 'submitResetPasswordForm')->name('update-password');
 });
 
-Route::middleware('auth')->group(function() {
-    Route::controller(UsersController::class)->group(function() {
+Route::middleware('auth')->group(function () {
+    Route::controller(UsersController::class)->group(function () {
         Route::get('/account', 'index')->name('users-index');
         Route::get('/delete-user/{id}', 'destroy')->name('user-delete');
         Route::get('/reset-password-user/{id}', 'resetUserPassword')->name('user-reset-password');
@@ -62,7 +62,7 @@ Route::middleware('auth')->group(function() {
         Route::post('/update-user', 'update')->name('user-update');
     });
 
-    Route::controller(StationsController::class)->group(function() {
+    Route::controller(StationsController::class)->group(function () {
         Route::get('/stations', 'index')->name('stations-index');
         Route::get('/delete-station/{id}', 'destroy')->name('station-delete');
         Route::get('/create-station', 'create')->name('create-station');
@@ -80,7 +80,7 @@ Route::middleware('auth')->group(function() {
         Route::post('/update-section', 'updateSection')->name('section-update');
     });
 
-    Route::controller(StationInfomationsController::class)->group(function() {
+    Route::controller(StationInfomationsController::class)->group(function () {
         Route::get('/stations-info', 'index')->name('stations-info-index');
         Route::get('/create-station-info', 'create')->name('create-station-info');
         Route::get('/edit-station-info/{id}', 'edit')->name('edit-station-info');
@@ -94,7 +94,7 @@ Route::middleware('auth')->group(function() {
         Route::get('/ajax/get-station-info', 'getStationInfo')->name('ajax-get-station-info');
     });
 
-    Route::controller(MealsController::class)->group(function() {
+    Route::controller(MealsController::class)->group(function () {
         Route::get('/meals', 'index')->name('meals-index');
         Route::get('/delete-meal/{id}', 'destroy')->name('meal-delete');
 
@@ -106,7 +106,7 @@ Route::middleware('auth')->group(function() {
         Route::post('/delete-icon-meal', 'destroyIcon')->name('meal-delete-icon');
     });
 
-    Route::controller(ActivitiesController::class)->group(function() {
+    Route::controller(ActivitiesController::class)->group(function () {
         Route::get('/activity', 'index')->name('activity-index');
         Route::get('/activity/create', 'create')->name('activity-create');
         Route::get('/activity/edit/{id}', 'edit')->name('activity-edit');
@@ -116,7 +116,7 @@ Route::middleware('auth')->group(function() {
         Route::post('/activity/update', 'update')->name('activity-update');
     });
 
-    Route::controller(RouteController::class)->group(function() {
+    Route::controller(RouteController::class)->group(function () {
         Route::get('/route-control', 'index')->name('route-index');
         Route::get('/route/create', 'create')->name('route-create');
         Route::get('/route/edit/{id}', 'edit')->name('route-edit');
@@ -131,31 +131,31 @@ Route::middleware('auth')->group(function() {
         Route::get('/ajax/get-route-info/{route_id}/{station_id}/{type}', 'getRouteInfo')->name('get-route-info');
     });
 
-    Route::controller(ReviewsController::class)->group(function(){
-        Route::get('/review','index')->name('review-index');
+    Route::controller(ReviewsController::class)->group(function () {
+        Route::get('/review', 'index')->name('review-index');
 
-        Route::get('/review/create','create')->name('review-create');
-        Route::post('/review/store','store')->name('review-store');
+        Route::get('/review/create', 'create')->name('review-create');
+        Route::post('/review/store', 'store')->name('review-store');
 
-        Route::get('/review/edit/{review}','edit')->name('review-edit');
-        Route::post('/review/update/{review}','update')->name('review-update');
+        Route::get('/review/edit/{review}', 'edit')->name('review-edit');
+        Route::post('/review/update/{review}', 'update')->name('review-update');
 
-        Route::get('/review/delete/{id}','destroy')->name('review-delete');
+        Route::get('/review/delete/{id}', 'destroy')->name('review-delete');
     });
 
-    Route::controller(InformationsController::class)->group(function(){
-        Route::get('/information','index')->name('information-index');
+    Route::controller(InformationsController::class)->group(function () {
+        Route::get('/information', 'index')->name('information-index');
 
-        Route::get('/information/create','create')->name('information-create');
-        Route::post('/information/store','store')->name('information-store');
+        Route::get('/information/create', 'create')->name('information-create');
+        Route::post('/information/store', 'store')->name('information-store');
 
-        Route::get('/information/edit/{information}','edit')->name('information-edit');
-        Route::post('/information/update/{information}','update')->name('information-update');
+        Route::get('/information/edit/{information}', 'edit')->name('information-edit');
+        Route::post('/information/update/{information}', 'update')->name('information-update');
 
-        Route::get('/information/delete/{id}','destroy')->name('information-delete');
+        Route::get('/information/delete/{id}', 'destroy')->name('information-delete');
     });
 
-    Route::controller(TimeTableController::class)->group(function() {
+    Route::controller(TimeTableController::class)->group(function () {
         Route::get('/time-table', 'index')->name('time-table-index');
         Route::get('/time-table/edit/{id}', 'edit')->name('time-table-edit');
         Route::get('/time-table/delete/{id}', 'destroy')->name('time-table-delete');
@@ -167,7 +167,7 @@ Route::middleware('auth')->group(function() {
         Route::get('/ajax/time-table/show-in-homepage/{id}', 'updateShowInHomepage')->name('show-in-homepage');
     });
 
-    Route::controller(RouteMapController::class)->group(function() {
+    Route::controller(RouteMapController::class)->group(function () {
         Route::get('/route-map', 'index')->name('route-map-index');
         Route::get('/route-map/delete/{id}', 'destroy')->name('route-map-delete');
 
@@ -178,7 +178,7 @@ Route::middleware('auth')->group(function() {
         Route::get('/ajax/route-map/show-in-homepage/{id}', 'updateShowInHomepage')->name('route-map-show');
     });
 
-    Route::controller(SlideController::class)->group(function() {
+    Route::controller(SlideController::class)->group(function () {
         Route::get('/media/slide', 'index')->name('slide-index');
         Route::get('/media/slide/delete/{id}', 'destroy')->name('slide-delete');
 
@@ -189,19 +189,19 @@ Route::middleware('auth')->group(function() {
         Route::get('/ajax/slide/show-in-homepage/{id}', 'updateShowInHomepage')->name('slide-show');
     });
 
-    Route::controller(PromotionController::class)->group(function() {
+    Route::controller(PromotionController::class)->group(function () {
         Route::get('/promotion', 'index')->name('promotion-index');
         Route::get('/promotion/create', 'create')->name('promotion-create');
     });
 
-    Route::controller(FareController::class)->group(function() {
+    Route::controller(FareController::class)->group(function () {
         Route::get('/fare-manage', 'index')->name('fare-index');
 
         Route::post('/fare-manage/update', 'update')->name('fare-update');
     });
 
 
-    Route::controller(BookingsController::class)->group(function() {
+    Route::controller(BookingsController::class)->group(function () {
         Route::get('/booking', 'index')->name('booking-index');
 
         Route::get('/booking/route', 'route')->name('booking-route');
@@ -209,10 +209,12 @@ Route::middleware('auth')->group(function() {
         Route::post('/booking/store', 'store')->name('booking-store');
     });
 
-    Route::controller(PrintController::class)->group(function() {
-        Route::get('/print/ticket/{bookingno}', 'ticket')->name('print-ticket');
 
-    });
+});
+
+Route::controller(PrintController::class)->group(function () {
+    Route::get('/print/ticket/{bookingno}', 'ticket')->name('print-ticket');
+
 });
 
 

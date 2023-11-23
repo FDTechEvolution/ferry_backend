@@ -81,7 +81,12 @@ class BookingController extends Controller
 
     public function destroy(Request $request) {
         if($this->checkBooking($request->booking_id)) {
-            return response()->json(['result' => true, 'data' => 'canceled.']);
+            $booking = Bookings::find($request->booking_id);
+            $booking->status = 'VO';
+            if($booking->save())
+                return response()->json(['result' => true, 'data' => 'Booking canceled.']);
+            else
+                return response()->json(['result' => false, 'data' => 'error.']);
         }
 
         return response()->json(['result' => false, 'data' => 'No Booking.']);
@@ -89,7 +94,16 @@ class BookingController extends Controller
 
     public function update(Request $request) {
         if($this->checkBooking($request->booking_id)) {
-            return response()->json(['result' => true, 'data' => 'updated.']);
+            $booking = Bookings::find($request->booking_id);
+            if(isset($request->departdate)) $booking->departdate = $request->departdate;
+            if(isset($request->fullname)) $booking->fullname = $request->fullname;
+            if(isset($request->mobile)) $booking->mobile = $request->mobile;
+            if(isset($request->totalamount)) $booking->totalamt = $request->totalamount;
+
+            if($booking->save())
+                return response()->json(['result' => true, 'data' => 'Booking updated.']);
+            else
+                return response()->json(['result' => false, 'data' => 'error.']);
         }
 
         return response()->json(['result' => false, 'data' => 'No Booking.']);

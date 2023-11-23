@@ -34,7 +34,7 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
     Route::post('logout', [AuthenticationController::class, 'destroy'])->middleware('auth:api');
 });
 
-Route::middleware(['cors'])->prefix('v2')->group(function () {
+Route::middleware(['cors'])->prefix('v1')->group(function () {
     Route::controller(StationsController::class)->group(function() {
         Route::get('stations/get', 'getStations');
     });
@@ -62,7 +62,7 @@ Route::middleware(['cors'])->prefix('v2')->group(function () {
 
 
 // Route Api for 7seven
-Route::middleware(['seven'])->prefix('v3')->group(function() {
+Route::middleware(['seven'])->prefix('v1')->group(function() {
     Route::controller(RouteController::class)->group(function() {
         // Route::get('route/all', 'getAllRoute');
         // Route::get('route/{id}', 'getRouteById');

@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Api\Seven;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\Route;
 use App\Models\Addon;
 use App\Models\Activity;
 use App\Models\Bookings;
+use App\Models\Customers;
 use App\Helpers\BookingHelper;
 
 class BookingController extends Controller
@@ -96,11 +98,11 @@ class BookingController extends Controller
         if($this->checkBooking($request->booking_id)) {
             $booking = Bookings::find($request->booking_id);
             if(isset($request->departdate)) $booking->departdate = $request->departdate;
-            if(isset($request->fullname)) $booking->fullname = $request->fullname;
-            if(isset($request->mobile)) $booking->mobile = $request->mobile;
+            if(isset($request->fullname)) $booking->bookingCustomers[0]->fullname = $request->fullname;
+            if(isset($request->mobile)) $booking->bookingCustomers[0]->mobile = $request->mobile;
             if(isset($request->totalamount)) $booking->totalamt = $request->totalamount;
 
-            if($booking->save())
+            if($booking->push())
                 return response()->json(['result' => true, 'data' => 'Booking updated.']);
             else
                 return response()->json(['result' => false, 'data' => 'error.']);

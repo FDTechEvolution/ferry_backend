@@ -8,6 +8,8 @@ use App\Http\Controllers\Api\StationsController;
 use App\Http\Controllers\Api\SlideController;
 use App\Http\Controllers\Api\RouteController;
 use App\Http\Controllers\Api\BookingController;
+use App\Http\Controllers\Api\TimetableController;
+use App\Http\Controllers\Api\RouteMapController;
 
 // 7 Controller
 use App\Http\Controllers\Api\Seven\BookingController as SevenBooking;
@@ -47,6 +49,14 @@ Route::middleware(['cors'])->prefix('v2')->group(function () {
         Route::controller(BookingController::Class)->group(function() {
             Route::post('create', 'store');
         });
+    });
+
+    Route::controller(TimeTableController::class)->group(function() {
+        Route::get('time-table/get', 'getTimetable');
+    });
+
+    Route::controller(RouteMapController::class)->group(function() {
+        Route::get('route-map/get', 'getRouteMap');
     });
 });
 

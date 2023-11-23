@@ -67,7 +67,7 @@ class BookingController extends Controller
     }
 
     private function checkBooking($booking_id) {
-        $booking = Bookings::find($booking_id);
+        $booking = Bookings::where('id', $booking_id)->where('status', 'DR')->first();
         return isset($booking) ?: false;
     }
 

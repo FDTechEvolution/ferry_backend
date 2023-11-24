@@ -47,9 +47,6 @@ class Bookings extends Model
         return $this->belongsToMany(Addon::class, 'booking_extras', 'booking_id', 'addon_id');
     }
 
-    public function bookingExtraActivities() {
-        return $this->belongsToMany(Activity::class, 'booking_extras', 'booking_id', 'activity_id');
-    }
 
     
 }

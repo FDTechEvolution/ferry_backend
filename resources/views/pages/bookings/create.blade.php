@@ -90,6 +90,11 @@
                         <div class="row mb-3">
                             <label class="col-12 col-md-2 col-form-label-sm">Extra</label>
                             <div class="col-12 col-md-6">
+                                <table class="table" id="tb-extra">
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
                                 <button class="btn btn-sm rounded-circle btn-outline-ferry" type="button" title="add extra"
                                     data-bs-toggle="modal" data-bs-target="#modalCentered"><i
                                         class="fi fi-plus"></i></button>
@@ -170,7 +175,7 @@
     <!-- Modal -->
     <div class="modal fade" id="modalCentered" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="modalCenteredLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalCenteredLabel">Modal title</h5>
@@ -179,48 +184,47 @@
                 <div class="modal-body">
                     <table class="table">
                         <tbody>
-                            <tr>
-                                <td colspan="4"><strong>Meal</strong></td>
-                            </tr>
-                            @foreach ($extras['meals'] as $index => $meal)
+                            @php
+                                $type = '';
+                            @endphp
+                            @foreach ($extras as $index => $item)
+                                @if ($type != $item['type'])
+                                    <tr>
+                                        <td colspan="3">
+                                            <h4>{{ $item['type'] }}</h4>
+                                        </td>
+                                    </tr>
+                                @endif
                                 <tr>
-                                    <td>
-                                        <img src="{{$meal['image']['path']}}/{{$meal['image']['name']}}" alt="" class="img-fluid">
+                                    <td style="width: 30%">
+                                        @if (isset($item['image']))
+                                            <img src="{{ $item['image']['path'] }}/{{ $item['image']['name'] }}"
+                                                alt="" class="img-fluid">
+                                        @endif
                                     </td>
                                     <td class="text-start">
-                                        <p><strong>{{ $meal['name'] }}</strong></p>
-                                        {{ number_format($meal['amount']) }}THB
+                                        <p><strong>{{ $item['name'] }}</strong></p>
+                                        {{ number_format($item['amount']) }}THB
                                     </td>
-                                  
-                                    <td class="text-end">
-                                        <button class="btn btn-outline-secondary btn-sm" data-id="{{ $meal['id'] }}"
-                                            data-type="addon" data-action="extra" data-price="{{$meal['amount']}}" data-title="{{ $meal['name'] }}">Select</button>
-                                    </td>
-                                </tr>
-                            @endforeach
-                            <tr>
-                                <td colspan="4"><strong>Activity</strong></td>
-                            </tr>
-                            @foreach ($extras['activities'] as $index => $item)
-                                <tr>
-                                    
-                                    <td class="text-start" colspan="2">
-                                        <p><strong>{{ $item['name'] }}</strong> {{ number_format($item['price']) }}THB</p>
-                                        
-                                    </td>
-                                 
+
                                     <td class="text-end">
                                         <button class="btn btn-outline-secondary btn-sm" data-id="{{ $item['id'] }}"
-                                            data-type="activity" data-action="extra" data-price="{{$item['price']}}" data-title="{{ $item['name'] }}">Select</button>
+                                            data-type="addon" data-action="extra" data-price="{{ $item['amount'] }}"
+                                            data-title="{{ $item['name'] }}" data-value="N">Select</button>
                                     </td>
                                 </tr>
+
+                                @php
+                                    $type = $item['type'];
+                                @endphp
                             @endforeach
+
                         </tbody>
                     </table>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-ferry">Save</button>
+                    <button type="button" class="btn btn-ferry" data-bs-dismiss="modal">Save</button>
                 </div>
             </div>
         </div>
@@ -237,6 +241,17 @@
             $('#total_price').val(total_price);
         }
 
+        function calculateExtraPrice() {
+            let extra_price = 0;
+            let arr = $('input[name="addon_price[]"]').map(function() {
+                //return this.value; // $(this).val()
+                extra_price += parseFloat(this.value);
+            }).get();
+
+            $('#extra_price').val(extra_price);
+            //calculateTotalPrice();
+        }
+
         $(document).ready(function() {
             calculateTotalPrice();
 
@@ -248,15 +263,41 @@
                 calculateTotalPrice();
             });
 
-            $('button[data-action="extra"]').on('click',function(e){
+            $('button[data-action="extra"]').on('click', function(e) {
                 let id = $(this).data('id');
                 let type = $(this).data('type');
                 let title = $(this).data('title');
-                let price = $(this).data('price');
+                let price = parseFloat($(this).data('price'));
+                let value = $(this).attr('data-value');
+                //console.log(value);
+                if (value === 'N') {
+                    $(this).attr('data-value', 'Y');
+                    $(this).removeClass('btn-outline-secondary');
+                    $(this).addClass('btn-success');
+                    $(this).text('Selected');
 
-                $(this).removeClass('btn-outline-secondary');
-                $(this).addClass('btn-success');
-                $(this).text('Selected');
+                    //set select
+                    let _title =
+                        '<svg width="1.5em" height="1.5em" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"></path></svg> ' +
+                        title;
+                    let _inputprice = '<input type="hidden" name="addon_id[]" value="' + id +
+                        '"/><input type="hidden" name="addon_price[]" value="' + price + '"/>';
+                    let row = '<tr id="tr-extra-' + id + '"><td>' + _title + '</td><td>' + price + 'THB' +
+                        _inputprice + '</td></tr>';
+                    $("#tb-extra tbody").append(row);
+                } else {
+                    $(this).attr('data-value', 'N');
+                    $(this).removeClass('btn-success');
+                    $(this).addClass('btn-outline-secondary');
+                    $(this).text('Select');
+
+                    $('#tr-extra-' + id).remove();
+                }
+
+                calculateExtraPrice();
+                calculateTotalPrice();
+
+
             });
         });
     </script>

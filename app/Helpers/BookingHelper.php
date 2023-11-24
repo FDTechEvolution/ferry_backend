@@ -3,6 +3,7 @@ namespace App\Helpers;
 
 use App\Models\BookingCustomers;
 use App\Models\BookingRoutes;
+use App\Models\BookingExtras;
 use App\Models\Bookings;
 use App\Models\Customers;
 use App\Models\Tickets;
@@ -23,9 +24,13 @@ class BookingHelper
         ];
     }
 
-    public static function getBookingInfo($booking_id)
+    public static function getBookingInfoByBookingNo($bookingno)
     {
+        $booking = Bookings::where(['bookingno'=>$bookingno])
+        ->with('tickets','bookingCustomers','bookingExtraAddons','user','bookingRoutes.station_from', 'bookingRoutes.station_to')
+        ->first();
 
+        return $booking;
     }
 
     /*
@@ -120,6 +125,13 @@ class BookingHelper
         //Create extra
         if (isset($data["extras"])) {
             $_extra = $data['extras'];
+            foreach($_extra as $index => $extra){
+                $bookingExtra = BookingExtras::create([
+                    'addon_id'=>$extra['addon_id'],
+                    'amount'=>$extra['amount'],
+                    'booking_id' => $booking->id
+                ]);
+            }
         }
 
         //Routes

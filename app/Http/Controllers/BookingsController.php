@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Addon;
 use App\Models\BookingCustomers;
 use App\Models\Bookings;
 use App\Models\Customers;
@@ -23,7 +24,9 @@ class BookingsController extends Controller
     public function index()
     {
 
-        $bookings = Bookings::with('bookingRoutes.station_from','bookingRoutes.station_to','bookingCustomers', 'user','tickets')->get();
+        $bookings = Bookings::with('bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingCustomers', 'user', 'tickets')
+            ->orderBy('departdate', 'ASC')
+            ->get();
 
 
 
@@ -60,13 +63,14 @@ class BookingsController extends Controller
         $route_id = request()->route_id;
 
         $route = Route::where('id', $route_id)->with('station_from', 'station_to', 'icons')->first();
-        $meals = (new MealsController)->getMeals();
-        $activities = (new ActivitiesController)->getActivities();
+        $extras = Addon::where('isactive', 'Y')
+            //->whereIn('type', ['ACTV','MEAL'])
+            ->with('image')
+            ->orderBy('type', 'ASC')
+            ->get();
 
-        $extras = [
-            'meals' => $meals,
-            'activities' => $activities,
-        ];
+
+
 
         return view('pages.bookings.create', ['route' => $route, 'departdate' => $departdate, 'extras' => $extras]);
     }
@@ -86,6 +90,18 @@ class BookingsController extends Controller
             'total_price' => 'required|numeric',
             'ispayment' => 'required|string',
         ]);
+
+        $extras = [];
+        if(isset($request->addon_id)){
+            $extraPrices = $request->addon_price;
+
+            foreach($request->addon_id as $index => $addon_id){
+                array_push($extras,[
+                    'addon_id'=>$addon_id,
+                    'amount'=>$extraPrices[$index]
+                ]);
+            }
+        }
 
         //$date = strtotime($request->departdate);
         //$departdate = date('Y-m-d', $this->convertDate($request->departdate));
@@ -115,16 +131,19 @@ class BookingsController extends Controller
                     'fulladdress' => null,
                 ],
             ],
-            'routes'=>[
+            'routes' => [
                 [
                     'route_id' => $request->route_id,
                     'traveldate' => $departdate,
                     'amount' => $request->price,
-                    'type'=>'departure'
-                ]
-            ]
+                    'type' => 'departure',
+                ],
+            ],
+            'extras'=>$extras
 
         ];
+
+        
 
         $booking = BookingHelper::createBooking($data);
 
@@ -134,13 +153,14 @@ class BookingsController extends Controller
     }
 
 
-    public function convertDate($date = null) {
-        if(is_null($date) || $date == ''){
+    public function convertDate($date = null)
+    {
+        if (is_null($date) || $date == '') {
             return null;
         }
 
         $ext = explode('/', $date);
-        if(sizeof($ext) <3){
+        if (sizeof($ext) < 3) {
             return $date;
         }
 

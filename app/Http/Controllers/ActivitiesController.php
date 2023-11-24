@@ -23,14 +23,7 @@ class ActivitiesController extends Controller
     protected $Type = 'activity';
     protected $AddonType = 'ACTV';
 
-    public static function getActivities($isactive = 'Y')
-    {
-        $activites = Activity::where('status', 'CO')
-            ->get();
-        
-        return $activites;
-    }
-
+   
 
 
     public function index() {

@@ -17,52 +17,142 @@
         .w-50 {
             width: 50%;
         }
-        .w-25{
+
+        .w-25 {
             width: 25%;
+        }
+
+        .page-break {
+            page-break-after: always;
+        }
+
+        .bg-main{
+            background: #BDEDFF;
+        }
+        .ptable{
+
+        }
+        .ptable td{
+            padding: 7px;
         }
     </style>
 </head>
 
 <body>
-    <div class="">
-        <div class="prow">
-            <table class="w-100">
-                <tr>
-                    <td class="w-50">
-                        <img src="https://andamanexpress.com/assets/images/logo_tiger_line_ferry.png" alt=""
-                            class="img-fluid w-100">
-                    </td>
-                    <td class="w-50 text-end">
-                        <h1>Andamanexpress Ticket</h1>
-                    </td>
-                </tr>
-            </table>
+    @php
+        $customers = $booking['bookingCustomers'];
+        $tickets = $booking['tickets'];
+        $user = $booking['user'];
+        $extras = $booking['bookingExtraAddons'];
+        $bookingRoutes = $booking['bookingRoutes'];
+    @endphp
 
-        </div>
-        <hr>
-        <div class="prow">
-            <h2>YOUR BOOKING DETAILS</h2>
-            <table class="w-100">
-                <thead class="bg-secondary">
+    @foreach ($customers as $customer)
+        <div class="">
+            <div class="prow">
+                <table class="w-100 ptable">
                     <tr>
-                        <th class="w-15">DATE</th>
-                        <th class="w-15">BOOKING NO</th>
-                        <th class="w-15">TICKET NO</th>
-                        <th class="w-15">DETAILS</th>
+                        <td class="w-25">
+                            <img src="https://andamanexpress.com/assets/images/logo_tiger_line_ferry.png" alt=""
+                                class="img-fluid w-100">
+                        </td>
+                        <td class="text-end">
+                            <h1>Andamanexpress Ticket</h1>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td></td>
-                        <td>{{$booking['bookingno']}}</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </tbody>
+                </table>
 
-            </table>
+            </div>
+            <hr>
+            <div class="prow">
+                <h3>YOUR BOOKING DETAILS</h3>
+                <table class="w-100 ptable">
+
+                    <tbody>
+                        <tr class="bg-main">
+                            <td class="w-15">DATE</td>
+                            <td class="w-15">BOOKING NO</td>
+                            <td class="w-15">TICKET NO</td>
+                            <td class="w-15">DETAILS</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>{{ $booking['bookingno'] }}</td>
+                            <td>
+                                @if (isset($booking['tickets'][0]))
+                                    {{ $booking['tickets'][0]['ticketno'] }}
+                                @endif
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr class="bg-main">
+                            <td colspan="2">
+                                Contact Information
+                            </td>
+                            <td colspan="2">
+                                Payment Information
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                Name: {{ $customer['fullname'] }}<br>
+                                Passport No.: {{ $customer['passportno'] }}<br>
+                                Mobile No.: {{ $customer['mobile'] }}<br>
+                                Email: {{ $customer['email'] }}
+                            </td>
+                            <td colspan="2">
+                                Total Payment: <strong
+                                    class="text-success">{{ number_format($booking['totalamt']) }}THB</strong><br>
+                                Payment Method: <br>
+                                Approved code: <br>
+                                Approved by: {{ $user['firstname'] }}
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+
+            <div class="prow">
+                <h3>YOUR TRAVEL ITINERARY</h3>
+                <table class="w-100 ptable">
+                    @foreach ($bookingRoutes as $route)
+                    <tr class="bg-main">
+                        <td class="w-25">
+                            Date of Traveling
+                        </td>
+                        <td class="w-25">
+                            From
+                        </td>
+                        <td class="w-25">
+                            To
+                        </td>
+                        <td class="w-25">
+                            Time
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="w-25">
+                                {{ date('D d/m/Y', strtotime($route['traveldate'])) }}
+                            </td>
+                            <td class="w-25">
+                                {{$route['station_from']['name']}}
+                            </td>
+                            <td class="w-25">
+                                {{$route['station_to']['name']}}
+                            </td>
+                            <td class="w-25">
+                                {{ date('H:i', strtotime($route['depart_time'])) }}/{{ date('H:i', strtotime($route['arrive_time'])) }}
+                            </td>
+                        </tr>
+                    @endforeach
+                </table>
+            </div>
+            <div class="prow">
+                <h3>YOUR TRAVEL INFORMATION</h3>
+            </div>
         </div>
-    </div>
+    @endforeach
 </body>
 
 </html>

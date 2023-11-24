@@ -6,7 +6,30 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
+
     <style>
+        @font-face {
+            font-family: 'Noto Sans Thai';
+            font-weight: normal;
+            font-style: normal;
+            font-variant: normal;
+            src: url({{ storage_path('pdf/Noto_Sans_Thai/NotoSansThai-VariableFont_wdth,wght.ttf') }}) format("truetype");
+        }
+
+        body {
+            font-size: 12px;
+            font-family: 'Noto Sans Thai', sans-serif;
+            font-weight: 400;
+        }
+        h1,h2,h3{
+            font-family: 'Noto Sans Thai', sans-serif;
+            font-weight: 700;
+        }
+
+        .font-w-700 {
+            font-weight: 700;
+        }
+
         .prow {
             width: 100%;
             position: relative;
@@ -26,13 +49,13 @@
             page-break-after: always;
         }
 
-        .bg-main{
+        .bg-main {
             background: #BDEDFF;
         }
-        .ptable{
 
-        }
-        .ptable td{
+        .ptable {}
+
+        .ptable td {
             padding: 7px;
         }
     </style>
@@ -69,7 +92,7 @@
                 <table class="w-100 ptable">
 
                     <tbody>
-                        <tr class="bg-main">
+                        <tr class="bg-main font-w-700">
                             <td class="w-15">DATE</td>
                             <td class="w-15">BOOKING NO</td>
                             <td class="w-15">TICKET NO</td>
@@ -85,7 +108,7 @@
                             </td>
                             <td></td>
                         </tr>
-                        <tr class="bg-main">
+                        <tr class="bg-main font-w-700">
                             <td colspan="2">
                                 Contact Information
                             </td>
@@ -113,33 +136,33 @@
                 </table>
             </div>
 
-            <div class="prow">
+            <div class="prow mt-3">
                 <h3>YOUR TRAVEL ITINERARY</h3>
                 <table class="w-100 ptable">
                     @foreach ($bookingRoutes as $route)
-                    <tr class="bg-main">
-                        <td class="w-25">
-                            Date of Traveling
-                        </td>
-                        <td class="w-25">
-                            From
-                        </td>
-                        <td class="w-25">
-                            To
-                        </td>
-                        <td class="w-25">
-                            Time
-                        </td>
-                    </tr>
+                        <tr class="bg-main font-w-700">
+                            <td class="w-25">
+                                Date of Traveling
+                            </td>
+                            <td class="w-25">
+                                From
+                            </td>
+                            <td class="w-25">
+                                To
+                            </td>
+                            <td class="w-25">
+                                Time
+                            </td>
+                        </tr>
                         <tr>
                             <td class="w-25">
                                 {{ date('D d/m/Y', strtotime($route['traveldate'])) }}
                             </td>
                             <td class="w-25">
-                                {{$route['station_from']['name']}}
+                                {{ $route['station_from']['name'] }}
                             </td>
                             <td class="w-25">
-                                {{$route['station_to']['name']}}
+                                {{ $route['station_to']['name'] }}
                             </td>
                             <td class="w-25">
                                 {{ date('H:i', strtotime($route['depart_time'])) }}/{{ date('H:i', strtotime($route['arrive_time'])) }}
@@ -148,8 +171,22 @@
                     @endforeach
                 </table>
             </div>
-            <div class="prow">
+            <div class="prow mt-3">
                 <h3>YOUR TRAVEL INFORMATION</h3>
+                <table class="w-100 ptable">
+                    @foreach ($bookingRoutes as $route)
+                        <tr class="bg-main font-w-700">
+                            <td>
+                                {{ date('D d/m/Y', strtotime($route['traveldate'])) }} From: {{ $route['station_from']['name'] }} To: {{ $route['station_to']['name'] }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                -
+                            </td>
+                        </tr>
+                    @endforeach
+                </table>
             </div>
         </div>
     @endforeach

@@ -23,7 +23,7 @@ class PrintController extends Controller
         }else{
             $booking = BookingHelper::getBookingInfoByBookingNo($bookingno);
             //$booking = Bookings::where(['bookingno'=>$bookingno])->with('tickets')->first();
-            Pdf::setOption(['dpi' => 150, 'defaultFont' => 'sans-serif', 'DOMPDF_ENABLE_CSS_FLOAT' => true]);
+            Pdf::setOption(['dpi' => 150, 'DOMPDF_ENABLE_CSS_FLOAT' => true]);
             $pdf = Pdf::loadView('print.ticket', ['booking'=>$booking]);
             //return $pdf->download('invoice.pdf');
             //$html = view('print.ticket')->render();

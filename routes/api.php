@@ -48,6 +48,7 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
     Route::prefix('booking')->group(function() {
         Route::controller(BookingController::Class)->group(function() {
             Route::post('create', 'store');
+            Route::get('record/{id}', 'bookingRecord');
         });
     });
 

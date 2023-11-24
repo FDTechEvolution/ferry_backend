@@ -310,6 +310,8 @@
     const icons = {{ Js::from($icons) }}
     const activities = {{ Js::from($activities) }}
     const meals = {{ Js::from($meals) }}
+    const fare_child = {{ Js::from($fare_child) }}
+    const fare_infant = {{ Js::from($fare_infant) }}
     let stations = ''
 </script>
 <script src="{{ asset('assets/js/app/route_control.js') }}"></script>

@@ -18,6 +18,7 @@ use App\Models\RouteMeal;
 use App\Models\RouteShuttlebus;
 use App\Models\RouteLongtailboat;
 use App\Models\BookingRoutes;
+use App\Models\Fare;
 
 class RouteController extends Controller
 {
@@ -53,9 +54,13 @@ class RouteController extends Controller
         // $activities = Activity::where('status', 'CO')->with('icon')->get();
         $meals = Addon::where('type', $this->Meal)->where('isactive', 'Y')->where('status', 'CO')->get();
         $activities = Addon::where('type', $this->Activity)->where('isactive', 'Y')->where('status', 'CO')->get();
+        $fare_child = Fare::where('name', 'Child')->first();
+        $fare_infant = Fare::where('name', 'Infant')->first();
 
         return view('pages.route_control.create', 
-                    ['stations' => $stations, 'icons' => $icons, 'activities' => $activities, 'meals' => $meals]
+                    ['stations' => $stations, 'icons' => $icons, 'activities' => $activities, 'meals' => $meals,
+                        'fare_child' => $fare_child, 'fare_infant' => $fare_infant
+                    ]
                 );
     }
 

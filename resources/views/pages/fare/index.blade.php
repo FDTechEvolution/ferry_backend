@@ -24,9 +24,9 @@
                                     <div class="col-md-3 offset-md-3 offset-lg-2 text-center fw-bold d-none d-md-block">
                                         Standard
                                     </div>
-                                    <div class="col-md-3 text-center fw-bold d-none d-md-block">
+                                    <!-- <div class="col-md-3 text-center fw-bold d-none d-md-block">
                                         Online
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col-md-3 offset-md-3 offset-lg-2 d-none d-md-block">
@@ -35,12 +35,12 @@
                                             <div class="col-6 text-center">%</div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 d-none d-md-block">
+                                    <!-- <div class="col-md-3 d-none d-md-block">
                                         <div class="row">
                                             <div class="col-6 text-center">THB</div>
                                             <div class="col-6 text-center">%</div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
 
                                 @foreach($fares as $index => $fare)
@@ -61,7 +61,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-3 col-online-{{ $index }}">
+                                        <!-- <div class="col-md-3 col-online-{{ $index }}">
                                             <div class="row">
                                                 <div class="col-sm-12 fw-bold mb-2 mb-md-0 d-md-none">Online</div>
                                                 <div class="col-2 text-center d-md-none d-flex align-items-center">THB</div>
@@ -73,7 +73,7 @@
                                                     <input type="number" name="online_percent[]" class="form-control form-control-sm text-center" onKeyUp="getValueOnline(this, {{ $index }})" value="{{ $fare->online_percent }}">
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <input type="hidden" name="fare_id[]" value="{{ $fare->id }}">
                                     </div>
                                 @endforeach

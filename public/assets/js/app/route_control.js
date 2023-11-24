@@ -10,6 +10,7 @@ const btn_shuttle_bus_cancel = document.querySelector('#btn-edit-shuttle-cancel'
 const btn_longtail_boat_create = document.querySelector('#btn-longtail-boat-create')
 const btn_longtail_boat_edit = document.querySelector('#btn-longtail-boat-edit')
 const btn_longtail_boat_cancel = document.querySelector('#btn-edit-longtail-cancel')
+const regular_price_input = document.querySelector('#regular-price')
 
 const station_to_selected = document.querySelector('#station-to-selected')
 
@@ -105,6 +106,31 @@ if(btn_shuttle_bus_create) {
 
             name.value = price.value = description.value = ''
         }
+    })
+}
+
+if(regular_price_input) {
+    regular_price_input.addEventListener('change', (e) => {
+        const child_price = document.querySelector('#child-price')
+        const infant_price = document.querySelector('#infant-price')
+        let child_p = fare_child.standard_percent !== 0 ? fare_child.standard_percent : fare_child.standard_thb
+        let child_t = fare_child.standard_percent ? 'p' : 't'
+        let infant_p = fare_infant.standard_percent !== 0 ? fare_infant.standard_percent : fare_infant.standard_thb
+        let infant_t = fare_infant.standard_percent ? 'p' : 't'
+
+        if(child_t === 'p') {
+            let in_float = parseFloat(`0.${child_p}`)
+            let price = parseInt(e.target.value)
+            child_price.value = price - (price*in_float)
+        }
+        else child_price.value = parseInt(e.target.value) - child_p
+
+        if(infant_t == 'p') {
+            let in_float = parseFloat(`0.${infant_p}`)
+            let price = parseInt(e.target.value)
+            infant_price.value = price - (price*in_float)
+        }
+        else infant_price.value = parseInt(e.target.value) - infant_p
     })
 }
 

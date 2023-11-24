@@ -11,6 +11,7 @@ use App\Models\Addon;
 use App\Models\Activity;
 use App\Models\Bookings;
 use App\Helpers\BookingHelper;
+use App\Http\Resources\BookingResource;
 
 class BookingController extends Controller
 {
@@ -253,6 +254,15 @@ class BookingController extends Controller
         $booking = Bookings::find($id);
         if(isset($booking)) return response()->json(['result' => true, 'data' => $booking]);
         return response()->json(['result' => false, 'data' => 'No Booking.']);
+    }
+
+    public function bookingRecord(string $id = null) {
+        $booking = Bookings::where('bookingno', $id)->with('bookingCustomers', 'bookingRoutes', 'bookingExtraAddons')->first();
+        if(isset($booking)) {
+            return response()->json(['result' => true, 'data' => new BookingResource($booking)], 200);
+        }
+
+        return response()->json(['result' => false, 'data' => 'No booking record.'], 200);
     }
     
 }

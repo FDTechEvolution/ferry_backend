@@ -36,7 +36,7 @@ class Bookings extends Model
     }
 
     public function bookingRoutes() {
-        return $this->belongsToMany(Route::class, 'booking_routes', 'booking_id', 'route_id');
+        return $this->belongsToMany(Route::class, 'booking_routes', 'booking_id', 'route_id')->withPivot('type', 'traveldate','amount');;
     }
 
     public function tickets() {

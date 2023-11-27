@@ -120,6 +120,7 @@ class BookingsController extends Controller
                 'ispayment' => $request->ispayment,
                 'user_id' => $request->user_id,
                 'trip_type' => 'one-way',
+                'book_channel'=>'ADMIN'
             ],
             'customers' => [
                 [

@@ -10,6 +10,8 @@ use App\Helpers\BookingHelper;
 
 //https://github.com/barryvdh/laravel-dompdf
 
+//https://github.com/milon/barcode?source=post_page-----7d7d83334510--------------------------------
+
 
 class PrintController extends Controller
 {

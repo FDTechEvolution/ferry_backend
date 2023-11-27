@@ -238,6 +238,18 @@
 
                 
             </div>
+            <div class="prow mt-3">
+                <small><strong>Terms and Conditions</strong></small>
+                <table class="w-100 ptable ">
+                    <tr>
+                        <td style="white-space:wrap">
+                            <small>
+                                <?=$term['body']?>
+                            </small>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
     @endforeach
 </body>

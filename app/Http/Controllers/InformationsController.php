@@ -11,7 +11,8 @@ class InformationsController extends Controller
 
     public static function getPosition(){
         return [
-            'TERM'=>'Terms & Conditions'
+            'TERM'=>'Terms & Conditions',
+            'TERM_TICKET'=>'Ticket Terms & Conditions'
         ];
     }
 
@@ -30,11 +31,13 @@ class InformationsController extends Controller
     }
 
     public function create(){
-        return view('pages.informations.create');
+        $positions = $this->getPosition();
+        return view('pages.informations.create',['positions'=>$positions]);
     }
 
     public function edit(Informations $information){
-        return view('pages.informations.edit',['information'=>$information]);
+        $positions = $this->getPosition();
+        return view('pages.informations.edit',['information'=>$information,'positions'=>$positions]);
     }
 
 

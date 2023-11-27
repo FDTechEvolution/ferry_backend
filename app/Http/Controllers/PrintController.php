@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Informations;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Bookings;
@@ -24,9 +25,10 @@ class PrintController extends Controller
             return view('print.ticket');
         }else{
             $booking = BookingHelper::getBookingInfoByBookingNo($bookingno);
+            $term = Informations::where('position','TERM_TICKET')->first();
             //$booking = Bookings::where(['bookingno'=>$bookingno])->with('tickets')->first();
             Pdf::setOption(['dpi' => 150, 'DOMPDF_ENABLE_CSS_FLOAT' => true]);
-            $pdf = Pdf::loadView('print.ticket', ['booking'=>$booking]);
+            $pdf = Pdf::loadView('print.ticket', ['booking'=>$booking,'term'=>$term]);
             //return $pdf->download('invoice.pdf');
             //$html = view('print.ticket')->render();
             //$pdf->loadHtml($html);

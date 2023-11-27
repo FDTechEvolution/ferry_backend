@@ -30,6 +30,9 @@ div.dataTables_wrapper div.dataTables_filter input {
     width: 100% !important;
 }
 /* -------------------------- */
+nav.nav-deep-light .nav-item.active>.nav-link,nav.nav-deep-light .nav-item:hover>.nav-link {
+    color: #ff6100 !important;
+}
 
 /* Custom Css */
 .btn-ferry {

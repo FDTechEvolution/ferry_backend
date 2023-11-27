@@ -37,18 +37,94 @@ class BookingController extends Controller
             $data = [
                 'booking' => $_booking,
                 'customers' => $_customer,
-                'extra' => $_extra,
+                'extras' => $_extra,
                 'routes' => $_route
             ];
 
-            // $booking = BookingHelper::createBooking($data);
+            $booking = BookingHelper::createBooking($data);
+            $payload = $this->setDataTo_2c2p($booking);
+            $PT_response = $this->postTo_2c2p($payload);
+            Log::debug($PT_response);
+            
+            $PT_resData = json_decode($PT_response);
+            // $PT_resPayload = json_decode(base64_decode($PT_resData->{"payload"}));
+            Log::debug(base64_decode($PT_resData->{"payload"}));
 
-            return response()->json(['result' => true, 'data' => $data], 200);
+
+            return response()->json(['result' => true, 'data' => $booking], 200);
         }
         // Log::debug($request);
 
         return response()->json(['result' => false, 'data' => 'No Route.'], 200);
     }
+
+    private function postTo_2c2p($fields_string) {
+        $BASEURL = config('services.payment.base_url');
+        $APIURL = "paymentToken";
+        
+        $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $BASEURL.$APIURL); 
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER,true); 
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+				'Content-Type: application/json',                 
+				));
+ 
+            //execute post
+            $result = curl_exec($ch); //close connection
+            curl_close($ch);
+            return $result;
+    }
+
+    private function setDataTo_2c2p($booking) {
+        $SECRETKEY = config('services.payment.secret_key');
+        $merchantID = config('services.payment.merchant_id');
+        $currencyCode = 'THB';
+        $nonceStr = time();
+
+        $PT_dataArray = array(
+            //MANDATORY PARAMS
+            "merchantID" => $merchantID,
+            "invoiceNo" => $booking->bookingno,
+            "description" => $booking->departdate,
+            "amount" => $booking->totalamt,
+            "currencyCode" => $currencyCode,
+            "paymentChannel" => ["THSCB"],
+
+            //MANDATORY RANDOMIZER
+            "nonceStr" => $nonceStr
+        );
+        $PT_dataArray = (object) array_filter((array) $PT_dataArray);    
+        $PT_data = json_encode($PT_dataArray);
+
+        $PT_dataB64= $this->base64url_encode($PT_data);
+
+        //JWT header
+        $PT_header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
+        $PT_headerB64= $this->base64url_encode($PT_header);
+
+        $PT_signature= hash_hmac('sha256', $PT_headerB64 . "." . $PT_dataB64 ,$SECRETKEY, true); 
+        $PT_signatureB64= $this->base64url_encode($PT_signature);
+    
+        $PT_payloadData = $PT_headerB64 . "." . $PT_dataB64 . "." . $PT_signatureB64;
+        $PT_payloadArray = array(
+            "payload" => $PT_payloadData
+        );
+        $PT_payloadArray = (object) array_filter((array) $PT_payloadArray);                 
+        $PT_payload = json_encode($PT_payloadArray);
+
+        return $PT_payload;
+    }
+
+    private function base64url_encode($data) {
+        return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
+    }
+    
+    private function base64url_decode($data) {
+        return base64_decode(str_pad(strtr($data, '-_', '+/'), strlen($data) % 4, '=', STR_PAD_RIGHT));
+    } 
 
     private function setBooking($departdate, $adult, $child, $infant, $trip_type, $book_channel, $amount, $meal, $activity, $bus, $boat) { 
         $extra_amount = ($meal + $activity + $bus + $boat);
@@ -193,8 +269,9 @@ class BookingController extends Controller
                 foreach($addon as $key2 => $qty) {
                     if($qty != 0) {
                         $_addon = Addon::find($addon_id[$key][$key2]);
-                        $addon_amount += $_addon->amount*$qty;
-                        array_push($addons, $_addon->id);
+                        $amount = $_addon->amount*$qty;
+                        $addon_amount += $amount;
+                        array_push($addons, ['addon_id' => $_addon->id, 'amount' => $amount]);
                     }
                 }
             }

@@ -7,7 +7,7 @@ use App\Http\Controllers\Api\AuthenticationController;
 use App\Http\Controllers\Api\StationsController;
 use App\Http\Controllers\Api\SlideController;
 use App\Http\Controllers\Api\RouteController;
-use App\Http\Controllers\Api\BookingController;
+use App\Http\Controllers\Api\BookingController as OnlineBooking;
 use App\Http\Controllers\Api\TimetableController;
 use App\Http\Controllers\Api\RouteMapController;
 
@@ -45,8 +45,8 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
         Route::get('route/search/{from}/{to}', 'searchRoute');
     });
 
-    Route::prefix('booking')->group(function() {
-        Route::controller(BookingController::Class)->group(function() {
+    Route::prefix('online-booking')->group(function() {
+        Route::controller(OnlineBooking::Class)->group(function() {
             Route::post('create', 'store');
             Route::get('record/{id}', 'bookingRecord');
         });

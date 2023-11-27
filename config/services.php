@@ -39,6 +39,12 @@ return [
     'token' => [
         'secret_token' => env('API_SECRET_TOKEN'),
         'seven_token' => env('API_SEVEN_TOKEN'),
+    ],
+
+    'payment' => [
+        'base_url' => env('BASE_PAYMENT_URL'),
+        'merchant_id' => env('MERCHANT_ID'),
+        'secret_key' => env('PAYMENT_SECRETKEY')
     ]
 
 ];

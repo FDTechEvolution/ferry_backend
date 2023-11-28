@@ -27,7 +27,11 @@ class BookingResource extends JsonResource
             'route' => $this->bookingRoutes->map(function($route) {
                 return [
                     'station_from' => $route->station_from->name,
+                    'station_from_pier' => $route->station_from->piername,
+                    'station_from_nickname' => $route->station_from->nickname,
                     'station_to' => $route->station_to->name,
+                    'station_to_pier' => $route->station_to->piername,
+                    'station_to_nickname' => $route->station_to->nickname,
                     'depart_time' => $route->depart_time,
                     'arrive_time' => $route->arrive_time,
                     'adult_price' => $route->regular_price,
@@ -44,6 +48,17 @@ class BookingResource extends JsonResource
                     'type' => $customer->type,
                     'passport' => $customer->passportno
                 ];
+            }),
+            'extra' => $this->bookingExtraAddons->map(function($extra) {
+                if($extra->status == 'CO' && $extra->isactive == 'Y') {
+                    return [
+                        'name' => $extra->name,
+                        'type' => $extra->type,
+                        'amount' => $extra->amount,
+                        'image' => $extra->image,
+                        'icon' => $extra->icon
+                    ];
+                }
             })
         ];
     }

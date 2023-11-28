@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\RouteController;
 use App\Http\Controllers\Api\BookingController as OnlineBooking;
 use App\Http\Controllers\Api\TimetableController;
 use App\Http\Controllers\Api\RouteMapController;
+use App\Http\Controllers\Api\PaymentController;
 
 // 7 Controller
 use App\Http\Controllers\Api\Seven\BookingController as SevenBooking;
@@ -32,6 +33,12 @@ use App\Http\Controllers\Api\Seven\BookingController as SevenBooking;
 Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
     Route::post('login', [AuthenticationController::class, 'store']);
     Route::post('logout', [AuthenticationController::class, 'destroy'])->middleware('auth:api');
+});
+
+Route::prefix('v1')->group(function() {
+    Route::controller(PaymentController::class)->group(function() {
+        Route::post('payment/get-response', 'paymentResponse');
+    });
 });
 
 Route::middleware(['cors'])->prefix('v1')->group(function () {

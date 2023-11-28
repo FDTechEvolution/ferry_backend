@@ -5,12 +5,15 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 use App\Models\Route;
 use App\Models\Addon;
 use App\Models\Activity;
 use App\Models\Bookings;
 use App\Helpers\BookingHelper;
+use App\Helpers\PaymentHelper;
 use App\Http\Resources\BookingResource;
 
 class BookingController extends Controller
@@ -42,89 +45,17 @@ class BookingController extends Controller
             ];
 
             $booking = BookingHelper::createBooking($data);
-            $payload = $this->setDataTo_2c2p($booking);
-            $PT_response = $this->postTo_2c2p($payload);
-            Log::debug($PT_response);
-            
-            $PT_resData = json_decode($PT_response);
-            // $PT_resPayload = json_decode(base64_decode($PT_resData->{"payload"}));
-            Log::debug(base64_decode($PT_resData->{"payload"}));
+            $payload = PaymentHelper::encodeRequest($booking);
+            $response = PaymentHelper::postTo_2c2p($payload);
+            $result = PaymentHelper::decodeResponse($response);
+            // Log::debug($result);
 
-
-            return response()->json(['result' => true, 'data' => $booking], 200);
+            return response()->json(['result' => true, 'data' => $result], 200);
         }
         // Log::debug($request);
 
         return response()->json(['result' => false, 'data' => 'No Route.'], 200);
     }
-
-    private function postTo_2c2p($fields_string) {
-        $BASEURL = config('services.payment.base_url');
-        $APIURL = "paymentToken";
-        
-        $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $BASEURL.$APIURL); 
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER,true); 
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-				'Content-Type: application/json',                 
-				));
- 
-            //execute post
-            $result = curl_exec($ch); //close connection
-            curl_close($ch);
-            return $result;
-    }
-
-    private function setDataTo_2c2p($booking) {
-        $SECRETKEY = config('services.payment.secret_key');
-        $merchantID = config('services.payment.merchant_id');
-        $currencyCode = 'THB';
-        $nonceStr = time();
-
-        $PT_dataArray = array(
-            //MANDATORY PARAMS
-            "merchantID" => $merchantID,
-            "invoiceNo" => $booking->bookingno,
-            "description" => $booking->departdate,
-            "amount" => $booking->totalamt,
-            "currencyCode" => $currencyCode,
-            "paymentChannel" => ["THSCB"],
-
-            //MANDATORY RANDOMIZER
-            "nonceStr" => $nonceStr
-        );
-        $PT_dataArray = (object) array_filter((array) $PT_dataArray);    
-        $PT_data = json_encode($PT_dataArray);
-
-        $PT_dataB64= $this->base64url_encode($PT_data);
-
-        //JWT header
-        $PT_header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
-        $PT_headerB64= $this->base64url_encode($PT_header);
-
-        $PT_signature= hash_hmac('sha256', $PT_headerB64 . "." . $PT_dataB64 ,$SECRETKEY, true); 
-        $PT_signatureB64= $this->base64url_encode($PT_signature);
-    
-        $PT_payloadData = $PT_headerB64 . "." . $PT_dataB64 . "." . $PT_signatureB64;
-        $PT_payloadArray = array(
-            "payload" => $PT_payloadData
-        );
-        $PT_payloadArray = (object) array_filter((array) $PT_payloadArray);                 
-        $PT_payload = json_encode($PT_payloadArray);
-
-        return $PT_payload;
-    }
-
-    private function base64url_encode($data) {
-        return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
-    }
-    
-    private function base64url_decode($data) {
-        return base64_decode(str_pad(strtr($data, '-_', '+/'), strlen($data) % 4, '=', STR_PAD_RIGHT));
-    } 
 
     private function setBooking($departdate, $adult, $child, $infant, $trip_type, $book_channel, $amount, $meal, $activity, $bus, $boat) { 
         $extra_amount = ($meal + $activity + $bus + $boat);
@@ -247,20 +178,6 @@ class BookingController extends Controller
         return $amount;
     }
 
-    // private function extraMeal($meal_id, $meal_qty) {
-    //     $meal_amount = 0;
-    //     foreach($meal_qty as $key => $meal) {
-    //         foreach($meal as $key2 => $qty) {
-    //             if($qty != 0) {
-    //                 $_meal = Addon::find($meal_id[$key][$key2]);
-    //                 $meal_amount += $_meal->amount*$qty;
-    //             }
-    //         }
-    //     }
-
-    //     return $meal_amount;
-    // }
-
     private function extraAddon($addon_id, $addon_qty) {
         $addons = [];
         $addon_amount = 0;
@@ -279,24 +196,6 @@ class BookingController extends Controller
 
         return array($addon_amount, $addons);
     }
-
-    // private function extraActivity($activity_id, $activity_qty) {
-    //     $activities = [];
-    //     $acctivity_amount = 0;
-    //     foreach($activity_qty as $key => $activity) {
-    //         if($activity != NULL) {
-    //             foreach($activity as $key2 => $qty) {
-    //                 if($qty != 0) {
-    //                     $_activity = Addon::find($activity_id[$key][$key2]);
-    //                     $acctivity_amount += $_activity->amount*$qty;
-    //                     array_push($activities, $_activity->id);
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    //     return array($acctivity_amount, $activities);
-    // }
 
 
     // 7 Booking controller

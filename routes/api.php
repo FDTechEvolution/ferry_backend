@@ -53,7 +53,7 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
     });
 
     Route::prefix('online-booking')->group(function() {
-        Route::controller(OnlineBooking::Class)->group(function() {
+        Route::controller(OnlineBooking::class)->group(function() {
             Route::post('create', 'store');
             Route::get('record/{id}', 'bookingRecord');
         });
@@ -86,7 +86,7 @@ Route::middleware(['seven'])->prefix('v1')->group(function() {
 
     // Booking
     Route::prefix('booking')->group(function() {
-        Route::controller(SevenBooking::Class)->group(function() {
+        Route::controller(SevenBooking::class)->group(function() {
             Route::post('create', 'store');
             Route::post('complete', 'complete');
             Route::post('cancel', 'destroy');

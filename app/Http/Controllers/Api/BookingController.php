@@ -5,12 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 
 use App\Models\Route;
 use App\Models\Addon;
-use App\Models\Activity;
 use App\Models\Bookings;
 use App\Helpers\BookingHelper;
 use App\Helpers\PaymentHelper;

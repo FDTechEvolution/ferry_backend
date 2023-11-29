@@ -44,7 +44,9 @@ return [
     'payment' => [
         'base_url' => env('BASE_PAYMENT_URL'),
         'merchant_id' => env('MERCHANT_ID'),
-        'secret_key' => env('PAYMENT_SECRETKEY')
+        'secret_key' => env('PAYMENT_SECRETKEY'),
+        'backend_return' => env('PAYMENT_RESPONSE_BACKEND'),
+        'frontend_return' => env('PAYMENT_RESPONSE_FRONTEND')
     ]
 
 ];

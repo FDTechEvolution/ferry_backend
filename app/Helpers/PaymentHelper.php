@@ -10,6 +10,8 @@ class PaymentHelper
     public static function encodeRequest($booking) {
         $SECRETKEY = config('services.payment.secret_key');
         $merchantID = config('services.payment.merchant_id');
+        $backend_response = config('services.payment.backend_return');
+        $fontend_return = config(('services.payment.frontend_return'));
         $currencyCode = 'THB';
         $nonceStr = time();
 
@@ -21,7 +23,9 @@ class PaymentHelper
             "amount" => $booking->totalamt,
             "currencyCode" => $currencyCode,
 
-            'userDefined1' => $booking->id,
+            "userDefined1" => $booking->id,
+            "frontendReturnUrl" => $fontend_return,
+            "backendReturnUrl" => $backend_response,
 
             //MANDATORY RANDOMIZER
             "nonceStr" => $nonceStr

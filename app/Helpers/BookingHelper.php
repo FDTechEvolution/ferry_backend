@@ -84,6 +84,7 @@ class BookingHelper
     public static function createBooking($data = [])
     {
 
+        
         //dd($data);
 
         $amount = 0;
@@ -159,6 +160,7 @@ class BookingHelper
             $b->completeBooking($booking->id);
 
         }
+        tranLog(['type'=>'booking','title'=>'Create booking','description'=>'','booking_id'=>$booking->id]);
 
         return $booking;
     }
@@ -221,6 +223,9 @@ class BookingHelper
 
 
         $booking = Bookings::with('bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingCustomers','tickets')->where('id', $bookingId)->first();
+
+        tranLog(['type'=>'booking','title'=>'Complate payment','description'=>'','booking_id'=>$booking->id]);
+
         return $booking;
     }
 
@@ -237,6 +242,8 @@ class BookingHelper
 
         $booking->status = 'VO';
         $booking->save();
+
+        tranLog(['type'=>'booking','title'=>'Void booking','description'=>'','booking_id'=>$booking->id]);
 
         //Create ticket
         return $booking;

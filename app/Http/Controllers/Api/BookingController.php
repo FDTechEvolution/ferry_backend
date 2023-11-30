@@ -47,7 +47,7 @@ class BookingController extends Controller
             $result = PaymentHelper::decodeResponse($response);
             // Log::debug($result);
 
-            return response()->json(['result' => true, 'data' => $result], 200);
+            return response()->json(['result' => true, 'data' => $result, 'booking' => $booking->bookingno], 200);
         }
         // Log::debug($request);
 

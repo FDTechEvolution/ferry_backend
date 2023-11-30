@@ -66,6 +66,10 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
     Route::controller(RouteMapController::class)->group(function() {
         Route::get('route-map/get', 'getRouteMap');
     });
+
+    Route::controller(PaymentController::class)->group(function () {
+        Route::post('payment/create', 'paymentRequest');
+    });
 });
 
 

@@ -16,16 +16,16 @@ class PaymentController extends Controller
     public function paymentResponse(Request $request) {
         $data = '{"payload":"' . $request['payload'] . '"}';
         $result = PaymentHelper::decodeResponse($data);
-
-        // Log::debug($result);
         
-        if($result['respCode'] == '0000') $this->updateBookingpayment($result['userDefined1'], $result['amount'], $result['cardType']); // payment successs
+        if($result['respCode'] == '0000') $this->updateBookingpayment($result); // payment successs
         else if($result['respCode'] == '4005') $this->paymentFail(); // payment fail
     }
 
-    private function updateBookingpayment($booking_id, $totalamt, $payment_method) {
-        $payment_data = ['payment_method' => $payment_method, 'totalamt' => $totalamt];
-        $result = (new BookingHelper)->completeBooking($booking_id, $payment_data);
+    private function updateBookingpayment($result) {
+        $cardType = $result['cardType'] != '' ? $result['cardType'] : 'CREDIT';
+        $description = json_encode($result);
+        $payment_data = ['payment_method' => $cardType, 'totalamt' => $result['amount'], 'description' => $description];
+        $res = (new BookingHelper)->completeBooking($result['userDefined1'], $payment_data);
     }
 
     private function paymentFail() {

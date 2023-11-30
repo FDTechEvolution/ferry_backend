@@ -24,6 +24,7 @@ class BookingResource extends JsonResource
             'trip_type' => $this->trip_type,
             'booking_number' => $this->bookingno,
             'status' => $this->status,
+            'ispayment' => $this->ispayment,
             'route' => $this->bookingRoutes->map(function($route) {
                 return [
                     'station_from' => $route->station_from->name,

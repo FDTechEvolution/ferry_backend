@@ -23,8 +23,8 @@ class PaymentHelper
             "amount" => $booking->totalamt,
             "currencyCode" => $currencyCode,
 
+            "paymentChannel" => ["CC", "PPQR", "IMBANK", "TRUEMONEY"],
             "userDefined1" => $booking->id,
-            "frontendReturnUrl" => $fontend_return,
             "backendReturnUrl" => $backend_response,
 
             //MANDATORY RANDOMIZER
@@ -37,13 +37,13 @@ class PaymentHelper
         return $data;
     }
 
-    public static function postTo_2c2p($fields_string) {
+    public static function postTo_2c2p($payload) {
         $BASEURL = config('services.payment.base_url');
         $APIURL = "paymentToken";
         
         $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $BASEURL.$APIURL); 
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER,true); 
@@ -51,9 +51,8 @@ class PaymentHelper
 				'Content-Type: application/json',                 
 				));
  
-            //execute post
-            $result = curl_exec($ch); //close connection
-            curl_close($ch);
+            $result = curl_exec($ch); //execute post
+            curl_close($ch); //close connection
             return $result;
     }
 

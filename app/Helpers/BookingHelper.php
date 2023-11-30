@@ -28,7 +28,7 @@ class BookingHelper
     public static function getBookingInfoByBookingNo($bookingno)
     {
         $booking = Bookings::where(['bookingno'=>$bookingno])
-        ->with('tickets.customer','bookingExtraAddons','user','bookingRoutes','bookingRoutes.station_from', 'bookingRoutes.station_to','bookingRoutes.station_lines')
+        ->with('tickets.customer','bookingExtraAddons','user','bookingRoutes','bookingRoutes.station_from', 'bookingRoutes.station_to','bookingRoutes.station_lines','payments')
         ->first();
 
         //dd($booking);

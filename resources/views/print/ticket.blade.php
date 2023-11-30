@@ -80,6 +80,7 @@
         $user = $booking['user'];
         $extras = $booking['bookingExtraAddons'];
         $bookingRoutes = $booking['bookingRoutes'];
+        $payment = sizeof($booking['payments'])>0?$booking['payments'][0]:NULL;
     @endphp
 
     @foreach ($tickets as $ticket)
@@ -144,8 +145,10 @@
                             <td colspan="">
                                 Total Payment: <strong
                                     class="text-success">{{ number_format($booking['totalamt']) }}THB</strong><br>
-                                Payment Method: <br>
+                                @if(!is_null($payment))
+                                Payment Method: {{$payment['payment_method']}}<br>
                                 Approved code: <br>
+                                @endif
                                 Approved by: {{ isset($user['firstname'])?$user['firstname']:'-' }}
                             </td>
                             <td>

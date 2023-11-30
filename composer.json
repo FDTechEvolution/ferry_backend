@@ -35,7 +35,8 @@
         "files" :[
             "app/Helpers/SequentNumber.php",
             "app/Helpers/BookingHelper.php",
-            "app/Helpers/PaymentHelper.php"
+            "app/Helpers/PaymentHelper.php",
+            "app/Helpers/TransactionLogHelper.php"
         ]
     },
     "autoload-dev": {

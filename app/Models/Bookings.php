@@ -43,6 +43,10 @@ class Bookings extends Model
         return $this->hasMany(Tickets::class,'booking_id', 'id');
     }
 
+    public function payments() {
+        return $this->hasMany(Payments::class,'booking_id', 'id');
+    }
+
     public function bookingExtraAddons() {
         return $this->belongsToMany(Addon::class, 'booking_extras', 'booking_id', 'addon_id');
     }

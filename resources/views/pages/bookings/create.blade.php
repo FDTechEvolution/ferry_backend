@@ -16,17 +16,17 @@
         </div>
         <hr>
         <div class="row text-white">
-            <div class="col-3">
+            <div class="col-6 col-md-3">
                 <i class="fi fi-time"></i> Detart Time: {{ date('H:i', strtotime($route['depart_time'])) }}
             </div>
-            <div class="col-3">
+            <div class="col-6 col-md-3">
                 <i class="fi fi-time"></i> Arrive Time: {{ date('H:i', strtotime($route['arrive_time'])) }}
             </div>
 
-            <div class="col-3">
+            <div class="col-6 col-md-3">
                 Regular Price: {{ number_format($route['regular_price']) }}THB
             </div>
-            <div class="col-3">
+            <div class="col-6 col-md-3">
                 Child Price: {{ number_format($route['child_price']) }}THB
             </div>
         </div>
@@ -42,9 +42,9 @@
                 <div class="row">
                     <div class="col-12 col-md-10 offset-md-1">
                         <div class="row mb-3">
-                            <label class="col-3 col-md-2 col-form-label-sm">Depart Date <span
+                            <label class="col-4 col-md-2 col-form-label-sm">Depart Date <span
                                     class="text-danger">*</span></label>
-                            <div class="col-9 col-md-4">
+                            <div class="col-8 col-md-4">
                                 <input required type="text" name="departdate" id="departdate"
                                     value="{{ $departdate }}" class="form-control form-control-sm datepicker"
                                     data-show-weeks="true" data-today-highlight="true" data-today-btn="true"
@@ -54,34 +54,38 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label class="col-3 col-md-2 col-form-label-sm">Reference</label>
-                            <div class="col-9 col-md-4">
+                            <label class="col-4 col-md-2 col-form-label-sm">Reference</label>
+                            <div class="col-8 col-md-4 mb-3">
                                 <input type="text" class="form-control form-control-sm" name="reference"
                                     id="reference" />
                             </div>
 
-                            <label class="col-1 col-form-label-sm text-end">A <span class="text-danger">*</span></label>
-                            <div class="col-1">
+                            <label class="col-2 col-md-1 col-form-label-sm text-end">A <span
+                                    class="text-danger">*</span></label>
+                            <div class="col-2 col-md-1 ">
                                 <input type="number" class="form-control form-control-sm" name="adult_passenger"
                                     id="adult_passenger" required value="1" />
                             </div>
 
-                            <label class="col-1 col-form-label-sm text-end">C <span class="text-danger">*</span></label>
-                            <div class="col-1">
+                            <label class="col-2 col-md-1  col-form-label-sm text-end">C <span
+                                    class="text-danger">*</span></label>
+                            <div class="col-2 col-md-1 ">
                                 <input type="number" class="form-control form-control-sm" name="child_passenger"
                                     id="child_passenger" required value="0" />
                             </div>
 
-                            <label class="col-1 col-form-label-sm text-end">I <span class="text-danger">*</span></label>
-                            <div class="col-1">
+                            <label class="col-2 col-md-1  col-form-label-sm text-end">I <span
+                                    class="text-danger">*</span></label>
+                            <div class="col-2 col-md-1 ">
                                 <input type="number" class="form-control form-control-sm" name="infant_passenger"
                                     id="infant_passenger" required value="0" />
                             </div>
                         </div>
 
                         <div class="row mb-3">
-                            <label class="col-2 col-form-label-sm">Customer Name <span class="text-danger">*</span></label>
-                            <div class="col-4">
+                            <label class="col-4 col-md-2 col-form-label-sm">Customer Name <span
+                                    class="text-danger">*</span></label>
+                            <div class="col-8 col-md-4">
                                 <input type="text" class="form-control form-control-sm" name="fullname" id="fullname"
                                     required />
                             </div>
@@ -105,21 +109,22 @@
                             </div>
                         </div>
 
-                        <div class="row mb-3">
-                            <label class="col-2 col-form-label-sm">Price <span class="text-danger">*</span></label>
-                            <div class="col-2">
+                        <div class="row">
+                            <label class="col-4 col-md-2 col-form-label-sm">Price <span
+                                    class="text-danger">*</span></label>
+                            <div class="col-8 col-md-2 mb-3">
                                 <input type="number" class="form-control form-control-sm" name="price" id="price"
                                     required value="{{ $route['regular_price'] }}" />
                             </div>
 
-                            <label class="col-2 col-form-label-sm text-end">Extra Price</label>
-                            <div class="col-2">
+                            <label class="col-4 col-md-2 col-form-label-sm">Extra Price</label>
+                            <div class="col-8 col-md-2 mb-3">
                                 <input type="text" class="form-control form-control-sm" name="extra_price"
                                     id="extra_price" value="0" value="0" />
                             </div>
 
-                            <label class="col-2 col-form-label-sm text-end">Total Price</label>
-                            <div class="col-2">
+                            <label class="col-4 col-md-2 col-form-label-sm">Total Price</label>
+                            <div class="col-8 col-md-2 mb-3">
                                 <input type="text" class="form-control form-control-sm" name="total_price"
                                     id="total_price" value="0" required readonly />
                             </div>
@@ -127,28 +132,38 @@
                         <hr>
 
                         <div class="row mb-3">
-                            <label class="col-2 col-form-label-sm text-success">Pay</label>
-                            <div class="col-3">
-                                <div class="form-check mb-2">
+                            <label class="col-4 col-md-2 col-form-label-sm text-success">Pay <span
+                                    class="text-danger">*</span></label>
+                            <div class="col-8 col-md-4">
+                                <div class="form-check form-check-inline">
                                     <input class="form-check-input form-check-input-danger" type="radio"
                                         name="ispayment" value="N" id="" required>
                                     <label class="form-check-label" for="checkDanger">Unpay</label>
                                 </div>
-                                <div class="form-check mb-2">
+                                <div class="form-check form-check-inline">
                                     <input class="form-check-input form-check-input-success" type="radio"
                                         name="ispayment" value="Y" id="" required>
                                     <label class="form-check-label" for="checkSuccess">Paid</label>
                                 </div>
                             </div>
-
-                            <label class="col-1 col-form-label-sm">Slip</label>
-                            <div class="col-4">
+                        </div>
+                        <div class="row mb-3" id="box-payment-option" style="display: none;">
+                            <label class="col-4 col-md-2 col-form-label-sm text-end">Payment Method</label>
+                            <div class="col-8 col-md-3">
+                                <select name="payment_method" id="payment_method" class="form-control">
+                                    <option value="CASH">Cash</option>
+                                    <option value="CREDIT">Credit</option>
+                                    <option value="BANKING">Banking</option>
+                                </select>
+                            </div>
+                            <label class="col-4 col-md-2 col-form-label-sm text-end">Slip</label>
+                            <div class="col-8 col-md-4">
                                 <input class="form-control form-control-sm" id="formFileSm" type="file">
                             </div>
                         </div>
                         <hr>
                         <div class="row mb-3">
-                            <label class="col-2 col-form-label-sm">Note</label>
+                            <label class="col-12 col-md-2 col-form-label-sm">Note</label>
                             <div class="col-12 col-md-6">
                                 <textarea class="form-control" name="note" id="note" rows="3"></textarea>
                             </div>
@@ -254,6 +269,15 @@
 
         $(document).ready(function() {
             calculateTotalPrice();
+
+            $('input[name="ispayment"]').change(function(){
+                let selected_value = $("input[name='ispayment']:checked").val();
+                if(selected_value =='Y'){
+                    $('#box-payment-option').show();
+                }else{
+                    $('#box-payment-option').hide();
+                }
+            });
 
             $('#price').on('keyup', function() {
                 calculateTotalPrice();

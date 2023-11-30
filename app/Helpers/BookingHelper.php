@@ -7,6 +7,7 @@ use App\Models\BookingExtras;
 use App\Models\Bookings;
 use App\Models\Customers;
 use App\Models\Tickets;
+use App\Models\Payments;
 use App\Models\Station;
 use Ramsey\Uuid\Uuid;
 use App\Helpers\SequentNumber;
@@ -47,6 +48,7 @@ class BookingHelper
                 'user_id'=> require only booking by admin on backend, null,
                 'trip_type'=> ENUM('one-way', 'round-trip') 
             ],
+            
             'routes'=>[
                 [
                     route_id,
@@ -150,6 +152,8 @@ class BookingHelper
             ]);
         }
 
+      
+
         if ($booking->ispayment == 'Y') {
             $b = new BookingHelper();
             $b->completeBooking($booking->id);
@@ -159,7 +163,7 @@ class BookingHelper
         return $booking;
     }
 
-    public function completeBooking($bookingId = null)
+    public function completeBooking($bookingId = null,$paymentData = [])
     {
         if (is_null($bookingId)) {
             return null;
@@ -169,6 +173,28 @@ class BookingHelper
         if (is_null($booking)) {
             return null;
         }
+
+        //Make paymet
+        if(empty($paymentData)){
+            $paymentData = [
+                'payment_method'=>'NO',
+                'totalamt'=>$booking->totalamt
+            ];
+        }
+        
+        $payment = Payments::create(
+            [
+                'payment_method'=>$paymentData['payment_method'],
+                'totalamt'=>$paymentData['totalamt'],
+                'confirm_document'=>isset($paymentData['confirm_document'])?$paymentData['confirm_document']:NULL,
+                'description'=>isset($paymentData['description'])?$paymentData['description']:NULL,
+                'booking_id'=>$booking->id,
+                'user_id'=>isset($paymentData['user_id'])?$paymentData['user_id']:NULL,
+                'docdate'=>date('Y-m-d H:i:s'),
+                'paymentno'=>newSequenceNumber('PAYMENT'),
+            ]
+        );
+        
 
         $booking->status = 'CO';
         $booking->save();

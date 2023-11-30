@@ -68,7 +68,7 @@
         .ptable {}
 
         .ptable td {
-            padding: 7px;
+            padding: 5px;
         }
     </style>
 </head>
@@ -91,7 +91,7 @@
                             <img src="https://andamanexpress.com/assets/images/logo_tiger_line_ferry.png" alt=""
                                 class="img-fluid w-100">
                         </td>
-                        <td class="text-end" style="">
+                        <td class="text-end" style="height: 70px;">
                             <div style="float: right;display:block;">
                             <?= DNS2D::getBarcodeHTML('4445645656', 'QRCODE',4,4)?>
                             </div>
@@ -242,10 +242,8 @@
                 <small><strong>Terms and Conditions</strong></small>
                 <table class="w-100 ptable ">
                     <tr>
-                        <td style="white-space:wrap">
-                            <small>
-                                <?=$term['body']?>
-                            </small>
+                        <td style="white-space:wrap;font-size: 9px;">
+                            <?=$term['body']?>
                         </td>
                     </tr>
                 </table>

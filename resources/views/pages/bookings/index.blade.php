@@ -68,15 +68,22 @@
                                 </td>
                                 <td><small>{{$item['book_channel']}}</small></td>
                                 <td class="text-end">
+                                    @if($item['ispayment']=='Y')
                                     <a href="{{ route('print-ticket', ['bookingno' => $item['bookingno']]) }}"
                                         class="btn btn-outline-secondary btn-sm transition-hover-top" rel="noopener"
                                         target="_blank">
                                         <i class="fi fi-print m-0"></i>
                                     </a>
-                                    <a href="{{ route('print-ticket', ['bookingno' => $item['bookingno']]) }}"
+                                    @endif
+                                    <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
                                         class="btn btn-outline-secondary btn-sm transition-hover-top" rel="noopener"
                                         target="_blank">
                                         <i class="fi fi-pencil m-0"></i>
+                                    </a>
+                                    <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
+                                        class="btn btn-outline-danger btn-sm transition-hover-top" rel="noopener"
+                                        target="_blank">
+                                        <i class="fi fi-close m-0"></i>
                                     </a>
                                 </td>
                             </tr>

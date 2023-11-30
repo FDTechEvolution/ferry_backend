@@ -197,6 +197,7 @@ class BookingHelper
         
 
         $booking->status = 'CO';
+        $booking->ispayment = 'Y';
         $booking->save();
 
         //Create ticket

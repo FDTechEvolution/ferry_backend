@@ -184,8 +184,8 @@ class BookingHelper
         
         $payment = Payments::create(
             [
-                'payment_method'=>$paymentData['payment_method'],
-                'totalamt'=>$paymentData['totalamt'],
+                'payment_method'=>isset($paymentData['payment_method'])?$paymentData['payment_method']:'NO',
+                'totalamt'=>isset($paymentData['totalamt'])?$paymentData['totalamt']:$booking->totalamt,
                 'confirm_document'=>isset($paymentData['confirm_document'])?$paymentData['confirm_document']:NULL,
                 'description'=>isset($paymentData['description'])?$paymentData['description']:NULL,
                 'booking_id'=>$booking->id,

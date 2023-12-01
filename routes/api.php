@@ -56,6 +56,7 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
         Route::controller(OnlineBooking::class)->group(function() {
             Route::post('create', 'store');
             Route::get('record/{id}', 'bookingRecord');
+            Route::get('check/person/{booking_current}/{booking_new}', 'bookingCheckRoute');
         });
     });
 

@@ -231,11 +231,50 @@ class BookingController extends Controller
 
     public function bookingRecord(string $id = null) {
         $booking = Bookings::where('bookingno', $id)->with('bookingCustomers', 'bookingRoutes', 'bookingExtraAddons')->first();
+        $addons = $this->getRouteAddon($booking);
+        $m_route = $this->getRouteMultiple($booking->bookingRoutes[0]->station_to_id);
         if(isset($booking)) {
-            return response()->json(['result' => true, 'data' => new BookingResource($booking)], 200);
+            return response()->json(['result' => true, 'data' => new BookingResource($booking), 'addon' => $addons, 'm_route' => $m_route], 200);
         }
 
         return response()->json(['result' => false, 'data' => 'No booking record.'], 200);
     }
-    
+
+    private function getRouteAddon($booking) {
+        $_booking = json_decode($booking, true);
+        $addons = [
+            'meals' => [],
+            'activities' => []
+        ];
+        foreach($_booking['booking_routes'] as $route) {
+            $route = Route::find($route['id']);
+            $addons['meals'] = $route->meal_lines;
+            $addons['activities'] = $route->activity_lines;
+        }
+
+        return $addons;
+    }
+
+    private function getRouteMultiple($station_id) {
+        $route = Route::where('station_from_id', $station_id)
+                        ->where('isactive', 'Y')
+                        ->where('status', 'CO')
+                        ->with('station_to')
+                        ->get();
+
+        return $route;
+    }
+
+    public function bookingCheckRoute(string $booking_current = null, string $booking_new = null) {
+        $route_current = $this->getRouteByBookingNumber($booking_current);
+        $route_new = $this->getRouteByBookingNumber($booking_new);
+
+        if($route_current == $route_new) return response()->json(['result' => true, 'data' => 'Currect.'], 200);
+        else return response()->json(['result' => false, 'data' => 'Incurrect.'], 200);
+    }
+
+    private function getRouteByBookingNumber($bookingno) {
+        $booking = Bookings::where('bookingno', $bookingno)->with('bookingRoutes')->first();
+        return $booking->bookingRoutes[0]['route_id'];
+    }
 }

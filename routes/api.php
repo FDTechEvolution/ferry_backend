@@ -57,6 +57,7 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
             Route::post('create', 'store');
             Route::get('record/{id}', 'bookingRecord');
             Route::get('check/person/{booking_current}/{booking_new}', 'bookingCheckRoute');
+            Route::post('merge', 'bookingMerge');
         });
     });
 

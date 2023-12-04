@@ -229,8 +229,12 @@ class BookingController extends Controller
         return response()->json(['result' => false, 'data' => 'No Booking.']);
     }
 
+    private function getBookingByBookingNumber($bookingno) {
+        return Bookings::where('bookingno', $bookingno)->with('bookingCustomers', 'bookingRoutes', 'bookingExtraAddons')->first();
+    }
+
     public function bookingRecord(string $id = null) {
-        $booking = Bookings::where('bookingno', $id)->with('bookingCustomers', 'bookingRoutes', 'bookingExtraAddons')->first();
+        $booking = $this->getBookingByBookingNumber($id);
         $addons = $this->getRouteAddon($booking);
         $m_route = $this->getRouteMultiple($booking->bookingRoutes[0]->station_to_id);
         if(isset($booking)) {
@@ -266,15 +270,39 @@ class BookingController extends Controller
     }
 
     public function bookingCheckRoute(string $booking_current = null, string $booking_new = null) {
-        $route_current = $this->getRouteByBookingNumber($booking_current);
-        $route_new = $this->getRouteByBookingNumber($booking_new);
+        if($booking_current != $booking_new) {
+            $route_current = $this->getRouteByBookingNumber($booking_current);
+            $route_new = $this->getRouteByBookingNumber($booking_new);
 
-        if($route_current == $route_new) return response()->json(['result' => true, 'data' => 'Currect.'], 200);
-        else return response()->json(['result' => false, 'data' => 'Incurrect.'], 200);
+            if($route_current[0] == $route_new[0]) {
+                $booking = $this->getBookingByBookingNumber($booking_new);
+                if($route_current[1] == $route_new[1]) {
+                    if($route_current[3] == $route_new[3]) {
+                        return response()->json(['result' => true, 'status' => '', 'data' => $booking], 200);
+                    }
+                    else {
+                        return response()->json(['result' => true, 'status' => 'not match', 'data' => $booking], 200);
+                    }
+                }
+                else {
+                    return response()->json(['result' => true, 'status' => 'unpay', 'data' => $booking], 200);
+                }
+            }
+            else return response()->json(['result' => false, 'status' => 'uncurrect', 'data' => ''], 200);
+        }
+
+        return response()->json(['result' => false, 'status' => 'duplicate', 'data' => ''], 200);
     }
 
     private function getRouteByBookingNumber($bookingno) {
         $booking = Bookings::where('bookingno', $bookingno)->with('bookingRoutes')->first();
-        return $booking->bookingRoutes[0]['route_id'];
+        return array($booking->bookingRoutes[0]['route_id'], $booking->ispayment, $booking->status, $booking->departdate);
+    }
+
+    public function bookingMerge(Request $request) {
+        $booking_current = $this->getBookingByBookingNumber($request->booking_number);
+        $booking_new = $this->getBookingByBookingNumber($request->booking_number_new);
+
+        return response()->json(['result' => true, 'data' => ''], 200);
     }
 }

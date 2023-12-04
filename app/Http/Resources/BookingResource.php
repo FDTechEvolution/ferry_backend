@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,8 +15,13 @@ class BookingResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $depart = new DateTime($this->departdate);
+        $now = new DateTime('now');
+        $do_update = $depart > $now ? true : false;
+
         return [
             'depart_date' => $this->departdate,
+            'do_update' => $do_update,
             'adult' => $this->adult_passenger,
             'child' => $this->child_passenger,
             'infant' => $this->infant_passenger,

@@ -18,6 +18,12 @@ class StationsController extends Controller
         return response()->json(['data' => $stations, 'status' => 'success']);
     }
 
+    public function getToStation(string $from_id) {
+        $station = Route::where('station_from_id', $from_id)->where('isactive', 'Y')->where('status', 'CO')->with('station_to')->get();
+        $stations = $this->groupStation($station);
+        return response()->json(['data' => $stations], 200);
+    }
+
     // 7
     public function getAllStation() {
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->orderBy('sort', 'ASC')->get();

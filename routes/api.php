@@ -45,6 +45,7 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
     Route::controller(StationsController::class)->group(function() {
         Route::get('stations/get', 'getStations');
         Route::get('stations/route', 'getStationFromRoute');
+        Route::get('stations/get/to/{from_id}', 'getToStation');
     });
     Route::controller(SlideController::class)->group(function() {
         Route::get('slide/get', 'getSlide');

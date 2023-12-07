@@ -38,6 +38,10 @@
             font-weight: 700;
         }
 
+        .text-main{
+            color: #ff6100;
+        }
+
         .prow {
             width: 100%;
             position: relative;
@@ -60,9 +64,16 @@
         .bg-gray {
             background: #d9d9d9;
         }
+        .bg-blue{
+            background: #2889e8;
+        }
 
         .border-gray {
             border: 1px solid #d9d9d9;
+        }
+
+        .border-blue {
+            border: 1px solid #2889e8;
         }
 
         .ptable {}
@@ -108,7 +119,7 @@
                 <table class="w-100 ptable">
 
                     <tbody>
-                        <tr class="bg-gray font-w-700">
+                        <tr class="bg-blue font-w-700">
                             <td class="w-15">DATE</td>
                             <td class="w-15">BOOKING NO</td>
                             <td class="w-15">TICKET NO</td>
@@ -124,7 +135,7 @@
                                 Channel of Distribution: {{$booking['book_channel']}}
                             </td>
                         </tr>
-                        <tr class="bg-gray font-w-700">
+                        <tr class="bg-blue font-w-700">
                             <td colspan="2">
                                 Contact Information
                             </td>
@@ -137,14 +148,13 @@
                         </tr>
                         <tr>
                             <td colspan="2">
-                                Name: <span class="font-bold-14">{{ $ticket['customer']['fullname'] }}</span><br>
+                                Name: <span class="font-bold-14 text-main">{{ $ticket['customer']['fullname'] }}</span><br>
                                 Passport No.: {{ $ticket['customer']['passportno'] }}<br>
                                 Mobile No.: {{ $ticket['customer']['mobile'] }}<br>
                                 Email: {{ $ticket['customer']['email'] }}
                             </td>
                             <td colspan="">
-                                Total Payment: <strong
-                                    class="text-success">{{ number_format($booking['totalamt']) }}THB</strong><br>
+                                Total Payment: <span class="font-bold-14 text-main">{{ number_format($booking['totalamt']) }}THB</span><br>
                                 @if(!is_null($payment))
                                 Payment Method: {{$payment['payment_method']}}<br>
                                 Approved code: <br>
@@ -166,7 +176,7 @@
                 <h3>YOUR TRAVEL ITINERARY</h3>
                 <table class="w-100 ptable">
                     @foreach ($bookingRoutes as $route)
-                        <tr class="bg-gray font-w-700">
+                        <tr class="bg-blue font-w-700">
                             <td class="w-25">
                                 Date of Traveling
                             </td>
@@ -180,7 +190,7 @@
                                 Time
                             </td>
                         </tr>
-                        <tr class="border-gray font-bold-14 text-danger">
+                        <tr class="border-blue font-bold-14 text-main">
                             <td class="w-25">
                                 {{ date('l d/m/Y', strtotime($route['pivot']['traveldate'])) }}
                             </td>
@@ -199,9 +209,9 @@
             </div>
             <div class="prow mt-3">
                 <h3>YOUR TRAVEL INFORMATION</h3>
-                <table class="w-100 ptable border-gray">
+                <table class="w-100 ptable border-blue">
                     @foreach ($bookingRoutes as $route)
-                        <tr class="bg-gray font-w-700">
+                        <tr class="bg-blue font-w-700">
                             <td>
                                 {{ date('l d/m/Y', strtotime($route['pivot']['traveldate'])) }} From:
                                 {{ $route['station_from']['name'] }} @if($route['station_from']['piername']!='')[{{$route['station_from']['piername']}}] @endif

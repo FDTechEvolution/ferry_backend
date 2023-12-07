@@ -46,7 +46,7 @@ class BookingHelper
                 'amount'=> price exclude extra,
                 'ispayment'=>Y:N,
                 'user_id'=> require only booking by admin on backend, null,
-                'trip_type'=> ENUM('one-way', 'round-trip') 
+                'trip_type'=> ENUM('one-way', 'return','multiple') 
             ],
             
             'routes'=>[

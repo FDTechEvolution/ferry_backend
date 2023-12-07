@@ -16,10 +16,12 @@
             @include('includes.sidebar')
 
             <!-- main -->
-            <main id="middle" class="flex-fill mt-6 mt-md-0 mx-auto py-2 background-trans border-radius-20"
+            <main id="middle" class="flex-fill mt-6 mt-md-0 mx-auto py-2 border-radius-20"
                 style="margin-left: 10px !important;">
                 @include('includes.flash-message')
+                <div class="section mb-3">
                 @yield('content')
+                </div>
             </main>
         </div>
 

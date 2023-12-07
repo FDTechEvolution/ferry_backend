@@ -5,6 +5,7 @@
 @stop
 
 @section('content')
+
 <div class="row mt-4">
     <div class="col-12">
         <form novalidate class="bs-validate" id="station-create-form" method="POST" action="{{ route('station-create') }}">

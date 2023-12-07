@@ -297,7 +297,7 @@ function saveAllList(type, list_id, ul_id, input_id) {
 
                                 <div class="row mb-4">
                                     <label class="col-3 col-md-2 col-lg-2 text-start fw-bold">Status :</label>
-                                    <div class="col-2">
+                                    <div class="col-5">
                                         <label class="d-flex align-items-center mb-3">
                                             <input class="d-none-cloaked" type="checkbox" id="route-status-switch" name="status" value="1" checked>
                                             <i class="switch-icon switch-icon-primary"></i>
@@ -310,12 +310,12 @@ function saveAllList(type, list_id, ul_id, input_id) {
                             <div class="col-12 mt-4 text-center text-lg-start">
                                 <input type="hidden" name="route_id" value="{{ $route['id'] }}">
                                 <x-button-submit-loading 
-                                    class="btn-lg w--20 me-4 button-orange-bg"
+                                    class="btn-lg w--30 me-4 button-orange-bg"
                                     :form_id="_('route-update-form')"
                                     :fieldset_id="_('route-update')"
                                     :text="_('Edit')"
                                 />
-                                <a href="{{ route('route-index') }}" class="btn btn-secondary btn-lg w--20">Cancel</a>
+                                <a href="{{ route('route-index') }}" class="btn btn-secondary btn-lg w--30">Cancel</a>
                                 <small id="user-create-error-notice" class="text-danger mt-3"></small>
                             </div>
                         </div>

@@ -6,10 +6,10 @@
 @stop
 
 @section('content')
-<div class="row mt-4">
+<div class="row mt-3">
 
-    <div class="col-sm-12 col-lg-10 mx-auto">
-        <div id="to-activity-list">
+    <div class="col-12">
+        <div id="to-activity-list" class="table-responsive">
             <div class="card-body">
                 <table class="table-datatable table table-datatable-custom" id="activity-datatable" 
                     data-lng-empty="No data available in table"
@@ -31,7 +31,7 @@
                     data-lng-pdf="PDF"
                     data-lng-xls="XLS"
                     data-lng-all="All"
-                    data-export-pdf-disable-mobile="true"
+                    data-export-pdf-disable-mobile="true" data-responsive="false"
                     data-export='["pdf", "xls"]'
                 >
                     <thead>

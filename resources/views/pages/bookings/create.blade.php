@@ -16,24 +16,23 @@
         </div>
         <hr>
         <div class="row text-white">
-            <div class="col-6 col-md-3">
+            <div class="col-12 col-md-3">
                 <i class="fi fi-time"></i> Detart Time: {{ date('H:i', strtotime($route['depart_time'])) }}
             </div>
-            <div class="col-6 col-md-3">
+            <div class="col-12 col-md-3">
                 <i class="fi fi-time"></i> Arrive Time: {{ date('H:i', strtotime($route['arrive_time'])) }}
             </div>
 
-            <div class="col-6 col-md-3">
+            <div class="col-12 col-md-3">
                 Regular Price: {{ number_format($route['regular_price']) }}THB
             </div>
-            <div class="col-6 col-md-3">
+            <div class="col-12 col-md-3">
                 Child Price: {{ number_format($route['child_price']) }}THB
             </div>
         </div>
     </div>
 
 
-    <div class="section mb-3">
         <form novalidate class="bs-validate" id="booking-form" method="POST" action="{{ route('booking-store') }}">
             @csrf
             <fieldset id="booking-ceate">
@@ -42,9 +41,9 @@
                 <div class="row">
                     <div class="col-12 col-md-10 offset-md-1">
                         <div class="row mb-3">
-                            <label class="col-4 col-md-2 col-form-label-sm">Depart Date <span
+                            <label class="col-5 col-md-2 col-form-label-sm">Depart Date <span
                                     class="text-danger">*</span></label>
-                            <div class="col-8 col-md-4">
+                            <div class="col-7 col-md-4">
                                 <input required type="text" name="departdate" id="departdate"
                                     value="{{ $departdate }}" class="form-control form-control-sm datepicker"
                                     data-show-weeks="true" data-today-highlight="true" data-today-btn="true"
@@ -54,38 +53,38 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label class="col-4 col-md-2 col-form-label-sm">Reference</label>
-                            <div class="col-8 col-md-4 mb-3">
+                            <label class="col-5 col-md-2 col-form-label-sm">Reference</label>
+                            <div class="col-7 col-md-4 mb-3">
                                 <input type="text" class="form-control form-control-sm" name="reference"
                                     id="reference" />
                             </div>
 
-                            <label class="col-2 col-md-1 col-form-label-sm text-end">A <span
+                            <label class="col-3 col-md-1 col-form-label-sm text-end">A <span
                                     class="text-danger">*</span></label>
-                            <div class="col-2 col-md-1 ">
+                            <div class="col-3 col-md-1 ">
                                 <input type="number" class="form-control form-control-sm" name="adult_passenger"
                                     id="adult_passenger" required value="1" />
                             </div>
 
-                            <label class="col-2 col-md-1  col-form-label-sm text-end">C <span
+                            <label class="col-3 col-md-1  col-form-label-sm text-end">C <span
                                     class="text-danger">*</span></label>
-                            <div class="col-2 col-md-1 ">
+                            <div class="col-3 col-md-1 ">
                                 <input type="number" class="form-control form-control-sm" name="child_passenger"
                                     id="child_passenger" required value="0" />
                             </div>
 
-                            <label class="col-2 col-md-1  col-form-label-sm text-end">I <span
+                            <label class="col-3 col-md-1  col-form-label-sm text-end">I <span
                                     class="text-danger">*</span></label>
-                            <div class="col-2 col-md-1 ">
+                            <div class="col-3 col-md-1 ">
                                 <input type="number" class="form-control form-control-sm" name="infant_passenger"
                                     id="infant_passenger" required value="0" />
                             </div>
                         </div>
 
                         <div class="row mb-3">
-                            <label class="col-4 col-md-2 col-form-label-sm">Customer Name <span
+                            <label class="col-12 col-md-2 col-form-label-sm">Customer Name <span
                                     class="text-danger">*</span></label>
-                            <div class="col-8 col-md-4">
+                            <div class="col-12 col-md-4">
                                 <input type="text" class="form-control form-control-sm" name="fullname" id="fullname"
                                     required />
                             </div>
@@ -181,7 +180,7 @@
                 </div>
             </fieldset>
         </form>
-    </div>
+    
 
 @stop
 

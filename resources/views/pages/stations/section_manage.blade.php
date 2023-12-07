@@ -9,11 +9,11 @@
 <div class="row mt-4">
     <div class="col-12">
         <div class="row bg-transparent mt-2">
-            <div class="ms-5 mb-3">
+            <div class="col-12 mb-3">
                 <a href="{{ route('stations-index') }}" class="btn btn-secondary" id="btn-section-cancel-manage">< Back</a>
             </div>
-            <div class="col-12 w--90 mx-auto">
-                <div id="to-section-list">
+            <div class="col-12">
+                <div id="to-section-list" class="table-responsive">
                     <div class="card-body">
                         <table class="table-datatable table table-datatable-custom" id="section-datatable" 
                             data-lng-empty="No data available in table"
@@ -36,7 +36,7 @@
                             data-lng-xls="XLS"
                             data-lng-all="All"
                             data-export-pdf-disable-mobile="true"
-                            data-export='["pdf", "xls"]'
+                            data-export='["pdf", "xls"]' data-responsive="false"
                         >
                             <thead>
                                 <tr>
@@ -74,7 +74,7 @@
                     <form novalidate class="bs-validate" id="section-edit-form" method="POST" action="{{ route('section-update') }}">
                         @csrf
                         <fieldset id="section-edit">
-                            <div class="row bg-transparent mt-5">
+                            <div class="row bg-transparent mt-3">
                                 <div class="col-sm-6 mx-auto">
                                     <h1 class="fw-bold text-second-color mb-4">Section edit</h1>
 

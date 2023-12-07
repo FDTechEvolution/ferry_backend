@@ -29,8 +29,6 @@
 
                         <div class="row">
                             <div class="col-12 px-4">
-                                <h1 class="fw-bold text-main-color-2 mb-4">Add new Route</h1>
-
                                 <div class="mb-4 row">
                                     <label class="col-sm-3 col-lg-2 col-form-label-sm text-start fw-bold">Station From* :</label>
                                     <div class="col-sm-9 col-lg-7">
@@ -262,7 +260,7 @@
 
                                 <div class="row mb-4">
                                     <label class="col-3 col-md-2 col-lg-2 text-start fw-bold">Status :</label>
-                                    <div class="col-2">
+                                    <div class="col-5">
                                         <label class="d-flex align-items-center mb-3">
                                             <input class="d-none-cloaked" type="checkbox" id="route-status-switch" name="status" value="1" checked>
                                             <i class="switch-icon switch-icon-primary"></i>
@@ -274,12 +272,12 @@
 
                             <div class="col-12 mt-4 text-center text-lg-start">
                                 <x-button-submit-loading 
-                                    class="btn-lg w--20 me-4 button-orange-bg"
+                                    class="btn-lg w--30 me-4 button-orange-bg"
                                     :form_id="_('route-create-form')"
                                     :fieldset_id="_('route-create')"
                                     :text="_('Add')"
                                 />
-                                <a href="{{ route('route-index') }}" class="btn btn-secondary btn-lg w--20">Cancel</a>
+                                <a href="{{ route('route-index') }}" class="btn btn-secondary btn-lg w--30">Cancel</a>
                                 <small id="user-create-error-notice" class="text-danger mt-3"></small>
                             </div>
                         </div>

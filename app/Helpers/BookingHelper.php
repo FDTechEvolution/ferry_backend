@@ -261,5 +261,7 @@ class BookingHelper
 
         $oldBooking->status = 'RELATED';
         $oldBooking->save();
+
+        return $newBooking;
     }
 }

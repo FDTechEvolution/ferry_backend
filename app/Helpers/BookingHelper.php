@@ -9,6 +9,7 @@ use App\Models\Customers;
 use App\Models\Tickets;
 use App\Models\Payments;
 use App\Models\Station;
+use App\Models\BookingRelated;
 use Ramsey\Uuid\Uuid;
 use App\Helpers\SequentNumber;
 
@@ -247,5 +248,18 @@ class BookingHelper
 
         //Create ticket
         return $booking;
+    }
+
+    public static function moveBooking($oldBookingno,$newBookingno){
+        $oldBooking = Bookings::where('bookingno',$oldBookingno)->with()->first();
+        $newBooking = Bookings::where('bookingno',$newBookingno)->first();
+
+        $bookingRelated = BookingRelated::create([
+            'booking_id'=>$newBooking->id,
+            'related_booking_id'=>$oldBooking->id
+        ]);
+
+        $oldBooking->status = 'RELATED';
+        $oldBooking->save();
     }
 }

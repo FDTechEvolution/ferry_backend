@@ -14,7 +14,58 @@
 @endphp
 
 @section('content')
+    <form novalidate class="bs-validate" id="frm" method="GET">
+        <div class="row">
 
+            <div class="col-12 col-md-3">
+                <div class="form-floating mb-3">
+                    <select class="form-select" id="station_from" aria-label="" name="station_from">
+                        <option selected></option>
+                        @foreach ($station['station_from'] as $item)
+                            <option value="{{$item['id']}}" @if($item['id']==$station_from)selected @endif>{{$item['name']}}</option>
+                        @endforeach
+                    </select>
+                    <label for="station_from">Station From</label>
+                </div>
+            </div>
+            <div class="col-12 col-md-3">
+                <div class="form-floating mb-3">
+                    <select class="form-select" id="station_to" aria-label="" name="station_to">
+                        <option selected></option>
+                        @foreach ($station['station_to'] as $item)
+                            <option value="{{$item['id']}}" @if($item['id']==$station_to)selected @endif>{{$item['name']}}</option>
+                        @endforeach
+                    </select>
+                    <label for="station_to">Station From</label>
+                </div>
+            </div>
+            <div class="col-12 col-md-2">
+                <div class="form-floating mb-3">
+                    <input type="text" name="departdate" id="departdate" class="form-control form-control-sm datepicker"
+                        data-show-weeks="true" data-today-highlight="true" data-today-btn="true" data-clear-btn="false"
+                        data-autoclose="true" data-date-start="today" data-format="DD/MM/YYYY" value="">
+                    <label for="departdate">Depart Date</label>
+                </div>
+            </div>
+            <div class="col-12 col-md-2">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="ticketno" name="ticketno" value="{{$ticketno}}">
+                    <label for="ticketno">Ticket Number</label>
+                </div>
+            </div>
+            <div class="col-12 col-md-2">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="bookingno" name="bookingno" value="{{$bookingno}}">
+                    <label for="bookingno">Booking Number</label>
+                </div>
+            </div>
+            <div class="col-12 text-center">
+                <button type="reset" class="btn btn-secondary">Clear</button>
+                <button type="submit" class="btn btn-ferry">Search</button>
+            </div>
+        </div>
+    </form>
+    <hr>
     <div class="row">
         <div class="col-12">
             <div class="table-responsive ">
@@ -35,6 +86,7 @@
                     data-custom-config='{"searching":true}'>
                     <thead>
                         <tr>
+                            <th>Create On</th>
                             <th>Booking No</th>
                             <th>Ticket No</th>
                             <th>Type</th>
@@ -52,16 +104,17 @@
                         @foreach ($bookings as $index => $item)
                             <tr
                                 style="color: {{ $colors[$item['trip_type']] }};--bs-table-color:{{ $colors[$item['trip_type']] }};">
+                                <td><small>{{ date('d/m/Y H:i', strtotime($item['created_at'])) }}</small></td>
                                 <td>{{ $item['bookingno'] }}</td>
-                                <td><strong>{{ isset($item['tickets'][0]) ? $item['tickets'][0]['ticketno'] : '-' }}</strong>
+                                <td><strong>{{ $item['ticketno'] }}</strong>
                                 </td>
                                 <td>{{ $item['trip_type'] }}</td>
                                 <td>
-                                    {{ $item['bookingRoutes'][0]['station_from']['nickname'] }}-{{ $item['bookingRoutes'][0]['station_to']['nickname'] }}<br>
+                                    {{ $item['route']}}<br>
                                     <small><span
-                                            class="badge rounded-pill bg-secondary">{{ date('H:i', strtotime($item['bookingRoutes'][0]['depart_time'])) }}-{{ date('H:i', strtotime($item['bookingRoutes'][0]['arrive_time'])) }}</span></small>
+                                            class="badge rounded-pill bg-secondary">{{ date('H:i', strtotime($item['depart_time'])) }}-{{ date('H:i', strtotime($item['arrive_time'])) }}</span></small>
                                 </td>
-                                <td>{{ date('d/m/Y', strtotime($item['departdate'])) }}</td>
+                                <td>{{ date('d/m/Y', strtotime($item['traveldate'])) }}</td>
                                 <td class="text-end">{{ number_format($item['totalamt']) }}</td>
                                 <td class="text-center">
                                     @if ($item['ispayment'] == 'Y')
@@ -72,17 +125,15 @@
 
                                 </td>
                                 <td>
-                                    @if (isset($item['user']['id']))
-                                        {{ $item['user']['firstname'] }}
-                                    @endif
+                                    {{ $item['firstname'] }}
                                 </td>
                                 <td><small>{{ $item['book_channel'] }}</small></td>
                                 <td class="text-end">
                                     <div class="d-none d-md-block">
                                         @if ($item['ispayment'] == 'Y')
                                             <a href="{{ route('print-ticket', ['bookingno' => $item['bookingno']]) }}"
-                                                class="btn btn-outline-secondary btn-sm transition-hover-top" rel="noopener"
-                                                target="_blank">
+                                                class="btn btn-outline-secondary btn-sm transition-hover-top"
+                                                rel="noopener" target="_blank">
                                                 <i class="fi fi-print m-0"></i>
                                             </a>
                                         @endif
@@ -117,7 +168,8 @@
                                                     @endif
 
                                                     <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
-                                                        class="dropdown-item text-truncate" rel="noopener" target="_blank">
+                                                        class="dropdown-item text-truncate" rel="noopener"
+                                                        target="_blank">
                                                         <i class="fi fi-pencil m-0"></i> View Detail
                                                     </a>
                                                 </div>

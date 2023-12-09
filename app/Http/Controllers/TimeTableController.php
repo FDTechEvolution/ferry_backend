@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Models\TimeTable;
 use App\Models\Image;
+use App\Helpers\ImageHelper;
 
 class TimeTableController extends Controller
 {
@@ -40,12 +41,15 @@ class TimeTableController extends Controller
             'file_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $image_id = $this->storeImage($request->file_picture);
+        $imageHelper = new ImageHelper();
+        $image = $imageHelper->upload($request->file_picture,'time_table');
+
+        //$image_id = $this->storeImage($request->file_picture);
         if($request->sort == '') $_sort = TimeTable::where('status', 'CO')->max('sort');
 
         $time_table = TimeTable::create([
             'detail' => $request->detail,
-            'image_id' => $image_id,
+            'image_id' => $image->id,
             'sort' => $request->sort != '' ? $request->sort : $_sort+1
         ]);
 

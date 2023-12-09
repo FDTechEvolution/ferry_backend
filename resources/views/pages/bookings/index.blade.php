@@ -80,10 +80,10 @@
                     data-header-fixed="true" data-select-onclick="false" data-enable-paging="true"
                     data-enable-col-sorting="false" data-autofill="false" data-group="false" data-items-per-page="50"
                     data-enable-column-visibility="false" data-lng-column-visibility="Column Visibility"
-                    data-enable-export="true" data-lng-export="<i class='fi fi-squared-dots fs-5 lh-1'></i>"
+                    data-enable-export="false" data-lng-export="<i class='fi fi-squared-dots fs-5 lh-1'></i>"
                     data-lng-pdf="PDF" data-lng-xls="XLS" data-lng-print="Print" data-lng-all="All"
-                    data-export-pdf-disable-mobile="true" data-export='["csv", "pdf", "xls"]'
-                    data-custom-config='{"searching":true}'>
+                    data-export-pdf-disable-mobile="false" data-export='["csv", "pdf", "xls"]'
+                    data-custom-config='{"searching":false}'>
                     <thead>
                         <tr>
                             <th>Create On</th>

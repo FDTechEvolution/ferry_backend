@@ -24,7 +24,8 @@ class Bookings extends Model
         'user_id',
         'status',
         'bookingno',
-        'book_channel'
+        'book_channel',
+        'trip_type'
     ];
 
     public function user() {

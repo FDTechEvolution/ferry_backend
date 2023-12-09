@@ -83,10 +83,13 @@ class TimeTableController extends Controller
     }
 
     public function destroy(string $id = null) {
-        $table = TimeTable::find($id);
+        $timeTable = TimeTable::where('id',$id)->first();
+        //dd($timeTable);
+        //remove image
+        $imageHelper = new ImageHelper();
+        $imageHelper->delete($timeTable->image_id);
 
-        $this->destroyImage($table->image_id, $table->image);
-        if($table->delete()) return redirect()->route('time-table-index')->withSuccess('Time table deleted.');
+        if($timeTable->delete()) return redirect()->route('time-table-index')->withSuccess('Time table deleted.');
         else return redirect()->route('time-table-index')->withFail('Something is wrong. Please try again.');
     }
 

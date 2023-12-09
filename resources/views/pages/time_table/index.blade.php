@@ -45,10 +45,12 @@
                             @foreach ($time_tables as $index => $table)
                                 <tr class="text-center align-middle">
                                     <td class="mx-w--100">
+                                        @if(isset($table->image->path))
                                         <a class="fancybox" href="{{ asset($table->image->path) }}">
                                             <img src="{{ asset($table->image->path) }}"
                                                 class="w--100 w-sm--200">
                                         </a>
+                                        @endif
                                     </td>
                                     <td>{{ $table->detail }}</td>
                                     <td>

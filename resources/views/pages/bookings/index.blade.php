@@ -8,8 +8,8 @@
 @php
     $colors = [
         'one-way' => '#0580c4',
-        'return' => '#00bf63',
-        'multiple' => '#ff6100',
+        'round-trip' => '#00bf63',
+        'multi-trip' => '#ff6100',
     ];
 @endphp
 

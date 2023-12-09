@@ -19,10 +19,10 @@ class BookingController extends Controller
         $route = $this->getRoute($request->route_id[0]);
         if($route) {
             $_amount = $this->routeAmount($request->route_id, $request->passenger, $request->child_passenger, $request->infant_passenger);
-            $_extra_meal = isset($request->meal_id) ? $this->extraAddon($request->meal_id, $request->meal_qty) : 0;
-            $_extra_activity = isset($request->activity_id) ? $this->extraAddon($request->activity_id, $request->activity_qty) : 0;
-            $_extra_shuttle_bus = isset($request->bus_id) ? $this->extraAddon($request->bus_id, $request->bus_qty) : 0;
-            $_extra_longtail_boat = isset($request->boat_id) ? $this->extraAddon($request->boat_id, $request->boat_qty) : 0;
+            $_extra_meal = isset($request->meal_id) ? $this->extraAddon($request->meal_id, $request->meal_qty, $request->route_id) : 0;
+            $_extra_activity = isset($request->activity_id) ? $this->extraAddon($request->activity_id, $request->activity_qty, $request->route_id) : 0;
+            $_extra_shuttle_bus = isset($request->bus_id) ? $this->extraAddon($request->bus_id, $request->bus_qty, $request->route_id) : 0;
+            $_extra_longtail_boat = isset($request->boat_id) ? $this->extraAddon($request->boat_id, $request->boat_qty, $request->route_id) : 0;
 
             $_booking = $this->setBooking($request->departdate, $request->passenger, $request->child_passenger, 
                                             $request->infant_passenger, $request->trip_type, $request->book_channel, 
@@ -52,6 +52,47 @@ class BookingController extends Controller
         // Log::debug($request);
 
         return response()->json(['result' => false, 'data' => 'No Route.'], 200);
+    }
+
+    public function storeMultiTrip(Request $request) {
+        // Log::debug($request);
+        if(isset($request->route_id)) {
+            
+            $route = $this->getRoute($request->route_id[0]);
+            if($route) {
+                $_amount = $this->routeAmount($request->route_id, $request->passenger, $request->child_passenger, $request->infant_passenger);
+                $_extra_meal = isset($request->meal_id) ? $this->extraAddon($request->meal_id, $request->meal_qty, $request->route_id) : [0, []];
+                $_extra_activity = isset($request->activity_id) ? $this->extraAddon($request->activity_id, $request->activity_qty, $request->route_id) : [0, []];
+                $_extra_shuttle_bus = isset($request->bus_id) ? $this->extraAddon($request->bus_id, $request->bus_qty, $request->route_id) : [0, []];
+                $_extra_longtail_boat = isset($request->boat_id) ? $this->extraAddon($request->boat_id, $request->boat_qty, $request->route_id) : [0, []];
+
+                $_booking = $this->setBooking($request->departdate[0], $request->passenger, $request->child_passenger, 
+                                                $request->infant_passenger, $request->trip_type, $request->book_channel, 
+                                                $_amount, $_extra_meal[0], $_extra_activity[0], $_extra_shuttle_bus[0], $_extra_longtail_boat[0]);
+                $_customer = $this->setPassenger($request->fullname, $request->mobile, $request->passenger_type, 
+                                                    $request->passportno, $request->email, $request->address);
+                $_route = $this->setRoutes($request->route_id, $request->departdate, $request->returndate, 
+                                            $request->passenger, $request->child_passenger, $request->infant_passenger);
+
+                $_extra = array_merge($_extra_meal[1], $_extra_activity[1], $_extra_shuttle_bus[1], $_extra_longtail_boat[1]);
+
+                $data = [
+                    'booking' => $_booking,
+                    'customers' => $_customer,
+                    'extras' => $_extra,
+                    'routes' => $_route
+                ];
+
+                $booking = BookingHelper::createBooking($data);
+                $payload = PaymentHelper::encodeRequest($booking);
+                $response = PaymentHelper::postTo_2c2p($payload);
+                $result = PaymentHelper::decodeResponse($response);
+
+                return response()->json(['result' => true, 'data' => $result, 'booking' => $booking->bookingno], 200);
+            }
+            return response()->json(['result' => false, 'data' => 'No Route.'], 200);
+        }
+        return response()->json(['result' => false, 'data' => 'No Data.'], 200);
     }
 
     private function setBooking($departdate, $adult, $child, $infant, $trip_type, $book_channel, $amount, $meal, $activity, $bus, $boat) { 
@@ -175,7 +216,7 @@ class BookingController extends Controller
         return $amount;
     }
 
-    private function extraAddon($addon_id, $addon_qty) {
+    private function extraAddon($addon_id, $addon_qty, $route) {
         $addons = [];
         $addon_amount = 0;
         foreach($addon_qty as $key => $addon) {
@@ -185,7 +226,8 @@ class BookingController extends Controller
                         $_addon = Addon::find($addon_id[$key][$key2]);
                         $amount = $_addon->amount*$qty;
                         $addon_amount += $amount;
-                        array_push($addons, ['addon_id' => $_addon->id, 'amount' => $amount]);
+                        $route_id = $route[$key];
+                        array_push($addons, ['addon_id' => $_addon->id, 'amount' => $amount, 'route_id' => $route_id]);
                     }
                 }
             }

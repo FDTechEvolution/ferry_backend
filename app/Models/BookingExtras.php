@@ -13,6 +13,7 @@ class BookingExtras extends Model
     protected $fillable = [
         'amount',
         'addon_id',
-        'booking_id'
+        'booking_id',
+        'route_id'
     ];
 }

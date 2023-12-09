@@ -137,6 +137,7 @@ class BookingHelper
                 $bookingExtra = BookingExtras::create([
                     'addon_id'=>$extra['addon_id'],
                     'amount'=>$extra['amount'],
+                    'route_id'=>$extra['route_id'],
                     'booking_id' => $booking->id
                 ]);
             }

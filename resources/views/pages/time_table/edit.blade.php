@@ -37,7 +37,7 @@
                             <i class="fi fi-circle-spin fi-spin"></i>
                         </span>
 
-                        <span class="cursor-pointer">Upload image</span>
+                        <span class="cursor-pointer">Upload new image</span>
                     </label>
 
                     <div class="row">

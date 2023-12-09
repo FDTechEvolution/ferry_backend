@@ -26,7 +26,7 @@ function setDataToEditForm(table) {
     document.querySelector('#time-table-id-edit').value = table.id
 
     document.querySelector('#current-image').classList.remove('d-none')
-    document.querySelector('#edit-image-cover').style = `background-image: url('..${table.image.path}/${table.image.name}'); width: 80px; height: 80px; min-width: 80px;`
+    document.querySelector('#edit-image-cover').style = `background-image: url('../${table.image.path}'); width: auto; height: 80px; min-width: 300px;`
     document.querySelector('#has-image').value = 1
 }
 

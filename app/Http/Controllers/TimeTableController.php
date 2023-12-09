@@ -64,19 +64,24 @@ class TimeTableController extends Controller
             'file_picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable'
         ]);
 
-        $table = TimeTable::find($request->_id);
-        $table->image;
+        $table = TimeTable::where('id',$request->_id)->first();
 
-        $image_id = null;
         if ($request->hasFile('file_picture')) {
-            $image_id = $this->storeImage($request->file_picture);
-            $this->destroyImage($table->image_id, $table->image);
+            $imageHelper = new ImageHelper();
+
+            //upload new file
+            $image = $imageHelper->upload($request->file_picture,'time_table');
+
+            //remove old file
+            $imageHelper->delete($table->image_id);
+
+            $table->image_id = $image->id;
         }
+
         if($request->sort == '') $_sort = TimeTable::where('status', 'CO')->max('sort');
 
         $table->detail = $request->detail;
         $table->sort = $request->sort != '' ? $request->sort : $_sort+1;
-        if($image_id != null) $table->image_id = $image_id;
 
         if($table->save()) return redirect()->route('time-table-index')->withSuccess('Time table updated.');
         else return redirect()->route('time-table-index')->withFail('Something is wrong. Please try again.');
@@ -92,28 +97,6 @@ class TimeTableController extends Controller
         if($timeTable->delete()) return redirect()->route('time-table-index')->withSuccess('Time table deleted.');
         else return redirect()->route('time-table-index')->withFail('Something is wrong. Please try again.');
     }
-
-    private function storeImage($image) {
-        $slug_image = time().'.'.$image->getClientOriginalExtension();
-
-        $img = Image::create([
-            'path' => $this->Path,
-            'name' => $slug_image
-        ]);
-
-        if($img) {
-            $image->move(public_path($this->Path), $slug_image);
-            return $img->id;
-        }
-    }
-
-    private function destroyImage($image_id, $_image) {
-        $image = Image::find($image_id)->delete();
-        if($image) {
-            unlink(public_path().$_image->path.'/'.$_image->name);
-        }
-    }
-
 
     public function updateShowInHomepage(string $id = null) {
         $table = TimeTable::find($id);

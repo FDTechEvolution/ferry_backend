@@ -19,6 +19,8 @@ class Station extends Model
         'station_infomation_from_id',
         'station_infomation_to_id',
         'sort',
+        'address',
+        'image_id'
     ];
 
     protected $hidden = [
@@ -27,6 +29,10 @@ class Station extends Model
 
     public function section() {
         return $this->hasOne(Section::class, 'id', 'section_id');
+    }
+
+    public function image(){
+        return $this->hasOne(Image::class,'id','image_id');
     }
 
     public function info_line() {

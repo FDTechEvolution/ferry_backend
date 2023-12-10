@@ -3,6 +3,7 @@
 
 <head>
     @include('includes.head')
+    <script src="https://kit.fontawesome.com/4e1914be33.js" crossorigin="anonymous"></script>
 </head>
 
 <body class="layout-admin layout-padded aside-sticky"

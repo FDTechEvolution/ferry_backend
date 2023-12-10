@@ -7,10 +7,9 @@
         </div>
         <div class="col-12 col-md-12 col-lg-12">
             <x-a-href-green :text="_('Add')" :href="route('create-station')" :target="_('_self')" class="ms-lg-3 btn-sm w--10 mb-2" />
- 
-            
-            <x-a-href-orange :text="_('Manage Section')" :href="route('manage-section')" :target="_('_self')"
-                class="ms-1 ms-lg-3 mb-2 btn-sm w--20" />
+
+
+            <x-a-href-orange :text="_('Manage Section')" :href="route('manage-section')" :target="_('_self')" class="ms-1 ms-lg-3 mb-2 btn-sm w--20" />
         </div>
     </div>
 @stop
@@ -59,12 +58,15 @@
                         <thead>
                             <tr>
                                 <th class="text-center w--5">Choose</th>
-                                <th class="text-start">Station Name</th>
-                                <th class="text-start">Station Pier</th>
-                                <th class="text-start">Nickname</th>
-                                <th class="text-center">Sort</th>
                                 <th class="text-center">Sections Group</th>
+                                <th class="text-start">Station Name</th>
+                                <th class="text-start">Nickname</th>
+                                <th class="text-start">Station Pier</th>
+
+                                <th class="text-center">Sort</th>
+
                                 <th class="text-center">Status</th>
+                                <th>Map Image</th>
                                 <th class="text-center">Action</th>
                             </tr>
                         </thead>
@@ -73,12 +75,19 @@
                                 <tr class="text-center" id="station-row-{{ $index }}">
                                     <td><input class="form-check-input form-check-input-primary station-check mt-2"
                                             type="checkbox" value=""></td>
-                                    <td data-id="name" class="text-start">{{ $station['name'] }}</td>
-                                    <td data-id="piername" class="text-start">{{ $station['piername'] }}</td>
-                                    <td data-id="nickname" class="text-start">{{ $station['nickname'] }}</td>
-                                    <td data-id="sort">{{ $station['sort'] }}</td>
                                     <td>{{ $station['section']['name'] }}</td>
+                                    <td data-id="name" class="text-start">{{ $station['name'] }}</td>
+                                    <td data-id="nickname" class="text-start">{{ $station['nickname'] }}</td>
+                                    <td data-id="piername" class="text-start">{{ $station['piername'] }}</td>
+
+                                    <td data-id="sort">{{ $station['sort'] }}</td>
+
                                     <td>{!! $status[$station['isactive']] !!}</td>
+                                    <td>
+                                        @if (isset($station->image->path))
+                                        <div class="avatar avatar-sm" style="background-image:url(../{{$station->image->path}})"></div>
+                                        @endif
+                                    </td>
                                     <td>
                                         <input type="hidden" id="station-id-{{ $index }}"
                                             value="{{ $station['id'] }}">

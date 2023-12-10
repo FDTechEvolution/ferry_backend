@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -10,6 +11,7 @@ use App\Models\Section;
 use App\Models\StationInfomation;
 use App\Models\StationInfoLine;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\ImageHelper;
 
 class StationsController extends Controller
 {
@@ -20,10 +22,11 @@ class StationsController extends Controller
 
     protected $_Status = [
         'Y' => '<span class="text-success">On</span>',
-        'N' => '<span class="text-danger">Off</span>'
+        'N' => '<span class="text-danger">Off</span>',
     ];
 
-    public static function avaliableStation(){
+    public static function avaliableStation()
+    {
         $sql = 'select s.id,s.name,s.piername,s.nickname from stations s join routes r on s.id = r.station_from_id left join sections sec on s.section_id = sec.id where r.isactive ="Y" group by s.id,s.name,s.piername,s.nickname order by sec.name ASC,s.name ASC';
         $stationFroms = DB::select($sql);
 
@@ -31,14 +34,14 @@ class StationsController extends Controller
         $stationTos = DB::select($sql);
 
         return [
-            'station_from'=>json_decode(json_encode($stationFroms), true),
-            'station_to' => json_decode(json_encode($stationTos), true)
+            'station_from' => json_decode(json_encode($stationFroms), true),
+            'station_to' => json_decode(json_encode($stationTos), true),
         ];
     }
 
     public function index()
     {
-        $stations = Station::where('status', 'CO')->orderBy('section_id', 'ASC')->orderBy('sort', 'ASC')->get();
+        $stations = Station::where('status', 'CO')->with(['image'])->orderBy('section_id', 'ASC')->orderBy('sort', 'ASC')->get();
         $sections = Section::where('isactive', 'Y')->orderBy('created_at', 'DESC')->get();
         $info = StationInfomation::where('status', 'Y')->get();
         $status = $this->_Status;
@@ -46,29 +49,33 @@ class StationsController extends Controller
         return view('pages.stations.index', ['stations' => $stations, 'sections' => $sections, 'status' => $status, 'info' => $info]);
     }
 
-    public function create() {
+    public function create()
+    {
         $sections = Section::where('isactive', 'Y')->orderBy('created_at', 'DESC')->get();
         $info = StationInfomation::where('status', 'Y')->get();
 
         return view('pages.stations.create', ['sections' => $sections, 'info' => $info]);
     }
 
-    public function sectionCreate() {
+    public function sectionCreate()
+    {
         $sections = Section::where('isactive', 'Y')->orderBy('created_at', 'DESC')->get();
-        
+
         return view('pages.stations.section_create', ['sections' => $sections]);
     }
 
-    public function sectionManage() {
+    public function sectionManage()
+    {
         $sections = Section::where('isactive', 'Y')->orderBy('created_at', 'DESC')->get();
-        
+
         return view('pages.stations.section_manage', ['sections' => $sections]);
     }
 
-    public function edit(string $id = null) {
-        $station = Station::find($id);
+    public function edit(string $id = null)
+    {
+        $station = Station::where('id', $id)->with(['image'])->first();
 
-        if(is_null($station) || $station->status != 'CO') 
+        if (is_null($station) || $station->status != 'CO')
             return redirect()->route('stations-index')->withFail('This station not exist.');
 
         $station->info_line;
@@ -85,7 +92,7 @@ class StationsController extends Controller
             'pier' => 'string|nullable',
             'nickname' => 'required|string',
             'section' => 'required|string',
-            'sort' => 'required|integer'
+            'sort' => 'required|integer',
         ]);
 
         /*
@@ -101,26 +108,39 @@ class StationsController extends Controller
             'nickname' => $request->nickname,
             'isactive' => isset($request->isactive) ? 'Y' : 'N',
             'section_id' => $request->section,
-            'sort' => $request->sort
+            'sort' => $request->sort,
+            'address' => $request->address,
         ]);
 
         if ($station) {
-            if($request->station_info_from_list != '') $this->storeInfoLine($station->id, $request->station_info_from_list, 'from');
-            if($request->station_info_to_list != '') $this->storeInfoLine($station->id, $request->station_info_to_list, 'to');
-            return redirect()->route('stations-index')->withSuccess(sprintf('Create Station "%s"',$request->name));
-        }
-        else
+            if ($request->station_info_from_list != '')
+                $this->storeInfoLine($station->id, $request->station_info_from_list, 'from');
+            if ($request->station_info_to_list != '')
+                $this->storeInfoLine($station->id, $request->station_info_to_list, 'to');
+
+            //check has image
+            if ($request->hasFile('image_file')) {
+                $imageHelper = new ImageHelper();
+                $image = $imageHelper->upload($request->image_file, 'station');
+
+                $station->image_id = $image->id;
+                $station->save();
+
+            }
+            return redirect()->route('stations-index')->withSuccess(sprintf('Create Station "%s"', $request->name));
+        } else
             return redirect()->route('stations-index')->withFail('Something is wrong. Please try again.');
     }
 
-    private function storeInfoLine(string $station_id = null, string $info = null, string $type = null) {
+    private function storeInfoLine(string $station_id = null, string $info = null, string $type = null)
+    {
         $_info = preg_split('/\,/', $info);
 
-        foreach($_info as $item) {
+        foreach ($_info as $item) {
             StationInfoLine::create([
                 'station_id' => $station_id,
                 'station_infomation_id' => $item,
-                'type' => $type
+                'type' => $type,
             ]);
         }
     }
@@ -143,14 +163,15 @@ class StationsController extends Controller
 
     public function update(Request $request)
     {
+        //dd($request);
         $request->validate([
             'name' => 'required|string',
-            'pier' => 'string',
+            'pier' => 'nullable|string',
             'nickname' => 'required|string',
             'section' => 'required|string',
             'sort' => 'required|integer',
             'info_from' => 'string|nullable',
-            'info_to' => 'string|nullable'
+            'info_to' => 'string|nullable',
         ]);
 
         if (!$this->checkStationName($request->name, $request->id))
@@ -171,41 +192,62 @@ class StationsController extends Controller
             $station->isactive = isset($request->isactive) ? 'Y' : 'N';
 
             if ($station->save()) {
+                //check has image
+                $imageHelper = new ImageHelper();
+                if($request->isremoveimage =='Y'){
+                    $imageHelper->delete($station->image_id);
+                    $station->image_id = null;
+                    $station->save();
+                }
+                
+                if ($request->hasFile('image_file')) {
+                    $image = $imageHelper->upload($request->image_file, 'station');
+
+                    $station->image_id = $image->id;
+                    $station->save();
+
+                }
+
                 $this->clearAllInfoLine($station->id);
-                if($request->station_info_from_list != '') $this->storeInfoLine($station->id, $request->station_info_from_list, 'from');
-                if($request->station_info_to_list != '') $this->storeInfoLine($station->id, $request->station_info_to_list, 'to');
+                if ($request->station_info_from_list != '')
+                    $this->storeInfoLine($station->id, $request->station_info_from_list, 'from');
+                if ($request->station_info_to_list != '')
+                    $this->storeInfoLine($station->id, $request->station_info_to_list, 'to');
                 return redirect()->route('stations-index')->withSuccess('Station updated...');
-            }
-            else
+            } else
                 return redirect()->route('stations-index')->withFail('Something is wrong. Please try again.');
         }
 
         return redirect()->route('stations-index')->withFail('Station record not exist. Please check.');
     }
 
-    private function clearAllInfoLine(string $station_id = null) {
+    private function clearAllInfoLine(string $station_id = null)
+    {
         StationInfoLine::where('station_id', $station_id)->delete();
     }
 
     public function destroy(string $id = null)
     {
-        $station = Station::find($id);
+        $station = Station::where('id', $id)->with(['stationFrom', 'image'])->first();
 
-        //Check used
-        if (false) {
-            $station->status = 'VO';
+        //Check use on routes
+        if (sizeof($station->stationFrom) > 0) {
+            //$station->status = 'VO';
             $station->isactive = 'N';
+            $station->save();
 
-            if ($station->save()){
-                return redirect()->route('stations-index')->withSuccess('Station deleted...');
-            }else{
-                return redirect()->route('stations-index')->withFail('Something is wrong. Please try again.');
-            }
+            return redirect()->route('stations-index')->withSuccess('this station used in other Route, just disable this Station');
         } else {
-            $station->forceDelete();
+            //check has image
+            if (isset($station->image->path)) {
+                $imageHelper = new ImageHelper();
+                $imageHelper->delete($station->image_id);
+            }
 
+            $station->forceDelete();
             return redirect()->route('stations-index')->withSuccess('Station deleted...');
         }
+
     }
 
     public function storeSection(Request $request)

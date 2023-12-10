@@ -8,14 +8,14 @@
 
     <div class="row mt-3">
         <div class="col-12">
-            <form novalidate class="bs-validate" id="station-create-form" method="POST" action="{{ route('station-create') }}">
+            <form novalidate class="bs-validate" id="station-create-form" method="POST" action="{{ route('station-create') }}" enctype="multipart/form-data">
                 @csrf
                 <fieldset id="station-create">
                     <div class="row">
                         <div class="col-12 col-md-6 border-end">
                             <div class="mb-3 row">
                                 <label for="station-name" class="col-sm-4 col-form-label-sm text-start">Station
-                                    Name* :</label>
+                                    Name <strong class="text-danger">*</strong> :</label>
                                 <div class="col-sm-8">
                                     <input type="text" required class="form-control form-control-sm" id="station-name"
                                         name="name" value="">
@@ -31,7 +31,7 @@
                             </div>
                             <div class="mb-3 row">
                                 <label for="station-nickname" class="col-sm-4 col-form-label-sm text-start">Station
-                                    Nickname* :</label>
+                                    Nickname <strong class="text-danger">*</strong> :</label>
                                 <div class="col-sm-8">
                                     <input type="text" required class="form-control form-control-sm"
                                         id="station-nickname" name="nickname" value="">
@@ -117,7 +117,7 @@
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label for="station-sort" class="col-sm-4 col-form-label-sm text-start">Section*
+                                <label for="station-sort" class="col-sm-4 col-form-label-sm text-start">Section <strong class="text-danger">*</strong>
                                     :</label>
                                 <div class="col-sm-8">
                                     <select required class="form-select form-select-sm" id="station-section"
@@ -130,7 +130,7 @@
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label for="station-sort" class="col-sm-4 col-form-label-sm text-start">Sort*
+                                <label for="station-sort" class="col-sm-4 col-form-label-sm text-start">Sort <strong class="text-danger">*</strong>
                                     :</label>
                                 <div class="col-sm-8">
                                     <select required class="form-select form-select-sm" id="station-sort" name="sort">
@@ -168,7 +168,59 @@
                             </div>
                             <div class="mb-3 row">
                                 <label for="address" class="col-sm-4 col-form-label-sm text-start">Address :</label>
+                                <div class="col-12 col-md-8">
+                                    <textarea name="address" id="address" rows="4" class="form-control"></textarea>
+                                </div>
                             </div>
+                            <div class="mb-3 row">
+                                <label for="image_file" class="col-sm-4 col-form-label-sm text-start">Map Image :</label>
+                                <div class="col-12 col-md-8">
+                                    <label
+                                        class="btn btn-light btn-sm cursor-pointer position-relative w-100 rounded border"
+                                        style="background-color: #fff;">
+                                        <input type="file" name="image_file" id="image_file" data-file-ext="jepg, jpg, png, gif"
+                                            data-file-max-size-kb-per-file="2048" data-file-max-size-kb-total="2048"
+                                            data-file-max-total-files="100" data-file-ext-err-msg="Allowed:"
+                                            data-file-exist-err-msg="File already exists:"
+                                            data-file-size-err-item-msg="File too large!"
+                                            data-file-size-err-total-msg="Total allowed size exceeded!"
+                                            data-file-size-err-max-msg="Maximum allowed files:"
+                                            data-file-toast-position="bottom-center"
+                                            data-file-preview-container=".js-file-input-container-multiple-list-static-picture"
+                                            data-file-preview-img-height="80"
+                                            data-file-btn-clear="a.js-file-input-btn-multiple-list-static-remove-picture"
+                                            data-file-preview-show-info="true" data-file-preview-list-type="list"
+                                            class="custom-file-input absolute-full cursor-pointer"
+                                            title="jpeg, jpg, png, gif (2MB) [size : 800 x 388 px]"
+                                            data-bs-toggle="tooltip" accept=".png, .jpg, .jpeg">
+
+                                        <span class="group-icon cursor-pointer">
+                                            <i class="fi fi-arrow-upload"></i>
+                                            <i class="fi fi-circle-spin fi-spin"></i>
+                                        </span>
+
+                                        <span class="cursor-pointer">Upload map image</span>
+                                    </label>
+
+                                    <div class="row">
+                                        <div class="col-10 col-md-10">
+                                            <div
+                                                class="js-file-input-container-multiple-list-static-picture position-relative hide-empty mt-2">
+                                                <!-- container -->
+                                            </div>
+                                        </div>
+                                        <div class="col-2 col-md-2 text-center">
+                                            <!-- remove button -->
+                                            <a href="javascript:void(0)" title="Clear Images" data-bs-toggle="tooltip"
+                                                id="remove-picture"
+                                                class="js-file-input-btn-multiple-list-static-remove-picture hide btn btn-secondary mt-4 text-center">
+                                                <i class="fi fi-close mx-auto"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
 
                     </div>

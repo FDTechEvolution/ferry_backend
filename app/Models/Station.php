@@ -39,4 +39,8 @@ class Station extends Model
         return $this->belongsToMany(StationInfomation::class, 'station_info_lines', 'station_id', 'station_infomation_id')
                     ->withPivot('type');
     }
+
+    public function stationFrom(){
+        return $this->hasMany(Route::class,'station_from_id','id');
+    }
 }

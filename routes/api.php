@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\BookingController as OnlineBooking;
 use App\Http\Controllers\Api\TimetableController;
 use App\Http\Controllers\Api\RouteMapController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\PromotionController;
 
 // 7 Controller
 use App\Http\Controllers\Api\Seven\BookingController as SevenBooking;
@@ -74,6 +75,10 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
 
     Route::controller(PaymentController::class)->group(function () {
         Route::post('payment/create', 'paymentRequest');
+    });
+
+    Route::controller(PromotionController::class)->group(function() {
+        Route::get('promotion/get', 'getPromotion');
     });
 });
 

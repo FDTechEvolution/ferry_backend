@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-12">
             <form novalidate class="bs-validate" id="promotion-create-form" method="POST"
-                action="{{ route('promotion-store') }}" enctype="multipart/form-data">
+                action="{{ route('promotion-update') }}" enctype="multipart/form-data">
                 @csrf
                 <fieldset id="promotion-create">
                     <div class="mb-4 row">
@@ -19,7 +19,7 @@
                                         class="text-danger">*</strong></label>
                                 <div class="col-sm-12 col-lg-9">
                                     <input required type="text" class="form-control form-control-sm" name="code"
-                                        value="">
+                                        value="{{ $promotion['code'] }}">
                                 </div>
                             </div>
                             <div class="mb-3 row">
@@ -27,14 +27,14 @@
                                         class="text-danger">*</strong></label>
                                 <div class="col-sm-6 col-lg-4">
                                     <input required type="number" class="form-control form-control-sm text-center"
-                                        name="discount" id="discount" value="">
+                                        name="discount" id="discount" value="{{ $promotion['discount'] }}">
                                 </div>
                                 <div class="col-sm-4 col-lg-5">
                                     <select required class="form-select form-select-sm text-center" name="discount_type"
                                         id="discount_type">
-                                        <option value="" selected >-- Select --</option>
-                                        <option value="PERCENT">%</option>
-                                        <option value="THB">THB</option>
+                                        <option value="" selected>-- Select --</option>
+                                        <option value="PERCENT" @if($promotion['discount_type']=='PERCENT') selected @endif>%</option>
+                                        <option value="THB" @if($promotion['discount_type']=='THB') selected @endif>THB</option>
                                     </select>
                                 </div>
                             </div>
@@ -43,7 +43,7 @@
                                         class="text-danger">*</strong></label>
                                 <div class="col-sm-12 col-lg-9">
                                     <input required type="number" class="form-control form-control-sm" name="times_use_max"
-                                        value="">
+                                        value="{{ $promotion['discount'] }}">
                                 </div>
                             </div>
                         </div>
@@ -55,10 +55,11 @@
                                 <label class="col-12 col-md-3 col-form-label-sm ">Trip Type</label>
                                 <div class="col-12 col-md-3 mb-2">
                                     <select name="trip_type" id="trip_type" class="form-select">
-                                        <option value="all">All</option>
-                                        <option value="one-way">One Way</option>
-                                        <option value="round-trip">Round Trip</option>
-                                        <option value="multi-trip">Multi Island</option>
+                                        <option value="all" selected>All</option>
+                                        @foreach ($tripTypes as $index=>$item)
+                                            <option value="{{ $index }}" @if($promotion['trip_type']==$index) selected @endif>{{ $item }}</option>
+                                        @endforeach
+
                                     </select>
                                 </div>
                             </div>
@@ -160,7 +161,7 @@
                                         class="text-danger">*</strong></label>
                                 <div class="col-12 col-md-7">
                                     <input required type="text" class="form-control form-control-sm" name="title"
-                                        value="">
+                                        value="{{ $promotion['title'] }}">
                                 </div>
                             </div>
                             <div class="row mb-2">
@@ -185,9 +186,9 @@
                                     </div>
 
                                     <!--
-                                                clear files button
-                                                hidden by default
-                                            -->
+                                                    clear files button
+                                                    hidden by default
+                                                -->
                                     <div class="mt-1">
                                         <a href="#" class="hide js-file-upload-clear2 btn btn-light btn-sm">
                                             Remove Image
@@ -200,7 +201,7 @@
                                 <div class="col-12 col-md-7">
                                     <div class="form-check mb-2">
                                         <input class="form-check-input form-check-input-success" type="checkbox"
-                                            value="Y" id="isactive" name="isactive" checked>
+                                            value="Y" id="isactive" name="isactive" @if($promotion['isactive']=='Y') checked @endif>
                                         <label class="form-check-label" for="isactive">
                                             Active and Show on home page.
                                         </label>

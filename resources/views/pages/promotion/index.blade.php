@@ -22,10 +22,11 @@
                         <th>Image Cover</th>
                         <th class="">Title</th>
                         <th class="">Code</th>
-                        <th class="">Discount</th>
-                        <th class="">Type</th>
+                        <th class="text-end">Discount</th>
+                        
                         <th class="text-end">Times to use Max</th>
                         <th class="text-end">Used</th>
+                        <th>Active&Show</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -33,19 +34,32 @@
                     @foreach ($promotions as $item)
                         <tr>
                             <td>
-                                @if(isset($item->image->path))
-                                <div class="avatar avatar-sm"
-                                style="background-image:url({{ asset('/'.$item->image->path) }})"></div>
+                                @if (isset($item->image->path))
+                                    <div class="avatar avatar-sm"
+                                        style="background-image:url({{ asset('/' . $item->image->path) }})"></div>
                                 @endif
                             </td>
                             <td>{{ $item['title'] }}</td>
                             <td>{{ $item['code'] }}</td>
-                            <td>{{ $item['discount'] }}</td>
-                            <td>{{ $item['discount_type'] }}</td>
+                            <td class="text-end">
+                                @if ($item['discount_type'] == 'THB')
+                                    {{ $item['discount'] }}THB
+                                @else
+                                    {{ $item['discount'] }}%
+                                @endif
+                            </td>
+                           
                             <td class="text-end">{{ $item['times_use_max'] }}</td>
                             <td class="text-end">{{ $item['times_used'] }}</td>
                             <td>
-                                <x-action-edit class="me-2" :url="route('promotion-edit', ['promotion' => $item])" id="btn-edit" />
+                                @if($item['isactive']=='Y')
+                                    <span class="badge bg-success-soft">Active</span>
+                                @else
+                                    <span class="badge bg-secondary-soft">Disable</span>
+                                @endif
+                            </td>
+                            <td>
+                                <x-action-edit class="me-2" :url="route('promotion-edit', ['id' => $item['id']])" id="btn-edit" />
                                 <x-action-delete :url="route('promotion-delete', ['id' => $item['id']])" :message="_('Are you sure? Delete ' . $item['title'] . '?')" />
                             </td>
                         </tr>

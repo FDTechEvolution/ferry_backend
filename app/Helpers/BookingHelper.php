@@ -26,6 +26,14 @@ class BookingHelper
         ];
     }
 
+    public static function tripType(){
+        return [
+            'one-way'=>'One Way',
+            'round-trip'=>'Round Trip',
+            'multi-trip'=>'Multi Island'
+        ];
+    }
+
     public static function getBookingInfoByBookingNo($bookingno)
     {
         $booking = Bookings::where(['bookingno'=>$bookingno])

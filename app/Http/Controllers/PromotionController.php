@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Station;
 use App\Models\Route;
 use App\Helpers\ImageHelper;
+use App\Helpers\BookingHelper;
 
 class PromotionController extends Controller
 {
@@ -20,26 +21,38 @@ class PromotionController extends Controller
     public function index()
     {
         $promotions = Promotions::with(['image'])
-            ->orderBy('isactive', 'DESC')
+            ->orderBy('isactive', 'ASC')
             ->orderBy('created_at', 'DESC')->get();
         return view('pages.promotion.index', ['promotions' => $promotions]);
     }
 
     public function create()
     {
+        $tirpTypes = BookingHelper::tripType();
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
         $routes = Route::where('isactive', 'Y')->where('status', 'CO')->with('station_from', 'station_to')->get();
 
-        return view('pages.promotion.create', ['stations' => $stations, 'routes' => $routes]);
+        return view('pages.promotion.create', ['stations' => $stations, 'routes' => $routes,'tirpTypes'=>$tirpTypes]);
+    }
+
+    public function edit($id){
+        $promotion = Promotions::where('id', $id)->first();
+        $tripTypes = BookingHelper::tripType();
+        $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
+        $routes = Route::where('isactive', 'Y')->where('status', 'CO')->with('station_from', 'station_to')->get();
+
+        return view('pages.promotion.edit', ['promotion' => $promotion,'stations' => $stations, 'routes' => $routes,'tripTypes'=>$tripTypes]);
+
     }
 
     public function store(Request $request)
     {
+        //dd($request);
         $request->validate([
             'code' => 'required|string',
-            'discount' => 'integer|nullable',
+            'discount' => 'decimal:2|required',
             'discount_type' => 'required|string',
-            'times_use_max' => 'required|integer',
+            'times_use_max' => 'required|decimal:2',
             'title' => 'required|string',
         ]);
 
@@ -57,6 +70,22 @@ class PromotionController extends Controller
         if (!$promotion) {
             return redirect()->route('promotion-index')->withFail('Something is wrong. Please try again.');
         }
+        if(!isset($request->isactive)){
+            $promotion->isactive = 'N';
+        }
+        //Save conditions
+        if($request->trip_type !='all'){
+            $promotion->trip_type = $request->trip_type;
+        }
+        if($request->station_from_id !=null && $request->station_from_id !=''){
+            $promotion->station_from_id = $request->station_from_id;
+        }
+        if($request->station_to_id !=null && $request->station_to_id !=''){
+            $promotion->station_to_id = $request->station_to_id;
+        }
+        if($request->route_id !=null && $request->route_id !=''){
+            $promotion->route_id = $request->route_id;
+        }
 
         //check has image
         if ($request->hasFile('image_file')) {
@@ -69,6 +98,17 @@ class PromotionController extends Controller
 
 
         return redirect()->route('promotion-index')->withSuccess('Promotion code saved.');
+    }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'code' => 'required|string',
+            'discount' => 'decimal:2|required',
+            'discount_type' => 'required|string',
+            'times_use_max' => 'required|decimal:2',
+            'title' => 'required|string',
+        ]);
     }
 
     public function destroy(string $id = null)

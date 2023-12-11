@@ -17,7 +17,7 @@ class ImageHelper
             $storePath .= '/' . $subFolder;
         }
 
-        $imageName = date('YmdHi') . $file->getClientOriginalName();
+        $imageName = date('YmdHi').'.'.$file->getClientOriginalExtension();
 
         /*
         $path = $file->storeAs(

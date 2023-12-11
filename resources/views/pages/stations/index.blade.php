@@ -85,7 +85,8 @@
                                     <td>{!! $status[$station['isactive']] !!}</td>
                                     <td>
                                         @if (isset($station->image->path))
-                                        <div class="avatar avatar-sm" style="background-image:url(../{{$station->image->path}})"></div>
+                                            <div class="avatar avatar-sm"
+                                                style="background-image:url({{ asset('/'.$station->image->path) }})"></div>
                                         @endif
                                     </td>
                                     <td>

@@ -192,6 +192,10 @@ Route::middleware('auth')->group(function () {
     Route::controller(PromotionController::class)->group(function () {
         Route::get('/promotion', 'index')->name('promotion-index');
         Route::get('/promotion/create', 'create')->name('promotion-create');
+        Route::post('/promotion/store', 'store')->name('promotion-store');
+        Route::post('/promotion/update', 'update')->name('promotion-update');
+        Route::get('/promotion/edit/{promotion}', 'edit')->name('promotion-edit');
+        Route::get('/promotion/delete/{id}', 'destroy')->name('promotion-delete');
     });
 
     Route::controller(FareController::class)->group(function () {

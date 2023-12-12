@@ -47,8 +47,7 @@
                                         d="M9.5 6.5a1.5 1.5 0 0 1-1 1.415l.385 1.99a.5.5 0 0 1-.491.595h-.788a.5.5 0 0 1-.49-.595l.384-1.99a1.5 1.5 0 1 1 2-1.415z">
                                     </path>
                                 </svg>
-                                <a href="#accordionAccountPasswd" data-bs-toggle="collapse" aria-expanded="true"
-                                    aria-controls="accordionAccountPasswd" class="text-dark">Forget Password?</a>
+                                <a href="{{route('forgot-password')}}" class="text-dark">Forget Password?</a>
                             </div>
 
                         </div>

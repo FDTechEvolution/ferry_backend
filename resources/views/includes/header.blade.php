@@ -45,7 +45,7 @@
       <li class="list-inline-item mx-1 dropdown text-end">
 
         <!-- has avatar -->
-        <a href="return javascript(void)" id="dropdownAccountOptions" class="dropdown-toggle text-dark" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-haspopup="true" aria-label="Account options"><i class="fi fi-arrow-down-full me-1 text-secondary"></i> {{ Auth::user()->username }}
+        <a href="return javascript(void)" id="dropdownAccountOptions" class="dropdown-toggle text-dark" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-haspopup="true" aria-label="Account options"><i class="fi fi-arrow-down-full me-1 text-secondary"></i> {{ Auth::user()->firstname }}
           @if(Auth::user()->image != '')
             <img src="{{ asset('assets/images/avatar/'.Auth::user()->image) }}" class="rounded-circle shadow ms-2" style="width: 46px; height: 48px; margin-top: -5px;" />
           @else
@@ -64,41 +64,14 @@
           
           <!-- user detail -->
           <div class="dropdown-header bg-primary bg-gradient rounded rounded-bottom-0 text-white small p-4">
-            <span class="d-block fw-medium text-truncate">John Doe</span>
-            <span class="d-block smaller fw-medium text-truncate">john.doe@gmail.com</span>
-            <span class="d-block smaller"><b>Last Login:</b> 2019-09-03 01:48</span>
+            <span class="d-block fw-medium text-truncate">{{ Auth::user()->firstname }} {{ Auth::user()->lastname }}</span>
+            <span class="d-block smaller fw-medium text-truncate">j{{ Auth::user()->email }}</span>
+            <span class="d-block smaller"><b>Last Login:</b> 00:00</span>
           </div>
 
           <div class="dropdown-divider mb-3"></div>
 
-          <a href="#" class="dropdown-item text-truncate">
-            <span class="fw-medium">My profile</span>
-            <small class="d-block text-muted smaller">account settings and more</small>
-          </a>
-
-          <a href="#" class="dropdown-item text-truncate">
-            <small class="badge bg-success-soft float-end">1 new</small>
-            <span class="fw-medium">My Messages</span>
-            <small class="d-block text-muted smaller">inbox, projects, tasts</small>
-          </a>
-
-          <a href="#" class="dropdown-item text-truncate">
-            <small class="badge bg-danger-soft float-end">1 unpaid</small>
-            <span class="fw-medium">My billing</span>
-            <small class="d-block text-muted smaller">your monthly billing</small>
-          </a>
-
-          <a href="#" class="dropdown-item text-truncate">
-            <span class="fw-medium">Account Settings</span>
-            <small class="d-block text-muted smaller">profile, password and more...</small>
-          </a>
-
-          <a href="#" class="dropdown-item text-truncate">
-            <span class="fw-medium">Upgrade</span>
-            <small class="d-block text-muted smaller">upgrade your account</small>
-          </a>
-
-          <div class="dropdown-divider mb-0 mt-3"></div>
+          
 
           <a href="{{ route('logout') }}" class="prefix-icon-ignore dropdown-footer dropdown-custom-ignore fw-medium py-3 px-4">
             <i class="fi fi-power float-start"></i>

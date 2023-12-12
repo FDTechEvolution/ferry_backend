@@ -12,9 +12,12 @@ use App\Http\Controllers\Api\TimetableController;
 use App\Http\Controllers\Api\RouteMapController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PromotionController;
+use App\Http\Controllers\Api\InfomationController;
+use App\Http\Controllers\Api\ReviewController;
 
 // 7 Controller
 use App\Http\Controllers\Api\Seven\BookingController as SevenBooking;
+use App\Http\Controllers\ReviewsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,6 +82,14 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
 
     Route::controller(PromotionController::class)->group(function() {
         Route::get('promotion/get', 'getPromotion');
+    });
+
+    Route::controller(InfomationController::class)->group(function() {
+        Route::get('term-and-condition/get', 'getTermAndCondition');
+    });
+
+    Route::controller(ReviewController::class)->group(function() {
+        Route::get('review/get', 'index');
     });
 });
 

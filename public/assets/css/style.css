@@ -80,7 +80,7 @@ nav.nav-deep-light .nav-item.active>.nav-link,nav.nav-deep-light .nav-item:hover
     color: #0a3961;
 }
 .text-main-color-2 {
-    color: #ff6100;
+    color: #ff6100 !important;
 }
 .text-second-color {
     color: #00bf63;

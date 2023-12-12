@@ -35,7 +35,7 @@ class Route extends Model
     }
 
     public function icons() {
-        return $this->belongsToMany(Icon::class, 'route_icons', 'route_id', 'icon_id');
+        return $this->belongsToMany(Icon::class, 'route_icons', 'route_id', 'icon_id')->orderBy('seq', 'ASC');
     }
 
     public function station_lines() {

@@ -9,6 +9,10 @@
 <body class="layout-admin layout-padded aside-sticky"
     data-s2t-class="btn-primary btn-sm bg-gradient-default rounded-circle border-0">
 
+    <div class="page-loader" id="page-loader">
+        <div class="spinner"></div>
+    </div>
+
     <div id="wrapper" class="d-flex align-items-stretch flex-column">
         @include('includes.header')
 
@@ -21,7 +25,7 @@
                 style="margin-left: 10px !important;">
                 @include('includes.flash-message')
                 <div class="section mb-3">
-                @yield('content')
+                    @yield('content')
                 </div>
             </main>
         </div>
@@ -64,6 +68,24 @@
 
     @yield('modal')
     @yield('script')
+
+    <script>
+        $(document).ready(function() {
+            $('#page-loader').hide();
+
+            $("a").click(function(){
+                //console.log($(this).attr("href"));
+                let clickUrl = $(this).attr("href");
+                if(!clickUrl.startsWith('javascript')){
+                    //$('#page-loader').show();
+                }
+            });
+
+            $(window).on('beforeunload', function(){
+                $('#page-loader').show();
+            });
+        });
+    </script>
 </body>
 
 </html>

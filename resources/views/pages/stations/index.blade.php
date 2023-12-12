@@ -2,14 +2,14 @@
 
 @section('page-title')
     <div class="row ms-md-2 d-md-flex flex-md-wrap flex-lg-nowrap">
-        <div class="col-12 col-md-7 col-lg-5">
+        <div class="col-12 col-md-7 my-auto">
             <h1 class="ms-2 mb-0" id="station-page-title"><span class="text-main-color-2">Station</span> manager</h1>
         </div>
         <div class="col-12 col-md-12 col-lg-12">
-            <x-a-href-green :text="_('Add')" :href="route('create-station')" :target="_('_self')" class="ms-lg-3 btn-sm w--10 mb-2" />
+            <x-a-href-green :text="_('Add')" :href="route('create-station')" :target="_('_self')" class="" />
 
 
-            <x-a-href-orange :text="_('Manage Section')" :href="route('manage-section')" :target="_('_self')" class="ms-1 ms-lg-3 mb-2 btn-sm w--20" />
+            <x-a-href-orange :text="_('Manage Section')" :href="route('manage-section')" :target="_('_self')" class="" />
         </div>
     </div>
 @stop

@@ -40,21 +40,21 @@
                         <div class="mb-3 row mb-8">
                             <label class="col-sm-2 col-form-label-sm text-start">Detail* :</label>
                             <div class="col-sm-8">
+                              
                                 <div class="quill-editor"
                                     data-ajax-url="_ajax/demo.summernote.php"
                                     data-ajax-params="['action','upload']['param2','value2']"
-                                    data-textarea-name="detail"
+                                    data-textarea-name="text"
                                     data-quill-config='{
                                         "modules": {
                                             "toolbar": [
-                                                [{ "header": [2, 3, 4, 5, 6, false] }],
+                                             
                                                 ["bold", "italic", "underline", "strike"],
                                                 [{ "color": [] }, { "background": [] }],
-                                                [{ "script": "super" }, { "script": "sub" }],
-                                                ["blockquote"],
+                           
                                                 [{ "list": "ordered" }, { "list": "bullet"}, { "indent": "-1" }, { "indent": "+1" }],
                                                 [{ "align": [] }],
-                                                ["link", "image", "video"],
+                                   
                                                 ["clean", "code-block"]
                                             ]
                                         },
@@ -63,6 +63,7 @@
                                     }'>
                                     <p></p>
                                 </div>
+                            
                             </div>
                         </div>
                         

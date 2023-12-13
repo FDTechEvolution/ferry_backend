@@ -86,6 +86,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/edit-station-info/{id}', 'edit')->name('edit-station-info');
         Route::get('/delete-station-info/{id}', 'destroy')->name('station-info-delete');
 
+        //$headers = array("Content-Type: text/html; charset=iso-8859-1");
+
         Route::post('/station-info-create', 'store')->name('station-info-create');
         Route::post('/update-station-info', 'update')->name('station-info-update');
 

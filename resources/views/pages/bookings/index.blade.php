@@ -56,7 +56,7 @@
             <div class="col-12 col-md-2">
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" id="bookingno" name="bookingno" value="{{$bookingno}}">
-                    <label for="bookingno">Booking Number</label>
+                    <label for="bookingno">Invoice Number</label>
                 </div>
             </div>
             <div class="col-12 text-center">
@@ -86,8 +86,8 @@
                     data-custom-config='{"searching":false}'>
                     <thead>
                         <tr>
-                            <th>Create On</th>
-                            <th>Booking No</th>
+                            <th>Issued Date</th>
+                            <th>Invoice No</th>
                             <th>Ticket No</th>
                             <th>Type</th>
                             <th>Route</th>
@@ -143,9 +143,9 @@
                                             <i class="fi fi-pencil m-0"></i>
                                         </a>
                                         <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
-                                            class="btn btn-outline-danger btn-sm transition-hover-top" rel="noopener"
+                                            class="btn btn-outline-info btn-sm transition-hover-top" rel="noopener"
                                             target="_blank">
-                                            <i class="fi fi-close m-0"></i>
+                                            <i class="fa-solid fa-eye"></i>
                                         </a>
                                     </div>
                                     <div class="d-md-none">

@@ -18,13 +18,17 @@ class Payments extends Model
         'booking_id',
         'user_id',
         'docdate',
-        'paymentno'
+        'paymentno',
+        'image_id'
     ];
 
     public function user() {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
+    public function image() {
+        return $this->hasOne(Image::class, 'id', 'image_id');
+    }
     public function booking() {
         return $this->hasOne(Bookings::class, 'id', 'booking_id');
     }

@@ -20,7 +20,8 @@ class Station extends Model
         'station_infomation_to_id',
         'sort',
         'address',
-        'image_id'
+        'image_id',
+        'google_map'
     ];
 
     protected $hidden = [

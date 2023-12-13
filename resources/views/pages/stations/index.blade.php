@@ -66,7 +66,8 @@
                                 <th class="text-center">Sort</th>
 
                                 <th class="text-center">Status</th>
-                                <th>Map Image</th>
+                                <th>Image</th>
+                                <th>GG Map</th>
                                 <th class="text-center">Action</th>
                             </tr>
                         </thead>
@@ -87,6 +88,11 @@
                                         @if (isset($station->image->path))
                                             <div class="avatar avatar-sm"
                                                 style="background-image:url({{ asset('/'.$station->image->path) }})"></div>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($station['google_map'] != null && $station['google_map'] != '')
+                                            <a href="https://www.google.co.th/maps/dir//{{$station['google_map']}}" target="_blank"><i class="fa-solid fa-location-dot"></i></a>
                                         @endif
                                     </td>
                                     <td>
@@ -143,4 +149,16 @@
         const station_info = {{ Js::from($info) }}
     </script>
     <script src="{{ asset('assets/js/app/station.js') }}"></script>
+
+    <script>
+        $(document).ready(function(){
+            /*
+            $('#text').on('keyup',function(){
+                let str = $(this).val();
+                str = str.replace(/[^\x00-\x7F]/g, "");
+                console.log(str);
+            });
+            */
+        });
+    </script>
 @stop

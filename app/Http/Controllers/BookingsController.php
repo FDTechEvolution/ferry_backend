@@ -11,6 +11,7 @@ use App\Models\Route;
 use Ramsey\Uuid\Uuid;
 use App\Helpers\BookingHelper;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\ImageHelper;
 
 
 use Illuminate\Http\Request;
@@ -177,13 +178,23 @@ class BookingsController extends Controller
 
         ];
 
-        
-
         $booking = BookingHelper::createBooking($data);
+        
+        $paymentData = [
+            'payment_method'=>$request->payment_method,
+            'totalamt'=>$booking->totalamt,
+            'user_id' => $request->user_id,
+        ];
 
+        if ($request->hasFile('image_file')) {
+            $imageHelper = new ImageHelper();
+            $image = $imageHelper->upload($request->image_file, 'payment_slip');
+            $paymentData['image_id'] = $image->id;
+        }
+
+        $booking = BookingHelper::completeBooking($booking['id'],$paymentData);
 
         return redirect()->route('booking-index')->withSuccess('Save New Booking');
-
     }
 
 

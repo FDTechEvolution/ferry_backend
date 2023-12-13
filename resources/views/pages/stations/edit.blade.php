@@ -68,7 +68,7 @@
                                 </div>
                                 <input type="hidden" name="station_info_to_list" id="input-station-info-to-list">
                             </div>
-                            <div class="mb-4 row">
+                            <div class="mb-4 row" style="display: none;">
                                 <label class="col-sm-4 col-form-label-sm text-start">
                                     Shuttle bus :
                                     <label class="d-flex align-items-center mb-2">
@@ -84,7 +84,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="mb-4 row">
+                            <div class="mb-4 row" style="display: none;">
                                 <label class="col-sm-4 col-form-label-sm text-start">
                                     Longtail boat :
                                     <label class="d-flex align-items-center mb-2">
@@ -135,7 +135,7 @@
                                     <select required class="form-select form-select-sm" id="edit-station-sort"
                                         name="sort">
                                         <option value="" disabled>-- Select --</option>
-                                        @for ($i = 1; $i <= 10; $i++)
+                                        @for ($i = 1; $i <= $maxSeq; $i++)
                                             <option value="{{ $i }}" @selected($station['sort'] == $i)>
                                                 {{ $i }}</option>
                                         @endfor
@@ -174,7 +174,7 @@
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label for="image_file" class="col-sm-4 col-form-label-sm text-start">Map Image :</label>
+                                <label for="" class="col-sm-4 col-form-label-sm text-start">Image :</label>
                                 <div class="col-12 col-md-8">
                                     <label
                                         class="btn btn-light btn-sm cursor-pointer position-relative w-100 rounded border"
@@ -200,7 +200,7 @@
                                             <i class="fi fi-circle-spin fi-spin"></i>
                                         </span>
 
-                                        <span class="cursor-pointer">Upload map image</span>
+                                        <span class="cursor-pointer">Upload image</span>
                                     </label>
 
                                     <div class="row">
@@ -233,6 +233,33 @@
                                         </div>
                                     @endif
                                 </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="address" class="col-sm-4 col-form-label-sm text-start">Google Map :</label>
+                                <div class="col-12 col-md-8">
+                                    <input type="text" name="google_map" id="google_map" class="form-control"
+                                        placeholder="Coordinates 99.0000,99.000" value="{{ $station['google_map'] }}">
+                                </div>
+                                @if ($station['google_map'] != null && $station['google_map'] != '')
+                                    @php
+                                        $latlong = explode(",",$station['google_map']);
+                                        $lat = (float)$latlong[0];
+                                        $long = (float)$latlong[1];
+                                    @endphp
+                                    <div class="col-12 mt-3">
+                                        <div class="map-leaflet w-100 rounded" style="height:300px"
+                                            data-map-tile="voyager" data-map-zoom="15"
+                                            data-map-json='[
+		{
+			"map_lat": {{$lat}},
+			"map_long": {{$long}},
+			"map_popup": ""
+		}
+	]'>
+                                            <!-- map container-->
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>

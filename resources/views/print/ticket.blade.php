@@ -1,5 +1,14 @@
 <!DOCTYPE html>
 <html>
+@php
+    $data = file_get_contents('https://andamanexpress.com/tiger-line-ferry_logo-header-3.jpg');
+    $base64 = 'data:image/jpg;base64,' . base64_encode($data);
+    $colors = [
+        'one-way' => '#0580c4',
+        'round-trip' => '#00bf63',
+        'multi-trip' => '#ff6100',
+    ];
+@endphp
 
 <head>
     <title>Ticket</title>
@@ -8,14 +17,15 @@
 
 
     <style>
+        /*
         @font-face {
             font-family: 'Noto Sans Thai';
             font-weight: normal;
             font-style: normal;
             font-variant: normal;
-            src: url({{ storage_path('pdf/Noto_Sans_Thai/NotoSansThai-VariableFont_wdth,wght.ttf') }}) format("truetype");
+            src: url({{ storage_path('/pdf/Noto_Sans_Thai/NotoSansThai-VariableFont_wdth,wght.ttf') }}) format("truetype");
         }
-
+*/
         body {
             font-size: 12px;
             font-family: 'Noto Sans Thai', sans-serif;
@@ -66,7 +76,7 @@
         }
 
         .bg-blue {
-            background: #2889e8;
+            background: #17adec;
         }
 
         .border-gray {
@@ -74,7 +84,7 @@
         }
 
         .border-blue {
-            border: 1px solid #2889e8;
+            border: 1px solid #17adec;
         }
 
         .ptable {}
@@ -83,18 +93,20 @@
             padding: 5px;
         }
 
+
+
         .header {
-            background-image: url("https://andamanexpress.com/tiger-line-ferry_logo-header-3.png");
+            background-image: url({{$base64}});
             background-color: #ffffff;
             width: 100%;
             height: auto;
             position: relative;
-            background-attachment: fixed;
+
             background-position: center center;
             background-repeat: no-repeat;
             background-size: cover;
 
-            
+
         }
     </style>
 </head>
@@ -114,8 +126,9 @@
             <div class="prow">
                 <table class="w-100 ptable">
                     <tr>
-                        <td class="w-100" style="padding: 0px;">
-                            <div class="header">
+                        <td class="w-100 header" style="padding: 0px;">
+                            <div class="">
+
                                 <table class="w-100 ptable">
                                     <tr>
                                         <td style="width: 88%;padding-top:30px;" class="text-end">
@@ -123,7 +136,7 @@
                                         </td>
                                         <td class="text-end" style="height: 100px;">
                                             <div style="float: right;display:block;margin-top:32px;">
-                                                <?= DNS2D::getBarcodeHTML('4445645656', 'QRCODE', 2.5, 2.5,'white') ?>
+                                                <?= DNS2D::getBarcodeHTML('4445645656', 'QRCODE', 2.5, 2.5, 'white') ?>
                                             </div>
 
                                         </td>
@@ -143,14 +156,14 @@
                 <table class="w-100 ptable">
 
                     <tbody>
-                        <tr class="bg-blue font-w-700">
-                            <td class="w-15">DATE</td>
-                            <td class="w-15">BOOKING NO</td>
-                            <td class="w-15">TICKET NO</td>
-                            <td class="w-15">DETAILS</td>
+                        <tr class="bg-gray font-w-700">
+                            <td class="w-15">ISSUED DATE</td>
+                            <td class="w-15">INVOICE NO.</td>
+                            <td class="w-15">TICKET NO.</td>
+                            <td class="w-15">DETAILS <strong style="color:{{$colors[$booking['trip_type']]}};">{{$booking['trip_type']}} ticket</strong></td>
                         </tr>
                         <tr>
-                            <td></td>
+                            <td><small>{{ date('d/m/Y H:i', strtotime($booking['created_at'])) }}</small></td>
                             <td>{{ $booking['bookingno'] }}</td>
                             <td class="font-bold-14">
                                 {{ $ticket['ticketno'] }}
@@ -175,7 +188,7 @@
                                 Name: <span
                                     class="font-bold-14 text-main">{{ $ticket['customer']['fullname'] }}</span><br>
                                 Passport No.: {{ $ticket['customer']['passportno'] }}<br>
-                                Mobile No.: {{ $ticket['customer']['mobile'] }}<br>
+                                Contact Number/Whatsapp/Thai Phone: {{ $ticket['customer']['mobile'] }}<br>
                                 Email: {{ $ticket['customer']['email'] }}
                             </td>
                             <td colspan="">
@@ -185,7 +198,7 @@
                                     Payment Method: {{ $payment['payment_method'] }}<br>
                                     Approved code: <br>
                                 @endif
-                                Approved by: {{ isset($user['firstname']) ? $user['firstname'] : '-' }}
+                               
                             </td>
                             <td>
                                 @foreach ($extras as $extra)
@@ -203,38 +216,46 @@
                 <table class="w-100 ptable">
                     @foreach ($bookingRoutes as $route)
                         <tr class="bg-blue font-w-700">
-                            <td class="w-25">
-                                Date of Traveling
+                            <td class="w-25 text-white">
+                                From: {{$route['station_from']['nickname']}}
                             </td>
-                            <td class="w-25">
-                                From
+                            <td class="w-25 text-white">
+                                To: {{$route['station_to']['nickname']}}
                             </td>
-                            <td class="w-25">
-                                To
+                            <td class="w-25 text-white">
+                                Departure
                             </td>
-                            <td class="w-25">
-                                Time
+                            <td class="w-25 text-white">
+                                Arrival
                             </td>
                         </tr>
-                        <tr class="border-blue font-bold-14 text-main">
+                        <tr class="border-blue">
                             <td class="w-25">
-                                {{ date('l d/m/Y', strtotime($route['pivot']['traveldate'])) }}
+                                <span class="font-bold-14">{{ $route['station_from']['name'] }}</span>
+                                @if ($route['station_from']['piername'] !='')
+                                    <br>({{$route['station_from']['piername']}})
+                                @endif
                             </td>
                             <td class="w-25">
-                                {{ $route['station_from']['name'] }}
+                                <span class="font-bold-14">{{ $route['station_to']['name'] }}</span>
+                                @if ($route['station_to']['piername'] !='')
+                                    <br>({{$route['station_to']['piername']}})
+                                @endif
                             </td>
                             <td class="w-25">
-                                {{ $route['station_to']['name'] }}
+                                <span class="font-bold-14">{{ date('H:i', strtotime($route['depart_time'])) }}</span><br>
+                                {{ date('dMY', strtotime($route['pivot']['traveldate'])) }}
                             </td>
                             <td class="w-25">
-                                {{ date('H:i', strtotime($route['depart_time'])) }}/{{ date('H:i', strtotime($route['arrive_time'])) }}
+                                <span class="font-bold-14">{{ date('H:i', strtotime($route['arrive_time'])) }}</span>
+                                {{ date('dMY', strtotime($route['pivot']['traveldate'])) }}
                             </td>
                         </tr>
                     @endforeach
                 </table>
             </div>
             <div class="prow mt-3">
-                <h3>YOUR TRAVEL INFORMATION</h3>
+                <h3>CHECK-IN</h3>
                 <table class="w-100 ptable border-blue">
                     @foreach ($bookingRoutes as $route)
                         <tr class="bg-blue font-w-700">

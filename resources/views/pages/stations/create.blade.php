@@ -8,7 +8,8 @@
 
     <div class="row mt-3">
         <div class="col-12">
-            <form novalidate class="bs-validate" id="station-create-form" method="POST" action="{{ route('station-create') }}" enctype="multipart/form-data">
+            <form novalidate class="bs-validate" id="station-create-form" method="POST" action="{{ route('station-create') }}"
+                enctype="multipart/form-data">
                 @csrf
                 <fieldset id="station-create">
                     <div class="row">
@@ -68,7 +69,7 @@
                                 </div>
                                 <input type="hidden" name="station_info_to_list" id="input-station-info-to-list">
                             </div>
-                            <div class="mb-4 row">
+                            <div class="mb-4 row"  style="display: none;">
                                 <label for="station-shuttle-bus" class="col-sm-4 col-form-label-sm text-start">
                                     Shuttle bus :
                                     <label class="d-flex align-items-center mb-2">
@@ -84,7 +85,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="mb-4 row">
+                            <div class="mb-4 row"  style="display: none;">
                                 <label for="station-longtail-boat" class="col-sm-4 col-form-label-sm text-start">
                                     Longtail boat :
                                     <label class="d-flex align-items-center mb-2">
@@ -117,7 +118,8 @@
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label for="station-sort" class="col-sm-4 col-form-label-sm text-start">Section <strong class="text-danger">*</strong>
+                                <label for="station-sort" class="col-sm-4 col-form-label-sm text-start">Section <strong
+                                        class="text-danger">*</strong>
                                     :</label>
                                 <div class="col-sm-8">
                                     <select required class="form-select form-select-sm" id="station-section"
@@ -129,18 +131,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="mb-3 row">
-                                <label for="station-sort" class="col-sm-4 col-form-label-sm text-start">Sort <strong class="text-danger">*</strong>
-                                    :</label>
-                                <div class="col-sm-8">
-                                    <select required class="form-select form-select-sm" id="station-sort" name="sort">
-                                        <option value="" selected disabled>-- Select --</option>
-                                        @for ($i = 1; $i <= 10; $i++)
-                                            <option value="{{ $i }}">{{ $i }}</option>
-                                        @endfor
-                                    </select>
-                                </div>
-                            </div>
+                            
                             <div class="mb-3 row" style="display: none;">
                                 <label for="extra-service" class="col-sm-4 col-form-label-sm text-start">Extra
                                     Service :</label>
@@ -172,15 +163,17 @@
                                     <textarea name="address" id="address" rows="4" class="form-control"></textarea>
                                 </div>
                             </div>
+
                             <div class="mb-3 row">
-                                <label for="image_file" class="col-sm-4 col-form-label-sm text-start">Map Image :</label>
+                                <label for="" class="col-sm-4 col-form-label-sm text-start">Image :</label>
                                 <div class="col-12 col-md-8">
                                     <label
                                         class="btn btn-light btn-sm cursor-pointer position-relative w-100 rounded border"
                                         style="background-color: #fff;">
-                                        <input type="file" name="image_file" id="image_file" data-file-ext="jepg, jpg, png, gif"
-                                            data-file-max-size-kb-per-file="2048" data-file-max-size-kb-total="2048"
-                                            data-file-max-total-files="100" data-file-ext-err-msg="Allowed:"
+                                        <input type="file" name="image_file" id="image_file"
+                                            data-file-ext="jepg, jpg, png, gif" data-file-max-size-kb-per-file="2048"
+                                            data-file-max-size-kb-total="2048" data-file-max-total-files="100"
+                                            data-file-ext-err-msg="Allowed:"
                                             data-file-exist-err-msg="File already exists:"
                                             data-file-size-err-item-msg="File too large!"
                                             data-file-size-err-total-msg="Total allowed size exceeded!"
@@ -199,7 +192,7 @@
                                             <i class="fi fi-circle-spin fi-spin"></i>
                                         </span>
 
-                                        <span class="cursor-pointer">Upload map image</span>
+                                        <span class="cursor-pointer">Upload image</span>
                                     </label>
 
                                     <div class="row">
@@ -217,6 +210,27 @@
                                                 <i class="fi fi-close mx-auto"></i>
                                             </a>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3 row">
+                                <label for="address" class="col-sm-4 col-form-label-sm text-start">Google Map :</label>
+                                <div class="col-12 col-md-8">
+                                    <input type="text" name="google_map" id="google_map" class="form-control"
+                                        placeholder="Coordinates 99.0000,99.000">
+                                </div>
+                                <div class="col-12 mt-3"  style="display: none;">
+                                    <div class="map-leaflet w-100 rounded" style="height:300px" data-map-tile="voyager"
+                                        data-map-zoom="13"
+                                        data-map-json='[
+		{
+			"map_lat": 40.750765,
+			"map_long": -73.993428,
+			"map_popup": ""
+		}
+	]'>
+                                        <!-- map container-->
                                     </div>
                                 </div>
                             </div>
@@ -261,6 +275,13 @@
 @section('script')
     <script>
         const station_info = {{ Js::from($info) }}
+
+        $(document).ready(function() {
+            $('#google_map').on('keyup', function() {
+                let google_map = $(this).val();
+
+            });
+        });
     </script>
     <script src="{{ asset('assets/js/app/station.js') }}"></script>
 @stop

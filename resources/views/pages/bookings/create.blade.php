@@ -157,7 +157,7 @@
                             </div>
                             <label class="col-4 col-md-2 col-form-label-sm text-end">Slip</label>
                             <div class="col-8 col-md-4">
-                                <input class="form-control form-control-sm" id="formFileSm" type="file">
+                                <input class="form-control form-control-sm" id="image_file" name="image_file" type="file" accept=".png, .jpg, .jpeg">
                             </div>
                         </div>
                         <hr>

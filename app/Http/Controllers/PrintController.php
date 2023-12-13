@@ -22,12 +22,15 @@ class PrintController extends Controller
     {
         $type = request()->type;
         if ($type == 'V') {
-            return view('print.ticket');
+            $booking = BookingHelper::getBookingInfoByBookingNo($bookingno);
+            $term = Informations::where('position','TERM_TICKET')->first();
+
+            return view('print.ticket',['booking'=>$booking,'term'=>$term]);
         }else{
             $booking = BookingHelper::getBookingInfoByBookingNo($bookingno);
             $term = Informations::where('position','TERM_TICKET')->first();
             //$booking = Bookings::where(['bookingno'=>$bookingno])->with('tickets')->first();
-            Pdf::setOption(['dpi' => 150, 'DOMPDF_ENABLE_CSS_FLOAT' => true]);
+            Pdf::setOption(['dpi' => 150, 'defaultMediaType' => 'a4','debugCss'=>true]);
             $pdf = Pdf::loadView('print.ticket', ['booking'=>$booking,'term'=>$term]);
             //return $pdf->download('invoice.pdf');
             //$html = view('print.ticket')->render();

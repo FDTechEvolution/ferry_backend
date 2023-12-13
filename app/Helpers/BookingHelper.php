@@ -167,7 +167,7 @@ class BookingHelper
 
         if ($booking->ispayment == 'Y') {
             $b = new BookingHelper();
-            $b->completeBooking($booking->id);
+            //$b->completeBooking($booking->id);
 
         }
         tranLog(['type'=>'booking','title'=>'Create booking','description'=>'','booking_id'=>$booking->id]);
@@ -175,7 +175,7 @@ class BookingHelper
         return $booking;
     }
 
-    public function completeBooking($bookingId = null,$paymentData = [])
+    public static function completeBooking($bookingId = null,$paymentData = [])
     {
         if (is_null($bookingId)) {
             return null;
@@ -204,6 +204,7 @@ class BookingHelper
                 'user_id'=>isset($paymentData['user_id'])?$paymentData['user_id']:NULL,
                 'docdate'=>date('Y-m-d H:i:s'),
                 'paymentno'=>newSequenceNumber('PAYMENT'),
+                'image_id'=>isset($paymentData['image_id'])?$paymentData['image_id']:null
             ]
         );
         

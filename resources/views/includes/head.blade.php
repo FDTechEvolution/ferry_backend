@@ -1,4 +1,4 @@
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <title>Ferry Application</title>
 <meta name="description" content="...">
 

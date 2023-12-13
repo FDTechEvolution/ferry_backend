@@ -73,16 +73,15 @@ class StationsController extends Controller
 
     public function edit(string $id = null)
     {
-        $station = Station::where('id', $id)->with(['image'])->first();
 
-        if (is_null($station) || $station->status != 'CO')
-            return redirect()->route('stations-index')->withFail('This station not exist.');
+        $station = Station::where('id', $id)->with(['image'])->first();
+        $maxSeq = $this->getMaxSortBySection($station->section_id);
 
         $station->info_line;
         $sections = Section::where('isactive', 'Y')->orderBy('created_at', 'DESC')->get();
         $info = StationInfomation::where('status', 'Y')->get();
 
-        return view('pages.stations.edit', ['station' => $station, 'sections' => $sections, 'info' => $info]);
+        return view('pages.stations.edit', ['station' => $station, 'sections' => $sections, 'info' => $info, 'maxSeq' => $maxSeq]);
     }
 
     public function store(Request $request)
@@ -92,7 +91,6 @@ class StationsController extends Controller
             'pier' => 'string|nullable',
             'nickname' => 'required|string',
             'section' => 'required|string',
-            'sort' => 'required|integer',
         ]);
 
         /*
@@ -102,14 +100,16 @@ class StationsController extends Controller
         if (!$this->checkNickname($request->nickname))
             return redirect()->route('stations-index')->withFail('Station nickname is exist. Please check.');
 
+        $maxSeq = $this->getMaxSortBySection($request->section);
         $station = Station::create([
             'name' => $request->name,
             'piername' => $request->pier,
             'nickname' => $request->nickname,
             'isactive' => isset($request->isactive) ? 'Y' : 'N',
             'section_id' => $request->section,
-            'sort' => $request->sort,
+            'sort' => $maxSeq + 1,
             'address' => $request->address,
+            'google_map' => $request->google_map,
         ]);
 
         if ($station) {
@@ -174,14 +174,21 @@ class StationsController extends Controller
             'info_to' => 'string|nullable',
         ]);
 
+        /*
         if (!$this->checkStationName($request->name, $request->id))
             return redirect()->route('stations-index')->withFail('Station name is exist. Please check.');
+        */
 
         if (!$this->checkNickname($request->nickname, $request->id))
             return redirect()->route('stations-index')->withFail('Station nickname is exist. Please check.');
 
         $station = Station::find($request->id);
+
+
+
         if (isset($station)) {
+            $oldSort = $station->sort;
+
             $station->name = $request->name;
             $station->piername = $request->pier;
             $station->nickname = $request->nickname;
@@ -190,16 +197,23 @@ class StationsController extends Controller
             $station->station_infomation_to_id = $request->info_to;
             $station->sort = $request->sort;
             $station->isactive = isset($request->isactive) ? 'Y' : 'N';
+            $station->google_map = $request->google_map;
+            $station->address = $request->address;
 
+            
             if ($station->save()) {
+                //check update sort
+                if ($oldSort != $request->sort) {
+                    $maxSeq = $this->getMaxSortBySection($request->section);
+                }
                 //check has image
                 $imageHelper = new ImageHelper();
-                if($request->isremoveimage =='Y'){
+                if ($request->isremoveimage == 'Y') {
                     $imageHelper->delete($station->image_id);
                     $station->image_id = null;
                     $station->save();
                 }
-                
+
                 if ($request->hasFile('image_file')) {
                     $image = $imageHelper->upload($request->image_file, 'station');
 
@@ -306,5 +320,21 @@ class StationsController extends Controller
         if (isset($section))
             return false;
         return true;
+    }
+
+    private function getMaxSortBySection($section_id)
+    {
+        $stations = Station::where('section_id', $section_id)
+            ->orderBy('sort', 'ASC')
+            ->orderBy('updated_at', 'DESC')
+            ->get();
+
+
+        foreach ($stations as $index => $station) {
+            $station->sort = ($index + 1);
+            $station->save();
+        }
+
+        return sizeof($stations);
     }
 }

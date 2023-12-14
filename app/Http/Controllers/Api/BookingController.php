@@ -28,7 +28,7 @@ class BookingController extends Controller
                                             $request->infant_passenger, $request->trip_type, $request->book_channel, 
                                             $_amount, $_extra_meal[0], $_extra_activity[0], $_extra_shuttle_bus[0], $_extra_longtail_boat[0]);
             $_customer = $this->setPassenger($request->fullname, $request->mobile, $request->passenger_type, 
-                                                $request->passportno, $request->email, $request->address);
+                                                $request->passportno, $request->email, $request->address, $request->mobile_code, $request->th_mobile, $request->country, $request->titlename, $request->birth_day);
             $_route = $this->setRoutes($request->route_id, $request->departdate, $request->returndate, 
                                         $request->passenger, $request->child_passenger, $request->infant_passenger);
 
@@ -70,7 +70,7 @@ class BookingController extends Controller
                                                 $request->infant_passenger, $request->trip_type, $request->book_channel, 
                                                 $_amount, $_extra_meal[0], $_extra_activity[0], $_extra_shuttle_bus[0], $_extra_longtail_boat[0]);
                 $_customer = $this->setPassenger($request->fullname, $request->mobile, $request->passenger_type, 
-                                                    $request->passportno, $request->email, $request->address);
+                                                    $request->passportno, $request->email, $request->address, $request->mobile_code, $request->th_mobile, $request->country, $request->titlename, $request->birth_day);
                 $_route = $this->setRoutes($request->route_id, $request->departdate, $request->returndate, 
                                             $request->passenger, $request->child_passenger, $request->infant_passenger);
 
@@ -115,29 +115,39 @@ class BookingController extends Controller
         return $booking;
     }
 
-    private function setPassenger($fullname, $mobile, $type = NULL, $passport = NULL, $email = NULL, $address = NULL) {
+    private function setPassenger($fullname, $mobile, $type = NULL, $passport = NULL, $email = NULL, $address = NULL, $mobile_code = NULL, $th_mobile = NULL, $country = NULL, $titlename = NULL, $birth_day = NULL) {
         $customer = [];
 
         if(is_array($fullname)) {
             foreach($fullname as $key => $name) {
                 if($key == 0) {
                     array_push($customer, [
+                        'title' => strtoupper($titlename[$key]),
                         'fullname' => $name,
                         'type' => strtoupper($type[$key]),
                         'passportno' => $passport,
                         'email' => $email,
+                        'mobile_code' => $mobile_code,
                         'mobile' => $mobile,
-                        'fulladdress' => $address
+                        'mobile_th' => $th_mobile,
+                        'fulladdress' => $address,
+                        'birthday' => $birth_day[$key],
+                        'country' => $country
                     ]);
                 }
                 else {
                     array_push($customer, [
+                        'title' => strtoupper($titlename[$key]),
                         'fullname' => $name,
                         'type' => strtoupper($type[$key]),
                         'passportno' => NULL,
                         'email' => NULL,
+                        'mobile_code' => NULL,
                         'mobile' => NULL,
-                        'fulladdress' => NULL
+                        'mobile_th' => NULL,
+                        'fulladdress' => NULL,
+                        'birthday' => $birth_day[$key],
+                        'country' => NULL
                     ]);
                 }
             }
@@ -279,8 +289,9 @@ class BookingController extends Controller
         $booking = $this->getBookingByBookingNumber($id);
         $addons = $this->getRouteAddon($booking);
         $m_route = $this->getRouteMultiple($booking->bookingRoutes[0]->station_to_id);
+        $m_from_route = $booking->bookingRoutes[0]->station_to;
         if(isset($booking)) {
-            return response()->json(['result' => true, 'data' => new BookingResource($booking), 'addon' => $addons, 'm_route' => $m_route], 200);
+            return response()->json(['result' => true, 'data' => new BookingResource($booking), 'addon' => $addons, 'm_route' => $m_route, 'm_from_route' => $m_from_route], 200);
         }
 
         return response()->json(['result' => false, 'data' => 'No booking record.'], 200);
@@ -342,9 +353,10 @@ class BookingController extends Controller
     }
 
     public function bookingMerge(Request $request) {
-        $booking_current = $this->getBookingByBookingNumber($request->booking_number);
-        $booking_new = $this->getBookingByBookingNumber($request->booking_number_new);
+        // $booking_current = $this->getBookingByBookingNumber($request->booking_number);
+        // $booking_new = $this->getBookingByBookingNumber($request->booking_number_new);
 
-        return response()->json(['result' => true, 'data' => ''], 200);
+        $booking = BookingHelper::moveBooking($request->booking_number, $request->booking_number_new);
+        return response()->json(['result' => true, 'data' => $booking], 200);
     }
 }

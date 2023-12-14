@@ -16,7 +16,12 @@ class Customers extends Model
         'passportno',
         'email',
         'mobile',
-        'fulladdress'
+        'fulladdress',
+        'mobil_code',
+        'mobile_th',
+        'title',
+        'country',
+        'birth_day'
     ];
 
     public function bookings() {

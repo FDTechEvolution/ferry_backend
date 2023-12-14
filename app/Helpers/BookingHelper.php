@@ -134,6 +134,11 @@ class BookingHelper
                 'email' => $customerData['email'],
                 'mobile' => $customerData['mobile'],
                 'fulladdress' => $customerData['fulladdress'],
+                'mobile_code' => $customerData['mobile_code'],
+                'mobile_th' => $customerData['mobile_th'],
+                'title' => $customerData['title'],
+                'country'=> $customerData['country'],
+                'birth_day' => $customerData['birthday']
             ]);
             $booking->bookingCustomers()->attach($customer, ["id" => (string) Uuid::uuid4()]);
         }

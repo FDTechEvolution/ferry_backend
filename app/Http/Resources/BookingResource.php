@@ -48,12 +48,14 @@ class BookingResource extends JsonResource
             }),
             'customer' => $this->bookingCustomers->map(function($customer) {
                 return [
+                    'title' => $customer->title,
                     'name' => $customer->fullname,
                     'mobile' => $customer->mobile,
                     'email' => $customer->email,
                     'address' => $customer->fulladdress,
                     'type' => $customer->type,
-                    'passport' => $customer->passportno
+                    'passport' => $customer->passportno,
+                    'birth_day' => $customer->birth_day
                 ];
             }),
             'extra' => $this->bookingExtraAddons->map(function($extra) {

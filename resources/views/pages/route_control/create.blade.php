@@ -30,7 +30,7 @@
                         <div class="row">
                             <div class="col-12 px-4">
                                 <div class="mb-4 row">
-                                    <label class="col-sm-3 col-lg-2 col-form-label-sm text-start fw-bold">Station From* :</label>
+                                    <label class="col-sm-3 col-lg-2 col-form-label-sm text-start fw-bold">Station From * :</label>
                                     <div class="col-sm-9 col-lg-7">
                                         <select required class="form-select form-select-sm" id="station-from-selected" name="station_from">
                                             <option value="" selected disabled>--- Choose ---</option>
@@ -203,8 +203,8 @@
                                     </div>
                                 </div>
 
-                                <div class="row mb-4">
-                                    <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+                                <div class="row">
+                                    <div class="col-12 col-lg-5 mb-3">
                                         <label class="d-flex align-items-center mb-1">
                                             <span class="user-select-none fw-bold me-2">Master From </span>
                                             <input class="d-none-cloaked" type="checkbox" id="master-from-switch" name="master_from_on" value="1" checked>
@@ -221,7 +221,7 @@
                                         <input type="hidden" id="master-from-selected" name="master_from_selected" value=''>
                                     </div>
 
-                                    <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+                                    <div class="col-12 col-lg-5 mb-3">
                                         <label class="d-flex align-items-center mb-1">
                                             <span class="user-select-none fw-bold me-2">Master To </span>
                                             <input class="d-none-cloaked" type="checkbox" id="master-to-switch" name="master_to_on" value="1" checked>
@@ -266,6 +266,17 @@
                                             :input_id="_('info-to-selected')"
                                         />
                                         <input type="hidden" id="info-to-selected" name="info_to_selected" value=''>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-12 col-lg-5">
+                                        <label for="">Text 1</label>
+                                        <textarea name="text_1" id="text_1"  rows="2" class="form-control"></textarea>
+                                    </div>
+                                    <div class="col-12 col-lg-5">
+                                        <label for="">Text 2</label>
+                                        <textarea name="text_2" id="text_2"  rows="2" class="form-control"></textarea>
                                     </div>
                                 </div>
 

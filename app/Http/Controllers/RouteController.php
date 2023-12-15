@@ -106,7 +106,9 @@ class RouteController extends Controller
             'child_price' => $request->child_price,
             'infant_price' => $request->infant_price,
             'isactive' => isset($request->status) ? 'Y' : 'N',
-            'partner_id'=>$request->partner_id
+            'partner_id'=>$request->partner_id,
+            'text_1'=>$request->text_1,
+            'text_2'=>$request->text_2
         ]);
 
         if($route) {
@@ -264,6 +266,8 @@ class RouteController extends Controller
             $route->infant_price = $request->infant_price;
             $route->isactive = isset($request->status) ? 'Y' : 'N';
             $route->partner_id = $request->partner_id;
+            $route->text_1 = $request->text_1;
+            $route->text_2 = $request->text_2;
 
         if($route->save()) {
             $this->routeIconDestroy($request->route_id);

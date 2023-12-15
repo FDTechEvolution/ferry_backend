@@ -51,8 +51,6 @@ function saveAllList(type, list_id, ul_id, input_id) {
 
                         <div class="row">
                             <div class="col-12 px-4">
-                                <h1 class="fw-bold text-main-color-2 mb-4">Edit route</h1>
-
                                 <div class="mb-4 row">
                                     <label class="col-sm-3 col-lg-2 col-form-label-sm text-start fw-bold">Station From* :</label>
                                     <div class="col-sm-9 col-lg-7">
@@ -303,6 +301,17 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                             :stations="$stations"
                                         />
                                         
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-12 col-lg-5">
+                                        <label for="">Text 1</label>
+                                        <textarea name="text_1" id="text_1"  rows="2" class="form-control">{{$route['text_1']}}</textarea>
+                                    </div>
+                                    <div class="col-12 col-lg-5">
+                                        <label for="">Text 2</label>
+                                        <textarea name="text_2" id="text_2"  rows="2" class="form-control">{{$route['text_2']}}</textarea>
                                     </div>
                                 </div>
 

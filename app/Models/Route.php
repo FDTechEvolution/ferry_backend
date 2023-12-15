@@ -20,7 +20,9 @@ class Route extends Model
         'infant_price',
         'isactive',
         'status',
-        'partner_id'
+        'partner_id',
+        'text_1',
+        'text_2'
     ];
 
     protected $hidden = [

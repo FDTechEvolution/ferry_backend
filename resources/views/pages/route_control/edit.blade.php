@@ -226,7 +226,7 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                 </div>
 
                                 <div class="row mb-4">
-                                    <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+                                    <div class="col-12 col-lg-5 mb-3">
                                         <label class="d-flex align-items-center mb-1">
                                             <span class="user-select-none fw-bold me-2">Master From </span>
                                             <input class="d-none-cloaked" type="checkbox" id="master-from-switch" name="master_from_on" value="1">
@@ -247,7 +247,7 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                         
                                     </div>
 
-                                    <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+                                    <div class="col-12 col-lg-5 mb-3">
                                         <label class="d-flex align-items-center mb-1">
                                             <span class="user-select-none fw-bold me-2">Master To </span>
                                             <input class="d-none-cloaked" type="checkbox" id="master-to-switch" name="master_to_on" value="1">

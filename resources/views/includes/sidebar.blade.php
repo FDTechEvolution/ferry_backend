@@ -151,6 +151,12 @@
               <span>Infomation</span>
           </a>
       </li>
+      <li class="nav-item {{ (request()->is('partner*')) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('partner-index') }}">
+            <i class="fi fi-arrow-right"></i>
+            <span>Partner</span>
+        </a>
+    </li>
       <li class="nav-item" style="display: none;">
           <a class="nav-link" href="#">
               <i class="fi fi-arrow-right"></i>

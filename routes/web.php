@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BookingsController;
 use App\Http\Controllers\InformationsController;
+use App\Http\Controllers\PartnerController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\AuthController;
@@ -155,6 +156,18 @@ Route::middleware('auth')->group(function () {
         Route::post('/information/update/{information}', 'update')->name('information-update');
 
         Route::get('/information/delete/{id}', 'destroy')->name('information-delete');
+    });
+
+    Route::controller(PartnerController::class)->group(function () {
+        Route::get('/partner', 'index')->name('partner-index');
+
+        Route::get('/partner/create', 'create')->name('partner-create');
+        Route::post('/partner/store', 'store')->name('partner-store');
+
+        Route::get('/partner/edit/{partner}', 'edit')->name('partner-edit');
+        Route::post('/partner/update/{partner}', 'update')->name('partner-update');
+
+        Route::get('/partner/delete/{id}', 'destroy')->name('partner-delete');
     });
 
     Route::controller(TimeTableController::class)->group(function () {

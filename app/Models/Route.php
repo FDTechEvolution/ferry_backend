@@ -19,12 +19,17 @@ class Route extends Model
         'child_price',
         'infant_price',
         'isactive',
-        'status'
+        'status',
+        'partner_id'
     ];
 
     protected $hidden = [
         
     ];
+
+    public function partner() {
+        return $this->hasOne(Partners::class, 'id', 'partner_id')->with('image');
+    }
 
     public function station_from() {
         return $this->hasOne(Station::class, 'id', 'station_from_id')->with('section');

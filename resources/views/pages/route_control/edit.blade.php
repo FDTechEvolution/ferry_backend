@@ -79,7 +79,7 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                         <select required class="form-select form-select-sm" id="station-to-selected" name="partner_id">
                                             <option value="" selected disabled>--- Choose ---</option>
                                             @foreach($partners as $partner)
-                                                <option value="{{ $partner['id'] }}">{{ $partner['name'] }}</option>
+                                                <option value="{{ $partner['id'] }}" @selected($partner['id'] == $route['partner_id'])>{{ $partner['name'] }}</option>
                                             @endforeach
                                         </select>
                                     </div>

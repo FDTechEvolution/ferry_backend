@@ -15,6 +15,11 @@ class PartnerController extends Controller
         $this->middleware('auth');
     }
 
+    public static function listPartners(){
+        $partners = Partners::where('isactive','Y')->orderBy('name','ASC')->get();
+        return $partners;
+    }
+
     public function index(){
         $partners = Partners::orderBy('created_at', 'DESC')->get();
        
@@ -53,6 +58,36 @@ class PartnerController extends Controller
 
             return redirect()->route('partner-index')->withSuccess(sprintf('Create partner "%s"', $request->name));
         }
+    }
+
+    public function update(Partners $partner){
+        $request = request();
+
+        $request->validate([
+            'name' => 'required|string'
+        ]);
+
+        $partner->name = $request->name;
+        $partner->isactive = $request->isactive;
+        $partner->save();
+
+        if ($request->isremoveimage == 'Y') {
+
+            $imageHelper = new ImageHelper();
+            $imageHelper->delete($partner->image_id);
+            $partner->image_id = null;
+            $partner->save();
+        }
+
+        if ($request->hasFile('image_file')) {
+            $imageHelper = new ImageHelper();
+            $image = $imageHelper->upload($request->image_file, 'station');
+
+            $partner->image_id = $image->id;
+            $partner->save();
+
+        }
+        return redirect()->route('partner-index')->withSuccess(sprintf('Create partner "%s"', $request->name));
     }
 
     public function destroy(string $id = null){

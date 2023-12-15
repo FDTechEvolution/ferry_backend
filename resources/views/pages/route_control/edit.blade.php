@@ -73,6 +73,17 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                         </select>
                                     </div>
                                 </div>
+                                <div class="mb-4 row">
+                                    <label class="col-sm-3 col-lg-2 col-form-label-sm text-start fw-bold">Partner :</label>
+                                    <div class="col-sm-9 col-lg-7">
+                                        <select required class="form-select form-select-sm" id="station-to-selected" name="partner_id">
+                                            <option value="" selected disabled>--- Choose ---</option>
+                                            @foreach($partners as $partner)
+                                                <option value="{{ $partner['id'] }}">{{ $partner['name'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="mb-0 pb-0 row">
                                     <label class="col-sm-12 col-lg-4 pb-0 col-form-label-sm text-start">More detail</label>
                                 </div>
@@ -258,7 +269,7 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                     </div>
                                 </div>
 
-                                <div class="row mb-4">
+                                <div class="row mb-4" style="display: none;">
                                     <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
                                         <label class="d-flex align-items-center mb-1 fw-bold">
                                             Infomation From 

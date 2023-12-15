@@ -2,7 +2,7 @@
 
 @section('page-title')
     <h1 class="ms-2 mb-0" id="promotion-page-title"><span class="text-main-color-2">Booking</span> Management</h1>
-    <x-a-href-green :text="_('New')" :href="route('booking-route')" class="ms-3 btn-sm w--10" />
+    <x-a-href-green :text="_('Create New Booking')" :href="route('booking-route')" class="ms-3 btn-sm w--50" />
 @stop
 
 @php

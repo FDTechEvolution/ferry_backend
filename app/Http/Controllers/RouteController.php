@@ -51,14 +51,15 @@ class RouteController extends Controller
     public function create() {
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
-        // $activities = Activity::where('status', 'CO')->with('icon')->get();
+        $partners = PartnerController::listPartners();
+
         $meals = Addon::where('type', $this->Meal)->where('isactive', 'Y')->where('status', 'CO')->get();
         $activities = Addon::where('type', $this->Activity)->where('isactive', 'Y')->where('status', 'CO')->get();
         $fare_child = Fare::where('name', 'Child')->first();
         $fare_infant = Fare::where('name', 'Infant')->first();
 
         return view('pages.route_control.create', 
-                    ['stations' => $stations, 'icons' => $icons, 'activities' => $activities, 'meals' => $meals,
+                    ['partners'=>$partners,'stations' => $stations, 'icons' => $icons, 'activities' => $activities, 'meals' => $meals,
                         'fare_child' => $fare_child, 'fare_infant' => $fare_infant
                     ]
                 );
@@ -75,13 +76,15 @@ class RouteController extends Controller
         $route->meal_lines;
         $route->shuttle_bus;
         $route->longtail_boat;
+
+        $partners = PartnerController::listPartners();
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->with('info_line')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
         $activities = Addon::where('type', $this->Activity)->where('status', 'CO')->with('icon')->get();
         $meals = Addon::where('type', $this->Meal)->where('status', 'CO')->get();
 
         return view('pages.route_control.edit', [
-            'route' => $route, 'icons' => $icons, 'stations' => $stations, 'activities' => $activities, 'meals' => $meals
+            'route' => $route, 'icons' => $icons, 'stations' => $stations, 'activities' => $activities, 'partners'=>$partners,'meals' => $meals
         ]);
     }
 
@@ -102,7 +105,8 @@ class RouteController extends Controller
             'regular_price' => $request->regular_price,
             'child_price' => $request->child_price,
             'infant_price' => $request->infant_price,
-            'isactive' => isset($request->status) ? 'Y' : 'N'
+            'isactive' => isset($request->status) ? 'Y' : 'N',
+            'partner_id'=>$request->partner_id
         ]);
 
         if($route) {
@@ -259,6 +263,8 @@ class RouteController extends Controller
             $route->child_price = $request->child_price;
             $route->infant_price = $request->infant_price;
             $route->isactive = isset($request->status) ? 'Y' : 'N';
+            $route->partner_id = $request->partner_id;
+
         if($route->save()) {
             $this->routeIconDestroy($request->route_id);
             $result = $this->routeIconStore($request->icons, $request->route_id);

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Route;
 use App\Models\Addon;
 use App\Models\Bookings;
+use App\Models\BookingRoutes;
 use App\Helpers\BookingHelper;
 use App\Helpers\PaymentHelper;
 use App\Http\Resources\BookingResource;
@@ -288,8 +289,10 @@ class BookingController extends Controller
     public function bookingRecord(string $id = null) {
         $booking = $this->getBookingByBookingNumber($id);
         $addons = $this->getRouteAddon($booking);
-        $m_route = $this->getRouteMultiple($booking->bookingRoutes[0]->station_to_id);
-        $m_from_route = $booking->bookingRoutes[0]->station_to;
+        $booking_routes = $booking->bookingRoutes->toArray();
+        $last_route = end($booking_routes);
+        $m_route = $this->getRouteMultiple($last_route['station_to_id']);
+        $m_from_route = $last_route['station_to'];
         if(isset($booking)) {
             return response()->json(['result' => true, 'data' => new BookingResource($booking), 'addon' => $addons, 'm_route' => $m_route, 'm_from_route' => $m_from_route], 200);
         }
@@ -358,5 +361,37 @@ class BookingController extends Controller
 
         $booking = BookingHelper::moveBooking($request->booking_number, $request->booking_number_new);
         return response()->json(['result' => true, 'data' => $booking], 200);
+    }
+
+    public function addNewRoute(Request $request) {
+        $booking = Bookings::find($request->booking_id);
+        $route = Route::find($request->route_id);
+        $amount = $booking->amount;
+        $new_amount = $this->passengerAmount($booking, $route);
+        if($booking->ispayment == 'N') {
+            BookingRoutes::create([
+                'route_id' => $route->id,
+                'traveldate' => $this->dateFormat($request->depart),
+                'booking_id' => $booking->id,
+                'amount' => $amount
+            ]);
+
+            $booking->amount = $amount + $new_amount;
+            $booking->totalamt = $booking->extraamt + $amount + $new_amount;
+            $booking->save();
+        }
+    }
+
+    private function dateFormat($date) {
+        $ex = explode('/', $date);
+        return $ex[2].'-'.$ex[1].'-'.$ex[0];
+    }
+
+    private function passengerAmount($booking, $route) {
+        $adult = $booking->adult_passenger*$route->regular_price;
+        $child = $booking->child_passenger*$route->child_price;
+        $infant = $booking->infant_passenger*$route->infant_price;
+
+        return $adult + $child + $infant;
     }
 }

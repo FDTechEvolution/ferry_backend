@@ -20,6 +20,7 @@ class BookingResource extends JsonResource
         $do_update = $depart > $now ? true : false;
 
         return [
+            'id' => $this->id,
             'depart_date' => $this->departdate,
             'do_update' => $do_update,
             'adult' => $this->adult_passenger,
@@ -43,11 +44,13 @@ class BookingResource extends JsonResource
                     'arrive_time' => $route->arrive_time,
                     'adult_price' => $route->regular_price,
                     'child_price' => $route->child_price,
-                    'infant_price' => $route->infant_price
+                    'infant_price' => $route->infant_price,
+                    'amount' => $route->pivot->amount
                 ];
             }),
             'customer' => $this->bookingCustomers->map(function($customer) {
                 return [
+                    'id' => $customer->id,
                     'title' => $customer->title,
                     'name' => $customer->fullname,
                     'mobile' => $customer->mobile,

@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PromotionController;
 use App\Http\Controllers\Api\InfomationController;
 use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\CustomerController;
 
 // 7 Controller
 use App\Http\Controllers\Api\Seven\BookingController as SevenBooking;
@@ -65,6 +66,8 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
             Route::get('record/{id}', 'bookingRecord');
             Route::get('check/person/{booking_current}/{booking_new}', 'bookingCheckRoute');
             Route::post('merge', 'bookingMerge');
+
+            Route::post('add-new-route', 'addNewRoute');
         });
     });
 
@@ -90,6 +93,10 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
 
     Route::controller(ReviewController::class)->group(function() {
         Route::get('review/get', 'index');
+    });
+
+    Route::controller(CustomerController::class)->group(function() {
+        Route::post('customer/update', 'updateCustomer');
     });
 });
 

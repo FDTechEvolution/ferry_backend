@@ -61,7 +61,7 @@ class BookingResource extends JsonResource
                     'birth_day' => $customer->birth_day
                 ];
             }),
-            'extra' => $this->bookingExtraAddons->map(function($extra) {
+            'extra' => $this->bookingRoutesX->map(function($extra) {
                 if($extra->status == 'CO' && $extra->isactive == 'Y') {
                     return [
                         'name' => $extra->name,

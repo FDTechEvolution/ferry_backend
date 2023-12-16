@@ -293,7 +293,7 @@ class BookingController extends Controller
     }
 
     private function getBookingByBookingNumber($bookingno) {
-        return Bookings::where('bookingno', $bookingno)->with('bookingCustomers', 'bookingRoutes', 'bookingExtraAddons')->first();
+        return Bookings::where('bookingno', $bookingno)->with('bookingCustomers', 'bookingRoutes', 'bookingRoutesX')->first();
     }
 
     public function bookingRecord(string $id = null) {
@@ -316,8 +316,8 @@ class BookingController extends Controller
             'meals' => [],
             'activities' => []
         ];
-        foreach($_booking['booking_routes'] as $route) {
-            $route = Route::find($route['id']);
+        foreach($_booking['booking_routes_x'] as $route) {
+            $route = Route::find($route['route_id']);
             $addons['meals'] = $route->meal_lines;
             $addons['activities'] = $route->activity_lines;
         }

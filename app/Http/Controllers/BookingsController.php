@@ -109,6 +109,11 @@ class BookingsController extends Controller
         return view('pages.bookings.create', ['route' => $route, 'departdate' => $departdate, 'extras' => $extras]);
     }
 
+    public function view($booking_id){
+        $booking = BookingHelper::getBookingInfoByBookingId($booking_id);
+        return view('pages.bookings.view',['booking'=>$booking]);
+    }
+
     public function store(Request $request)
     {
         //dd($request->all());
@@ -172,9 +177,10 @@ class BookingsController extends Controller
                     'traveldate' => $departdate,
                     'amount' => $request->price,
                     'type' => 'departure',
+                    'extras'=>$extras
                 ],
             ],
-            'extras'=>$extras
+            
 
         ];
 

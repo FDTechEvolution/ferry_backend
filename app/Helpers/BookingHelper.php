@@ -26,19 +26,31 @@ class BookingHelper
         ];
     }
 
-    public static function tripType(){
+    public static function tripType()
+    {
         return [
-            'one-way'=>'One Way',
-            'round-trip'=>'Round Trip',
-            'multi-trip'=>'Multi Island'
+            'one-way' => 'One Way',
+            'round-trip' => 'Round Trip',
+            'multi-trip' => 'Multi Island',
         ];
     }
 
     public static function getBookingInfoByBookingNo($bookingno)
     {
-        $booking = Bookings::where(['bookingno'=>$bookingno])
-        ->with('tickets.customer','bookingExtraAddons','user','bookingRoutes','bookingRoutes.station_from', 'bookingRoutes.station_to','bookingRoutes.station_lines','payments')
-        ->first();
+        $booking = Bookings::where(['bookingno' => $bookingno])
+            ->with('tickets.customer', 'bookingCustomers', 'bookingExtraAddons', 'user', 'bookingRoutes', 'bookingRoutes.partner', 'bookingRoutes.partner.image', 'bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingRoutes.station_lines', 'payments')
+            ->first();
+
+        //dd($booking);
+
+        return $booking;
+    }
+
+    public static function getBookingInfoByBookingId($booking_id)
+    {
+        $booking = Bookings::where(['id' => $booking_id])
+            ->with('tickets.customer', 'bookingExtraAddons', 'user', 'bookingRoutes', 'bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingRoutes.station_lines', 'payments')
+            ->first();
 
         //dd($booking);
 
@@ -93,7 +105,7 @@ class BookingHelper
     public static function createBooking($data = [])
     {
 
-        
+
         //dd($data);
 
         $amount = 0;
@@ -134,27 +146,17 @@ class BookingHelper
                 'email' => $customerData['email'],
                 'mobile' => $customerData['mobile'],
                 'fulladdress' => $customerData['fulladdress'],
-                'mobile_code' => $customerData['mobile_code'],
-                'mobile_th' => $customerData['mobile_th'],
-                'title' => $customerData['title'],
-                'country'=> $customerData['country'],
-                'birth_day' => $customerData['birthday']
+                'mobile_code' => isset($customerData['mobile_code']) ? $customerData['mobile_code'] : null,
+                'mobile_th' => isset($customerData['mobile_th']) ? $customerData['mobile_th'] : null,
+                'title' => isset($customerData['title']) ? $customerData['title'] : null,
+                'country' => isset($customerData['country']) ? $customerData['country'] : null,
+                'birth_day' => isset($customerData['birthday']) ? $customerData['birthday'] : null
             ]);
             $booking->bookingCustomers()->attach($customer, ["id" => (string) Uuid::uuid4()]);
         }
 
         //Create extra
-        if (isset($data["extras"])) {
-            $_extra = $data['extras'];
-            foreach($_extra as $index => $extra){
-                $bookingExtra = BookingExtras::create([
-                    'addon_id'=>$extra['addon_id'],
-                    'amount'=>$extra['amount'],
-                    'route_id'=>$extra['route_id'],
-                    'booking_id' => $booking->id
-                ]);
-            }
-        }
+
 
         //Routes
         $_routes = $data['routes'];
@@ -166,21 +168,32 @@ class BookingHelper
                 'type' => $routeData['type'],
                 'booking_id' => $booking->id,
             ]);
+
+            if (isset($routeData["extras"])) {
+                $_extra = $routeData['extras'];
+                foreach ($_extra as $index => $extra) {
+                    $bookingExtra = BookingExtras::create([
+                        'addon_id' => $extra['addon_id'],
+                        'amount' => $extra['amount'],
+                        'booking_route_id' => $bookingRoute->id,
+                    ]);
+                }
+            }
         }
 
-      
+
 
         if ($booking->ispayment == 'Y') {
             $b = new BookingHelper();
             //$b->completeBooking($booking->id);
 
         }
-        tranLog(['type'=>'booking','title'=>'Create booking','description'=>'','booking_id'=>$booking->id]);
+        tranLog(['type' => 'booking', 'title' => 'Create booking', 'description' => '', 'booking_id' => $booking->id]);
 
         return $booking;
     }
 
-    public static function completeBooking($bookingId = null,$paymentData = [])
+    public static function completeBooking($bookingId = null, $paymentData = [])
     {
         if (is_null($bookingId)) {
             return null;
@@ -192,27 +205,27 @@ class BookingHelper
         }
 
         //Make paymet
-        if(empty($paymentData)){
+        if (empty($paymentData)) {
             $paymentData = [
-                'payment_method'=>'NO',
-                'totalamt'=>$booking->totalamt
+                'payment_method' => 'NO',
+                'totalamt' => $booking->totalamt,
             ];
         }
-        
+
         $payment = Payments::create(
             [
-                'payment_method'=>isset($paymentData['payment_method'])?$paymentData['payment_method']:'NO',
-                'totalamt'=>isset($paymentData['totalamt'])?$paymentData['totalamt']:$booking->totalamt,
-                'confirm_document'=>isset($paymentData['confirm_document'])?$paymentData['confirm_document']:NULL,
-                'description'=>isset($paymentData['description'])?$paymentData['description']:NULL,
-                'booking_id'=>$booking->id,
-                'user_id'=>isset($paymentData['user_id'])?$paymentData['user_id']:NULL,
-                'docdate'=>date('Y-m-d H:i:s'),
-                'paymentno'=>newSequenceNumber('PAYMENT'),
-                'image_id'=>isset($paymentData['image_id'])?$paymentData['image_id']:null
-            ]
+                'payment_method' => isset($paymentData['payment_method']) ? $paymentData['payment_method'] : 'NO',
+                'totalamt' => isset($paymentData['totalamt']) ? $paymentData['totalamt'] : $booking->totalamt,
+                'confirm_document' => isset($paymentData['confirm_document']) ? $paymentData['confirm_document'] : NULL,
+                'description' => isset($paymentData['description']) ? $paymentData['description'] : NULL,
+                'booking_id' => $booking->id,
+                'user_id' => isset($paymentData['user_id']) ? $paymentData['user_id'] : NULL,
+                'docdate' => date('Y-m-d H:i:s'),
+                'paymentno' => newSequenceNumber('PAYMENT'),
+                'image_id' => isset($paymentData['image_id']) ? $paymentData['image_id'] : null
+            ],
         );
-        
+
 
         $booking->status = 'CO';
         $booking->ispayment = 'Y';
@@ -229,18 +242,18 @@ class BookingHelper
                         'ticketno' => newSequenceNumber('TICKET'),
                         'station_from_id' => $route['station_from']['id'],
                         'station_to_id' => $route['station_to']['id'],
-                        'status'=>'CO',
-                        'customer_id'=>$customer['id'],
-                        'booking_id'=>$booking['id']
+                        'status' => 'CO',
+                        'customer_id' => $customer['id'],
+                        'booking_id' => $booking['id'],
                     ],
                 );
             }
         }
 
 
-        $booking = Bookings::with('bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingCustomers','tickets')->where('id', $bookingId)->first();
+        $booking = Bookings::with('bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingCustomers', 'tickets')->where('id', $bookingId)->first();
 
-        tranLog(['type'=>'booking','title'=>'Complate payment','description'=>'','booking_id'=>$booking->id]);
+        tranLog(['type' => 'booking', 'title' => 'Complate payment', 'description' => '', 'booking_id' => $booking->id]);
 
         return $booking;
     }
@@ -259,19 +272,20 @@ class BookingHelper
         $booking->status = 'VO';
         $booking->save();
 
-        tranLog(['type'=>'booking','title'=>'Void booking','description'=>'','booking_id'=>$booking->id]);
+        tranLog(['type' => 'booking', 'title' => 'Void booking', 'description' => '', 'booking_id' => $booking->id]);
 
         //Create ticket
         return $booking;
     }
 
-    public static function moveBooking($oldBookingno,$newBookingno){
-        $oldBooking = Bookings::where('bookingno',$oldBookingno)->with()->first();
-        $newBooking = Bookings::where('bookingno',$newBookingno)->first();
+    public static function moveBooking($oldBookingno, $newBookingno)
+    {
+        $oldBooking = Bookings::where('bookingno', $oldBookingno)->with()->first();
+        $newBooking = Bookings::where('bookingno', $newBookingno)->first();
 
         $bookingRelated = BookingRelated::create([
-            'booking_id'=>$newBooking->id,
-            'related_booking_id'=>$oldBooking->id
+            'booking_id' => $newBooking->id,
+            'related_booking_id' => $oldBooking->id,
         ]);
 
         $oldBooking->status = 'RELATED';

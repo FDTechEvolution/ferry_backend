@@ -29,4 +29,8 @@ class BookingRoutes extends Model
     public function station_to() {
         return $this->hasOne(Station::class, 'route_id', 'station_to_id')->with('section');
     }
+
+    public function bookingExtras() {
+        return $this->hasMany(BookingExtras::class,'booking_route_id', 'id')->with('addon');
+    }
 }

@@ -15,4 +15,8 @@ class BookingExtras extends Model
         'addon_id',
         'booking_route_id'
     ];
+
+    public function addon() {
+        return $this->hasOne(Addon::class, 'id', 'addon_id');
+    }
 }

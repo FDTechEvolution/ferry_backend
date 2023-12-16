@@ -33,7 +33,7 @@ class Bookings extends Model
     }
 
     public function bookingCustomers() {
-        return $this->belongsToMany(Customers::class, 'booking_customers', 'booking_id', 'customer_id');
+        return $this->belongsToMany(Customers::class, 'booking_customers', 'booking_id', 'customer_id')->withPivot('isdefault');
     }
 
     public function bookingRoutes() {

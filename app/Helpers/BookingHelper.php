@@ -137,6 +137,8 @@ class BookingHelper
         }
 
         //Create customers
+        //$totalPassenger = ($booking->adult_passenger+$booking->child_passenger+$booking->infant_passenger);
+
         $_c = $data['customers'];
         foreach ($_c as $key => $customerData) {
             $customer = Customers::create([
@@ -152,7 +154,9 @@ class BookingHelper
                 'country' => isset($customerData['country']) ? $customerData['country'] : null,
                 'birth_day' => isset($customerData['birthday']) ? $customerData['birthday'] : null
             ]);
-            $booking->bookingCustomers()->attach($customer, ["id" => (string) Uuid::uuid4()]);
+            $isdefault = $key==0?'Y':'N';
+
+            $booking->bookingCustomers()->attach($customer, ["id" => (string) Uuid::uuid4(),'isdefault'=>$isdefault]);
         }
 
         //Create extra
@@ -232,11 +236,12 @@ class BookingHelper
         $booking->save();
 
         //Create ticket
+        
         $customers = $booking->bookingCustomers;
         $routes = $booking->bookingRoutes;
 
         foreach ($routes as $key => $route) {
-            foreach ($customers as $customer) {
+            foreach ($customers as $index=> $customer) {
                 $ticket = Tickets::create(
                     [
                         'ticketno' => newSequenceNumber('TICKET'),
@@ -245,9 +250,12 @@ class BookingHelper
                         'status' => 'CO',
                         'customer_id' => $customer['id'],
                         'booking_id' => $booking['id'],
+                        'isdefault'=>$customer->pivot->isdefault
                     ],
                 );
             }
+
+            
         }
 
 

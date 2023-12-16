@@ -16,7 +16,8 @@ class Tickets extends Model
         'station_to_id',
         'status',
         'customer_id',
-        'booking_id'
+        'booking_id',
+        'isdefault'
     ];
 
     public function customer() {

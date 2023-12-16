@@ -38,7 +38,7 @@ class BookingHelper
     public static function getBookingInfoByBookingNo($bookingno)
     {
         $booking = Bookings::where(['bookingno' => $bookingno])
-            ->with('tickets.customer', 'bookingCustomers', 'bookingExtraAddons', 'user', 'bookingRoutes', 'bookingRoutes.partner', 'bookingRoutes.partner.image', 'bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingRoutes.station_lines', 'payments')
+        ->with('tickets.customer', 'user', 'bookingRoutes','bookingRoutesX.bookingExtraAddons', 'bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingRoutes.station_lines', 'payments')
             ->first();
 
         //dd($booking);
@@ -49,7 +49,7 @@ class BookingHelper
     public static function getBookingInfoByBookingId($booking_id)
     {
         $booking = Bookings::where(['id' => $booking_id])
-            ->with('tickets.customer', 'bookingExtraAddons', 'user', 'bookingRoutes', 'bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingRoutes.station_lines', 'payments')
+            ->with('tickets.customer', 'user', 'bookingRoutes','bookingRoutesX.bookingExtraAddons', 'bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingRoutes.station_lines', 'payments')
             ->first();
 
         //dd($booking);

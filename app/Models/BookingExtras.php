@@ -19,4 +19,5 @@ class BookingExtras extends Model
     public function addon() {
         return $this->hasOne(Addon::class, 'id', 'addon_id');
     }
+
 }

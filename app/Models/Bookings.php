@@ -40,6 +40,10 @@ class Bookings extends Model
         return $this->belongsToMany(Route::class, 'booking_routes', 'booking_id', 'route_id')->withPivot('type', 'traveldate','amount')->with('station_from', 'station_to');
     }
 
+    public function bookingRoutesX(){
+        return $this->hasMany(BookingRoutes::class,'booking_id','id');
+    }
+
     public function tickets() {
         return $this->hasMany(Tickets::class,'booking_id', 'id');
     }
@@ -48,9 +52,6 @@ class Bookings extends Model
         return $this->hasMany(Payments::class,'booking_id', 'id');
     }
 
-    public function bookingExtraAddons() {
-        return $this->belongsToMany(Addon::class, 'booking_extras', 'booking_id', 'addon_id');
-    }
 
 
     

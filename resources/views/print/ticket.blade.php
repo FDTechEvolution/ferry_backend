@@ -116,7 +116,7 @@
 
         $tickets = $booking['tickets'];
         $user = $booking['user'];
-        $extras = $booking['bookingExtraAddons'];
+        $extras = $booking['bookingRoutesX'];
         $bookingRoutes = $booking['bookingRoutes'];
         $payment = sizeof($booking['payments']) > 0 ? $booking['payments'][0] : null;
     @endphp
@@ -201,9 +201,7 @@
                                
                             </td>
                             <td>
-                                @foreach ($extras as $extra)
-                                    - {{ $extra['name'] }}<br>
-                                @endforeach
+                               
                             </td>
                         </tr>
                     </tbody>

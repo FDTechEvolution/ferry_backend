@@ -266,7 +266,7 @@
                                     [{{ $route['station_to']['piername'] }}]
                                 @endif
 
-                                <a href="https://www.andamanexpress.com/station?code={{$route['station_from']['nickname']}}" class="text-main" target="_blank">Click to see your check-in points</a>
+                                <a href="https://www.andamanexpress.com/station/detail/{{$route['station_from']['nickname']}}" class="text-main" target="_blank">Click to see your check-in points</a>
                             </td>
                         </tr>
                         @foreach ($route['station_lines'] as $info)

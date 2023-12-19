@@ -1,11 +1,13 @@
 <?php
 namespace App\Helpers;
 
+use App\Models\Addon;
 use App\Models\BookingCustomers;
 use App\Models\BookingRoutes;
 use App\Models\BookingExtras;
 use App\Models\Bookings;
 use App\Models\Customers;
+use App\Models\PaymentLines;
 use App\Models\Tickets;
 use App\Models\Payments;
 use App\Models\Station;
@@ -38,7 +40,7 @@ class BookingHelper
     public static function getBookingInfoByBookingNo($bookingno)
     {
         $booking = Bookings::where(['bookingno' => $bookingno])
-        ->with('tickets.customer', 'user', 'bookingRoutes','bookingRoutesX.bookingExtraAddons', 'bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingRoutes.station_lines', 'payments')
+            ->with('bookingCustomers','tickets.customer', 'user', 'bookingRoutes', 'bookingRoutesX.bookingExtraAddons', 'bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingRoutes.station_lines', 'payments')
             ->first();
 
         //dd($booking);
@@ -49,7 +51,7 @@ class BookingHelper
     public static function getBookingInfoByBookingId($booking_id)
     {
         $booking = Bookings::where(['id' => $booking_id])
-            ->with('tickets.customer', 'user', 'bookingRoutes','bookingRoutesX.bookingExtraAddons', 'bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingRoutes.station_lines', 'payments')
+            ->with('bookingCustomers','tickets.customer', 'user', 'bookingRoutes', 'bookingRoutesX.bookingExtraAddons', 'bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingRoutes.station_lines', 'payments')
             ->first();
 
         //dd($booking);
@@ -130,11 +132,15 @@ class BookingHelper
 
         ]);
 
+       
+
         $amount += $_b['amount'];
 
         if (!$booking) {
             return false;
         }
+
+
 
         //Create customers
         //$totalPassenger = ($booking->adult_passenger+$booking->child_passenger+$booking->infant_passenger);
@@ -154,9 +160,10 @@ class BookingHelper
                 'country' => isset($customerData['country']) ? $customerData['country'] : null,
                 'birth_day' => isset($customerData['birthday']) ? $customerData['birthday'] : null
             ]);
-            $isdefault = $key==0?'Y':'N';
+            $isdefault = $key == 0 ? 'Y' : 'N';
+           
 
-            $booking->bookingCustomers()->attach($customer, ["id" => (string) Uuid::uuid4(),'isdefault'=>$isdefault]);
+            $booking->bookingCustomers()->attach($customer, ["id" => (string) Uuid::uuid4(), 'isdefault' => $isdefault]);
         }
 
         //Create extra
@@ -176,22 +183,19 @@ class BookingHelper
             if (isset($routeData["extras"])) {
                 $_extra = $routeData['extras'];
                 foreach ($_extra as $index => $extra) {
+                    $addon = Addon::where('id',$extra['addon_id'])->first();
+
                     $bookingExtra = BookingExtras::create([
-                        'addon_id' => $extra['addon_id'],
+                        'addon_id' => $addon->id,
                         'amount' => $extra['amount'],
                         'booking_route_id' => $bookingRoute->id,
                     ]);
+
                 }
             }
         }
 
 
-
-        if ($booking->ispayment == 'Y') {
-            $b = new BookingHelper();
-            //$b->completeBooking($booking->id);
-
-        }
         tranLog(['type' => 'booking', 'title' => 'Create booking', 'description' => '', 'booking_id' => $booking->id]);
 
         return $booking;
@@ -208,40 +212,17 @@ class BookingHelper
             return null;
         }
 
-        //Make paymet
-        if (empty($paymentData)) {
-            $paymentData = [
-                'payment_method' => 'NO',
-                'totalamt' => $booking->totalamt,
-            ];
-        }
-
-        $payment = Payments::create(
-            [
-                'payment_method' => isset($paymentData['payment_method']) ? $paymentData['payment_method'] : 'NO',
-                'totalamt' => isset($paymentData['totalamt']) ? $paymentData['totalamt'] : $booking->totalamt,
-                'confirm_document' => isset($paymentData['confirm_document']) ? $paymentData['confirm_document'] : NULL,
-                'description' => isset($paymentData['description']) ? $paymentData['description'] : NULL,
-                'booking_id' => $booking->id,
-                'user_id' => isset($paymentData['user_id']) ? $paymentData['user_id'] : NULL,
-                'docdate' => date('Y-m-d H:i:s'),
-                'paymentno' => newSequenceNumber('PAYMENT'),
-                'image_id' => isset($paymentData['image_id']) ? $paymentData['image_id'] : null
-            ],
-        );
-
-
         $booking->status = 'CO';
         $booking->ispayment = 'Y';
         $booking->save();
 
         //Create ticket
-        
+
         $customers = $booking->bookingCustomers;
         $routes = $booking->bookingRoutes;
 
         foreach ($routes as $key => $route) {
-            foreach ($customers as $index=> $customer) {
+            foreach ($customers as $index => $customer) {
                 $ticket = Tickets::create(
                     [
                         'ticketno' => newSequenceNumber('TICKET'),
@@ -250,12 +231,12 @@ class BookingHelper
                         'status' => 'CO',
                         'customer_id' => $customer['id'],
                         'booking_id' => $booking['id'],
-                        'isdefault'=>$customer->pivot->isdefault
+                        'isdefault' => $customer->pivot->isdefault,
                     ],
                 );
             }
 
-            
+
         }
 
 

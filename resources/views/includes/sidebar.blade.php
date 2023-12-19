@@ -62,7 +62,7 @@
       <li class="nav-item {{ (request()->is('time-table*')) ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('time-table-index') }}">
           <i class="fi fi-arrow-right"></i>
-          <span>Time Table</span>
+          <span>Timetable</span>
         </a>
       </li>
       <li class="nav-item {{ (request()->is('route-map*')) ? 'active' : '' }}">

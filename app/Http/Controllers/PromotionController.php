@@ -109,6 +109,22 @@ class PromotionController extends Controller
             'times_use_max' => 'required|decimal:2',
             'title' => 'required|string',
         ]);
+
+        $promotion = Promotions::where('id',$request->id)->first();
+
+        if(is_null($promotion)){
+            return redirect()->route('promotion-index');
+        }
+
+        if ($request->hasFile('image_file')) {
+            $imageHelper = new ImageHelper();
+            $image = $imageHelper->upload($request->image_file, 'promotion');
+            $promotion->image_id = $image->id;
+        }
+
+        
+
+
     }
 
     public function destroy(string $id = null)

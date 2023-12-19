@@ -4,6 +4,8 @@ namespace App\Helpers;
 use Illuminate\Support\Facades\Log;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use App\Models\Payments;
+use App\Models\PaymentLines;
 
 class PaymentHelper
 {
@@ -66,5 +68,81 @@ class PaymentHelper
         $decoded_array = (array) $decodedPayload;
         
         return $decoded_array;
+    }
+
+    //Make draf payment
+    public static function createPaymentFromBooking($booking_id)
+    {
+        $booking = BookingHelper::getBookingInfoByBookingId($booking_id);
+        $totalAmount = 0;
+
+        //Make draft payment
+        $payment = Payments::create([
+            'payment_method' => 'NO',
+            'totalamt' => $booking->totalamt,
+            'docdate' => date('Y-m-d H:i:s'),
+            'paymentno' => newSequenceNumber('PAYMENT'),
+            'booking_id' => $booking->id
+        ]);
+
+        //Customer
+        if(!is_null($booking->bookingCustomers)){
+            $bookingCustomer = $booking->bookingCustomers[0];
+            $payment->customer_id = $bookingCustomer->id;
+        }
+
+        foreach ($booking->bookingRoutes as $index => $bookingRoute) {
+            $paymentLine = PaymentLines::create([
+                'payment_id' => $payment->id,
+                'type' => 'ROUTE',
+                'booking_id' => $booking->id,
+                'title' => sprintf('Booking No.%s, From %s to %s', $booking->bookingno, $bookingRoute->station_from->name, $bookingRoute->station_to->name),
+                'amount' => $bookingRoute->pivot->amount,
+                'booking_route_id' => $bookingRoute->id,
+            ]);
+
+            $totalAmount += $bookingRoute->pivot->amount;
+
+            //Addons
+            $bRoute = $booking->bookingRoutesX[$index];
+
+            if (!is_null($bRoute->bookingExtraAddons)) {
+                foreach ($bRoute->bookingExtraAddons as $key => $addon) {
+                    //$_addon = Addon::where('id'=>$addon->)->first();
+
+                    $paymentLine = PaymentLines::create([
+                        'payment_id' => $payment->id,
+                        'type' => 'ADDON',
+                        'booking_id' => $booking->id,
+                        'title' => sprintf('%s',$addon->name),
+                        'amount' => $addon->amount,
+                        'booking_route_id' => $bookingRoute->id,
+                    ]);
+                    $totalAmount += $addon->amount;
+                }
+            }
+
+        }
+        $payment->totalamt = $totalAmount;
+        $payment->save();
+
+        return $payment;
+    }
+
+    public static function completePayment($payment_id,$paymentData = []){
+        $payment = Payments::where('id',$payment_id)->first();
+
+        $payment->status = 'CO';
+        $payment->ispaid = 'Y';
+        $payment->payment_date = date('Y-m-d H:i:s');
+        $payment->payment_method = isset($paymentData['payment_method']) ? $paymentData['payment_method'] : 'NO';
+        $payment->confirm_document = isset($paymentData['confirm_document']) ? $paymentData['confirm_document'] : NULL;
+        $payment->description = isset($paymentData['description']) ? $paymentData['description'] : NULL;
+        $payment->image_id = isset($paymentData['image_id']) ? $paymentData['image_id'] : null;
+        $payment->user_id = isset($paymentData['user_id']) ? $paymentData['user_id'] : null;
+
+        $payment->save();
+
+        return $payment;
     }
 }

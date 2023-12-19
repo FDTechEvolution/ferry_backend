@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\PaymentHelper;
 use App\Models\Addon;
 use App\Models\BookingCustomers;
 use App\Models\Bookings;
@@ -151,8 +152,8 @@ class BookingsController extends Controller
         $_customers = [];
         for ($i = 0; $i < 1; $i++) {
             $fullname = $request->fullname;
-            if($i!=0){
-                $fullname = sprintf('%s [%d]',$fullname,($i));
+            if ($i != 0) {
+                $fullname = sprintf('%s [%d]', $fullname, ($i));
             }
             $_c = [
                 'fullname' => $fullname,
@@ -162,7 +163,7 @@ class BookingsController extends Controller
                 'mobile' => null,
                 'fulladdress' => null,
             ];
-            array_push($_customers,$_c);
+            array_push($_customers, $_c);
         }
 
         $data = [
@@ -180,7 +181,7 @@ class BookingsController extends Controller
                 'trip_type' => 'one-way',
                 'book_channel' => 'ADMIN',
             ],
-            'customers' =>$_customers,
+            'customers' => $_customers,
             'routes' => [
                 [
                     'route_id' => $request->route_id,
@@ -195,20 +196,25 @@ class BookingsController extends Controller
         ];
 
         $booking = BookingHelper::createBooking($data);
+        $payment = PaymentHelper::createPaymentFromBooking($booking->id);
 
-        $paymentData = [
-            'payment_method' => $request->payment_method,
-            'totalamt' => $booking->totalamt,
-            'user_id' => $request->user_id,
-        ];
+        //Check has Payment
+        if ($request->ispayment == 'Y') {
+            $paymentData = [
+                'payment_method' => $request->payment_method,
+                'user_id' => $request->user_id,
+            ];
 
-        if ($request->hasFile('image_file')) {
-            $imageHelper = new ImageHelper();
-            $image = $imageHelper->upload($request->image_file, 'payment_slip');
-            $paymentData['image_id'] = $image->id;
+            if ($request->hasFile('image_file')) {
+                $imageHelper = new ImageHelper();
+                $image = $imageHelper->upload($request->image_file, 'payment_slip');
+                $paymentData['image_id'] = $image->id;
+            }
+
+            $payment = PaymentHelper::completePayment($payment->id,$paymentData);
+            $booking = BookingHelper::completeBooking($booking['id']);
         }
 
-        $booking = BookingHelper::completeBooking($booking['id'], $paymentData);
 
         return redirect()->route('booking-index')->withSuccess('Save New Booking');
     }

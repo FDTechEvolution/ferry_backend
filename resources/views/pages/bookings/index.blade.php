@@ -2,7 +2,7 @@
 
 @section('page-title')
     <h1 class="ms-2 mb-0" id="promotion-page-title"><span class="text-main-color-2">Booking</span> Management</h1>
-    <x-a-href-green :text="_('Create New Booking')" :href="route('booking-route')" class="ms-3 btn-sm w--50" />
+    <x-a-href-green :text="_('Create New Booking Staff Only')" :href="route('booking-route')" class="ms-3 btn-sm w--50" />
 @stop
 
 @php
@@ -86,7 +86,7 @@
                     data-custom-config='{"searching":false}'>
                     <thead>
                         <tr>
-                            <th>Issued Date</th>
+                            <th>Issue Date</th>
                             <th>Invoice No</th>
                             <th>Ticket No</th>
                             <th>Type</th>
@@ -118,7 +118,7 @@
                                 <td class="text-end">{{ number_format($item['totalamt']) }}</td>
                                 <td class="text-center">
                                     @if ($item['ispayment'] == 'Y')
-                                        <span class="text-success">Pay</span>
+                                        <span class="text-success">Paid</span>
                                     @else
                                         <span class="text-danger">Unpay</span>
                                     @endif

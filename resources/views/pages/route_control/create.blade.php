@@ -239,7 +239,7 @@
                                     </div>
                                 </div>
 
-                                <div class="row mb-4" style="display: none;">
+                                <div class="row mb-4">
                                     <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
                                         <label class="d-flex align-items-center mb-1 fw-bold">
                                             Infomation From 

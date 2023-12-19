@@ -19,11 +19,18 @@ class Payments extends Model
         'user_id',
         'docdate',
         'paymentno',
-        'image_id'
+        'image_id',
+        'status',
+        'payment_date',
+        'customer_id'
     ];
 
     public function user() {
         return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+    public function customer() {
+        return $this->hasOne(Customers::class, 'id', 'customer_id');
     }
 
     public function image() {
@@ -31,5 +38,9 @@ class Payments extends Model
     }
     public function booking() {
         return $this->hasOne(Bookings::class, 'id', 'booking_id');
+    }
+
+    public function paymentLines() {
+        return $this->belongsTo(PaymentLines::class, 'id', 'payment_id');
     }
 }

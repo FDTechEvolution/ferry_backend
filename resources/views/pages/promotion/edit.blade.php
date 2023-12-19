@@ -11,6 +11,7 @@
             <form novalidate class="bs-validate" id="promotion-create-form" method="POST"
                 action="{{ route('promotion-update') }}" enctype="multipart/form-data">
                 @csrf
+                <input type="hidden" name="id" id="id" value="{{$promotion->id}}">
                 <fieldset id="promotion-create">
                     <div class="mb-4 row">
                         <div class="col-sm-12 col-lg-4 border-end">
@@ -214,7 +215,7 @@
                     <div class="row mb-3">
                         <div class="col-12 text-center">
                             <x-button-submit-loading class="btn-lg w--10 me-5" :form_id="_('promotion-create-form')" :fieldset_id="_('promotion-create')"
-                                :text="_('Add')" />
+                                :text="_('Save')" />
                             <a href="{{ route('promotion-index') }}" class="btn btn-secondary btn-lg w--10">Cancel</a>
                             <small id="user-create-error-notice" class="text-danger mt-3"></small>
                         </div>

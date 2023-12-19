@@ -51,7 +51,8 @@ class BookingController extends Controller
             $payload = PaymentHelper::encodeRequest($booking);
             $response = PaymentHelper::postTo_2c2p($payload);
             $result = PaymentHelper::decodeResponse($response);
-            // Log::debug($result);
+
+            Log::debug($result);
 
             return response()->json(['result' => true, 'data' => $result, 'booking' => $booking->bookingno], 200);
             // return response()->json(['data' => $data]);

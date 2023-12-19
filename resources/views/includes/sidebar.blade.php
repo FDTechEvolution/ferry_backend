@@ -166,7 +166,7 @@
       <li class="nav-item">
           <a class="nav-link" href="#">
               <i class="fi fi-arrow-right"></i>
-              <span>Api</span>
+              <span>API</span>
           </a>
       </li>
 

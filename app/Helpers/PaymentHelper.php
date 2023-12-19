@@ -8,8 +8,9 @@ use Firebase\JWT\Key;
 class PaymentHelper
 {
     public static function encodeRequest($booking) {
+        $merchantID = config('services.payment.merchant_id_etc');
         $SECRETKEY = config('services.payment.secret_key');
-        $merchantID = config('services.payment.merchant_id');
+        // $merchantID = config('services.payment.merchant_id_credit');
         $backend_response = config('services.payment.backend_return');
         $fontend_return = config(('services.payment.frontend_return'));
         $currencyCode = 'THB';
@@ -23,7 +24,7 @@ class PaymentHelper
             "amount" => $booking->totalamt,
             "currencyCode" => $currencyCode,
 
-            "paymentChannel" => ["CC", "PPQR", "IMBANK", "TRUEMONEY"],
+            "paymentChannel" => ["PPQR"],
             "userDefined1" => $booking->id,
             "backendReturnUrl" => $backend_response,
 

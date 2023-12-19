@@ -51,4 +51,12 @@ class PromotionController extends Controller
     private function oneTripPromoCode() {
         
     }
+
+    private function roundTripPromocode() {
+
+    }
+
+    private function multiTripPromocode() {
+        
+    }
 }

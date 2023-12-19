@@ -132,15 +132,11 @@ class BookingHelper
 
         ]);
 
-       
-
         $amount += $_b['amount'];
 
         if (!$booking) {
             return false;
         }
-
-
 
         //Create customers
         //$totalPassenger = ($booking->adult_passenger+$booking->child_passenger+$booking->infant_passenger);
@@ -162,13 +158,9 @@ class BookingHelper
             ]);
             $isdefault = $key == 0 ? 'Y' : 'N';
            
-
             $booking->bookingCustomers()->attach($customer, ["id" => (string) Uuid::uuid4(), 'isdefault' => $isdefault]);
         }
-
-        //Create extra
-
-
+        
         //Routes
         $_routes = $data['routes'];
         foreach ($_routes as $key => $routeData) {

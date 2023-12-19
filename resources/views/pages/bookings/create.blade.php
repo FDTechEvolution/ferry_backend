@@ -151,7 +151,6 @@
                             <div class="col-8 col-md-3">
                                 <select name="payment_method" id="payment_method" class="form-control">
                                     <option value="CASH">Cash</option>
-                                    <option value="CREDIT">Credit</option>
                                     <option value="BANKING">Banking</option>
                                 </select>
                             </div>

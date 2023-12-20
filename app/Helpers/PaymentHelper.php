@@ -9,11 +9,10 @@ use App\Models\PaymentLines;
 
 class PaymentHelper
 {
-    public static function encodeRequest($booking)
+    public static function encodeRequest($payment, $payment_channel)
     {
-        $merchantID = config('services.payment.merchant_id_etc');
+        $merchantID = $payment_channel == 'CC' ? config('services.payment.merchant_id_credit') : config('services.payment.merchant_id_etc');       
         $SECRETKEY = config('services.payment.secret_key');
-        // $merchantID = config('services.payment.merchant_id_credit');
         $backend_response = config('services.payment.backend_return');
         $fontend_return = config(('services.payment.frontend_return'));
         $currencyCode = 'THB';
@@ -22,13 +21,14 @@ class PaymentHelper
         $payload = array(
             //MANDATORY PARAMS
             "merchantID" => $merchantID,
-            "invoiceNo" => $booking->bookingno,
-            "description" => $booking->departdate,
-            "amount" => $booking->totalamt,
+            "invoiceNo" => $payment->paymentno,
+            "description" => $payment_channel,
+            "amount" => $payment->totalamt,
             "currencyCode" => $currencyCode,
 
-            "paymentChannel" => ["PPQR"],
-            "userDefined1" => $booking->id,
+            "paymentChannel" => [$payment_channel],
+            "userDefined1" => $payment->id,
+            "userDefined2" => $payment->booking_id,
             "backendReturnUrl" => $backend_response,
 
             //MANDATORY RANDOMIZER

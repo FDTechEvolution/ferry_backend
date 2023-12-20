@@ -71,6 +71,16 @@ class BookingResource extends JsonResource
                         'icon' => $extra->icon
                     ];
                 }
+            }),
+            'payment' => $this->payments->map(function($payment) {
+                return [
+                    'payment_id' => $payment->id,
+                    'payment_method' => $payment->payment_method,
+                    'totalamt' => $payment->totalamt,
+                    'paymentno' => $payment->paymentno,
+                    'ispaid' => $payment->ispaid,
+                    'status' => $payment->status
+                ];
             })
         ];
     }

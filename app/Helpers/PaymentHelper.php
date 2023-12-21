@@ -11,7 +11,7 @@ class PaymentHelper
 {
     public static function encodeRequest($payment, $payment_channel)
     {
-        $merchantID = $payment_channel == 'CC' ? config('services.payment.merchant_id_credit') : config('services.payment.merchant_id_etc');       
+        $merchantID = $payment_channel == 'CC' ? config('services.payment.merchant_id_credit') : config('services.payment.merchant_id_etc');
         $SECRETKEY = config('services.payment.secret_key');
         $backend_response = config('services.payment.backend_return');
         $fontend_return = config(('services.payment.frontend_return'));
@@ -147,6 +147,32 @@ class PaymentHelper
             $payment->user_id = isset($paymentData['user_id']) ? $paymentData['user_id'] : null;
 
             $payment->save();
+        }
+
+        return $payment;
+    }
+
+    public static function updatePayWithCreditCard($payment_id)
+    {
+        $payment = Payments::where('id', $payment_id)->first();
+
+        if (!is_null($payment)) {
+            $feeeAmount = $payment->totalamt * 0.035;
+
+            //Make payment line
+            $paymentLine = PaymentLines::create([
+                'payment_id' => $payment->id,
+                'type' => 'FEE',
+                'title' => 'Credit card fee 3.5%',
+                'amount' => $feeeAmount,
+            ]);
+
+            if ($paymentLine) {
+                $payment->payment_method = 'CREDIT';
+                $payment->totalamt = $payment->totalamt + $feeeAmount;
+
+                $payment->save();
+            }
         }
 
         return $payment;

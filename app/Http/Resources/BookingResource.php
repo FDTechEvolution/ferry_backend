@@ -79,9 +79,17 @@ class BookingResource extends JsonResource
                     'totalamt' => $payment->totalamt,
                     'paymentno' => $payment->paymentno,
                     'ispaid' => $payment->ispaid,
-                    'status' => $payment->status
+                    'status' => $payment->status,
+                    'payment_lines' => $payment->paymentLines->map(function($line) {
+                        return [
+                            'type' => $line->type,
+                            'title' => $line->title,
+                            'amount' => $line->amount
+                        ];
+                    })
                 ];
-            })
+            }),
+
         ];
     }
 }

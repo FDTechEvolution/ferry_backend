@@ -33,7 +33,7 @@ class BookingController extends Controller
 
             $_booking = $this->setBooking($request->departdate, $request->passenger, $request->child_passenger, 
                                             $request->infant_passenger, $request->trip_type, $request->book_channel, 
-                                            $_amount, $_extra_meal[0], $_extra_activity[0], $_extra_shuttle_bus[0], $_extra_longtail_boat[0]);
+                                            $_amount, $_extra_meal[0], $_extra_activity[0], $_extra_shuttle_bus[0], $_extra_longtail_boat[0], $request->ispremiumflex);
             $_customer = $this->setPassenger($request->fullname, $request->mobile, $request->passenger_type, 
                                                 $request->passportno, $request->email, $request->address, $request->mobile_code, $request->th_mobile, $request->country, $request->titlename, $request->birth_day);
             $_route = $this->setRoutes($request->route_id, $request->departdate, $request->returndate, 
@@ -57,6 +57,10 @@ class BookingController extends Controller
 
             $booking = BookingHelper::createBooking($data);
             $payment = PaymentHelper::createPaymentFromBooking($booking->id);
+            $payment_id = $payment->id;
+            if($request->ispremiumflex == 'Y') $payment = PaymentHelper::updatePremiumFlex($payment_id);
+            if($payment_channel == 'CC') $payment = PaymentHelper::updatePayWithCreditCard($payment_id);
+            $payment->totalamt = number_format($payment->totalamt, 2, '.', '');
 
             $payload = PaymentHelper::encodeRequest($payment, $payment_channel);
             $response = PaymentHelper::postTo_2c2p($payload);
@@ -86,7 +90,7 @@ class BookingController extends Controller
 
                 $_booking = $this->setBooking($request->departdate[0], $request->passenger, $request->child_passenger, 
                                                 $request->infant_passenger, $request->trip_type, $request->book_channel, 
-                                                $_amount, $_extra_meal[0], $_extra_activity[0], $_extra_shuttle_bus[0], $_extra_longtail_boat[0]);
+                                                $_amount, $_extra_meal[0], $_extra_activity[0], $_extra_shuttle_bus[0], $_extra_longtail_boat[0], $request->ispremiumflex);
                 $_customer = $this->setPassenger($request->fullname, $request->mobile, $request->passenger_type, 
                                                     $request->passportno, $request->email, $request->address, $request->mobile_code, $request->th_mobile, $request->country, $request->titlename, $request->birth_day);
                 $_route = $this->setRoutes($request->route_id, $request->departdate, $request->returndate, 
@@ -109,7 +113,12 @@ class BookingController extends Controller
                 $payment_channel = $this->PaymentMethod[$request->payment_method];
 
                 $booking = BookingHelper::createBooking($data);
-                $payload = PaymentHelper::encodeRequest($booking, $payment_channel);
+                $payment = PaymentHelper::createPaymentFromBooking($booking->id);
+                if($request->ispremiumflex == 'Y') $payment = PaymentHelper::updatePremiumFlex($payment->id);
+                if($payment_channel == 'CC') $payment = PaymentHelper::updatePayWithCreditCard($payment->id);
+                $payment->totalamt = number_format($payment->totalamt, 2, '.', '');
+
+                $payload = PaymentHelper::encodeRequest($payment, $payment_channel);
                 $response = PaymentHelper::postTo_2c2p($payload);
                 $result = PaymentHelper::decodeResponse($response);
 
@@ -120,7 +129,7 @@ class BookingController extends Controller
         return response()->json(['result' => false, 'data' => 'No Data.'], 200);
     }
 
-    private function setBooking($departdate, $adult, $child, $infant, $trip_type, $book_channel, $amount, $meal, $activity, $bus, $boat) { 
+    private function setBooking($departdate, $adult, $child, $infant, $trip_type, $book_channel, $amount, $meal, $activity, $bus, $boat, $ispremiumflex) { 
         $extra_amount = ($meal + $activity + $bus + $boat);
         $booking = [
             'departdate' => $departdate,
@@ -134,7 +143,8 @@ class BookingController extends Controller
             'user_id' => NULL,
             'trip_type' => $trip_type,
             'status' => 'DR',
-            'book_channel' => $book_channel
+            'book_channel' => $book_channel,
+            'ispremiumflex' => $ispremiumflex
         ];
 
         return $booking;

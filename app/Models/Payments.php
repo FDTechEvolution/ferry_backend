@@ -41,6 +41,6 @@ class Payments extends Model
     }
 
     public function paymentLines() {
-        return $this->belongsTo(PaymentLines::class, 'id', 'payment_id');
+        return $this->hasMany(PaymentLines::class, 'payment_id', 'id');
     }
 }

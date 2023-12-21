@@ -66,6 +66,7 @@ class PaymentHelper
         $SECRETKEY = config('services.payment.secret_key');
 
         $decoded = json_decode($response, true);
+        Log::debug($decoded);
         $payloadResponse = $decoded['payload'];
         $decodedPayload = JWT::decode($payloadResponse, new Key($SECRETKEY, 'HS256'));
         $decoded_array = (array) $decodedPayload;
@@ -170,6 +171,31 @@ class PaymentHelper
             if ($paymentLine) {
                 $payment->payment_method = 'CREDIT';
                 $payment->totalamt = $payment->totalamt + $feeeAmount;
+
+                $payment->save();
+            }
+        }
+
+        return $payment;
+    }
+
+    public static function updatePremiumFlex($payment_id)
+    {
+        $payment = Payments::where('id', $payment_id)->first();
+
+        if (!is_null($payment)) {
+            $premiumAmount = $payment->totalamt * 0.1;
+
+            //Make payment line
+            $paymentLine = PaymentLines::create([
+                'payment_id' => $payment->id,
+                'type' => 'PREMIUM',
+                'title' => 'Premium Flex 10%',
+                'amount' => $premiumAmount,
+            ]);
+
+            if ($paymentLine) {
+                $payment->totalamt = $payment->totalamt + $premiumAmount;
 
                 $payment->save();
             }

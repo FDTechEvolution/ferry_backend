@@ -129,6 +129,7 @@ class BookingHelper
             'trip_type' => $_b['trip_type'],
             'bookingno' => newSequenceNumber('BOOKING'),
             'book_channel' => isset($_b['book_channel']) ? $_b['book_channel'] : 'ONLINE',
+            'ispremiumflex' => isset($_b['ispremiumflex']) ? $_b['ispremiumflex'] : 'N',
 
         ]);
 

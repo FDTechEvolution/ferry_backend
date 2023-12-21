@@ -25,7 +25,8 @@ class Bookings extends Model
         'status',
         'bookingno',
         'book_channel',
-        'trip_type'
+        'trip_type',
+        'ispremiumflex'
     ];
 
     public function user() {

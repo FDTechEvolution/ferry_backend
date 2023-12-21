@@ -17,7 +17,7 @@ class PromotionResource extends JsonResource
         return [
             'title' => $this->title,
             'image' => $this->image->path,
-            'code' => $this->image->code
+            'code' => $this->code
         ];
     }
 }

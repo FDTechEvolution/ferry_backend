@@ -24,6 +24,7 @@ function setDataToEditForm(slide) {
     document.querySelector('#slide-link-edit').innerText = slide.link
     document.querySelector('#slide-sort-edit').value = slide.sort
     document.querySelector('#slide-id-edit').value = slide.id
+    document.querySelector('#slide-description-edit').innerText = slide.description
 
     document.querySelector('#current-image').classList.remove('d-none')
     document.querySelector('#edit-image-cover').style = `background-image: url('..${slide.image.path}/${slide.image.name}'); width: 220px; height: 80px; min-width: 80px;`

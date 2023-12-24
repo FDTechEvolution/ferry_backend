@@ -27,6 +27,7 @@ class SlideController extends Controller
         $request->validate([
             'sort' => 'integer|nullable',
             'link' => 'string|nullable',
+            'description' => 'string|nullable',
             'file_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
@@ -38,7 +39,8 @@ class SlideController extends Controller
         $slide = Slide::create([
             'link' => $request->link,
             'sort' => $request->sort != '' ? $request->sort : $_sort+1,
-            'image_id' => $image_id
+            'image_id' => $image_id,
+            'description' => $request->description
         ]);
 
         if($slide) return redirect()->route('slide-index')->withSuccess('Slide created.');
@@ -49,6 +51,7 @@ class SlideController extends Controller
         $request->validate([
             'sort' => 'integer|nullable',
             'link' => 'string|nullable',
+            'description' => 'string|nullable',
             'file_picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable'
         ]);
 
@@ -64,6 +67,7 @@ class SlideController extends Controller
 
         $slide->link = $request->link;
         $slide->sort = $request->sort != '' ? $request->sort : $_sort;
+        $slide->description = $request->description;
         if($image_id != null) $slide->image_id = $image_id;
 
         if($slide->save()) return redirect()->route('slide-index')->withSuccess('Slide updated.');

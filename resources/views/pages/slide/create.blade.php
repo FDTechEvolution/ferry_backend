@@ -58,12 +58,18 @@
                     <input type="number" class="form-control form-control-sm text-center" name="sort">
                 </div>
             </div>
-            <div class="mb-2 row">
+            <div class="mb-4 row">
                 <label class="col-sm-12 col-lg-1 col-form-label-sm text-start text-light fw-bold">Links :</label>
-                <div class="col-sm-12 col-lg-5 mb-3 mb-lg-0">
+                <div class="col-sm-12 col-lg-4 mb-3 mb-lg-0">
                     <textarea class="form-control" rows="1" name="link"></textarea>
                 </div>
-                <div class="col-sm-12 col-lg-6 justify-content-end d-flex align-items-end">
+                <label class="col-sm-12 col-lg-2 col-form-label-sm text-end text-light fw-bold">Description :</label>
+                <div class="col-sm-12 col-lg-5 mb-3 mb-lg-0">
+                    <textarea class="form-control" rows="2" name="description"></textarea>
+                </div>
+            </div>
+            <div class="mb-2 row">
+                <div class="col-sm-12 col-lg-6 offset-lg-6 justify-content-end d-flex align-items-end">
                     <x-button-submit-loading 
                         class="btn-sm w--20 me-2 button-green-bg border-radius-10"
                         :form_id="_('slide-create-form')"

@@ -15,7 +15,8 @@ class Slide extends Model
         'sort',
         'image_id',
         'isactive',
-        'status'
+        'status',
+        'description'
     ];
 
     protected $hidden = [

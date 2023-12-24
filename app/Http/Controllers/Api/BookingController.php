@@ -319,15 +319,19 @@ class BookingController extends Controller
         return Bookings::where('bookingno', $bookingno)->with('bookingCustomers', 'bookingRoutes', 'bookingRoutesX', 'payments')->first();
     }
 
-    public function bookingRecord(string $id = null) {
-        $booking = $this->getBookingByBookingNumber($id);
-        $addons = $this->getRouteAddon($booking);
-        $booking_routes = $booking->bookingRoutes->toArray();
-        $last_route = end($booking_routes);
-        $m_route = $this->getRouteMultiple($last_route['station_to_id']);
-        $m_from_route = $last_route['station_to'];
+    public function bookingRecord(string $bookingno = null, string $email = null) {
+        $booking = $this->getBookingByBookingNumber($bookingno);
         if(isset($booking)) {
-            return response()->json(['result' => true, 'data' => new BookingResource($booking), 'addon' => $addons, 'm_route' => $m_route, 'm_from_route' => $m_from_route], 200);
+            $cus_email = $booking->bookingCustomers[0]->email;
+            if($cus_email == $email) {
+                $addons = $this->getRouteAddon($booking);
+                $booking_routes = $booking->bookingRoutes->toArray();
+                $last_route = end($booking_routes);
+                $m_route = $this->getRouteMultiple($last_route['station_to_id']);
+                $m_from_route = $last_route['station_to'];
+            
+                return response()->json(['result' => true, 'data' => new BookingResource($booking), 'addon' => $addons, 'm_route' => $m_route, 'm_from_route' => $m_from_route], 200);
+            }
         }
 
         return response()->json(['result' => false, 'data' => 'No booking record.'], 200);

@@ -64,7 +64,7 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
         Route::controller(OnlineBooking::class)->group(function() {
             Route::post('create', 'store');
             Route::post('create/multi', 'storeMultiTrip');
-            Route::get('record/{id}', 'bookingRecord');
+            Route::get('record/{bookingno}/{email}', 'bookingRecord');
             Route::get('check/person/{booking_current}/{booking_new}', 'bookingCheckRoute');
             Route::post('merge', 'bookingMerge');
 

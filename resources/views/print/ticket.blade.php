@@ -147,11 +147,7 @@
                         </td>
                     </tr>
                 </table>
-
-
-
             </div>
-            <hr>
             <div class="prow">
                 <h3>YOUR BOOKING DETAILS</h3>
                 <table class="w-100 ptable">
@@ -189,10 +185,13 @@
                                 Name: <span
                                     class="font-bold-14 text-main">{{ $ticket['customer']['fullname'] }}</span><br>
                                 Passport No.: {{ $ticket['customer']['passportno'] }}<br>
-                                Contact Number/Whatsapp/Thai Phone: {{ $ticket['customer']['mobile'] }}<br>
-                                Email: {{ $ticket['customer']['email'] }}
+                                Tel: {{ $ticket['customer']['mobile'] }}<br>
+                                Email: {{ $ticket['customer']['email'] }}<br>
+                                Adult: {{$booking['adult_passenger']}} person(s)
+                                @if($booking['child_passenger']>0)<br>Child: {{$booking['child_passenger']}} person(s) @endif
                             </td>
                             <td colspan="2">
+                                Payment Status: @if($booking['ispayment']=='Y') <span class="text-success">Paid</span> @else <span class="text-danger">Unpay</span>  @endif <br>
                                 Total Payment: <span
                                     class="font-bold-14 text-main">{{ number_format($booking['totalamt']) }}THB</span><br>
                                 @if (!is_null($payment))
@@ -257,7 +256,7 @@
                 <table class="w-100 ptable border-blue">
                     @foreach ($bookingRoutes as $route)
                         <tr class="bg-blue font-w-700">
-                            <td>
+                            <td colspan="2">
                                 {{ date('l d/m/Y', strtotime($route['pivot']['traveldate'])) }} From:
                                 {{ $route['station_from']['name'] }} @if ($route['station_from']['piername'] != '')
                                     [{{ $route['station_from']['piername'] }}]
@@ -265,8 +264,7 @@
                                 To: {{ $route['station_to']['name'] }} @if ($route['station_to']['piername'] != '')
                                     [{{ $route['station_to']['piername'] }}]
                                 @endif
-
-                                <a href="https://www.andamanexpress.com/station/detail/{{$route['station_from']['nickname']}}" class="text-main" target="_blank">Click to see your check-in points</a>
+                            
                             </td>
                         </tr>
                         @foreach ($route['station_lines'] as $info)
@@ -277,6 +275,14 @@
                                                 [{{ $route['station_from']['piername'] }}]
                                             @endif
                                         </span>
+                                        
+                                    </td>
+                                    <td class="text-end">
+                                        <a href="https://www.andamanexpress.com/station/detail/{{$route['station_from']['nickname']}}" class="text-main" target="_blank">Click to see your check-in points</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="white-space:wrap">
                                         <div style="width: inherit">
                                             {{ strip_tags($info['text']) }}
                                         </div>
@@ -288,7 +294,7 @@
                         @foreach ($route['station_lines'] as $info)
                             @if ($info['pivot']['type'] == 'to')
                                 <tr>
-                                    <td style="white-space:wrap">
+                                    <td style="white-space:wrap" colspan="2">
                                         <span class="font-bold-14">{{ $route['station_to']['name'] }} @if ($route['station_to']['piername'] != '')
                                                 [{{ $route['station_to']['piername'] }}]
                                             @endif </span>
@@ -303,7 +309,7 @@
                 </table>
             </div>
 
-            @if ($ticket['isdefault'] == 'Y')
+            @if ($ticket['isdefault'] == 'Y' && sizeof($customers)>1)
                 <div class="prow mt-3">
                     <h3>Passenger List</h3>
                     <table class="ptable w-100">
@@ -311,7 +317,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>Fullname</th>
-                                <th>Passport No.</th>
+                                <th>Birth Day</th>
                                 <th>Mobile</th>
                             </tr>
                         </thead>
@@ -319,7 +325,7 @@
                             <tr>
                                 <td>{{$index+1}}.</td>
                                 <td>{{$customer['fullname']}}</td>
-                                <td>{{$customer['passportno']}}</td>
+                                <td>{{$customer['birth_day']}}</td>
                                 <td>{{$customer['mobile_th']}}</td>
                             </tr>
                         @endforeach

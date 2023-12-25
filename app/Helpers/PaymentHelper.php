@@ -66,7 +66,7 @@ class PaymentHelper
         $SECRETKEY = config('services.payment.secret_key');
 
         $decoded = json_decode($response, true);
-        Log::debug($decoded);
+        // Log::debug($decoded);
         $payloadResponse = $decoded['payload'];
         $decodedPayload = JWT::decode($payloadResponse, new Key($SECRETKEY, 'HS256'));
         $decoded_array = (array) $decodedPayload;

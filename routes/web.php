@@ -20,6 +20,7 @@ use App\Http\Controllers\SlideController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\FareController;
 use App\Http\Controllers\PrintController;
+use App\Http\Controllers\NewsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -229,6 +230,17 @@ Route::middleware('auth')->group(function () {
         Route::post('/booking/store', 'store')->name('booking-store');
     });
 
+
+    Route::controller(NewsController::class)->group(function() {
+        Route::get('/news', 'index')->name('news-index');
+        Route::get('/news/create', 'create')->name('news-create');
+        Route::get('/news/edit/{news}', 'edit')->name('news-edit');
+
+        Route::post('/news/store', 'store')->name('news-store');
+        Route::post('/news/update/{news}', 'update')->name('news-update');
+
+        Route::get('/news/delete/{id}', 'destroy')->name('news-delete');
+    });
 
 });
 

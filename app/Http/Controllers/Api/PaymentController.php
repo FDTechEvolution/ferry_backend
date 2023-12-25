@@ -46,6 +46,10 @@ class PaymentController extends Controller
         $booking = Bookings::find($payment->booking_id);
         $payment_channel = $this->PaymentMethod[$request->payment_method];
 
+        // Log::debug($booking->bookingCustomers);
+        // $customer_email = $booking->bookingCustomers->customer[0]->email;
+        // Log::debug($customer_email);
+
         $payload = PaymentHelper::encodeRequest($payment, $payment_channel);
         $response = PaymentHelper::postTo_2c2p($payload);
         $result = PaymentHelper::decodeResponse($response);

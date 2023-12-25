@@ -68,7 +68,7 @@ class BookingController extends Controller
 
             // Log::debug($result);
 
-            return response()->json(['result' => true, 'data' => $result, 'booking' => $booking->bookingno], 200);
+            return response()->json(['result' => true, 'data' => $result, 'booking' => $booking->bookingno, 'email' => $request->email], 200);
             // return response()->json(['data' => $data]);
         }
         // Log::debug($request);

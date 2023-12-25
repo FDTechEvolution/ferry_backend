@@ -78,7 +78,7 @@
         </a>
       </li>
       <li class="nav-item {{ (request()->is('news*')) ? 'active' : '' }}">
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="{{ route('news-index') }}">
           <i class="fi fi-arrow-right"></i>
           <span>News</span>
         </a>

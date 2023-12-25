@@ -12,51 +12,37 @@ use App\Http\Resources\PromotionResource;
 class PromotionController extends Controller
 {
     public function getPromotion() {
-        $promotions = Promotions::where('isactive', 'Y')->get();
+        $promotions = Promotions::where('isactive', 'Y')->orderBy('created_at', 'DESC')->get();
 
         return response()->json(['data' => PromotionResource::collection(($promotions))], 200);
     }
 
-    public function promotionCode($promo_code, $trip_type) {
-        $promo = Promotions::where('code', $promo_code)->whereColumn('times_used', '<', 'times_use_max')->first();
+    public function getPromotionByCode($promocode) {
+        $promotion = Promotions::where('code', $promocode)->where('isactive', 'Y')->first();
+
+        if(isset($promotion))
+            return response()->json(['data' => new PromotionResource($promotion)], 200);
+        else
+            return response()->json(['data' => false], 200);
+    }
+
+    public function promotionCode(Request $request) {
+        $promo = Promotions::where('code', $request->promo_code)->whereColumn('times_used', '<', 'times_use_max')->first();
         if(isset($promo)) {
-            $_trip_type = $this->promoTripType($promo, $trip_type);
+            $_trip_type = $this->promoTripType($promo->trip_type, $$request->trip_type);
+            if($_trip_type) $this->promoDepartDateStart();
         }
         else return response()->json(['result' => false, 'data' => 'No promotion code or promotion code ran out.'], 200);
     }
 
-    private function promoTripType($promo, $trip_type) {
+    private function promoTripType($promo_trip, $trip_type) {
         $result = null;
 
-        if($promo->trip_type == NULL) return array('result' => true, 'data' => $promo);
+        if($promo_trip == NULL) return true;
         else {
-            switch ($trip_type) {
-                case 'one-trip':
-                    $result = $this->oneTripPromoCode($promo);
-                    break;
-                case 'round-trip':
-                    $result = $this->roundTripPromocode($promo);
-                    break;
-                case 'multi-trip':
-                    $result = $this->multiTripPromocode($promo);
-                    break;
-                default:
-                    $result = false;
-            }
+            if($promo_trip == $trip_type) return true;
+            else return false;
         }
-
-        return $result;
     }
 
-    private function oneTripPromoCode() {
-        
-    }
-
-    private function roundTripPromocode() {
-
-    }
-
-    private function multiTripPromocode() {
-        
-    }
 }

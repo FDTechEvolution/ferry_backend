@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\PromotionController;
 use App\Http\Controllers\Api\InfomationController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\CustomerController;
+use App\Http\Controllers\Api\NewsController;
 
 // 7 Controller
 use App\Http\Controllers\Api\Seven\BookingController as SevenBooking;
@@ -86,6 +87,8 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
 
     Route::controller(PromotionController::class)->group(function() {
         Route::get('promotion/get', 'getPromotion');
+        Route::get('promotion/view/{promocode}', 'getPromotionByCode');
+        Route::post('promotion/check', 'promotionCode');
     });
 
     Route::controller(InfomationController::class)->group(function() {
@@ -98,6 +101,12 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
 
     Route::controller(CustomerController::class)->group(function() {
         Route::post('customer/update', 'updateCustomer');
+    });
+
+    Route::controller(NewsController::class)->group(function() {
+        Route::get('news', 'getNews');
+        Route::get('news/get/{id}', 'getNewsById');
+        Route::get('news/view', 'getNewByView');
     });
 });
 

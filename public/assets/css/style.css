@@ -11,6 +11,10 @@ body.layout-admin #middle {
     flex-wrap: nowrap;
 }
 
+.table{
+    font-size: 0.8rem;
+}
+
 /* --------------------------- */
 
 /* Datatable Css replace */

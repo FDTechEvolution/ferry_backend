@@ -69,6 +69,13 @@
     <div class="row">
         <div class="col-12">
             <div class="table-responsive ">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb bg-light p-3">
+                        <li class="breadcrumb-item"><a href="#">Selected 0 items</a></li>
+                        <li class="breadcrumb-item"><a href="#"><i class="fi fi-print m-0"></i> Print Ticket</a></li>
+                        <li class="breadcrumb-item"><a href="#">Send Email</a></li>
+                    </ol>
+                </nav>
                 <table class="table-datatable table table-hover" id="" data-lng-empty="No data available in table"
                     data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
                     data-lng-filtered="(filtered from _MAX_ total entries)" data-lng-loading="Loading..."
@@ -86,6 +93,7 @@
                     data-custom-config='{"searching":false}'>
                     <thead>
                         <tr>
+                            <th></th>
                             <th>Issue Date</th>
                             <th>Invoice No</th>
                             <th>Ticket No</th>
@@ -104,6 +112,12 @@
                         @foreach ($bookings as $index => $item)
                             <tr
                                 style="color: {{ $colors[$item['trip_type']] }};--bs-table-color:{{ $colors[$item['trip_type']] }};">
+                                <td>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input form-check-input-primary" type="checkbox" value="{{$item['id']}}" id="book_{{$item['id']}}" name="booking_selected">
+                                        
+                                    </div>
+                                </td>
                                 <td><small>{{ date('d/m/Y H:i', strtotime($item['created_at'])) }}</small></td>
                                 <td>{{ $item['bookingno'] }}</td>
                                 <td><strong>{{ $item['ticketno'] }}</strong>
@@ -132,19 +146,19 @@
                                     <div class="d-none d-md-block">
                                         @if ($item['ispayment'] == 'Y')
                                             <a href="{{ route('print-ticket', ['bookingno' => $item['bookingno']]) }}"
-                                                class="btn btn-outline-secondary btn-sm transition-hover-top"
-                                                rel="noopener" target="_blank">
+                                                class="transition-hover-top me-2 fs-5"
+                                                rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Print Ticket">
                                                 <i class="fi fi-print m-0"></i>
                                             </a>
                                         @endif
                                         <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
-                                            class="btn btn-outline-secondary btn-sm transition-hover-top" rel="noopener"
-                                            target="_blank">
+                                            class="transition-hover-top me-2 fs-5" rel="noopener"
+                                            target="_blank" style="display: none;">
                                             <i class="fi fi-pencil m-0"></i>
                                         </a>
                                         <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
-                                            class="btn btn-outline-info btn-sm transition-hover-top" rel="noopener"
-                                            target="_blank">
+                                            class="transition-hover-top fs-5" rel="noopener"
+                                            target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="View and Edit ooking">
                                             <i class="fa-solid fa-eye"></i>
                                         </a>
                                     </div>

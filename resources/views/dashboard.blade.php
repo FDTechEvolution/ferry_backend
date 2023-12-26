@@ -66,7 +66,7 @@
                             data-ajax-confirm-btn-no-text="Cancel" data-ajax-confirm-btn-no-icon="fi fi-close">
                             <div class="section w-100" style="background-color: #ff61006b">
                                 <div class="d-flex w-100 align-items-center text-center">
-                                    <span class="w-100 display-6 text-light fw-bold">
+                                    <span class="w-100 display-7 text-light fw-bold">
                                         Logout
                                     </span>
                                 </div>

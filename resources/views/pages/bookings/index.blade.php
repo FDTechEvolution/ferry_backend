@@ -67,15 +67,18 @@
     </form>
     <hr>
     <div class="row">
+        <div class="col-12 mb-2">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-light p-3">
+                    <li class="breadcrumb-item"><a href="#">Selected 0 items</a></li>
+                    <li class="breadcrumb-item"><a href="#"><i class="fi fi-print m-0"></i> Print Ticket</a></li>
+                    <li class="breadcrumb-item"><a href="#"><i class="fa-regular fa-envelope"></i> Send Email</a></li>
+                </ol>
+            </nav>
+        </div>
         <div class="col-12">
             <div class="table-responsive ">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb bg-light p-3">
-                        <li class="breadcrumb-item"><a href="#">Selected 0 items</a></li>
-                        <li class="breadcrumb-item"><a href="#"><i class="fi fi-print m-0"></i> Print Ticket</a></li>
-                        <li class="breadcrumb-item"><a href="#">Send Email</a></li>
-                    </ol>
-                </nav>
+                
                 <table class="table-datatable table table-hover" id="" data-lng-empty="No data available in table"
                     data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
                     data-lng-filtered="(filtered from _MAX_ total entries)" data-lng-loading="Loading..."

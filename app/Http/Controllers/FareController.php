@@ -27,8 +27,8 @@ class FareController extends Controller
             $fare = Fare::find($id);
             $fare->standard_thb = $request->standard_thb[$index];
             $fare->standard_percent = $request->standard_percent[$index];
-            $fare->online_thb = $request->online_thb[$index];
-            $fare->online_percent = $request->online_percent[$index];
+            $fare->isfixed = $request->is_fixed[$index];
+            $fare->fixed_thb = $request->fixed_thb[$index];
             if($fare->save()) $result = true;
             else {
                 $result = false;

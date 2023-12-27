@@ -82,9 +82,12 @@ class RouteController extends Controller
         $icons = DB::table('icons')->where('type', $this->Type)->get();
         $activities = Addon::where('type', $this->Activity)->where('status', 'CO')->with('icon')->get();
         $meals = Addon::where('type', $this->Meal)->where('status', 'CO')->get();
+        $fare_child = Fare::where('name', 'Child')->first();
+        $fare_infant = Fare::where('name', 'Infant')->first();
 
         return view('pages.route_control.edit', [
-            'route' => $route, 'icons' => $icons, 'stations' => $stations, 'activities' => $activities, 'partners'=>$partners,'meals' => $meals
+            'route' => $route, 'icons' => $icons, 'stations' => $stations, 'activities' => $activities, 
+            'partners'=>$partners,'meals' => $meals, 'fare_child' => $fare_child, 'fare_infant' => $fare_infant
         ]);
     }
 

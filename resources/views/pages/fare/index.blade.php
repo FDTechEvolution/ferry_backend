@@ -24,9 +24,9 @@
                                     <div class="col-md-3 offset-md-3 offset-lg-2 text-center fw-bold d-none d-md-block">
                                         Standard
                                     </div>
-                                    <!-- <div class="col-md-3 text-center fw-bold d-none d-md-block">
-                                        Online
-                                    </div> -->
+                                    <div class="col-md-3 text-center fw-bold d-none d-md-block">
+                                        Fixed Price
+                                    </div>
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col-md-3 offset-md-3 offset-lg-2 d-none d-md-block">
@@ -35,12 +35,11 @@
                                             <div class="col-6 text-center">%</div>
                                         </div>
                                     </div>
-                                    <!-- <div class="col-md-3 d-none d-md-block">
+                                    <div class="col-md-3 d-none d-md-block">
                                         <div class="row">
-                                            <div class="col-6 text-center">THB</div>
-                                            <div class="col-6 text-center">%</div>
+                                            <div class="col-12 text-center">THB</div>
                                         </div>
-                                    </div> -->
+                                    </div>
                                 </div>
 
                                 @foreach($fares as $index => $fare)
@@ -53,27 +52,23 @@
                                                 <div class="col-sm-12 fw-bold mb-2 mb-md-0 d-md-none">Standard</div>
                                                 <div class="col-2 text-center d-md-none d-flex align-items-center">THB</div>
                                                 <div class="col-10 col-md-6 text-center mb-2 mb-md-0">
-                                                    <input type="number" name="standard_thb[]" class="form-control form-control-sm text-center" onKeyUp="getValueStandard(this, {{ $index }})" value="{{ $fare->standard_thb }}">
+                                                    <input type="number" name="standard_thb[]" class="form-control form-control-sm text-center" onKeyUp="getValueStandard(this, '{{ $index }}')" value="{{ $fare->standard_thb }}">
                                                 </div>
                                                 <div class="col-2 text-center d-md-none d-flex align-items-center">%</div>
                                                 <div class="col-10 col-md-6 text-center">
-                                                    <input type="number" name="standard_percent[]" class="form-control form-control-sm text-center" onKeyUp="getValueStandard(this, {{ $index }})" value="{{ $fare->standard_percent }}">
+                                                    <input type="number" name="standard_percent[]" class="form-control form-control-sm text-center" onKeyUp="getValueStandard(this, '{{ $index }}')" value="{{ $fare->standard_percent }}">
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- <div class="col-md-3 col-online-{{ $index }}">
+                                        <div class="col-md-3 col-fixed-{{ $index }}">
                                             <div class="row">
-                                                <div class="col-sm-12 fw-bold mb-2 mb-md-0 d-md-none">Online</div>
-                                                <div class="col-2 text-center d-md-none d-flex align-items-center">THB</div>
-                                                <div class="col-10 col-md-6 text-center mb-2 mb-md-0">
-                                                    <input type="number" name="online_thb[]" class="form-control form-control-sm text-center" onKeyUp="getValueOnline(this, {{ $index }})" value="{{ $fare->online_thb }}">
-                                                </div>
-                                                <div class="col-2 text-center d-md-none d-flex align-items-center">%</div>
-                                                <div class="col-10 col-md-6 text-center">
-                                                    <input type="number" name="online_percent[]" class="form-control form-control-sm text-center" onKeyUp="getValueOnline(this, {{ $index }})" value="{{ $fare->online_percent }}">
+                                                <div class="col-10 col-md-6 offset-md-3 text-center mb-2 mb-md-0 d-flex align-items-center">
+                                                    <input class="form-check-input form-check-input-default me-2" type="checkbox" name="is_fixed[]" value="Y" style="height: 16px;" @checked(old('is_fixed[]', $fare->isfixed == 'Y'))>
+                                                    <input type="number" name="fixed_thb[]" class="form-control form-control-sm text-center" value="{{ $fare->fixed_thb }}">
+                                                    <input type="hidden" name="is_fixed[]" value="N">
                                                 </div>
                                             </div>
-                                        </div> -->
+                                        </div>
                                         <input type="hidden" name="fare_id[]" value="{{ $fare->id }}">
                                     </div>
                                 @endforeach

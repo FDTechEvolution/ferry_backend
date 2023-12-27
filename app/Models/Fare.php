@@ -16,7 +16,9 @@ class Fare extends Model
         'standard_percent',
         'online_thb',
         'online_percent',
-        'seq'
+        'seq',
+        'isfixed',
+        'fixed_thb'
     ];
 
     protected $hidden = [

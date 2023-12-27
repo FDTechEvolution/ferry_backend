@@ -108,7 +108,7 @@
                                             <ul class="dropdown-menu shadow-lg p-1 w-100" id="activity-dropdown" aria-labelledby="dropdownActivity">
                                                 @foreach($activities as $index => $activity)
                                                     <li id="activity-active-{{ $index }}" data-id="{{ $activity->id }}">
-                                                        <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteActivity({{ $index }})">
+                                                        <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteActivity('{{ $index }}')">
                                                             <img src="{{ asset($activity->icon->path.'/'.$activity->icon->name) }}" class="me-2" width="24" height="24">
                                                             <span>{{ $activity->name }}</span>
                                                         </a>
@@ -138,7 +138,7 @@
                                             <ul class="dropdown-menu shadow-lg p-1 w-100" aria-labelledby="dropdownMeal">
                                                 @foreach($meals as $index => $meal)
                                                     <li id="meal-active-{{ $index }}" data-id="{{ $meal['id'] }}">
-                                                        <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteMeal({{ $index }})">
+                                                        <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteMeal('{{ $index }}')">
                                                             <img src="{{ asset('icon/meal/icon/'.$meal->image_icon) }}" class="me-2" width="24" height="24">
                                                             <span>{{ $meal->name }}</span>
                                                         </a>
@@ -187,7 +187,7 @@
                                             <ul class="dropdown-menu shadow-lg p-1 w-100" aria-labelledby="dropdownIcons">
                                                 @foreach($icons as $index => $icon)
                                                     <li id="icon-active-{{ $index }}" class="text-center">
-                                                        <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteIcon({{ $index }})">
+                                                        <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteIcon('{{ $index }}')">
                                                             <img src="{{ asset($icon->path) }}" class="me-2" width="42" height="42">
                                                         </a>
                                                     </li>

@@ -113,16 +113,23 @@ if(regular_price_input) {
     regular_price_input.addEventListener('change', (e) => {
         const child_price = document.querySelector('#child-price')
         const infant_price = document.querySelector('#infant-price')
+
         let child_p = fare_child.standard_percent !== 0 ? fare_child.standard_percent : fare_child.standard_thb
-        let child_t = fare_child.standard_percent ? 'p' : 't'
+        let child_t = ''
+        if(fare_child.isfixed == 'Y') child_t = 'f'
+        else child_t = fare_child.standard_percent ? 'p' : 't'
+
         let infant_p = fare_infant.standard_percent !== 0 ? fare_infant.standard_percent : fare_infant.standard_thb
-        let infant_t = fare_infant.standard_percent ? 'p' : 't'
+        let infant_t = ''
+        if(fare_infant.isfixed == 'Y') infant_t = 'f'
+        else infant_t = fare_infant.standard_percent ? 'p' : 't'
 
         if(child_t === 'p') {
             let in_float = parseFloat(`0.${child_p}`)
             let price = parseInt(e.target.value)
             child_price.value = price - (price*in_float)
         }
+        else if(child_t === 'f') child_price.value = parseInt(fare_child.fixed_thb)
         else child_price.value = parseInt(e.target.value) - child_p
 
         if(infant_t == 'p') {
@@ -130,6 +137,7 @@ if(regular_price_input) {
             let price = parseInt(e.target.value)
             infant_price.value = price - (price*in_float)
         }
+        else if(infant_t === 'f') infant_price.value = parseInt(fare_infant.fixed_thb)
         else infant_price.value = parseInt(e.target.value) - infant_p
     })
 }

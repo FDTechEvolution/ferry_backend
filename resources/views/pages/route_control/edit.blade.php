@@ -227,9 +227,13 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                     <div class="col-12 col-lg-5 mb-3">
                                         <label class="d-flex align-items-center mb-1">
                                             <span class="user-select-none fw-bold me-2">Master From </span>
-                                            <input class="d-none-cloaked" type="checkbox" id="master-from-switch" name="master_from_on" value="1">
+                                            <input class="d-none-cloaked" type="checkbox" id="master-from-switch" name="master_from_on" value="1" @checked(old('master_from_on', $route['master_from_info'] == 'Y'))>
                                             <i class="switch-icon switch-icon-primary switch-icon-xs"></i>
-                                            <span class="ms-1 user-select-none" id="master-from-text">Off</span>
+                                            <span class="ms-1 user-select-none" id="master-from-text">
+                                                @if($route['master_from_info'] == 'Y') On
+                                                @else Off
+                                                @endif
+                                            </span>
                                         </label>
 
                                         <input type="hidden" id="master-from-selected" name="master_from_selected" value=''>
@@ -248,9 +252,13 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                     <div class="col-12 col-lg-5 mb-3">
                                         <label class="d-flex align-items-center mb-1">
                                             <span class="user-select-none fw-bold me-2">Master To </span>
-                                            <input class="d-none-cloaked" type="checkbox" id="master-to-switch" name="master_to_on" value="1">
+                                            <input class="d-none-cloaked" type="checkbox" id="master-to-switch" name="master_to_on" value="1" @checked(old('master_to_on', $route['master_to_info'] == 'Y'))>
                                             <i class="switch-icon switch-icon-primary switch-icon-xs"></i>
-                                            <span class="ms-1 user-select-none" id="master-to-text">Off</span>
+                                            <span class="ms-1 user-select-none" id="master-to-text">
+                                                @if($route['master_to_info'] == 'Y') On
+                                                @else Off
+                                                @endif
+                                            </span>
                                         </label>
 
                                         <input type="hidden" id="master-to-selected" name="master_to_selected" value=''>
@@ -268,7 +276,7 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                 </div>
 
                                 <div class="row mb-4">
-                                    <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+                                    <div class="col-sm-12 col-md-6 col-lg-5 mb-3">
                                         <label class="d-flex align-items-center mb-1 fw-bold">
                                             Infomation From
                                         </label>
@@ -285,7 +293,7 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                         />
                                     </div>
 
-                                    <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+                                    <div class="col-sm-12 col-md-6 col-lg-5 mb-3">
                                         <label class="d-flex align-items-center mb-1 fw-bold">
                                             Infomation To
                                         </label>
@@ -307,21 +315,39 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                 <div class="row mb-3">
                                     <div class="col-12 col-lg-5">
                                         <label for="">Text 1</label>
-                                        <textarea name="text_1" id="text_1"  rows="2" class="form-control">{{$route['text_1']}}</textarea>
+                                        <textarea name="text_1" id="text_1"  rows="3" class="form-control">{{$route['text_1']}}</textarea>
                                     </div>
                                     <div class="col-12 col-lg-5">
                                         <label for="">Text 2</label>
-                                        <textarea name="text_2" id="text_2"  rows="2" class="form-control">{{$route['text_2']}}</textarea>
+                                        <textarea name="text_2" id="text_2"  rows="3" class="form-control">{{$route['text_2']}}</textarea>
                                     </div>
                                 </div>
 
                                 <div class="row mb-4">
-                                    <label class="col-3 col-md-2 col-lg-2 text-start fw-bold">Status :</label>
+                                    <label class="col-6 col-md-2 col-lg-2 text-start fw-bold">Status :</label>
                                     <div class="col-5">
                                         <label class="d-flex align-items-center mb-3">
-                                            <input class="d-none-cloaked" type="checkbox" id="route-status-switch" name="status" value="1" checked>
+                                            <input class="d-none-cloaked" type="checkbox" id="route-status-switch" name="status" value="1" @checked(old('status', $route['isactive'] == 'Y'))>
                                             <i class="switch-icon switch-icon-primary"></i>
-                                            <span class="px-3 user-select-none" id="route-status-text">On</span>
+                                            <span class="px-3 user-select-none" id="route-status-text">
+                                                @if($route['isactive'] == 'Y') On
+                                                @else Off
+                                                @endif
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <label class="col-6 col-md-2 col-lg-2 text-start fw-bold">PromoCode :</label>
+                                    <div class="col-5">
+                                        <label class="d-flex align-items-center mb-3">
+                                            <input class="d-none-cloaked" type="checkbox" id="route-promocode-switch" name="promocode" value="1" @checked(old('promocode', $route['ispromocode'] == 'Y'))>
+                                            <i class="switch-icon switch-icon-primary"></i>
+                                            <span class="px-3 user-select-none" id="route-promocode-text">
+                                                @if($route['ispromocode'] == 'Y') On
+                                                @else Off
+                                                @endif
+                                            </span>
                                         </label>
                                     </div>
                                 </div>

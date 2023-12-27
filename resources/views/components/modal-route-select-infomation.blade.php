@@ -36,6 +36,16 @@
 </div>
 
 
+<style>
+    span.info-content-text p {
+        border: 1px solid #e1e1e1;
+        padding: 5px;
+        border-radius: 10px;
+        font-size: 14px;
+        background-color: #f9f9f9;
+    }
+</style>
+
 <script>
 if(document.querySelector(`#{{ $select_id }}`)) {
     document.querySelector(`#{{ $select_id }}`).addEventListener('change', (e) => {
@@ -121,9 +131,10 @@ function addMasterInfoList(e, index, station_id, type, ul_id, input_id) {
         li.setAttribute('class', 'list-group-item info-from-active-on')
         li.setAttribute('data-id', _info.id)
         li.id = rand
-        li.innerHTML = `${_info.name} 
-                        <i class="${info_icon} ms-2 text-primary cursor-pointer" title="View" onClick="showStationInfo('${_info.id}', '${station_id}', '${type}')"></i>
-                        <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoFrom('${rand}', ${index}, '${_info.id}', '${ul_id}', '${input_id}', '${type}')"></i>`
+        li.innerHTML = `<span class="fw-bold">${_info.name}</span>
+                        <i class="${info_icon} ms-2 text-primary cursor-pointer d-none" title="View" onClick="showStationInfo('${_info.id}', '${station_id}', '${type}')"></i>
+                        <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoFrom('${rand}', ${index}, '${_info.id}', '${ul_id}', '${input_id}', '${type}')"></i>
+                        <span class="info-content-text">${_info.text}</span>`
         _ul.appendChild(li)
 
         e.setAttribute('data-rand', rand)

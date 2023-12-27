@@ -21,6 +21,9 @@ class RouteResource extends JsonResource
             'arrive_time' => date('h:i', strtotime($this->arrive_time)),
             'regular_price' => $this->regular_price - ($this->regular_price*0.2),
             'avaliable_seat' => 100,
+            'master_from_info' => $this->master_from_info,
+            'master_to_info' => $this->master_to_info,
+            'ispromocode' => $this->ispromocode,
             'station_from' => [
                 'name' => $this->station_from->name,
                 'piername' => $this->station_from->piername,
@@ -31,27 +34,26 @@ class RouteResource extends JsonResource
                 'piername' => $this->station_to->piername,
                 'nickname' => $this->station_to->nickname
             ],
-            // without Activity & Meal
-            // 'activities' => !$this->activity_lines ? '' : $this->activity_lines->map(function($activity) {
-            //     if($activity->status == 'CO') {
-            //         return [
-            //             'id' => $activity->id,
-            //             'name' => $activity->name,
-            //             'amount' => $activity->price,
-            //             'detail' => $activity->detail
-            //         ];
-            //     }
-            // }),
-            // 'meals' => !$this->meal_lines ? '' : $this->meal_lines->map(function($meal) {
-            //     if($meal->isactive == 'Y' && $meal->status == 'CO') {
-            //         return [
-            //             'id' => $meal->id,
-            //             'name' => $meal->name,
-            //             'amount' => $meal->amount,
-            //             'detail' => $meal->description
-            //         ];
-            //     }
-            // }),
+            'activities' => !$this->activity_lines ? '' : $this->activity_lines->map(function($activity) {
+                if($activity->status == 'CO') {
+                    return [
+                        'id' => $activity->id,
+                        'name' => $activity->name,
+                        'amount' => $activity->price,
+                        'detail' => $activity->detail
+                    ];
+                }
+            }),
+            'meals' => !$this->meal_lines ? '' : $this->meal_lines->map(function($meal) {
+                if($meal->isactive == 'Y' && $meal->status == 'CO') {
+                    return [
+                        'id' => $meal->id,
+                        'name' => $meal->name,
+                        'amount' => $meal->amount,
+                        'detail' => $meal->description
+                    ];
+                }
+            }),
         ];
     }
 }

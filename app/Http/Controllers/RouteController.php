@@ -43,7 +43,7 @@ class RouteController extends Controller
         $icons = DB::table('icons')->where('type', $this->Type)->get();
 
         $status = $this->_Status;
-        return view('pages.route_control.index', 
+        return view('pages.route_control.index',
                     ['routes' => $routes, 'stations' => $stations, 'route_status' => $status, 'icons' => $icons]
                 );
     }
@@ -58,7 +58,7 @@ class RouteController extends Controller
         $fare_child = Fare::where('name', 'Child')->first();
         $fare_infant = Fare::where('name', 'Infant')->first();
 
-        return view('pages.route_control.create', 
+        return view('pages.route_control.create',
                     ['partners'=>$partners,'stations' => $stations, 'icons' => $icons, 'activities' => $activities, 'meals' => $meals,
                         'fare_child' => $fare_child, 'fare_infant' => $fare_infant
                     ]
@@ -68,7 +68,7 @@ class RouteController extends Controller
     public function edit(string $id = null) {
         $route = Route::find($id);
 
-        if(is_null($route) || $route->status != 'CO') 
+        if(is_null($route) || $route->status != 'CO')
             return redirect()->route('route-index')->withFail('This route not exist.');
 
         $route->station_lines;
@@ -86,7 +86,7 @@ class RouteController extends Controller
         $fare_infant = Fare::where('name', 'Infant')->first();
 
         return view('pages.route_control.edit', [
-            'route' => $route, 'icons' => $icons, 'stations' => $stations, 'activities' => $activities, 
+            'route' => $route, 'icons' => $icons, 'stations' => $stations, 'activities' => $activities,
             'partners'=>$partners,'meals' => $meals, 'fare_child' => $fare_child, 'fare_infant' => $fare_infant
         ]);
     }
@@ -111,12 +111,15 @@ class RouteController extends Controller
             'isactive' => isset($request->status) ? 'Y' : 'N',
             'partner_id'=>$request->partner_id,
             'text_1'=>$request->text_1,
-            'text_2'=>$request->text_2
+            'text_2'=>$request->text_2,
+            'master_from_info' => isset($request->master_from_on) ? 'Y' : 'N',
+            'master_to_info' => isset($request->master_to_on) ? 'Y' : 'N',
+            'ispromocode' => isset($request->promocode) ? 'Y' : 'N'
         ]);
 
         if($route) {
             $result = $this->routeIconStore($request->icons, $route->id);
-            
+
             if(isset($request->shuttle_bus_name)) $this->shuttlebusStore($request->shuttle_bus_name, $request->shuttle_bus_price, $request->shuttle_bus_description, $route->id);
             if(isset($request->longtail_boat_name)) $this->longtailStore($request->longtail_boat_name, $request->longtail_boat_price, $request->longtail_boat_description, $route->id);
             if(isset($request->activity_id)) $this->routeActivityStore($request->activity_id, $route->id);
@@ -133,7 +136,7 @@ class RouteController extends Controller
         }
 
         // Log::debug($request);
-        
+
         return redirect()->back()->withFail('Something is wrong. Please try again.');
     }
 
@@ -148,7 +151,7 @@ class RouteController extends Controller
                         'description' => $description[$key],
                         'status' => 'CO'
                     ]);
-            
+
             if($addon) {
                 RouteShuttlebus::create([
                     'route_id' => $route_id,
@@ -271,6 +274,9 @@ class RouteController extends Controller
             $route->partner_id = $request->partner_id;
             $route->text_1 = $request->text_1;
             $route->text_2 = $request->text_2;
+            $route->master_from_info = isset($request->master_from_on) ? 'Y' : 'N';
+            $route->master_to_info = isset($request->master_to_on) ? 'Y' : 'N';
+            $route->ispromocode = isset($request->promocode) ? 'Y' : 'N';
 
         if($route->save()) {
             $this->routeIconDestroy($request->route_id);
@@ -310,7 +316,7 @@ class RouteController extends Controller
         $route = Route::find($id);
         $route_used = BookingRoutes::where('route_id', $id)->first();
 
-        if(is_null($route) || $route->status != 'CO') 
+        if(is_null($route) || $route->status != 'CO')
             return redirect()->route('route-index')->withFail('This route not exist.');
 
         if(isset($route_used)) {
@@ -334,7 +340,7 @@ class RouteController extends Controller
             if(sizeof($longtail_boat) > 0) {
                 foreach($longtail_boat as $boat) { Addon::find($boat->addon_id)->delete(); }
             }
-            
+
             RouteShuttlebus::where('route_id', $id)->delete();
             RouteLongtailboat::where('route_id', $id)->delete();
             $route->delete();

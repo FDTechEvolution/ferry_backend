@@ -22,11 +22,14 @@ class Route extends Model
         'status',
         'partner_id',
         'text_1',
-        'text_2'
+        'text_2',
+        'master_from_info',
+        'master_to_info',
+        'ispromocode'
     ];
 
     protected $hidden = [
-        
+
     ];
 
     public function partner() {

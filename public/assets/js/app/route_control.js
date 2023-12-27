@@ -4,6 +4,7 @@ const btn_cancel_create = document.querySelector('#btn-cancel-create')
 const master_from_switch = document.querySelector('#master-from-switch')
 const master_to_switch = document.querySelector('#master-to-switch')
 const route_status_switch = document.querySelector('#route-status-switch')
+const route_promocode_switch = document.querySelector('#route-promocode-switch')
 const btn_shuttle_bus_create = document.querySelector('#btn-shuttle-bus-create')
 const btn_shuttle_bus_edit = document.querySelector('#btn-shuttle-bus-edit')
 const btn_shuttle_bus_cancel = document.querySelector('#btn-edit-shuttle-cancel')
@@ -53,6 +54,13 @@ if(master_to_switch) {
 if(route_status_switch) {
     let text = document.querySelector('#route-status-text')
     route_status_switch.addEventListener('change', (e) => {
+        text.innerHTML = e.target.checked ? 'On' : 'Off'
+    })
+}
+
+if(route_promocode_switch) {
+    let text = document.querySelector('#route-promocode-text')
+    route_promocode_switch.addEventListener('change', (e) => {
         text.innerHTML = e.target.checked ? 'On' : 'Off'
     })
 }

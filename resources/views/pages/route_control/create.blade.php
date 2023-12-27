@@ -54,7 +54,7 @@
                                 <div class="mb-4 row">
                                     <label class="col-sm-3 col-lg-2 col-form-label-sm text-start fw-bold">Partner :</label>
                                     <div class="col-sm-9 col-lg-7">
-                                        <select required class="form-select form-select-sm" id="station-to-selected" name="partner_id">
+                                        <select class="form-select form-select-sm" id="partner-selected" name="partner_id">
                                             <option value="" selected disabled>--- Choose ---</option>
                                             @foreach($partners as $partner)
                                                 <option value="{{ $partner['id'] }}">{{ $partner['name'] }}</option>
@@ -209,7 +209,7 @@
                                             <span class="user-select-none fw-bold me-2">Master From </span>
                                             <input class="d-none-cloaked" type="checkbox" id="master-from-switch" name="master_from_on" value="1" checked>
                                             <i class="switch-icon switch-icon-primary switch-icon-xs"></i>
-                                            <span class="ms-1 user-select-none" id="master-from-text">Off</span>
+                                            <span class="ms-1 user-select-none" id="master-from-text">On</span>
                                         </label>
 
                                         <x-modal-route-select-infomation
@@ -226,7 +226,7 @@
                                             <span class="user-select-none fw-bold me-2">Master To </span>
                                             <input class="d-none-cloaked" type="checkbox" id="master-to-switch" name="master_to_on" value="1" checked>
                                             <i class="switch-icon switch-icon-primary switch-icon-xs"></i>
-                                            <span class="ms-1 user-select-none" id="master-to-text">Off</span>
+                                            <span class="ms-1 user-select-none" id="master-to-text">On</span>
                                         </label>
 
                                         <x-modal-route-select-infomation
@@ -240,7 +240,7 @@
                                 </div>
 
                                 <div class="row mb-4">
-                                    <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+                                    <div class="col-sm-12 col-md-6 col-lg-5 mb-3">
                                         <label class="d-flex align-items-center mb-1 fw-bold">
                                             Infomation From
                                         </label>
@@ -254,7 +254,7 @@
                                         <input type="hidden" id="info-from-selected" name="info_from_selected" value=''>
                                     </div>
 
-                                    <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+                                    <div class="col-sm-12 col-md-6 col-lg-5 mb-3">
                                         <label class="d-flex align-items-center mb-1 fw-bold">
                                             Infomation To
                                         </label>
@@ -271,22 +271,33 @@
 
                                 <div class="row mb-3">
                                     <div class="col-12 col-lg-5">
-                                        <label for="">Text 1</label>
-                                        <textarea name="text_1" id="text_1"  rows="2" class="form-control"></textarea>
+                                        <label>Text 1</label>
+                                        <textarea name="text_1" id="text_1"  rows="3" class="form-control"></textarea>
                                     </div>
                                     <div class="col-12 col-lg-5">
-                                        <label for="">Text 2</label>
-                                        <textarea name="text_2" id="text_2"  rows="2" class="form-control"></textarea>
+                                        <label>Text 2</label>
+                                        <textarea name="text_2" id="text_2"  rows="3" class="form-control"></textarea>
                                     </div>
                                 </div>
 
                                 <div class="row mb-4">
-                                    <label class="col-3 col-md-2 col-lg-2 text-start fw-bold">Status :</label>
+                                    <label class="col-6 col-md-2 col-lg-2 text-start fw-bold">Status :</label>
                                     <div class="col-5">
                                         <label class="d-flex align-items-center mb-3">
                                             <input class="d-none-cloaked" type="checkbox" id="route-status-switch" name="status" value="1" checked>
                                             <i class="switch-icon switch-icon-primary"></i>
                                             <span class="px-3 user-select-none" id="route-status-text">On</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-4">
+                                    <label class="col-6 col-md-2 col-lg-2 text-start fw-bold">PromoCode :</label>
+                                    <div class="col-5">
+                                        <label class="d-flex align-items-center mb-3">
+                                            <input class="d-none-cloaked" type="checkbox" id="route-promocode-switch" name="promocode" value="1">
+                                            <i class="switch-icon switch-icon-primary"></i>
+                                            <span class="px-3 user-select-none" id="route-promocode-text">Off</span>
                                         </label>
                                     </div>
                                 </div>

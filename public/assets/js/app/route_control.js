@@ -190,7 +190,7 @@ if(btn_shuttle_bus_edit) {
             const value_data = [name.value, price.value, description.value]
             const shuttle_input = document.querySelector('.shuttle-bus-input-list')
             const inputs = shuttle_input.querySelectorAll(`input.${ref}`)
-            
+
             lis.forEach((li) => {
                 li.querySelector('span._name').innerHTML = value_data[0]
                 li.querySelector('span._price').innerHTML = value_data[1]
@@ -359,7 +359,7 @@ if(btn_longtail_boat_edit) {
             const value_data = [name.value, price.value, description.value]
             const longtail_input = document.querySelector('.longtail-boat-input-list')
             const inputs = longtail_input.querySelectorAll(`input.${ref}`)
-            
+
             lis.forEach((li) => {
                 li.querySelector('span._name').innerHTML = value_data[0]
                 li.querySelector('span._price').innerHTML = value_data[1]
@@ -469,7 +469,7 @@ function addMasterInfoFrom(e, index, station_id) {
         let li = document.createElement('li')
         li.setAttribute('class', 'info-from-active-on list-group-item')
         li.id = rand
-        li.innerHTML = `${_info.name} 
+        li.innerHTML = `${_info.name}
                         <i class="${info_icon} ms-2 text-primary cursor-pointer" title="View" onClick="viewInfo('${_info.id}', 'from')"></i>
                         <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoFrom('${rand}', ${index}, '${_info.id}')"></i>`
         choosed.appendChild(li)
@@ -567,7 +567,7 @@ function showStationInfo(info_id, station_id, type) {
     let info_type = type === 'to' ? 'Master To : ' : 'Master From : '
     let res = stations.find((item) => { return item.id === station_id })
     let info = res.info_line.find((item) => { return item.id === info_id })
-        
+
     document.querySelector('#station-info-modal-title').innerHTML = `<strong>${info_type}</strong> ${info.name}`
     document.querySelector('#station-info-modal-content').innerHTML = info.text
     $('#modal-station-info').modal('show')
@@ -604,30 +604,21 @@ function addRouteIcon(index) {
         let rand = generateString(8)
         icon_position.push(rand)
         let li = document.createElement('li')
-        li.classList.add('list-group-item')
-        li.classList.add('bg-transparent')
-        li.classList.add('border-0')
-        li.classList.add('icon-active-on')
+        li.setAttribute('class', 'list-group-item bg-transparent border-0 icon-active-on text-center')
         li.id = rand
         li.setAttribute('style', 'max-width: 100px;')
-
-        li.innerHTML = `<img src="${icon.path}" class="w-100">`
+        li.innerHTML = `<img src="${icon.path}" class="w-100"><p class="smaller mb-0">${icon.name}</p>`
         ul.appendChild(li)
 
         let del = document.createElement('i')
-        del.classList.add('fi')
-        del.classList.add('fi-round-close')
-        del.classList.add('text-danger')
-        del.classList.add('cursor-pointer')
-        del.classList.add('icon-del-style')
-
+        del.setAttribute('class', 'fi fi-round-close text-danger cursor-pointer icon-del-style')
         del.setAttribute('onClick', `deleteIconSelected('${rand}', '${icon.id}')`)
         li.appendChild(del)
 
         icon_input.push(icon.id)
         icon_list.value = icon_input
     }
-    
+
     if(icon_input.length >= 6) {
         setClassListRemove('icon-notice')
         document.querySelector('#dropdownIcons').disabled = true
@@ -660,11 +651,11 @@ function setRouteIcon() {
             let rand = generateString(8)
             icon_position.push(rand)
             let li = document.createElement('li')
-            li.setAttribute('class', 'list-group-item bg-transparent border-0 icon-active-on')
+            li.setAttribute('class', 'list-group-item bg-transparent border-0 icon-active-on text-center')
             li.id = rand
             li.setAttribute('style', 'max-width: 100px;')
 
-            li.innerHTML = `<img src="${icon.path}" class="w-100">`
+            li.innerHTML = `<img src="${icon.path}" class="w-100"><p class="smaller mb-0">${icon.name}</p>`
             ul.appendChild(li)
 
             let del = document.createElement('i')
@@ -772,13 +763,13 @@ function clearInfomationInput(input_id) {
 function addRouteActivity(index) {
     const ul = document.querySelector('#ul-activity-selected')
     const activity = activities.find((item, key) => { return key === index })
-    
+
     let rand = generateString(8)
     let li = document.createElement('li')
     li.setAttribute('class', 'list-group-item')
     li.setAttribute('data-id', activity.id)
     li.id = `activity-${rand}`
-    li.innerHTML = `<img src="${activity.icon.path}/${activity.icon.name}" width="24" height="24" class="ms-2"> 
+    li.innerHTML = `<img src="${activity.icon.path}/${activity.icon.name}" width="24" height="24" class="ms-2">
                     ${activity.name} <small>(${parseInt(activity.amount)} ฿)</small>
                     <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeActivity('${rand}', '${activity.id}')"></i>
                     <input type="hidden" name="activity_id[]" value="${activity.id}">`
@@ -803,13 +794,13 @@ function removeActivity(rand, id) {
 
 function setActivityData() {
     const ul = document.querySelector('#ul-activity-selected')
-    
+
     route_activity.forEach((activity, index) => {
         let rand = generateString(8)
         let li = document.createElement('li')
         li.setAttribute('class', 'list-group-item')
         li.id = `activity-${rand}`
-        li.innerHTML = `<img src="${activity.icon.path}/${activity.icon.name}" width="24" height="24" class="ms-2"> 
+        li.innerHTML = `<img src="${activity.icon.path}/${activity.icon.name}" width="24" height="24" class="ms-2">
                         ${activity.name} <small>(${parseInt(activity.amount)} ฿)</small>
                         <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeActivity('${rand}', '${activity.id}')"></i>
                         <input type="hidden" name="activity_id[]" value="${activity.id}">`
@@ -835,7 +826,7 @@ function addRouteMeal(index) {
     li.setAttribute('class', 'list-group-item')
     li.setAttribute('data-id', meal.id)
     li.id = `meal-${rand}`
-    li.innerHTML = `<img src="/icon/meal/icon/${meal.image_icon}" width="24" height="24" class="ms-2"> 
+    li.innerHTML = `<img src="/icon/meal/icon/${meal.image_icon}" width="24" height="24" class="ms-2">
                     ${meal.name} <small>(${parseInt(meal.amount)} ฿)</small>
                     <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeMeal('${rand}', '${meal.id}')"></i>
                     <input type="hidden" name="meal_id[]" value="${meal.id}">`
@@ -866,7 +857,7 @@ function setMealData() {
         li.setAttribute('class', 'list-group-item')
         li.setAttribute('data-id', meal.id)
         li.id = `meal-${rand}`
-        li.innerHTML = `<img src="/icon/meal/icon/${meal.image_icon}" width="24" height="24" class="ms-2"> 
+        li.innerHTML = `<img src="/icon/meal/icon/${meal.image_icon}" width="24" height="24" class="ms-2">
                         ${meal.name} <small>(${parseInt(meal.amount)} ฿)</small>
                         <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeMeal('${rand}', '${meal.id}')"></i>
                         <input type="hidden" name="meal_id[]" value="${meal.id}">`
@@ -941,8 +932,8 @@ if(filter_to) {
 }
 
 function searchRouteStation(e) {
-    let is_routes = routes.filter((item, key) => { 
-        return item.station_from.name.toLowerCase().includes(keyup_from.toLowerCase()) && 
+    let is_routes = routes.filter((item, key) => {
+        return item.station_from.name.toLowerCase().includes(keyup_from.toLowerCase()) &&
                 item.station_to.name.toLowerCase().includes(keyup_to.toLowerCase())
     })
     is_routes.forEach((route, index) => {
@@ -972,7 +963,7 @@ function updateDatatableData() {
                 data: 'choose',
                 className: "text-center"
             },
-            { 
+            {
                 data: 'station_from',
                 className: "text-start",
                 render: (data) => {
@@ -980,7 +971,7 @@ function updateDatatableData() {
                     return `${data.name} ${pier}`
                 }
             },
-            { 
+            {
                 data: 'station_to',
                 className: "text-start",
                 render: (data) => {
@@ -988,7 +979,7 @@ function updateDatatableData() {
                     return `${data.name} ${pier}`
                 }
             },
-            { 
+            {
                 data: 'depart',
                 className: "text-center",
                 render: (data) => {
@@ -996,7 +987,7 @@ function updateDatatableData() {
                     return `${_depart[0]}:${_depart[1]}`
                 }
             },
-            { 
+            {
                 data: 'arrive',
                 className: "text-center",
                 render: (data) => {
@@ -1004,7 +995,7 @@ function updateDatatableData() {
                     return `${_arrive[0]}:${_arrive[1]}`
                 }
             },
-            { 
+            {
                 data: 'icon',
                 className: "text-center",
                 render: (data) => {
@@ -1017,7 +1008,7 @@ function updateDatatableData() {
                             </div>`
                 }
             },
-            { 
+            {
                 data: 'price',
                 className: "text-center",
                 render: (data) => {
@@ -1025,25 +1016,25 @@ function updateDatatableData() {
                     return _price[0]
                 }
             },
-            { 
+            {
                 data: 'status',
                 className: "text-center",
                 render: (data) => {
                     return data === 'CO' ? `<span class="text-success">On</span>` : `<span class="text-danger">Off</span>`
                 }
             },
-            { 
+            {
                 data: 'action',
                 className: "text-center",
                 render: (data) => {
                     return `<a href="/route/edit/${data}" class="text-primary me-2" id="btn-route-edit">
-                                <svg width="18px" height="18px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">  
-                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>  
+                                <svg width="18px" height="18px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>
                                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"></path>
                                 </svg>
                             </a>
-                            <svg class="text-danger cursor-pointer" onClick="setConfirmDelete('${data}')" width="18px" height="18px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">  
-                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>  
+                            <svg class="text-danger cursor-pointer" onClick="setConfirmDelete('${data}')" width="18px" height="18px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
                                 <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
                             </svg>`
                 }

@@ -11,7 +11,7 @@
             <label for="station-to" class="form-label">Station to </label>
             <input type="text" class="form-control" id="station-to">
         </div>
-        <x-button-orange 
+        <x-button-orange
             :type="_('button')"
             :text="_('search')"
         />
@@ -108,7 +108,7 @@
                                             <ul class="dropdown-menu shadow-lg p-1 w-100" id="activity-dropdown" aria-labelledby="dropdownActivity">
                                                 @foreach($activities as $index => $activity)
                                                     <li id="activity-active-{{ $index }}" data-id="{{ $activity->id }}">
-                                                        <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteActivity('{{ $index }}')">
+                                                        <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteActivity({{ $index }})">
                                                             <img src="{{ asset($activity->icon->path.'/'.$activity->icon->name) }}" class="me-2" width="24" height="24">
                                                             <span>{{ $activity->name }}</span>
                                                         </a>
@@ -138,7 +138,7 @@
                                             <ul class="dropdown-menu shadow-lg p-1 w-100" aria-labelledby="dropdownMeal">
                                                 @foreach($meals as $index => $meal)
                                                     <li id="meal-active-{{ $index }}" data-id="{{ $meal['id'] }}">
-                                                        <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteMeal('{{ $index }}')">
+                                                        <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteMeal({{ $index }})">
                                                             <img src="{{ asset('icon/meal/icon/'.$meal->image_icon) }}" class="me-2" width="24" height="24">
                                                             <span>{{ $meal->name }}</span>
                                                         </a>
@@ -186,9 +186,9 @@
 
                                             <ul class="dropdown-menu shadow-lg p-1 w-100" aria-labelledby="dropdownIcons">
                                                 @foreach($icons as $index => $icon)
-                                                    <li id="icon-active-{{ $index }}" class="text-center">
-                                                        <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteIcon('{{ $index }}')">
-                                                            <img src="{{ asset($icon->path) }}" class="me-2" width="42" height="42">
+                                                    <li id="icon-active-{{ $index }}" class="text-start">
+                                                        <a class="dropdown-item rounded py-1" href="javascript:void(0)" onClick="addRouteIcon({{ $index }})">
+                                                            <img src="{{ asset($icon->path) }}" class="me-2" width="42" height="42"> {{ $icon->name }}
                                                         </a>
                                                     </li>
                                                 @endforeach
@@ -212,7 +212,7 @@
                                             <span class="ms-1 user-select-none" id="master-from-text">Off</span>
                                         </label>
 
-                                        <x-modal-route-select-infomation 
+                                        <x-modal-route-select-infomation
                                             :header="_('Master From')"
                                             :select_id="_('station-from-selected')"
                                             :type="_('from')"
@@ -229,7 +229,7 @@
                                             <span class="ms-1 user-select-none" id="master-to-text">Off</span>
                                         </label>
 
-                                        <x-modal-route-select-infomation 
+                                        <x-modal-route-select-infomation
                                             :header="_('Master To')"
                                             :select_id="_('station-to-selected')"
                                             :type="_('to')"
@@ -242,10 +242,10 @@
                                 <div class="row mb-4">
                                     <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
                                         <label class="d-flex align-items-center mb-1 fw-bold">
-                                            Infomation From 
+                                            Infomation From
                                         </label>
 
-                                        <x-modal-route-select-infomation 
+                                        <x-modal-route-select-infomation
                                             :header="_('Infomation From')"
                                             :select_id="_('station-from-selected')"
                                             :type="_('from')"
@@ -256,10 +256,10 @@
 
                                     <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
                                         <label class="d-flex align-items-center mb-1 fw-bold">
-                                            Infomation To 
+                                            Infomation To
                                         </label>
 
-                                        <x-modal-route-select-infomation 
+                                        <x-modal-route-select-infomation
                                             :header="_('Infomation To')"
                                             :select_id="_('station-to-selected')"
                                             :type="_('to')"
@@ -293,7 +293,7 @@
                             </div>
 
                             <div class="col-12 mt-4 text-center text-lg-start">
-                                <x-button-submit-loading 
+                                <x-button-submit-loading
                                     class="btn-lg w--30 me-4 button-orange-bg"
                                     :form_id="_('route-create-form')"
                                     :fieldset_id="_('route-create')"

@@ -15,9 +15,9 @@ class IconSeeder extends Seeder
     public function run(): void
     {
         $icon_name = [
-            'Driving' => 'ico-driving.png', 
-            'Fishing' => 'ico-fishing.png', 
-            'Surfing' => 'ico-surfing.png', 
+            'Driving' => 'ico-driving.png',
+            'Fishing' => 'ico-fishing.png',
+            'Surfing' => 'ico-surfing.png',
             'Swimming' => 'ico-swimming.png'
         ];
 
@@ -25,8 +25,8 @@ class IconSeeder extends Seeder
             DB::table('icons')->insert([
                 'id' => Str::uuid(),
                 'name' => $key,
-                'path' => '/icon/activity/'.$icon,
-                'type' => 'activity'
+                'path' => '/icon/route/'.$icon,
+                'type' => 'route'
             ]);
         }
     }

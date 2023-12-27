@@ -11,7 +11,7 @@
             <label for="station-to" class="form-label">Station to </label>
             <input type="text" class="form-control" id="station-to">
         </div>
-        <x-button-orange 
+        <x-button-orange
             :type="_('button')"
             :text="_('search')"
         />
@@ -128,7 +128,7 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                             <ul class="dropdown-menu shadow-lg p-1 w-100" id="activity-dropdown" aria-labelledby="dropdownActivity">
                                                 @foreach($activities as $index => $activity)
                                                     <li id="activity-active-{{ $index }}" data-id="{{ $activity->id }}">
-                                                        <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteActivity('{{ $index }}')">
+                                                        <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteActivity({{ $index }})">
                                                             <img src="{{ asset($activity->icon->path.'/'.$activity->icon->name) }}" class="me-2" width="24" height="24">
                                                             <span>{{ $activity->name }}</span>
                                                         </a>
@@ -158,7 +158,7 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                             <ul class="dropdown-menu shadow-lg p-1 w-100" aria-labelledby="dropdownMeal">
                                                 @foreach($meals as $index => $meal)
                                                     <li id="meal-active-{{ $index }}" data-id="{{ $meal['id'] }}">
-                                                        <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteMeal('{{ $index }}')">
+                                                        <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteMeal({{ $index }})">
                                                             <img src="{{ asset('icon/meal/icon/'.$meal->image_icon) }}" class="me-2" width="24" height="24">
                                                             <span>{{ $meal->name }}</span>
                                                         </a>
@@ -206,9 +206,9 @@ function saveAllList(type, list_id, ul_id, input_id) {
 
                                             <ul class="dropdown-menu shadow-lg p-1 w-100" aria-labelledby="dropdownIcons">
                                                 @foreach($icons as $index => $icon)
-                                                    <li id="icon-active-{{ $index }}" class="text-center">
-                                                        <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteIcon('{{ $index }}')">
-                                                            <img src="{{ asset($icon->path) }}" class="me-2" width="42" height="42">
+                                                    <li id="icon-active-{{ $index }}" class="text-start">
+                                                        <a class="dropdown-item rounded py-1" href="javascript:void(0)" onClick="addRouteIcon({{ $index }})">
+                                                            <img src="{{ asset($icon->path) }}" class="me-2" width="42" height="42"> {{ $icon->name }}
                                                         </a>
                                                     </li>
                                                 @endforeach
@@ -233,7 +233,7 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                         </label>
 
                                         <input type="hidden" id="master-from-selected" name="master_from_selected" value=''>
-                                        <x-modal-route-edit-infomation 
+                                        <x-modal-route-edit-infomation
                                             :header="_('Master From')"
                                             :select_id="_('station-from-selected')"
                                             :type="_('from')"
@@ -242,7 +242,7 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                             :data="$route['station_lines']"
                                             :stations="$stations"
                                         />
-                                        
+
                                     </div>
 
                                     <div class="col-12 col-lg-5 mb-3">
@@ -254,7 +254,7 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                         </label>
 
                                         <input type="hidden" id="master-to-selected" name="master_to_selected" value=''>
-                                        <x-modal-route-edit-infomation 
+                                        <x-modal-route-edit-infomation
                                             :header="_('Master To')"
                                             :select_id="_('station-to-selected')"
                                             :type="_('to')"
@@ -263,18 +263,18 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                             :data="$route['station_lines']"
                                             :stations="$stations"
                                         />
-                                        
+
                                     </div>
                                 </div>
 
                                 <div class="row mb-4">
                                     <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
                                         <label class="d-flex align-items-center mb-1 fw-bold">
-                                            Infomation From 
+                                            Infomation From
                                         </label>
 
                                         <input type="hidden" id="info-from-selected" name="info_from_selected" value=''>
-                                        <x-modal-route-edit-infomation 
+                                        <x-modal-route-edit-infomation
                                             :header="_('Infomation From')"
                                             :select_id="_('station-from-selected')"
                                             :type="_('from')"
@@ -287,11 +287,11 @@ function saveAllList(type, list_id, ul_id, input_id) {
 
                                     <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
                                         <label class="d-flex align-items-center mb-1 fw-bold">
-                                            Infomation To 
+                                            Infomation To
                                         </label>
-                                        
+
                                         <input type="hidden" id="info-to-selected" name="info_to_selected" value=''>
-                                        <x-modal-route-edit-infomation 
+                                        <x-modal-route-edit-infomation
                                             :header="_('Infomation To')"
                                             :select_id="_('station-to-selected')"
                                             :type="_('to')"
@@ -300,7 +300,7 @@ function saveAllList(type, list_id, ul_id, input_id) {
                                             :data="$route['station_lines']"
                                             :stations="$stations"
                                         />
-                                        
+
                                     </div>
                                 </div>
 
@@ -329,7 +329,7 @@ function saveAllList(type, list_id, ul_id, input_id) {
 
                             <div class="col-12 mt-4 text-center text-lg-start">
                                 <input type="hidden" name="route_id" value="{{ $route['id'] }}">
-                                <x-button-submit-loading 
+                                <x-button-submit-loading
                                     class="btn-lg w--30 me-4 button-orange-bg"
                                     :form_id="_('route-update-form')"
                                     :fieldset_id="_('route-update')"

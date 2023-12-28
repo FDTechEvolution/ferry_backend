@@ -109,7 +109,9 @@
                                                 @foreach($activities as $index => $activity)
                                                     <li id="activity-active-{{ $index }}" data-id="{{ $activity->id }}">
                                                         <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteActivity({{ $index }})">
-                                                            <img src="{{ asset($activity->icon->path.'/'.$activity->icon->name) }}" class="me-2" width="24" height="24">
+                                                            @if(isset($activity->icon))
+                                                                <img src="{{ asset($activity->icon->path.'/'.$activity->icon->name) }}" class="me-2" width="24" height="24">
+                                                            @endif
                                                             <span>{{ $activity->name }}</span>
                                                         </a>
                                                     </li>
@@ -139,7 +141,9 @@
                                                 @foreach($meals as $index => $meal)
                                                     <li id="meal-active-{{ $index }}" data-id="{{ $meal['id'] }}">
                                                         <a class="dropdown-item rounded" href="javascript:void(0)" onClick="addRouteMeal({{ $index }})">
-                                                            <img src="{{ asset('icon/meal/icon/'.$meal->image_icon) }}" class="me-2" width="24" height="24">
+                                                            @if(isset($meal->image_icon))
+                                                                <img src="{{ asset('icon/meal/icon/'.$meal->image_icon) }}" class="me-2" width="24" height="24">
+                                                            @endif
                                                             <span>{{ $meal->name }}</span>
                                                         </a>
                                                     </li>

@@ -50,7 +50,7 @@ class RouteController extends Controller
 
     public function create() {
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
-        $icons = DB::table('icons')->where('type', $this->Type)->get();
+        $icons = DB::table('icons')->where('type', $this->Type)->orderBy('name', 'ASC')->get();
         $partners = PartnerController::listPartners();
 
         $meals = Addon::where('type', $this->Meal)->where('isactive', 'Y')->where('status', 'CO')->get();

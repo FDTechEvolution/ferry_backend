@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Resources\StationResource;
 use App\Models\Station;
 use App\Models\Route;
+use App\Models\Section;
 
 class StationsController extends Controller
 {
@@ -58,16 +59,18 @@ class StationsController extends Controller
                 'name' => $route['station_from']['name'],
                 'piername' => $route['station_from']['piername'],
                 'nickname' => $route['station_from']['nickname'],
-                'section' => $route['station_from']['section']['name']
+                'section' => $route['station_from']['section']['name'],
+                'col' => $route['station_from']['section']['sectionscol']
             ];
             if(!in_array($_from, $stations['from'])) array_push($stations['from'], $_from);
-            
+
             $_to = [
                 'id' => $route['station_to']['id'],
                 'name' => $route['station_to']['name'],
                 'piername' => $route['station_to']['piername'],
                 'nickname' => $route['station_to']['nickname'],
-                'section' => $route['station_to']['section']['name']
+                'section' => $route['station_to']['section']['name'],
+                'col' => $route['station_to']['section']['sectionscol']
             ];
             if(!in_array($_to, $stations['to'])) array_push($stations['to'], $_to);
         }

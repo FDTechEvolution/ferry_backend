@@ -22,6 +22,7 @@
                         <th>Image Cover</th>
                         <th class="">Title</th>
                         <th class="">Code</th>
+                        <th>Depart Date Range</th>
                         <th class="text-end">Discount</th>
                         
                         <th class="text-end">Times to use Max</th>
@@ -41,6 +42,9 @@
                             </td>
                             <td>{{ $item['title'] }}</td>
                             <td>{{ $item['code'] }}</td>
+                            <td>
+                                {{ date('d/m/Y', strtotime($item['depart_date_start'])) }} - {{ date('d/m/Y', strtotime($item['depart_date_end'])) }}
+                            </td>
                             <td class="text-end">
                                 @if ($item['discount_type'] == 'THB')
                                     {{ $item['discount'] }}THB

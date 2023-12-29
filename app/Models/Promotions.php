@@ -27,7 +27,10 @@ class Promotions extends Model
         'title',
         'isactive',
         'image_id',
-        'created_at'
+        'created_at',
+        'isfreecreditcharge',
+        'isfreepremiumflex',
+        'description'
     ];
 
     public function image(){

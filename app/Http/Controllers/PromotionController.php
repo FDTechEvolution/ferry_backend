@@ -10,6 +10,7 @@ use App\Models\Station;
 use App\Models\Route;
 use App\Helpers\ImageHelper;
 use App\Helpers\BookingHelper;
+use Carbon\Carbon;
 
 class PromotionController extends Controller
 {
@@ -56,6 +57,15 @@ class PromotionController extends Controller
             'title' => 'required|string',
         ]);
 
+        //Date custom
+        $daterange = $request->daterange;
+        $dates = explode('-',$daterange);
+        $startDate = trim($dates[0]);
+        $endDate = trim($dates[0]);
+        $startDate = Carbon::createFromFormat('d/m/Y', $startDate)->format('Y-m-d');
+        $endDate = Carbon::createFromFormat('d/m/Y', $endDate)->format('Y-m-d');
+
+
         $promotion = Promotions::create([
             'code' => $request->code,
             'discount' => $request->discount,
@@ -63,8 +73,11 @@ class PromotionController extends Controller
             'times_use_max' => $request->times_use_max,
             'title' => $request->title,
             'isactive' => 'Y',
+            'depart_date_start'=>$startDate,
+            'depart_date_end'=>$endDate
         ]);
 
+        
 
 
         if (!$promotion) {

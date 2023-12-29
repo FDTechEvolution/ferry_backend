@@ -13,7 +13,7 @@ use App\Http\Resources\PromotionResource;
 class PromotionController extends Controller
 {
     public function getPromotion() {
-        $promotions = Promotions::where('isactive', 'Y')->orderBy('created_at', 'DESC')->get();
+        $promotions = Promotions::where('isactive', 'Y')->with('image')->orderBy('created_at', 'DESC')->get();
 
         return response()->json(['data' => PromotionResource::collection(($promotions))], 200);
     }

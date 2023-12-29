@@ -26,7 +26,8 @@ class Promotions extends Model
         'times_use_max',
         'title',
         'isactive',
-        'image_id'
+        'image_id',
+        'created_at'
     ];
 
     public function image(){

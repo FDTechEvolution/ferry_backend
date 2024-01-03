@@ -37,7 +37,8 @@
             "app/Helpers/BookingHelper.php",
             "app/Helpers/PaymentHelper.php",
             "app/Helpers/TransactionLogHelper.php",
-            "app/Helpers/ImageHelper.php"
+            "app/Helpers/ImageHelper.php",
+            "app/Helpers/PromotionHelper.php"
         ]
     },
     "autoload-dev": {

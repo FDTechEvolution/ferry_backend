@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 use App\Models\Promotions;
-
+use App\Helpers\PromotionHelper;
 use App\Http\Resources\PromotionResource;
 
 class PromotionController extends Controller
@@ -28,16 +28,16 @@ class PromotionController extends Controller
     }
 
     public function promotionCode(Request $request) {
-        $promo = Promotions::where('code', $request->promo_code)->whereColumn('times_used', '<', 'times_use_max')->first();
+        $promo = Promotions::where('code', $request->promo_code)->where('isactive', 'Y')->whereColumn('times_used', '<', 'times_use_max')->first();
         if(isset($promo)) {
             $_depart_date = false;
             $_booking_date = false;
             $_station = false;
 
-            $_trip_type = $this->promoTripType($promo->trip_type, $request->trip_type);
-            if($_trip_type) $_depart_date = $this->promoDepartDate($promo, $request->depart_date);
-            if($_depart_date) $_booking_date = $this->promoBookingDate($promo);
-            if($_booking_date) $_station = $this->promoStation($promo, $request->station_from_id, $request->station_to_id);
+            $_trip_type = PromotionHelper::promoTripType($promo->trip_type, $request->trip_type);
+            if($_trip_type) $_depart_date = PromotionHelper::promoDepartDate($promo, $request->depart_date);
+            if($_depart_date) $_booking_date = PromotionHelper::promoBookingDate($promo);
+            if($_booking_date) $_station = PromotionHelper::promoStation($promo, $request->station_from_id, $request->station_to_id);
 
             if($_trip_type && $_depart_date && $_booking_date && $_station) {
                 return response()->json(['result' => true, 'data' => $promo]);
@@ -48,7 +48,7 @@ class PromotionController extends Controller
     }
 
     private function promoTripType($promo_trip, $trip_type) {
-        if($promo_trip == NULL) return true;
+        if($promo_trip == NULL || $promo_trip == 'all') return true;
         else {
             if($promo_trip == $trip_type) return true;
             else return false;

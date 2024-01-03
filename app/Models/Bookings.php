@@ -26,7 +26,8 @@ class Bookings extends Model
         'bookingno',
         'book_channel',
         'trip_type',
-        'ispremiumflex'
+        'ispremiumflex',
+        'promotion_id'
     ];
 
     public function user() {
@@ -55,5 +56,5 @@ class Bookings extends Model
 
 
 
-    
+
 }

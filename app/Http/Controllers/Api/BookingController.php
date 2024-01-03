@@ -10,8 +10,10 @@ use App\Models\Route;
 use App\Models\Addon;
 use App\Models\Bookings;
 use App\Models\BookingRoutes;
+use App\Models\Promotions;
 use App\Helpers\BookingHelper;
 use App\Helpers\PaymentHelper;
+use App\Helpers\PromotionHelper;
 use App\Http\Resources\BookingResource;
 
 class BookingController extends Controller
@@ -30,13 +32,16 @@ class BookingController extends Controller
             $_extra_activity = isset($request->activity_id) ? $this->extraAddon($request->activity_id, $request->activity_qty) : [0, []];
             $_extra_shuttle_bus = isset($request->bus_id) ? $this->extraAddon($request->bus_id, $request->bus_qty) : [0, []];
             $_extra_longtail_boat = isset($request->boat_id) ? $this->extraAddon($request->boat_id, $request->boat_qty) : [0, []];
+            $_promotion = $request->promocode != '' ? $this->promoCode($request->promocode, $request->route_id) : false;
 
-            $_booking = $this->setBooking($request->departdate, $request->passenger, $request->child_passenger, 
-                                            $request->infant_passenger, $request->trip_type, $request->book_channel, 
-                                            $_amount, $_extra_meal[0], $_extra_activity[0], $_extra_shuttle_bus[0], $_extra_longtail_boat[0], $request->ispremiumflex);
-            $_customer = $this->setPassenger($request->fullname, $request->mobile, $request->passenger_type, 
-                                                $request->passportno, $request->email, $request->address, $request->mobile_code, $request->th_mobile, $request->country, $request->titlename, $request->birth_day);
-            $_route = $this->setRoutes($request->route_id, $request->departdate, $request->returndate, 
+            $_booking = $this->setBooking($request->departdate, $request->passenger, $request->child_passenger,
+                                            $request->infant_passenger, $request->trip_type, $request->book_channel,
+                                            $_amount, $_extra_meal[0], $_extra_activity[0], $_extra_shuttle_bus[0],
+                                            $_extra_longtail_boat[0], $request->ispremiumflex, $_promotion);
+            $_customer = $this->setPassenger($request->fullname, $request->mobile, $request->passenger_type,
+                                                $request->passportno, $request->email, $request->address, $request->mobile_code,
+                                                $request->th_mobile, $request->country, $request->titlename, $request->birth_day);
+            $_route = $this->setRoutes($request->route_id, $request->departdate, $request->returndate,
                                         $request->passenger, $request->child_passenger, $request->infant_passenger);
 
             $_extra = array_merge($_extra_meal[1], $_extra_activity[1], $_extra_shuttle_bus[1], $_extra_longtail_boat[1]);
@@ -79,7 +84,7 @@ class BookingController extends Controller
     public function storeMultiTrip(Request $request) {
         // Log::debug($request);
         if(isset($request->route_id)) {
-            
+
             $route = $this->getRoute($request->route_id[0]);
             if($route) {
                 $_amount = $this->routeAmount($request->route_id, $request->passenger, $request->child_passenger, $request->infant_passenger);
@@ -87,13 +92,17 @@ class BookingController extends Controller
                 $_extra_activity = isset($request->activity_id) ? $this->extraAddon($request->activity_id, $request->activity_qty) : [0, []];
                 $_extra_shuttle_bus = isset($request->bus_id) ? $this->extraAddon($request->bus_id, $request->bus_qty) : [0, []];
                 $_extra_longtail_boat = isset($request->boat_id) ? $this->extraAddon($request->boat_id, $request->boat_qty) : [0, []];
+                $_promotion = null;
 
-                $_booking = $this->setBooking($request->departdate[0], $request->passenger, $request->child_passenger, 
-                                                $request->infant_passenger, $request->trip_type, $request->book_channel, 
-                                                $_amount, $_extra_meal[0], $_extra_activity[0], $_extra_shuttle_bus[0], $_extra_longtail_boat[0], $request->ispremiumflex);
-                $_customer = $this->setPassenger($request->fullname, $request->mobile, $request->passenger_type, 
-                                                    $request->passportno, $request->email, $request->address, $request->mobile_code, $request->th_mobile, $request->country, $request->titlename, $request->birth_day);
-                $_route = $this->setRoutes($request->route_id, $request->departdate, $request->returndate, 
+                $_booking = $this->setBooking($request->departdate[0], $request->passenger, $request->child_passenger,
+                                                $request->infant_passenger, $request->trip_type, $request->book_channel,
+                                                $_amount, $_extra_meal[0], $_extra_activity[0], $_extra_shuttle_bus[0],
+                                                $_extra_longtail_boat[0], $request->ispremiumflex, $_promotion);
+                $_customer = $this->setPassenger($request->fullname, $request->mobile, $request->passenger_type,
+                                                    $request->passportno, $request->email, $request->address,
+                                                    $request->mobile_code, $request->th_mobile, $request->country,
+                                                    $request->titlename, $request->birth_day);
+                $_route = $this->setRoutes($request->route_id, $request->departdate, $request->returndate,
                                             $request->passenger, $request->child_passenger, $request->infant_passenger);
 
                 $_extra = array_merge($_extra_meal[1], $_extra_activity[1], $_extra_shuttle_bus[1], $_extra_longtail_boat[1]);
@@ -129,7 +138,44 @@ class BookingController extends Controller
         return response()->json(['result' => false, 'data' => 'No Data.'], 200);
     }
 
-    private function setBooking($departdate, $adult, $child, $infant, $trip_type, $book_channel, $amount, $meal, $activity, $bus, $boat, $ispremiumflex) { 
+    private function promoCode($promocode, $route_id) {
+        $promotion = Promotions::where('code', $promocode)->where('isactive', 'Y')->whereColumn('times_used', '<', 'times_use_max')->first();
+        if(isset($promocode)) {
+            $route = Route::find($route_id[0]);
+            if(isset($route) && $route->ispromocode == 'Y') {
+                $promotion->station_from_id = $route->station_from_id;
+                $promotion->station_to_id = $route->station_to_id;
+
+                return $promotion;
+            }
+        }
+        return false;
+    }
+
+    private function setPromotionCode($promo, $trip_type, $depart_date) {
+        $_depart_date = false;
+        $_booking_date = false;
+        $_station = false;
+
+        $_trip_type = PromotionHelper::promoTripType($promo->trip_type, $trip_type);
+        if($_trip_type) $_depart_date = PromotionHelper::promoDepartDate($promo, $depart_date);
+        if($_depart_date) $_booking_date = PromotionHelper::promoBookingDate($promo);
+        if($_booking_date) $_station = PromotionHelper::promoStation($promo, $promo->station_from_id, $promo->station_to_id);
+
+        if($_depart_date && $_booking_date && $_station) {
+            return $promo;
+        }
+        return null;
+    }
+
+    private function setBooking($departdate, $adult, $child, $infant, $trip_type, $book_channel, $amount, $meal, $activity, $bus, $boat, $ispremiumflex, $promotion) {
+        // $_amount = $amount;
+        // $_promo = null;
+        // if($promotion) {
+        //     $_promo = $this->setPromotionCode($promotion, $trip_type, $departdate);
+        // }
+        // 'promotion_id' => $_promo != null ? $_promo->id : null
+
         $extra_amount = ($meal + $activity + $bus + $boat);
         $booking = [
             'departdate' => $departdate,
@@ -144,7 +190,8 @@ class BookingController extends Controller
             'trip_type' => $trip_type,
             'status' => 'DR',
             'book_channel' => $book_channel,
-            'ispremiumflex' => $ispremiumflex
+            'ispremiumflex' => $ispremiumflex,
+
         ];
 
         return $booking;
@@ -212,7 +259,7 @@ class BookingController extends Controller
                 $amount += $r->regular_price*$adult;
                 $amount += $r->child_price*$child;
                 $amount += $r->infant_price*$infant;
-                
+
                 array_push($route, [
                     'route_id' => $_route,
                     'traveldate' => $traveldate[$key],
@@ -257,7 +304,7 @@ class BookingController extends Controller
             $amount += $_r->child_price*$child;
             $amount += $_r->infant_price*$infant;
         }
-        
+
         return $amount;
     }
 
@@ -329,7 +376,7 @@ class BookingController extends Controller
                 $last_route = end($booking_routes);
                 $m_route = $this->getRouteMultiple($last_route['station_to_id']);
                 $m_from_route = $last_route['station_to'];
-            
+
                 return response()->json(['result' => true, 'data' => new BookingResource($booking), 'addon' => $addons, 'm_route' => $m_route, 'm_from_route' => $m_from_route], 200);
             }
         }

@@ -69,9 +69,9 @@ class BookingHelper
                 'amount'=> price exclude extra,
                 'ispayment'=>Y:N,
                 'user_id'=> require only booking by admin on backend, null,
-                'trip_type'=> ENUM('one-way', 'return','multiple') 
+                'trip_type'=> ENUM('one-way', 'return','multiple')
             ],
-            
+
             'routes'=>[
                 [
                     route_id,
@@ -101,7 +101,7 @@ class BookingHelper
                 ],
                 [.....],
             ],
-           
+
         ]
     */
     public static function createBooking($data = [])
@@ -130,7 +130,7 @@ class BookingHelper
             'bookingno' => newSequenceNumber('BOOKING'),
             'book_channel' => isset($_b['book_channel']) ? $_b['book_channel'] : 'ONLINE',
             'ispremiumflex' => isset($_b['ispremiumflex']) ? $_b['ispremiumflex'] : 'N',
-
+            'promotion_id' => $_b['promotion_id']
         ]);
 
         $amount += $_b['amount'];
@@ -158,10 +158,10 @@ class BookingHelper
                 'birth_day' => isset($customerData['birthday']) ? $customerData['birthday'] : null
             ]);
             $isdefault = $key == 0 ? 'Y' : 'N';
-           
+
             $booking->bookingCustomers()->attach($customer, ["id" => (string) Uuid::uuid4(), 'isdefault' => $isdefault]);
         }
-        
+
         //Routes
         $_routes = $data['routes'];
         foreach ($_routes as $key => $routeData) {

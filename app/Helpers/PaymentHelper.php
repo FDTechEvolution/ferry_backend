@@ -6,6 +6,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use App\Models\Payments;
 use App\Models\PaymentLines;
+use App\Models\Promotions;
 
 class PaymentHelper
 {
@@ -179,6 +180,32 @@ class PaymentHelper
         return $payment;
     }
 
+    public static function updatePayWithCreditCardFree($payment_id, $payment_amount)
+    {
+        $payment = Payments::where('id', $payment_id)->first();
+
+        if (!is_null($payment)) {
+            $creditAmount = -$payment_amount * 0.035;
+
+            //Make payment line
+            $paymentLine = PaymentLines::create([
+                'payment_id' => $payment->id,
+                'type' => 'FEE',
+                'title' => 'Free Credit card fee',
+                'amount' => $creditAmount,
+            ]);
+
+            if ($paymentLine) {
+                $payment->payment_method = 'CREDIT';
+                $payment->totalamt = $payment->totalamt + $creditAmount;
+
+                $payment->save();
+            }
+        }
+
+        return $payment;
+    }
+
     public static function updatePremiumFlex($payment_id)
     {
         $payment = Payments::where('id', $payment_id)->first();
@@ -196,6 +223,85 @@ class PaymentHelper
 
             if ($paymentLine) {
                 $payment->totalamt = $payment->totalamt + $premiumAmount;
+
+                $payment->save();
+            }
+        }
+
+        return $payment;
+    }
+
+    public static function updatePremiumFlexFree($payment_id, $payment_amount)
+    {
+        $payment = Payments::where('id', $payment_id)->first();
+
+        if (!is_null($payment)) {
+            $premiumAmount = -$payment_amount * 0.1;
+
+            //Make payment line
+            $paymentLine = PaymentLines::create([
+                'payment_id' => $payment->id,
+                'type' => 'PREMIUM',
+                'title' => 'Free Premium Flex',
+                'amount' => $premiumAmount,
+            ]);
+
+            if ($paymentLine) {
+                $payment->totalamt = $payment->totalamt + $premiumAmount;
+
+                $payment->save();
+            }
+        }
+
+        return $payment;
+    }
+
+    public static function updatePremiumFlexDiscount($payment_id, $discountamt)
+    {
+        $payment = Payments::where('id', $payment_id)->first();
+
+        if (!is_null($payment)) {
+            $premiumAmount = $payment->totalamt * 0.1;
+            $premiumDiscountAmount = $discountamt * 0.1;
+            $premiumDiscount = $premiumDiscountAmount - $premiumAmount;
+
+            //Make payment line
+            $paymentLine = PaymentLines::create([
+                'payment_id' => $payment->id,
+                'type' => 'PREMIUM',
+                'title' => 'Premium Flex Discount',
+                'amount' => $premiumDiscount,
+            ]);
+
+            if ($paymentLine) {
+                $payment->totalamt = $payment->totalamt + $premiumDiscount;
+
+                $payment->save();
+            }
+        }
+
+        return $payment;
+    }
+
+    public static function updatePromoCodeDiscount($payment_id, $promotion_id, $discountamt) {
+        $payment = Payments::where('id', $payment_id)->first();
+        $promotion = Promotions::find($promotion_id);
+
+        if (!is_null($payment)) {
+            $discountAmount = $discountamt - $payment->totalamt;
+            $discount = number_format($promotion->discount);
+            $discount_type = $promotion->discount_type == 'PERCENT' ? '%' : 'THB';
+
+            //Make payment line
+            $paymentLine = PaymentLines::create([
+                'payment_id' => $payment->id,
+                'type' => 'ROUTE',
+                'title' => sprintf('PromoCode Discount %s %s [%s]', $discount, $discount_type, $promotion->code),
+                'amount' => $discountAmount,
+            ]);
+
+            if ($paymentLine) {
+                $payment->totalamt = $payment->totalamt + $discountAmount;
 
                 $payment->save();
             }

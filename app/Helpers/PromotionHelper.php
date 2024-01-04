@@ -72,4 +72,16 @@ class PromotionHelper
 
         return ($_from && $_to) ? true : false;
     }
+
+    public static function promoDiscount($amount, $promo) {
+        if($promo->discount_type == 'PERCENT') {
+            $discount = $amount - ((intval($promo->discount)/100)*$amount);
+            return $discount;
+        }
+
+        if($promo->discount_type == 'THB') {
+            $discount = $amount - intval($promo['discount']);
+            return $discount;
+        }
+    }
 }

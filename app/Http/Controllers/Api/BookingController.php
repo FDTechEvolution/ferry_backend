@@ -27,17 +27,19 @@ class BookingController extends Controller
     public function store(Request $request) {
         $route = $this->getRoute($request->route_id[0]);
         if($route) {
+            $_promo = NULL;
             $_amount = $this->routeAmount($request->route_id, $request->passenger, $request->child_passenger, $request->infant_passenger);
             $_extra_meal = isset($request->meal_id) ? $this->extraAddon($request->meal_id, $request->meal_qty) : [0, []];
             $_extra_activity = isset($request->activity_id) ? $this->extraAddon($request->activity_id, $request->activity_qty) : [0, []];
             $_extra_shuttle_bus = isset($request->bus_id) ? $this->extraAddon($request->bus_id, $request->bus_qty) : [0, []];
             $_extra_longtail_boat = isset($request->boat_id) ? $this->extraAddon($request->boat_id, $request->boat_qty) : [0, []];
             $_promotion = $request->promocode != '' ? $this->promoCode($request->promocode, $request->route_id) : false;
+            if($_promotion) $_promo = $this->setPromotionCode($_promotion, $request->trip_type, $request->departdate);
 
             $_booking = $this->setBooking($request->departdate, $request->passenger, $request->child_passenger,
                                             $request->infant_passenger, $request->trip_type, $request->book_channel,
                                             $_amount, $_extra_meal[0], $_extra_activity[0], $_extra_shuttle_bus[0],
-                                            $_extra_longtail_boat[0], $request->ispremiumflex, $_promotion);
+                                            $_extra_longtail_boat[0], $request->ispremiumflex, $_promo);
             $_customer = $this->setPassenger($request->fullname, $request->mobile, $request->passenger_type,
                                                 $request->passportno, $request->email, $request->address, $request->mobile_code,
                                                 $request->th_mobile, $request->country, $request->titlename, $request->birth_day);
@@ -59,24 +61,42 @@ class BookingController extends Controller
             ];
 
             $payment_channel = $this->PaymentMethod[$request->payment_method];
+            $isfreepremiumflex = isset($_promo) ? $_promo->isfreepremiumflex : 'N';
+            $isfreecreditcharge = isset($_promo) ? $_promo->isfreecreditcharge : 'N';
 
             $booking = BookingHelper::createBooking($data);
             $payment = PaymentHelper::createPaymentFromBooking($booking->id);
             $payment_id = $payment->id;
-            if($request->ispremiumflex == 'Y') $payment = PaymentHelper::updatePremiumFlex($payment_id);
-            if($payment_channel == 'CC') $payment = PaymentHelper::updatePayWithCreditCard($payment_id);
+
+            // update promoCode
+            if(isset($_promo)) {
+                $discount_amount = PromotionHelper::promoDiscount($_amount, $_promo);
+                $payment = PaymentHelper::updatePromoCodeDiscount($payment_id, $_promo->id, $discount_amount);
+            }
+            $payment_amt = $payment->totalamt;
+
+            // update PremiumFlex
+            if($request->ispremiumflex == 'Y')
+                $payment = PaymentHelper::updatePremiumFlex($payment_id);
+            if($request->ispremiumflex == 'Y' && $isfreepremiumflex == 'Y')
+                $payment = PaymentHelper::updatePremiumFlexFree($payment_id, $payment_amt);
+
+            $payment_amt = $payment->totalamt;
+
+            // update CreditCard Free
+            if($payment_channel == 'CC')
+                $payment = PaymentHelper::updatePayWithCreditCard($payment_id);
+            if($payment_channel == 'CC' && $isfreecreditcharge == 'Y')
+                $payment = PaymentHelper::updatePayWithCreditCardFree($payment_id, $payment_amt);
+
             $payment->totalamt = number_format($payment->totalamt, 2, '.', '');
 
             $payload = PaymentHelper::encodeRequest($payment, $payment_channel);
             $response = PaymentHelper::postTo_2c2p($payload);
             $result = PaymentHelper::decodeResponse($response);
 
-            // Log::debug($result);
-
             return response()->json(['result' => true, 'data' => $result, 'booking' => $booking->bookingno, 'email' => $request->email], 200);
-            // return response()->json(['data' => $data]);
         }
-        // Log::debug($request);
 
         return response()->json(['result' => false, 'data' => 'No Route.'], 200);
     }
@@ -149,33 +169,30 @@ class BookingController extends Controller
                 return $promotion;
             }
         }
-        return false;
+        return NULL;
     }
 
     private function setPromotionCode($promo, $trip_type, $depart_date) {
+        $_trip_type = false;
         $_depart_date = false;
         $_booking_date = false;
         $_station = false;
 
-        $_trip_type = PromotionHelper::promoTripType($promo->trip_type, $trip_type);
-        if($_trip_type) $_depart_date = PromotionHelper::promoDepartDate($promo, $depart_date);
-        if($_depart_date) $_booking_date = PromotionHelper::promoBookingDate($promo);
-        if($_booking_date) $_station = PromotionHelper::promoStation($promo, $promo->station_from_id, $promo->station_to_id);
+        $_date = explode('-', $depart_date);
+        $_departdate = $_date[2].'/'.$_date[1].'/'.$_date[0];
 
-        if($_depart_date && $_booking_date && $_station) {
+        $_trip_type = PromotionHelper::promoTripType($promo->trip_type, $trip_type);
+        $_depart_date = PromotionHelper::promoDepartDate($promo, $_departdate);
+        $_booking_date = PromotionHelper::promoBookingDate($promo);
+        $_station = PromotionHelper::promoStation($promo, $promo->station_from_id, $promo->station_to_id);
+
+        if($_trip_type && $_depart_date && $_booking_date && $_station) {
             return $promo;
         }
-        return null;
+        return NULL;
     }
 
-    private function setBooking($departdate, $adult, $child, $infant, $trip_type, $book_channel, $amount, $meal, $activity, $bus, $boat, $ispremiumflex, $promotion) {
-        // $_amount = $amount;
-        // $_promo = null;
-        // if($promotion) {
-        //     $_promo = $this->setPromotionCode($promotion, $trip_type, $departdate);
-        // }
-        // 'promotion_id' => $_promo != null ? $_promo->id : null
-
+    private function setBooking($departdate, $adult, $child, $infant, $trip_type, $book_channel, $amount, $meal, $activity, $bus, $boat, $ispremiumflex, $promo) {
         $extra_amount = ($meal + $activity + $bus + $boat);
         $booking = [
             'departdate' => $departdate,
@@ -191,7 +208,7 @@ class BookingController extends Controller
             'status' => 'DR',
             'book_channel' => $book_channel,
             'ispremiumflex' => $ispremiumflex,
-
+            'promotion_id' => $promo != NULL ? $promo->id : NULL
         ];
 
         return $booking;

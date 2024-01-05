@@ -13,6 +13,7 @@ use Ramsey\Uuid\Uuid;
 use App\Helpers\BookingHelper;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\ImageHelper;
+use Illuminate\Support\Carbon;
 
 
 use Illuminate\Http\Request;
@@ -26,6 +27,8 @@ class BookingsController extends Controller
 
     public function index()
     {
+
+        $this->clearUnpayBooking();
 
         $station_from = request()->station_from;
         $station_to = request()->station_to;
@@ -211,7 +214,7 @@ class BookingsController extends Controller
                 $paymentData['image_id'] = $image->id;
             }
 
-            $payment = PaymentHelper::completePayment($payment->id,$paymentData);
+            $payment = PaymentHelper::completePayment($payment->id, $paymentData);
             $booking = BookingHelper::completeBooking($booking['id']);
         }
 
@@ -233,5 +236,33 @@ class BookingsController extends Controller
 
         $converted = ($ext[2]) . '-' . $ext[1] . '-' . $ext[0];
         return $converted;
+    }
+
+
+    private function clearUnpayBooking()
+    {
+        $now = Carbon::now();
+        $yesterday = $now->add(-1, 'day');
+
+        $bookings = Bookings::where('ispayment', 'N')
+            ->where('created_at','<', $yesterday)
+            ->where('book_channel','ONLINE')
+            ->get();
+        
+            foreach($bookings as $booking){
+                foreach($booking->bookingCustomers as $item){
+                    $item->delete();
+                }
+
+                foreach($booking->bookingRoutes as $item){
+                    $item->delete();
+                }
+
+                foreach($booking->payments as $item){
+                    $item->delete();
+                }
+
+                $booking->delete();
+            }
     }
 }

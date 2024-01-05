@@ -82,7 +82,7 @@
             });
 
             $(window).on('beforeunload', function(){
-                $('#page-loader').show();
+                //$('#page-loader').show();
             });
         });
     </script>

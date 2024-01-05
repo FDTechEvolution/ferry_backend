@@ -1,4 +1,4 @@
-@props(['header' => '', 'select_id' => '', 'type' => '', 'ismaster' => '', 'input_id' => '', 'data' => [], 'stations' => []])
+@props(['header' => '', 'select_id' => '', 'type' => '', 'ismaster' => '', 'input_id' => '', 'data' => [], 'stations' => [],'turnon'=>'Y'])
 
 @php
     $modal_id = uniqid();
@@ -47,6 +47,7 @@
 
 
 <script>
+
 setInfomationListData()
 
 if(document.querySelector(`#{{ $select_id }}`)) {
@@ -67,7 +68,7 @@ if(document.querySelector(`#{{ $select_id }}`)) {
         clearInfomationSelected2(ul_id)
         clearInfomationInput2(input_id)
         if(infos.length > 0) {
-            setInfomationListSelect(infos, type, e.target.value, list_id, ul_id, input_id, false)
+            setInfomationListSelect(infos, type, e.target.value, list_id, ul_id, input_id, false,ismaster)
             setInfomationOnChange(e.target.value, type, ismaster, list_id, ul_id, input_id)
         }
         else {
@@ -87,7 +88,7 @@ if(document.querySelector(`#{{ $select_id }}`)) {
     })
 }
 
-function setInfomationListSelect(infos, type, station_id, list_id, ul_id, input_id, _new) {
+function setInfomationListSelect(infos, type, station_id, list_id, ul_id, input_id, _new,_ismaster) {
     saveAllList(type, list_id, ul_id, input_id)
     let li_name = type === 'from' ? 'master_from[]' : 'master_to[]'
     let ul = document.querySelector(`#list-${list_id}`)
@@ -105,7 +106,7 @@ function setInfomationListSelect(infos, type, station_id, list_id, ul_id, input_
         _input.setAttribute('class', 'form-check-input me-1')
         _input.value = info.id
         _input.id = `input-${rand}`
-        _input.setAttribute('onClick', `addMasterInfoList(this, '${station_id}', '${type}', '${ul_id}', '${input_id}', ${_new})`)
+        _input.setAttribute('onClick', `addMasterInfoList(this, '${station_id}', '${type}', '${ul_id}', '${input_id}', ${_new},'${_ismaster}','${type}')`)
 
         _label.classList.add('ms-2')
         _label.setAttribute('for', `input-${rand}`)
@@ -121,8 +122,10 @@ function setInfomationListSelect(infos, type, station_id, list_id, ul_id, input_
     })
 }
 
-function addMasterInfoList(e, station_id, type, ul_id, input_id, _new) {
+function addMasterInfoList(e, station_id, type, ul_id, input_id, _new,ismaster,type) {
     const _input = document.querySelector(`#${input_id}`)
+    
+    let isturnon = `{{ $turnon }}`;
     if(e.checked) {
         let _stations = !_new ? {{ Js::from($stations) }} : stations
         const info_icon = 'fi fi-squared-info'
@@ -136,10 +139,20 @@ function addMasterInfoList(e, station_id, type, ul_id, input_id, _new) {
         li.setAttribute('class', 'list-group-item info-from-active-on')
         li.setAttribute('data-id', _info.id)
         li.id = rand
-        li.innerHTML = `<span class="fw-bold">${_info.name}</span>
+        
+        if(isturnon =='Y'){
+            li.innerHTML = `<span class="fw-bold">${_info.name}</span>
                         <i class="${info_icon} ms-2 text-primary cursor-pointer d-none" title="View" onClick="showStationInfo('${_info.id}', '${station_id}', '${type}')"></i>
                         <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoFrom('${rand}', '${_info.id}', '${ul_id}', '${input_id}', '${type}')"></i>
-                        <span class="info-content-text">${_info.text}</span>`
+                        <span class="info-content-text" id="box-${ismaster}-${type}">${_info.text}</span>`;
+        }else{
+            li.innerHTML = `<span class="fw-bold">${_info.name}</span>
+                        <i class="${info_icon} ms-2 text-primary cursor-pointer d-none" title="View" onClick="showStationInfo('${_info.id}', '${station_id}', '${type}')"></i>
+                        <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoFrom('${rand}', '${_info.id}', '${ul_id}', '${input_id}', '${type}')"></i>
+                        <span class="info-content-text" id="box-${ismaster}-${type}" style="display:none;">${_info.text}</span>`;
+        }
+        
+        
         _ul.appendChild(li)
 
         e.setAttribute('data-rand', rand)
@@ -185,7 +198,7 @@ function setInfomationListData() {
     const infos = res.info_line.filter((item) => { return item.pivot.type === type })
     const info_selected = station_lines.filter((item) => { return item.pivot.type === type && item.pivot.ismaster === ismaster })
     clearInfomationList2(list_id)
-    setInfomationListSelect(infos, type, station_id, list_id, ul_id, input_id, false)
+    setInfomationListSelect(infos, type, station_id, list_id, ul_id, input_id, false,ismaster)
     setInfomationListSelected(info_selected, station_id, type, ul_id, input_id, list_id)
     document.querySelector(`#btn-${button_create}`).setAttribute('onClick', `setModalCreateId('${button_id}', '${station_id}', '${type}', '${list_id}', '${ul_id}', '${input_id}')`)
 }

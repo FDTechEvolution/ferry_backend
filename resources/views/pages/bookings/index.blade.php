@@ -22,7 +22,8 @@
                     <select class="form-select" id="station_from" aria-label="" name="station_from">
                         <option selected></option>
                         @foreach ($station['station_from'] as $item)
-                            <option value="{{$item['id']}}" @if($item['id']==$station_from)selected @endif>{{$item['name']}}</option>
+                            <option value="{{ $item['id'] }}" @if ($item['id'] == $station_from) selected @endif>
+                                {{ $item['name'] }}</option>
                         @endforeach
                     </select>
                     <label for="station_from">Station From</label>
@@ -33,7 +34,8 @@
                     <select class="form-select" id="station_to" aria-label="" name="station_to">
                         <option selected></option>
                         @foreach ($station['station_to'] as $item)
-                            <option value="{{$item['id']}}" @if($item['id']==$station_to)selected @endif>{{$item['name']}}</option>
+                            <option value="{{ $item['id'] }}" @if ($item['id'] == $station_to) selected @endif>
+                                {{ $item['name'] }}</option>
                         @endforeach
                     </select>
                     <label for="station_to">Station From</label>
@@ -49,13 +51,13 @@
             </div>
             <div class="col-12 col-md-2">
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="ticketno" name="ticketno" value="{{$ticketno}}">
+                    <input type="text" class="form-control" id="ticketno" name="ticketno" value="{{ $ticketno }}">
                     <label for="ticketno">Ticket Number</label>
                 </div>
             </div>
             <div class="col-12 col-md-2">
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="bookingno" name="bookingno" value="{{$bookingno}}">
+                    <input type="text" class="form-control" id="bookingno" name="bookingno" value="{{ $bookingno }}">
                     <label for="bookingno">Invoice Number</label>
                 </div>
             </div>
@@ -70,15 +72,23 @@
         <div class="col-12 mb-2">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb bg-light p-3">
-                    <li class="breadcrumb-item"><a href="#">Selected 0 items</a></li>
-                    <li class="breadcrumb-item"><a href="#"><i class="fi fi-print m-0"></i> Print Ticket</a></li>
-                    <li class="breadcrumb-item"><a href="#"><i class="fa-regular fa-envelope"></i> Send Email</a></li>
+                    <li class="breadcrumb-item">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input form-check-input-primary" type="checkbox"id="check_all">
+                            <label for="check_all">Select All ({{ sizeof($bookings) }} bookings)
+                        </div>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#" id="action-print" class="disabled"><i
+                                class="fi fi-print m-0"></i> Print Ticket</a></li>
+                    <li class="breadcrumb-item"><a href="#" id="action-send-email" class="disabled"><i
+                                class="fa-regular fa-envelope"></i> Send Email</a></li>
                 </ol>
             </nav>
         </div>
         <div class="col-12">
+
             <div class="table-responsive ">
-                
+
                 <table class="table-datatable table table-hover" id="" data-lng-empty="No data available in table"
                     data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
                     data-lng-filtered="(filtered from _MAX_ total entries)" data-lng-loading="Loading..."
@@ -96,8 +106,10 @@
                     data-custom-config='{"searching":false}'>
                     <thead>
                         <tr>
-                            <th></th>
-                            <th>Issue Date</th>
+                            <th class="align-content-between">
+
+                            </th>
+                            <th class="">Issue Date</th>
                             <th>Invoice No</th>
                             <th>Ticket No</th>
                             <th>Type</th>
@@ -117,8 +129,10 @@
                                 style="color: {{ $colors[$item['trip_type']] }};--bs-table-color:{{ $colors[$item['trip_type']] }};">
                                 <td>
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input form-check-input-primary" type="checkbox" value="{{$item['id']}}" id="book_{{$item['id']}}" name="booking_selected">
-                                        
+                                        <input class="form-check-input form-check-input-primary" data-action="check_all"
+                                            type="checkbox" value="{{ $item['id'] }}" id="book_{{ $item['id'] }}"
+                                            name="book_{{ $item['id'] }}">
+
                                     </div>
                                 </td>
                                 <td><small>{{ date('d/m/Y H:i', strtotime($item['created_at'])) }}</small></td>
@@ -127,7 +141,7 @@
                                 </td>
                                 <td>{{ $item['trip_type'] }}</td>
                                 <td>
-                                    {{ $item['route']}}<br>
+                                    {{ $item['route'] }}<br>
                                     <small><span
                                             class="badge rounded-pill bg-secondary">{{ date('H:i', strtotime($item['depart_time'])) }}-{{ date('H:i', strtotime($item['arrive_time'])) }}</span></small>
                                 </td>
@@ -149,19 +163,20 @@
                                     <div class="d-none d-md-block">
                                         @if ($item['ispayment'] == 'Y')
                                             <a href="{{ route('print-ticket', ['bookingno' => $item['bookingno']]) }}"
-                                                class="transition-hover-top me-2 fs-5"
-                                                rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Print Ticket">
+                                                class="transition-hover-top me-2 fs-5" rel="noopener" target="_blank"
+                                                data-bs-toggle="tooltip" data-bs-placement="top" title="Print Ticket">
                                                 <i class="fi fi-print m-0"></i>
                                             </a>
                                         @endif
                                         <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
-                                            class="transition-hover-top me-2 fs-5" rel="noopener"
-                                            target="_blank" style="display: none;">
+                                            class="transition-hover-top me-2 fs-5" rel="noopener" target="_blank"
+                                            style="display: none;">
                                             <i class="fi fi-pencil m-0"></i>
                                         </a>
                                         <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
-                                            class="transition-hover-top fs-5" rel="noopener"
-                                            target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="View and Edit ooking">
+                                            class="transition-hover-top fs-5" rel="noopener" target="_blank"
+                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                            title="View and Edit ooking">
                                             <i class="fa-solid fa-eye"></i>
                                         </a>
                                     </div>
@@ -204,4 +219,47 @@
 
         </div>
     </div>
+@stop
+
+@section('script')
+    <script>
+        function settingActionLink(active) {
+            if (active) {
+                $('#action-print').removeClass('disabled');
+                $('#action-send-email').removeClass('disabled');
+            } else {
+                $('#action-print').addClass('disabled');
+                $('#action-send-email').addClass('disabled');
+            }
+        }
+        $(document).ready(function() {
+            $('#check_all').on('change', function() {
+                let all_booking_checks = $('input[data-action="check_all"]');
+                let checked = false;
+
+                if (this.checked) {
+                    checked = true;
+                    settingActionLink(true);
+                } else {
+                    settingActionLink(false);
+                }
+
+                $.each(all_booking_checks, function(index, item) {
+                    item.checked = checked;
+                });
+            });
+
+            $('input[data-action="check_all"]').on('change', function() {
+                let all_booking_checks = $('input[data-action="check_all"]');
+
+                settingActionLink(false);
+                $.each(all_booking_checks, function(index, item) {
+                    if(item.checked){
+                        settingActionLink(true);
+                        return true;
+                    }
+                });
+            });
+        });
+    </script>
 @stop

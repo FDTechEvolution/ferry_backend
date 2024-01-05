@@ -242,7 +242,8 @@ function saveAllList(type, list_id, ul_id, input_id) {
 
                                         <input type="hidden" id="master-from-selected" name="master_from_selected" value=''>
                                         <x-modal-route-edit-infomation
-                                            :header="_('Master From')"
+                                            :header="_('Master From')" 
+                                            :turnon="$route['master_from_info']"
                                             :select_id="_('station-from-selected')"
                                             :type="_('from')"
                                             :ismaster="_('Y')"
@@ -409,6 +410,26 @@ function saveAllList(type, list_id, ul_id, input_id) {
     const longtail_boat = {{ Js::from($route['longtail_boat']) }}
     const fare_child = {{ Js::from($fare_child) }}
     const fare_infant = {{ Js::from($fare_infant) }}
+
+    $(document).ready(function(){
+        $('#master-from-switch').on('change',function(){
+            //console.log(this.checked);
+            if(this.checked){
+                $('#box-Y-from').show();
+            }else{
+                $('#box-Y-from').hide();
+            }
+        });
+
+        $('#master-to-switch').on('change',function(){
+            //console.log(this.checked);
+            if(this.checked){
+                $('#box-Y-to').show();
+            }else{
+                $('#box-Y-to').hide();
+            }
+        });
+    });
 </script>
 <script src="{{ asset('assets/js/app/route_control.js') }}"></script>
 

@@ -71,12 +71,7 @@
           <span>Route Map</span>
         </a>
       </li>
-      <li class="nav-item {{ (request()->is('stations-info*')) ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('stations-info-index') }}">
-          <i class="fi fi-arrow-right"></i>
-          <span>Station Infomation</span>
-        </a>
-      </li>
+
       <li class="nav-item {{ (request()->is('news*')) ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('news-index') }}">
           <i class="fi fi-arrow-right"></i>

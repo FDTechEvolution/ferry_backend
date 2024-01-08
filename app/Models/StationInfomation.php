@@ -13,7 +13,8 @@ class StationInfomation extends Model
     protected $fillable = [
         'name',
         'text',
-        'isactive'
+        'isactive',
+        'type',
     ];
 
     protected $hidden = [
@@ -27,4 +28,5 @@ class StationInfomation extends Model
     public function info_to() {
         return $this->belongsTo(Station::class, 'id', 'station_infomation_to_id');
     }
+
 }

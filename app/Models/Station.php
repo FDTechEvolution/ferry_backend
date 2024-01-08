@@ -21,7 +21,18 @@ class Station extends Model
         'sort',
         'address',
         'image_id',
-        'google_map'
+        'google_map',
+        'master_from',
+        'master_to',
+        'shuttle_bus_price',
+        'shuttle_bus_text',
+        'shuttle_bus_mouseover',
+        'private_taxi_price',
+        'private_taxi_text',
+        'private_taxi_mouseover',
+        'longtail_boat_price',
+        'longtail_boat_text',
+        'longtail_boat_mouseover'
     ];
 
     protected $hidden = [
@@ -43,5 +54,9 @@ class Station extends Model
 
     public function stationFrom(){
         return $this->hasMany(Route::class,'station_from_id','id');
+    }
+
+    public function stationInformations(){
+        return $this->hasMany(StationInfomation::class,'station_id','id');
     }
 }

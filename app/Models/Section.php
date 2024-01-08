@@ -19,7 +19,7 @@ class Section extends Model
 
     ];
 
-    public function station() {
-        return $this->belongsTo(Station::class, 'id', 'section_id');
+    public function stations() {
+        return $this->hasMany(Station::class, 'section_id', 'id')->orderBy('sort','ASC');
     }
 }

@@ -15,103 +15,64 @@
 @stop
 
 @section('content')
-
-    <div class="row mt-4">
-
+    <div class="row">
         <div class="col-12">
-            <div id="to-station-list" class="table-responsive">
-                <div class="card-body">
-                    <div class="d-flex justify-content-center d-flex align-items-center mb-4">
-                        <div class="form-check me-3">
-                            <input class="form-check-input form-check-input-primary" type="checkbox" value=""
-                                id="station-check-select">
-                            <label class="form-check-label" for="station-check-select">
-                                Select
-                            </label>
-                        </div>
-                        <div class="form-check me-5">
-                            <input class="form-check-input form-check-input-primary" type="checkbox" value=""
-                                id="station-check-all">
-                            <label class="form-check-label" for="station-check-all">
-                                ALL
-                            </label>
-                        </div>
-
-                        <!-- edit -->
-                        <x-action-edit class="me-3 ms-5" style="margin-top: -2px;" :url="_('#')" />
-
-                        <!-- delete -->
-                        <x-action-delete :url="_('#')" :message="_('ยืนยันการลบ ?')" />
-                    </div>
-                    <table class="table-datatable table table-datatable-custom" id="station-datatable"
-                        data-lng-empty="No data available in table"
-                        data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
-                        data-lng-filtered="(filtered from _MAX_ total entries)" data-lng-loading="Loading..."
-                        data-lng-processing="Processing..." data-lng-search="Search..."
-                        data-lng-norecords="No matching records found"
-                        data-lng-sort-ascending=": activate to sort column ascending"
-                        data-lng-sort-descending=": activate to sort column descending" data-enable-col-sorting="false"
-                        data-items-per-page="15" data-enable-column-visibility="false" data-enable-export="true"
-                        data-lng-export="<i class='fi fi-squared-dots fs-5 lh-1'></i>" data-lng-pdf="PDF" data-lng-xls="XLS"
-                        data-lng-all="All" data-export-pdf-disable-mobile="true" data-export='["pdf", "xls"]'
-                        data-responsive="false">
-                        <thead>
+            <table class="table table-hover">
+                
+                <tbody>
+                    @foreach ($sections as $i=> $section)
+                    <tr>
+                        <td colspan="8" class="@if($i>0) pt-5 @endif">
+                            <strong class="text-main-color-2">{{$section->name}}</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Sort</th>
+                        <th>Station Name</th>
+                        <th>Nick Name</th>
+                        <th>Pier</th>
+                        <th>Status</th>
+                        <th>Image</th>
+                        <th>Google Map</th>
+                        <th></th>
+                    </tr>
+                        @foreach ($section->stations as $index => $station)
                             <tr>
-                                <th class="text-center w--5">Choose</th>
-                                <th class="text-center">Sections Group</th>
-                                <th class="text-start">Station Name</th>
-                                <th class="text-start">Nickname</th>
-                                <th class="text-start">Station Pier</th>
-
-                                <th class="text-center">Sort</th>
-
-                                <th class="text-center">Status</th>
-                                <th>Image</th>
-                                <th>GG Map</th>
-                                <th class="text-center">Action</th>
+                                <td>{{ $station->sort }}</td>
+                                <td>{{ $station->name }}</td>
+                                <td>{{ $station->nickname }}</td>
+                                <td>{{ $station->piername }}</td>
+                                
+                                <td>{!! $status[$station['isactive']] !!}</td>
+                                <td>
+                                    @if (isset($station->image->path))
+                                        <div class="avatar avatar-sm"
+                                            style="background-image:url({{ asset('/' . $station->image->path) }})">
+                                        </div>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($station['google_map'] != null && $station['google_map'] != '')
+                                        <a href="https://www.google.co.th/maps/dir//{{ $station['google_map'] }}"
+                                            target="_blank"><i class="fa-solid fa-location-dot"></i></a>
+                                    @endif
+                                </td>
+                                <td class="text-end">
+                                    <input type="hidden" id="station-id-{{ $index }}"
+                                        value="{{ $station['id'] }}">
+                                    <input type="hidden" id="station-section-{{ $index }}"
+                                        value="{{ $station['section']['id'] }}">
+                                    <input type="hidden" id="station-status-{{ $index }}"
+                                        value="{{ $station['isactive'] }}">
+                                    <x-action-edit class="me-2" :url="route('edit-station', ['id' => $station['id']])" id="btn-station-edit" />
+                                    <x-action-delete :url="route('station-delete', ['id' => $station['id']])" :message="_('Are you sure? Delete ' . $station['name'] . '?')" />
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($stations as $index => $station)
-                                <tr class="text-center" id="station-row-{{ $index }}">
-                                    <td><input class="form-check-input form-check-input-primary station-check mt-2"
-                                            type="checkbox" value=""></td>
-                                    <td>{{ $station['section']['name'] }}</td>
-                                    <td data-id="name" class="text-start">{{ $station['name'] }}</td>
-                                    <td data-id="nickname" class="text-start">{{ $station['nickname'] }}</td>
-                                    <td data-id="piername" class="text-start">{{ $station['piername'] }}</td>
+                        @endforeach
+                    @endforeach
+                </tbody>
 
-                                    <td data-id="sort">{{ $station['sort'] }}</td>
-
-                                    <td>{!! $status[$station['isactive']] !!}</td>
-                                    <td>
-                                        @if (isset($station->image->path))
-                                            <div class="avatar avatar-sm"
-                                                style="background-image:url({{ asset('/'.$station->image->path) }})"></div>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($station['google_map'] != null && $station['google_map'] != '')
-                                            <a href="https://www.google.co.th/maps/dir//{{$station['google_map']}}" target="_blank"><i class="fa-solid fa-location-dot"></i></a>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <input type="hidden" id="station-id-{{ $index }}"
-                                            value="{{ $station['id'] }}">
-                                        <input type="hidden" id="station-section-{{ $index }}"
-                                            value="{{ $station['section']['id'] }}">
-                                        <input type="hidden" id="station-status-{{ $index }}"
-                                            value="{{ $station['isactive'] }}">
-                                        <x-action-edit class="me-2" :url="route('edit-station', ['id' => $station['id']])" id="btn-station-edit" />
-                                        <x-action-delete :url="route('station-delete', ['id' => $station['id']])" :message="_('Are you sure? Delete ' . $station['name'] . '?')" />
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
+            </table>
         </div>
     </div>
 
@@ -144,14 +105,11 @@
 @stop
 
 @section('script')
-    <script>
-        const stations = {{ Js::from($stations) }}
-        const station_info = {{ Js::from($info) }}
-    </script>
+
     <script src="{{ asset('assets/js/app/station.js') }}"></script>
 
     <script>
-        $(document).ready(function(){
+        $(document).ready(function() {
             /*
             $('#text').on('keyup',function(){
                 let str = $(this).val();

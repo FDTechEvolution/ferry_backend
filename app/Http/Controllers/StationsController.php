@@ -43,12 +43,13 @@ class StationsController extends Controller
 
     public function index()
     {
-        $stations = Station::where('status', 'CO')->with(['image'])->orderBy('section_id', 'ASC')->orderBy('sort', 'ASC')->get();
-        $sections = Section::where('isactive', 'Y')->orderBy('created_at', 'DESC')->get();
-        $info = StationInfomation::where('status', 'Y')->get();
+        //$stations = Station::where('status', 'CO')->with(['image'])->orderBy('section_id', 'ASC')->orderBy('sort', 'ASC')->get();
+        $sections = Section::where('isactive', 'Y')->with(['stations'])->orderBy('created_at', 'DESC')->get();
+        //$info = StationInfomation::where('status', 'Y')->get();
         $status = $this->_Status;
 
-        return view('pages.stations.index', ['stations' => $stations, 'sections' => $sections, 'status' => $status, 'info' => $info]);
+        //dd($sections);
+        return view('pages.stations.index', ['sections' => $sections, 'status' => $status]);
     }
 
     public function create()
@@ -213,7 +214,7 @@ class StationsController extends Controller
                 $imageHelper->delete($station->image_id);
             }
 
-            StationInfomation::where('station_id',$id)->delete();
+            //StationInfomation::where('station_id',$id)->delete();
             $station->forceDelete();
             
             return redirect()->route('stations-index')->withSuccess('Station deleted...');

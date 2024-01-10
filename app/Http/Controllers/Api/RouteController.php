@@ -16,7 +16,7 @@ class RouteController extends Controller
                         ->where('station_to_id', $to)
                         ->where('isactive', 'Y')
                         ->where('status', 'CO')
-                        ->with('station_from', 'station_to', 'icons', 'activity_lines', 'meal_lines', 'shuttle_bus', 'longtail_boat', 'partner', 'station_lines')
+                        ->with('station_from', 'station_to', 'icons', 'activity_lines', 'meal_lines', 'partner', 'station_lines', 'routeAddons')
                         ->get();
 
         return response()->json(['data' => $routes, 'status' => 'success']);

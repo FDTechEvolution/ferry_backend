@@ -34,10 +34,17 @@ class PromotionController extends Controller
             $_booking_date = false;
             $_station = false;
 
+            $depart_date = null;
+            if($request->trip_type == 'one-way') $depart_date = $request->depart_date;
+            else if($request->trip_type == 'round-trip') {
+                $ex = explode(' - ', $request->depart_date);
+                $depart_date = $ex[0];
+            }
+
             $_trip_type = PromotionHelper::promoTripType($promo->trip_type, $request->trip_type);
-            if($_trip_type) $_depart_date = PromotionHelper::promoDepartDate($promo, $request->depart_date);
-            if($_depart_date) $_booking_date = PromotionHelper::promoBookingDate($promo);
-            if($_booking_date) $_station = PromotionHelper::promoStation($promo, $request->station_from_id, $request->station_to_id);
+            $_depart_date = PromotionHelper::promoDepartDate($promo, $depart_date);
+            $_booking_date = PromotionHelper::promoBookingDate($promo);
+            $_station = PromotionHelper::promoStation($promo, $request->station_from_id, $request->station_to_id);
 
             if($_trip_type && $_depart_date && $_booking_date && $_station) {
                 return response()->json(['result' => true, 'data' => $promo]);

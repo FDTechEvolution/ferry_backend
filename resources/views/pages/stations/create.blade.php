@@ -15,6 +15,17 @@
                     <div class="row">
                         <div class="col-12 col-lg-7 border-end">
                             <div class="mb-3 row">
+                                <label class="col-sm-4 col-form-label-sm text-start">Station Status :</label>
+                                <div class="col-sm-5">
+                                    <label class="d-flex align-items-center mb-3">
+                                        <input class="d-none-cloaked" type="checkbox" id="isactive"
+                                            name="isactive" value="ํY" checked>
+                                        <i class="switch-icon switch-icon-primary"></i>
+                                        <span class="px-3 user-select-none" id="edit-station-status-checked">On</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
                                 <label for="station-sort" class="col-sm-4 col-form-label-sm text-start">Section <strong
                                         class="text-danger">*</strong>
                                     :</label>

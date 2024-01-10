@@ -25,7 +25,9 @@ class Route extends Model
         'text_2',
         'master_from_info',
         'master_to_info',
-        'ispromocode'
+        'ispromocode',
+        'master_from',
+        'master_to'
     ];
 
     protected $hidden = [
@@ -67,5 +69,9 @@ class Route extends Model
 
     public function longtail_boat() {
         return $this->belongsToMany(Addon::class, 'route_longtailboats', 'route_id', 'addon_id');
+    }
+
+    public function routeAddons() {
+        return $this->hasMany(RouteAddons::class, 'route_id', 'id')->orderBy('type','ASC');
     }
 }

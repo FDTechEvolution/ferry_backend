@@ -44,7 +44,7 @@ class StationsController extends Controller
     public function index()
     {
         //$stations = Station::where('status', 'CO')->with(['image'])->orderBy('section_id', 'ASC')->orderBy('sort', 'ASC')->get();
-        $sections = Section::where('isactive', 'Y')->with(['stations'])->orderBy('created_at', 'DESC')->get();
+        $sections = Section::where('isactive', 'Y')->with(['stations'])->orderBy('seq', 'ASC')->get();
         //$info = StationInfomation::where('status', 'Y')->get();
         $status = $this->_Status;
 

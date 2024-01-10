@@ -65,7 +65,7 @@
         <div class="col-12">
             <div id="to-route-list" class="table-responsive">
 
-                <table class="table-datatable table table-datatable-custom" id="route-datatable"
+                <table class="table-datatable table table-datatable-custom table-hover" id="route-datatable"
                     data-lng-empty="No data available in table"
                     data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
                     data-lng-filtered="(filtered from _MAX_ total entries)" data-lng-loading="Loading..."
@@ -121,7 +121,7 @@
                                 <td>
                                     <div class="row mx-auto justify-center-custom">
                                         @foreach ($route['icons'] as $icon)
-                                            <div class="col-sm-4 px-0" style="max-width: 40px;">
+                                            <div class="col-sm-4 px-0" style="max-width: 30px;">
                                                 <img src="{{ $icon['path'] }}" class="w-100">
                                             </div>
                                         @endforeach

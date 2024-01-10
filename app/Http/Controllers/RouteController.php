@@ -37,10 +37,30 @@ class RouteController extends Controller
         'N' => '<span class="text-danger">Off</span>'
     ];
 
+    public static function getRouteAddons(){
+        $infos = [
+            [
+                'title' => 'Shuttle Bus',
+                'key' => 'shuttle_bus',
+            ],
+            [
+                'title' => 'Private Taxi',
+                'key' => 'private_taxi',
+            ],
+            [
+                'title' => 'Longtail boat',
+                'key' => 'longtail_boat',
+            ],
+        ];
+
+        return $infos;
+    }
+
     public function index() {
         $routes = Route::where('status', 'CO')->with('station_from', 'station_to', 'icons')->orderBy('created_at', 'DESC')->get();
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
+        
 
         $status = $this->_Status;
         return view('pages.route_control.index',
@@ -58,9 +78,14 @@ class RouteController extends Controller
         $fare_child = Fare::where('name', 'Child')->first();
         $fare_infant = Fare::where('name', 'Infant')->first();
 
+        $infos = $this->getRouteAddons();
+        $stationjsons = $stations->toJson();
+        //dd($stationjsons);
+
         return view('pages.route_control.create',
                     ['partners'=>$partners,'stations' => $stations, 'icons' => $icons, 'activities' => $activities, 'meals' => $meals,
-                        'fare_child' => $fare_child, 'fare_infant' => $fare_infant
+                        'fare_child' => $fare_child, 'fare_infant' => $fare_infant,
+                        'infos'=>$infos,'stationJsons'=>$stationjsons
                     ]
                 );
     }

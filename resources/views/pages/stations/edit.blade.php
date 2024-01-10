@@ -20,7 +20,7 @@
                                 <div class="col-sm-5">
                                     <label class="d-flex align-items-center mb-3">
                                         <input class="d-none-cloaked" type="checkbox" id="edit-station-status"
-                                            name="isactive" value="1" checked>
+                                            name="isactive" value="Y" checked>
                                         <i class="switch-icon switch-icon-primary"></i>
                                         <span class="px-3 user-select-none" id="edit-station-status-checked">On</span>
                                     </label>

@@ -487,7 +487,7 @@
         const fare_child = {{ Js::from($fare_child) }}
         const fare_infant = {{ Js::from($fare_infant) }}
         let stations = ''
-        const stationJson = JSON.parse('{!! $stationJsons !!}');
+        const stationJson = {{ Js::from($stations) }};
         //console.log(stationJson);
         function appendMasterInfo(station, type) {
             $('#master_'+type).text(station['master_'+type]);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\RouteAddons;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -96,23 +97,62 @@ class RouteController extends Controller
         if(is_null($route) || $route->status != 'CO')
             return redirect()->route('route-index')->withFail('This route not exist.');
 
+        $route->routeAddons;
+
+        if(sizeof($route->routeAddons) ==0){
+            $infos = $this->getRouteAddons();
+            foreach($infos as $info){
+                $routeAddon = RouteAddons::create([
+                    'name'=>$info['title'].' from',
+                    'type'=>$info['key'],
+                    'subtype'=>'from',
+                    'message'=>null,
+                    'mouseover'=>null,
+                    'price'=>0,
+                    'isactive'=>'N',
+                    'isservice_charge'=>'N',
+                    'route_id'=>$route->id
+                ]);
+                $routeAddon = RouteAddons::create([
+                    'name'=>$info['title'].' to',
+                    'type'=>$info['key'],
+                    'subtype'=>'to',
+                    'message'=>null,
+                    'mouseover'=>null,
+                    'price'=>0,
+                    'isactive'=>'N',
+                    'isservice_charge'=>'N',
+                    'route_id'=>$route->id
+                ]);
+            }
+            $route = Route::find($id);
+            $route->routeAddons;
+        }
+
         $route->station_lines;
         $route->activity_lines;
         $route->meal_lines;
         $route->shuttle_bus;
         $route->longtail_boat;
 
+
+
         $partners = PartnerController::listPartners();
-        $stations = Station::where('isactive', 'Y')->where('status', 'CO')->with('info_line')->get();
+        $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
         $activities = Addon::where('type', $this->Activity)->where('status', 'CO')->with('icon')->get();
         $meals = Addon::where('type', $this->Meal)->where('status', 'CO')->get();
         $fare_child = Fare::where('name', 'Child')->first();
         $fare_infant = Fare::where('name', 'Infant')->first();
+        $infos = $this->getRouteAddons();
+
+        $stationjsons = $stations->toJson();
+       
 
         return view('pages.route_control.edit', [
             'route' => $route, 'icons' => $icons, 'stations' => $stations, 'activities' => $activities,
-            'partners'=>$partners,'meals' => $meals, 'fare_child' => $fare_child, 'fare_infant' => $fare_infant
+            'partners'=>$partners,'meals' => $meals, 'fare_child' => $fare_child, 'fare_infant' => $fare_infant,'infos'=>$infos,
+            'stationJsons'=>$stationjsons
         ]);
     }
 
@@ -124,6 +164,8 @@ class RouteController extends Controller
             'child_price' => 'integer|nullable',
             'infant_price' => 'integer|nullable'
         ]);
+
+        //dd($request);
 
         $route = Route::create([
             'station_from_id' => $request->station_from,
@@ -139,17 +181,20 @@ class RouteController extends Controller
             'text_2'=>$request->text_2,
             'master_from_info' => isset($request->master_from_on) ? 'Y' : 'N',
             'master_to_info' => isset($request->master_to_on) ? 'Y' : 'N',
-            'ispromocode' => isset($request->promocode) ? 'Y' : 'N'
+            'ispromocode' => isset($request->promocode) ? 'Y' : 'N',
+            'master_from'=>$request->master_from,
+            'master_to'=>$request->master_to
         ]);
 
         if($route) {
             $result = $this->routeIconStore($request->icons, $route->id);
 
-            if(isset($request->shuttle_bus_name)) $this->shuttlebusStore($request->shuttle_bus_name, $request->shuttle_bus_price, $request->shuttle_bus_description, $route->id);
-            if(isset($request->longtail_boat_name)) $this->longtailStore($request->longtail_boat_name, $request->longtail_boat_price, $request->longtail_boat_description, $route->id);
+            //if(isset($request->shuttle_bus_name)) $this->shuttlebusStore($request->shuttle_bus_name, $request->shuttle_bus_price, $request->shuttle_bus_description, $route->id);
+            //if(isset($request->longtail_boat_name)) $this->longtailStore($request->longtail_boat_name, $request->longtail_boat_price, $request->longtail_boat_description, $route->id);
             if(isset($request->activity_id)) $this->routeActivityStore($request->activity_id, $route->id);
             if(isset($request->meal_id)) $this->routeMealStore($request->meal_id, $route->id);
 
+            /*
             if($result) {
                 if(isset($request->master_from_selected)) $this->storeRouteStationInfoLine($route->id, $request->master_from_selected, 'from', 'Y');
                 if(isset($request->master_to_selected)) $this->storeRouteStationInfoLine($route->id, $request->master_to_selected, 'to', 'Y');
@@ -157,7 +202,42 @@ class RouteController extends Controller
                 if(isset($request->info_to_selected)) $this->storeRouteStationInfoLine($route->id, $request->info_to_selected, 'to', 'N');
                 return redirect()->route('route-index')->withSuccess('Route created...');
             }
+            
             else return redirect()->back()->withFail('Something is wrong. Please try again.');
+            */
+
+            //Make route addons From
+            $routeAddons = $this->getRouteAddons();
+            foreach($routeAddons as $index => $routeAddonType){
+                $routeAddon = RouteAddons::create([
+                    'name'=>$routeAddonType['title'],
+                    'type'=>$routeAddonType['key'],
+                    'subtype'=>'from',
+                    'message'=>$request[$routeAddonType['key'].'_text_from'],
+                    'mouseover'=>$request[$routeAddonType['key'].'_mouseover_from'],
+                    'price'=>$request[$routeAddonType['key'].'_price_from'],
+                    'isactive'=>isset($request[$routeAddonType['key'].'_isactive_from'])?'Y':'N',
+                    'isservice_charge'=>isset($request[$routeAddonType['key'].'_isservice_charge_from'])?'Y':'N',
+                    'route_id'=>$route->id
+                ]);
+            }
+
+            foreach($routeAddons as $index => $routeAddonType){
+                $routeAddon = RouteAddons::create([
+                    'name'=>$routeAddonType['title'],
+                    'type'=>$routeAddonType['key'],
+                    'subtype'=>'to',
+                    'message'=>$request[$routeAddonType['key'].'_text_to'],
+                    'mouseover'=>$request[$routeAddonType['key'].'_mouseover_to'],
+                    'price'=>$request[$routeAddonType['key'].'_price_to'],
+                    'isactive'=>isset($request[$routeAddonType['key'].'_isactive_to'])?'Y':'N',
+                    'isservice_charge'=>isset($request[$routeAddonType['key'].'_isservice_charge_to'])?'Y':'N',
+                    'route_id'=>$route->id
+                ]);
+            }
+
+            return redirect()->route('route-index')->withSuccess('Route created...');
+
         }
 
         // Log::debug($request);
@@ -285,7 +365,7 @@ class RouteController extends Controller
             'infant_price' => 'integer|nullable',
         ]);
 
-        // Log::debug($request);
+        //dd($request);
 
         $route = Route::find($request->route_id);
             $route->station_from_id = $request->station_from;
@@ -299,9 +379,11 @@ class RouteController extends Controller
             $route->partner_id = $request->partner_id;
             $route->text_1 = $request->text_1;
             $route->text_2 = $request->text_2;
-            $route->master_from_info = isset($request->master_from_on) ? 'Y' : 'N';
-            $route->master_to_info = isset($request->master_to_on) ? 'Y' : 'N';
+            //$route->master_from_info = isset($request->master_from_on) ? 'Y' : 'N';
+            //$route->master_to_info = isset($request->master_to_on) ? 'Y' : 'N';
             $route->ispromocode = isset($request->promocode) ? 'Y' : 'N';
+            $route->master_from = $request->master_from;
+            $route->master_to = $request->master_to;
 
         if($route->save()) {
             $this->routeIconDestroy($request->route_id);
@@ -311,20 +393,35 @@ class RouteController extends Controller
             $this->routeMealDestroy($request->route_id);
             if(isset($request->meal_id)) $this->routeMealStore($request->meal_id, $request->route_id);
 
-            $this->routeShuttleBusDestroy($request->route_id);
-            if(isset($request->shuttle_bus_name)) $this->shuttlebusStore($request->shuttle_bus_name, $request->shuttle_bus_price, $request->shuttle_bus_description, $request->route_id);
+            //$this->routeShuttleBusDestroy($request->route_id);
+            //if(isset($request->shuttle_bus_name)) $this->shuttlebusStore($request->shuttle_bus_name, $request->shuttle_bus_price, $request->shuttle_bus_description, $request->route_id);
 
-            $this->routeLongtailBoatDestroy($request->route_id);
-            if(isset($request->longtail_boat_name)) $this->longtailStore($request->longtail_boat_name, $request->longtail_boat_price, $request->longtail_boat_description, $request->route_id);
+            //$this->routeLongtailBoatDestroy($request->route_id);
+            //if(isset($request->longtail_boat_name)) $this->longtailStore($request->longtail_boat_name, $request->longtail_boat_price, $request->longtail_boat_description, $request->route_id);
 
             if($result) {
                 $this->clearAllRouteStationInfoLine($request->route_id);
-                if(isset($request->master_from_selected)) $this->storeRouteStationInfoLine($route->id, $request->master_from_selected, 'from', 'Y');
-                if(isset($request->master_to_selected)) $this->storeRouteStationInfoLine($route->id, $request->master_to_selected, 'to', 'Y');
-                if(isset($request->info_from_selected)) $this->storeRouteStationInfoLine($route->id, $request->info_from_selected, 'from', 'N');
-                if(isset($request->info_to_selected)) $this->storeRouteStationInfoLine($route->id, $request->info_to_selected, 'to', 'N');
-                return redirect()->route('route-index')->withSuccess('Route updated...');
+                //if(isset($request->master_from_selected)) $this->storeRouteStationInfoLine($route->id, $request->master_from_selected, 'from', 'Y');
+                //if(isset($request->master_to_selected)) $this->storeRouteStationInfoLine($route->id, $request->master_to_selected, 'to', 'Y');
+                //if(isset($request->info_from_selected)) $this->storeRouteStationInfoLine($route->id, $request->info_from_selected, 'from', 'N');
+                //if(isset($request->info_to_selected)) $this->storeRouteStationInfoLine($route->id, $request->info_to_selected, 'to', 'N');
+                //return redirect()->route('route-index')->withSuccess('Route updated...');
             }
+
+            //dd($request);
+
+            //update route addons
+            foreach($request->route_addons as $item){
+                $routeAddon = RouteAddons::find($item['id']);
+                $routeAddon->isactive = isset($item['isactive'])?'Y':'N';
+                $routeAddon->isservice_charge = isset($item['isservice_charge'])?'Y':'N';
+                $routeAddon->price = $item['price'];
+                $routeAddon->mouseover = $item['mouseover'];
+                $routeAddon->message = $item['message'];
+                $routeAddon->save();
+            }
+
+            return redirect()->route('route-index')->withSuccess('Route updated...');
         }
         else return redirect()->route('route-index')->withFail('Something is wrong. Please try again.');
     }

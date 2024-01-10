@@ -72,6 +72,6 @@ class Route extends Model
     }
 
     public function routeAddons() {
-        return $this->hasMany(RouteAddons::class, 'route_id', 'id')->orderBy('type','ASC');
+        return $this->hasMany(RouteAddons::class, 'route_id', 'id')->orderBy('type','ASC')->orderBy('subtype','ASC');
     }
 }

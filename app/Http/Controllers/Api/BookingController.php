@@ -11,6 +11,7 @@ use App\Models\Addon;
 use App\Models\Bookings;
 use App\Models\BookingRoutes;
 use App\Models\Promotions;
+use App\Models\RouteAddons;
 use App\Helpers\BookingHelper;
 use App\Helpers\PaymentHelper;
 use App\Helpers\PromotionHelper;
@@ -33,6 +34,8 @@ class BookingController extends Controller
             $_extra_activity = isset($request->activity_id) ? $this->extraAddon($request->activity_id, $request->activity_qty) : [0, []];
             $_extra_shuttle_bus = isset($request->bus_id) ? $this->extraAddon($request->bus_id, $request->bus_qty) : [0, []];
             $_extra_longtail_boat = isset($request->boat_id) ? $this->extraAddon($request->boat_id, $request->boat_qty) : [0, []];
+            $_addons = isset($request->route_addon) ? $request->route_addon : [];
+            $_addon_detail = isset($request->route_addon_detail) ? $request->route_addon_detail : [];
             $_promotion = $request->promocode != '' ? $this->promoCode($request->promocode, $request->route_id) : false;
             if($_promotion) $_promo = $this->setPromotionCode($_promotion, $request->trip_type, $request->departdate);
 
@@ -44,7 +47,7 @@ class BookingController extends Controller
                                                 $request->passportno, $request->email, $request->address, $request->mobile_code,
                                                 $request->th_mobile, $request->country, $request->titlename, $request->birth_day);
             $_route = $this->setRoutes($request->route_id, $request->departdate, $request->returndate,
-                                        $request->passenger, $request->child_passenger, $request->infant_passenger);
+                                        $request->passenger, $request->child_passenger, $request->infant_passenger, $_addons, $_addon_detail);
 
             $_extra = array_merge($_extra_meal[1], $_extra_activity[1], $_extra_shuttle_bus[1], $_extra_longtail_boat[1]);
 
@@ -123,7 +126,7 @@ class BookingController extends Controller
                                                     $request->mobile_code, $request->th_mobile, $request->country,
                                                     $request->titlename, $request->birth_day);
                 $_route = $this->setRoutes($request->route_id, $request->departdate, $request->returndate,
-                                            $request->passenger, $request->child_passenger, $request->infant_passenger);
+                                            $request->passenger, $request->child_passenger, $request->infant_passenger, [], []);
 
                 $_extra = array_merge($_extra_meal[1], $_extra_activity[1], $_extra_shuttle_bus[1], $_extra_longtail_boat[1]);
 
@@ -265,8 +268,9 @@ class BookingController extends Controller
         return $customer;
     }
 
-    private function setRoutes($route_id, $departdate, $returndate = null, $adult, $child, $infant) {
+    private function setRoutes($route_id, $departdate, $returndate = null, $adult, $child, $infant, $addons, $addon_detail) {
         $route = [];
+        $route_addons = [];
         $traveldate = $returndate != null ? [$departdate, $returndate] : $departdate;
 
         if(is_array($traveldate)) {
@@ -277,11 +281,17 @@ class BookingController extends Controller
                 $amount += $r->child_price*$child;
                 $amount += $r->infant_price*$infant;
 
+                // Log::debug($addons);
+                if(!empty($addons[0])) {
+                    $route_addons = $this->setRouteAddon($addons[$key], $addon_detail[$key]);
+                }
+
                 array_push($route, [
                     'route_id' => $_route,
                     'traveldate' => $traveldate[$key],
                     'amount' => $amount,
-                    'type' => NULL
+                    'type' => NULL,
+                    'route_addons' => $route_addons
                 ]);
             }
         }
@@ -292,15 +302,43 @@ class BookingController extends Controller
             $amount += $r->child_price*$child;
             $amount += $r->infant_price*$infant;
 
+            if(!empty($addons[0])) {
+                $route_addons = $this->setRouteAddon($addons[0], $addon_detail[0]);
+            }
+
             array_push($route, [
                 'route_id' => $route_id[0],
                 'traveldate' => $traveldate,
                 'amount' => $amount,
-                'type' => NULL
+                'type' => NULL,
+                'route_addons' => $route_addons
             ]);
         }
 
         return $route;
+    }
+
+    private function setRouteAddon($addons, $addon_detail) {
+        $_addon = [];
+        foreach($addons as $index => $addon) {
+            $a = $this->getRouteAddonById($addon);
+            if($a != NULL) {
+                $amount = $a->isservice_charge == 'Y' ? $a->price : 0;
+                array_push($_addon, [
+                    'route_addon_id' => $a->id,
+                    'amount' => $amount,
+                    'description' => $addon_detail[$index]
+                ]);
+            }
+        }
+
+        return $_addon;
+    }
+
+    private function getRouteAddonById($id) {
+        $addon = RouteAddons::find($id);
+        if(isset($addon)) return $addon;
+        else return NULL;
     }
 
     private function getRoute($route_id) {

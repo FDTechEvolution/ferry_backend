@@ -33,4 +33,8 @@ class BookingRoutes extends Model
     public function bookingExtraAddons() {
         return $this->belongsToMany(Addon::class, 'booking_extras','booking_route_id', 'addon_id');
     }
+
+    public function bookingRouteAddons() {
+        return $this->belongsToMany(RouteAddons::class, 'booking_extras','booking_route_id', 'route_addon_id');
+    }
 }

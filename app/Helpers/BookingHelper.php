@@ -12,6 +12,7 @@ use App\Models\Tickets;
 use App\Models\Payments;
 use App\Models\Station;
 use App\Models\BookingRelated;
+use App\Models\BookingRouteAddon;
 use Ramsey\Uuid\Uuid;
 use App\Helpers\SequentNumber;
 
@@ -184,6 +185,17 @@ class BookingHelper
                         'booking_route_id' => $bookingRoute->id,
                     ]);
 
+                }
+            }
+
+            if(isset($routeData['route_addons'])) {
+                foreach($routeData['route_addons'] as $addon) {
+                    BookingExtras::create([
+                        'booking_route_id' => $bookingRoute->id,
+                        'route_addon_id' => $addon['route_addon_id'],
+                        'amount' => $addon['amount'],
+                        'description' => $addon['description']
+                    ]);
                 }
             }
         }

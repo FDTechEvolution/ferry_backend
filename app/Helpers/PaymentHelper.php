@@ -127,6 +127,21 @@ class PaymentHelper
                 }
             }
 
+            // Route Addons
+            if(!is_null($bRoute->bookingRouteAddons)) {
+                foreach($bRoute->bookingRouteAddons as $key => $addon) {
+                    $amount = $addon->isservice_charge == 'Y' ? $addon->price : 0;
+                    PaymentLines::create([
+                        'payment_id' => $payment->id,
+                        'type' => 'ADDON',
+                        'booking_id' => $booking->id,
+                        'title' => sprintf('%s', $addon->name),
+                        'amount' => $amount,
+                        'booking_route_id' => $bookingRoute->id,
+                    ]);
+                }
+            }
+
         }
         $payment->totalamt = $totalAmount;
         $payment->save();

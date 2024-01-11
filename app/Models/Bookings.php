@@ -43,7 +43,7 @@ class Bookings extends Model
     }
 
     public function bookingRoutesX(){
-        return $this->hasMany(BookingRoutes::class,'booking_id','id')->with('bookingExtraAddons');
+        return $this->hasMany(BookingRoutes::class,'booking_id','id')->with('bookingExtraAddons', 'bookingRouteAddons');
     }
 
     public function tickets() {

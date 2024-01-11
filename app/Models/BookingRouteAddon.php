@@ -6,20 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-class BookingExtras extends Model
+class BookingRouteAddon extends Model
 {
-    use HasFactory,HasUuids;
+    use HasFactory, HasUuids;
 
     protected $fillable = [
-        'amount',
-        'addon_id',
         'booking_route_id',
         'route_addon_id',
+        'amount',
         'description'
     ];
-
-    public function addon() {
-        return $this->hasOne(Addon::class, 'id', 'addon_id');
-    }
-
 }

@@ -304,26 +304,109 @@
 
 
                             </div>
-                            <div class="row">
-                                <div class="col-12 col-lg-6">
-                                    <div class="row">
+                            <hr>
+                            <div class="row mb-4">
+                                <div class="col-12 col-lg-6 px-4">
+                                    <div class="row border rounded bg-gray-100">
                                         <div class="col-12">
-                                            <div class="form-floating mb-3">
-                                                <textarea class="form-control" id="master_from" name="master_from" style="height: 100px"></textarea>
-                                                <label for="master_from">Master From</label>
+                                            <strong>Master From</strong>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="d-flex align-items-center mb-3">
+                                                <input class="d-none-cloaked" type="checkbox" name="master_from_info"
+                                                    id="master_from_info" value="Y" data-action="boxswitch">
+                                                <i class="switch-icon switch-icon-primary switch-icon-sm"></i>
+                                                <span class="px-3 user-select-none">On/Off</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="col-12" style="display: none;" id="box_master_from_info">
+                                            <div class="row">
+                                                <div class="col-12 mb-2">
+                                                    <textarea class="form-control" id="master_from" name="master_from" rows="4"></textarea>
+                                                </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-lg-6">
-                                    <div class="row">
+                                <div class="col-12 col-lg-6 px-4">
+                                    <div class="row border rounded bg-gray-100">
                                         <div class="col-12">
-                                            <div class="form-floating mb-3">
-                                                <textarea class="form-control" id="master_to" name="master_to" style="height: 100px"></textarea>
-                                                <label for="master_to">Master To</label>
+                                            <strong>Master To</strong>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="d-flex align-items-center mb-3">
+                                                <input class="d-none-cloaked" type="checkbox" name="master_to_info"
+                                                    id="master_to_info" value="Y" data-action="boxswitch">
+                                                <i class="switch-icon switch-icon-primary switch-icon-sm"></i>
+                                                <span class="px-3 user-select-none">On/Off</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="col-12" style="display: none;" id="box_master_to_info">
+                                            <div class="row">
+                                                <div class="col-12 mb-2">
+                                                    <textarea class="form-control" id="master_to" name="master_to" rows="4"></textarea>
+                                                </div>
                                             </div>
                                         </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-12 col-lg-6 px-4">
+                                    <div class="row border rounded bg-gray-100">
+                                        <div class="col-12">
+                                            <strong>Info From</strong>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="d-flex align-items-center mb-3">
+                                                <input class="d-none-cloaked" type="checkbox"
+                                                    name="isinformation_from_active" id="isinformation_from_active"
+                                                    value="Y" data-action="boxswitch">
+                                                <i class="switch-icon switch-icon-primary switch-icon-sm"></i>
+                                                <span class="px-3 user-select-none">On/Off</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="col-12" style="display: none;" id="box_isinformation_from_active">
+                                            <div class="row">
+                                                <div class="col-12 mb-2">
+                                                    <textarea class="form-control" id="information_from" name="information_from" rows="3"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-lg-6 px-4">
+                                    <div class="row border rounded bg-gray-100">
+                                        <div class="col-12">
+                                            <strong>Info To</strong>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="d-flex align-items-center mb-3">
+                                                <input class="d-none-cloaked" type="checkbox"
+                                                    name="isinformation_to_active" id="isinformation_to_active"
+                                                    value="Y" data-action="boxswitch">
+                                                <i class="switch-icon switch-icon-primary switch-icon-sm"></i>
+                                                <span class="px-3 user-select-none">On/Off</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="col-12" style="display: none;" id="box_isinformation_to_active">
+                                            <div class="row">
+                                                <div class="col-12 mb-2">
+                                                    <textarea class="form-control" id="information_to" name="information_to" rows="3"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -490,44 +573,50 @@
         const stationJson = {{ Js::from($stations) }};
         //console.log(stationJson);
         function appendMasterInfo(station, type) {
-            $('#master_'+type).text(station['master_'+type]);
-            //$('#master_to').text(station.master_to);
+            $('#master_' + type).text(station['master_' + type]);
+            if ($('#master_' + type).val() != '') {
+                $('#master_' + type + '_info').prop('checked', true);
+                $('#box_master_' + type + '_info').show();
+            } else {
+                $('#master_' + type + '_info').prop('checked', false);
+                $('#box_master_' + type + '_info').hide();
+            }
 
             let types = ['shuttle_bus', 'private_taxi', 'longtail_boat'];
 
             $.each(types, function(index, _type) {
                 let isactive = false;
-                if (String(station[_type+'_price']) !== '' && station[_type+'_price'] != 0) {
-                    $('#'+_type+'_price_' + type).val(station[_type+'_price']);
+                if (String(station[_type + '_price']) !== '' && station[_type + '_price'] != 0) {
+                    $('#' + _type + '_price_' + type).val(station[_type + '_price']);
                     isactive = true;
                     //console.log('shuttle_bus_price_');
                 } else {
-                    $('#'+_type+'_' + type).val('');
+                    $('#' + _type + '_' + type).val('');
                 }
 
-                if ((station[_type+'_text'] !== '') && station[_type+'_text'] !== null) {
-                    $('#'+_type+'_text_'+ type).val(station[_type+'_text']);
+                if ((station[_type + '_text'] !== '') && station[_type + '_text'] !== null) {
+                    $('#' + _type + '_text_' + type).val(station[_type + '_text']);
                     isactive = true;
                     //console.log('shuttle_bus_text_');
                     //console.log(station['shuttle_bus_text']);
                 } else {
-                    $('#'+_type+'_text_'+ type).val('');
+                    $('#' + _type + '_text_' + type).val('');
                 }
 
-                if (String(station[_type+'_mouseover']) !== '' && station[_type+'_mouseover'] !== null) {
-                    $('#'+_type+'_mouseover_' + type).val(station[_type+'_mouseover']);
+                if (String(station[_type + '_mouseover']) !== '' && station[_type + '_mouseover'] !== null) {
+                    $('#' + _type + '_mouseover_' + type).val(station[_type + '_mouseover']);
                     isactive = true;
                     //console.log('shuttle_bus_mouseover_');
                 } else {
-                    $('#'+_type+'_mouseover_' + type).val('');
+                    $('#' + _type + '_mouseover_' + type).val('');
                 }
 
                 if (isactive) {
-                    $('#'+_type+'_isactive_' + type).prop('checked', true);
-                    $('#box_'+_type +'_isactive_'+ type).show();
+                    $('#' + _type + '_isactive_' + type).prop('checked', true);
+                    $('#box_' + _type + '_isactive_' + type).show();
                 } else {
-                    $('#'+_type+'_isactive_' + type).prop('checked', false);
-                    $('#box_'+_type +'_isactive_'+ type).hide();
+                    $('#' + _type + '_isactive_' + type).prop('checked', false);
+                    $('#box_' + _type + '_isactive_' + type).hide();
                 }
             });
 

@@ -334,26 +334,109 @@
 
 
                             </div>
-                            <div class="row">
-                                <div class="col-12 col-lg-6">
-                                    <div class="row">
+                            <hr>
+                            <div class="row mb-4">
+                                <div class="col-12 col-lg-6 px-4">
+                                    <div class="row border rounded bg-gray-100">
                                         <div class="col-12">
-                                            <div class="form-floating mb-3">
-                                                <textarea class="form-control" id="master_from" name="master_from" style="height: 100px">{{ $route['master_from'] }}</textarea>
-                                                <label for="master_from">Master From</label>
+                                            <strong>Master From</strong>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="d-flex align-items-center mb-3">
+                                                <input class="d-none-cloaked" type="checkbox" name="master_from_info"
+                                                    id="master_from_info" value="Y" data-action="boxswitch" data-id="master_from_info" @if($route->master_from_info=='Y') @checked(true) @endif>
+                                                <i class="switch-icon switch-icon-primary switch-icon-sm"></i>
+                                                <span class="px-3 user-select-none">On/Off</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="col-12" @if($route->master_from_info=='N') style="display: none;" @endif id="box_master_from_info">
+                                            <div class="row">
+                                                <div class="col-12 mb-2">
+                                                    <textarea class="form-control" id="master_from" name="master_from" rows="4">{{$route->master_from}}</textarea>
+                                                </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-lg-6">
-                                    <div class="row">
+                                <div class="col-12 col-lg-6 px-4">
+                                    <div class="row border rounded bg-gray-100">
                                         <div class="col-12">
-                                            <div class="form-floating mb-3">
-                                                <textarea class="form-control" id="master_to" name="master_to" style="height: 100px">{{ $route['master_to'] }}</textarea>
-                                                <label for="master_to">Master To</label>
+                                            <strong>Master To</strong>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="d-flex align-items-center mb-3">
+                                                <input class="d-none-cloaked" type="checkbox" name="master_to_info"
+                                                    id="master_to_info" value="Y" data-action="boxswitch" data-id="master_to_info" @if($route->master_to_info=='Y') @checked(true) @endif>
+                                                <i class="switch-icon switch-icon-primary switch-icon-sm"></i>
+                                                <span class="px-3 user-select-none">On/Off</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="col-12" @if($route->master_to_info=='N') style="display: none;" @endif id="box_master_to_info">
+                                            <div class="row">
+                                                <div class="col-12 mb-2">
+                                                    <textarea class="form-control" id="master_to" name="master_to" rows="4">{{$route->master_to}}</textarea>
+                                                </div>
                                             </div>
                                         </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-12 col-lg-6 px-4">
+                                    <div class="row border rounded bg-gray-100">
+                                        <div class="col-12">
+                                            <strong>Info From</strong>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="d-flex align-items-center mb-3">
+                                                <input class="d-none-cloaked" type="checkbox"
+                                                    name="isinformation_from_active" id="isinformation_from_active"
+                                                    value="Y" data-action="boxswitch" data-id="isinformation_from_active" @if($route->isinformation_from_active=='Y') @checked(true) @endif>
+                                                <i class="switch-icon switch-icon-primary switch-icon-sm"></i>
+                                                <span class="px-3 user-select-none">On/Off</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="col-12" @if($route->isinformation_from_active=='N') style="display: none;" @endif id="box_isinformation_from_active">
+                                            <div class="row">
+                                                <div class="col-12 mb-2">
+                                                    <textarea class="form-control" id="information_from" name="information_from" rows="3">{{$route->information_from}}</textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-lg-6 px-4">
+                                    <div class="row border rounded bg-gray-100">
+                                        <div class="col-12">
+                                            <strong>Info To</strong>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="d-flex align-items-center mb-3">
+                                                <input class="d-none-cloaked" type="checkbox"
+                                                    name="isinformation_to_active" id="isinformation_to_active"
+                                                    value="Y" data-action="boxswitch" data-id="isinformation_to_active" @if($route->isinformation_to_active=='Y') @checked(true) @endif>
+                                                <i class="switch-icon switch-icon-primary switch-icon-sm"></i>
+                                                <span class="px-3 user-select-none">On/Off</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="col-12" @if($route->isinformation_to_active=='N') style="display: none;" @endif  id="box_isinformation_to_active">
+                                            <div class="row">
+                                                <div class="col-12 mb-2">
+                                                    <textarea class="form-control" id="information_to" name="information_to" rows="3">{{$route->information_to}}</textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>

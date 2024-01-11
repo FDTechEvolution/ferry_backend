@@ -63,6 +63,7 @@ class RouteController extends Controller
         $icons = DB::table('icons')->where('type', $this->Type)->get();
         
 
+        //$this->make($routes);
         $status = $this->_Status;
         return view('pages.route_control.index',
                     ['routes' => $routes, 'stations' => $stations, 'route_status' => $status, 'icons' => $icons]
@@ -100,27 +101,47 @@ class RouteController extends Controller
         $route->routeAddons;
 
         if(sizeof($route->routeAddons) ==0){
+            $_route = Route::where('id',$id)->with('station_from','station_to')->first();
+
+            
+            
             $infos = $this->getRouteAddons();
+            $stationFrom = $route->station_from;
+            $stationTo = $route->station_to;
+
+            $route->master_from = $stationFrom->master_from;
+            $route->master_to = $stationTo->master_to;
+            $route->save();
+
             foreach($infos as $info){
+                $isactive = 'N';
+                if(!is_null($stationFrom[$info['key'].'_text']) || !is_null($stationFrom[$info['key'].'_mouseover'])){
+                    $isactive = 'Y';
+                }
                 $routeAddon = RouteAddons::create([
                     'name'=>$info['title'].' from',
                     'type'=>$info['key'],
                     'subtype'=>'from',
-                    'message'=>null,
-                    'mouseover'=>null,
-                    'price'=>0,
-                    'isactive'=>'N',
+                    'message'=>$stationFrom[$info['key'].'_text'],
+                    'mouseover'=>$stationFrom[$info['key'].'_mouseover'],
+                    'price'=>$stationFrom[$info['key'].'_price'],
+                    'isactive'=>$isactive,
                     'isservice_charge'=>'N',
                     'route_id'=>$route->id
                 ]);
+
+                $isactive = 'N';
+                if(!is_null($stationTo[$info['key'].'_text']) || !is_null($stationTo[$info['key'].'_mouseover'])){
+                    $isactive = 'Y';
+                }
                 $routeAddon = RouteAddons::create([
                     'name'=>$info['title'].' to',
                     'type'=>$info['key'],
                     'subtype'=>'to',
-                    'message'=>null,
-                    'mouseover'=>null,
-                    'price'=>0,
-                    'isactive'=>'N',
+                    'message'=>$stationTo[$info['key'].'_text'],
+                    'mouseover'=>$stationTo[$info['key'].'_mouseover'],
+                    'price'=>$stationTo[$info['key'].'_price'],
+                    'isactive'=>$isactive,
                     'isservice_charge'=>'N',
                     'route_id'=>$route->id
                 ]);
@@ -156,6 +177,64 @@ class RouteController extends Controller
         ]);
     }
 
+    private function make($routes){
+        
+        $count =0;
+        foreach($routes as $route){
+            
+            if(sizeof($route->routeAddons) > 0){
+                continue;
+            }
+
+            if($count >100){
+                return true;
+            }
+
+            $infos = $this->getRouteAddons();
+            $stationFrom = $route->station_from;
+            $stationTo = $route->station_to;
+
+            $route->master_from = $stationFrom->master_from;
+            $route->master_to = $stationTo->master_to;
+            $route->save();
+
+            foreach($infos as $info){
+                $isactive = 'N';
+                if(!is_null($stationFrom[$info['key'].'_text']) || !is_null($stationFrom[$info['key'].'_mouseover'])){
+                    $isactive = 'Y';
+                }
+                $routeAddon = RouteAddons::create([
+                    'name'=>$info['title'].' from',
+                    'type'=>$info['key'],
+                    'subtype'=>'from',
+                    'message'=>$stationFrom[$info['key'].'_text'],
+                    'mouseover'=>$stationFrom[$info['key'].'_mouseover'],
+                    'price'=>$stationFrom[$info['key'].'_price'],
+                    'isactive'=>$isactive,
+                    'isservice_charge'=>'N',
+                    'route_id'=>$route->id
+                ]);
+
+                $isactive = 'N';
+                if(!is_null($stationTo[$info['key'].'_text']) || !is_null($stationTo[$info['key'].'_mouseover'])){
+                    $isactive = 'Y';
+                }
+                $routeAddon = RouteAddons::create([
+                    'name'=>$info['title'].' to',
+                    'type'=>$info['key'],
+                    'subtype'=>'to',
+                    'message'=>$stationTo[$info['key'].'_text'],
+                    'mouseover'=>$stationTo[$info['key'].'_mouseover'],
+                    'price'=>$stationTo[$info['key'].'_price'],
+                    'isactive'=>$isactive,
+                    'isservice_charge'=>'N',
+                    'route_id'=>$route->id
+                ]);
+            }
+            $count++;
+        }
+    }
+
     public function store(Request $request) {
         $request->validate([
             'station_from' => 'required|string|min:36|max:36',
@@ -183,7 +262,11 @@ class RouteController extends Controller
             'master_to_info' => isset($request->master_to_on) ? 'Y' : 'N',
             'ispromocode' => isset($request->promocode) ? 'Y' : 'N',
             'master_from'=>$request->master_from,
-            'master_to'=>$request->master_to
+            'master_to'=>$request->master_to,
+            'isinformation_from_active' => isset($request->master_from_on) ? 'Y' : 'N',
+            'isinformation_to_active' => isset($request->master_to_on) ? 'Y' : 'N',
+            'information_from'=>$request->information_from,
+            'information_to'=>$request->information_to
         ]);
 
         if($route) {
@@ -379,11 +462,16 @@ class RouteController extends Controller
             $route->partner_id = $request->partner_id;
             $route->text_1 = $request->text_1;
             $route->text_2 = $request->text_2;
-            //$route->master_from_info = isset($request->master_from_on) ? 'Y' : 'N';
-            //$route->master_to_info = isset($request->master_to_on) ? 'Y' : 'N';
+            $route->master_from_info = isset($request->master_from_info) ? 'Y' : 'N';
+            $route->master_to_info = isset($request->master_to_info) ? 'Y' : 'N';
             $route->ispromocode = isset($request->promocode) ? 'Y' : 'N';
             $route->master_from = $request->master_from;
             $route->master_to = $request->master_to;
+
+            $route->isinformation_from_active = isset($request->isinformation_from_active) ? 'Y' : 'N';
+            $route->isinformation_to_active = isset($request->isinformation_to_active) ? 'Y' : 'N';
+            $route->information_from = $request->information_from;
+            $route->information_to = $request->information_to;
 
         if($route->save()) {
             $this->routeIconDestroy($request->route_id);

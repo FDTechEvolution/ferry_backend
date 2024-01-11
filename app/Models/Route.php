@@ -27,7 +27,11 @@ class Route extends Model
         'master_to_info',
         'ispromocode',
         'master_from',
-        'master_to'
+        'master_to',
+        'information_from',
+        'information_to',
+        'isinformation_from_active',
+        'isinformation_to_active'
     ];
 
     protected $hidden = [

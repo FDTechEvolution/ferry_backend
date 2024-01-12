@@ -115,6 +115,8 @@ class BookingController extends Controller
                 $_extra_activity = isset($request->activity_id) ? $this->extraAddon($request->activity_id, $request->activity_qty) : [0, []];
                 $_extra_shuttle_bus = isset($request->bus_id) ? $this->extraAddon($request->bus_id, $request->bus_qty) : [0, []];
                 $_extra_longtail_boat = isset($request->boat_id) ? $this->extraAddon($request->boat_id, $request->boat_qty) : [0, []];
+                $_addons = isset($request->route_addon) ? $request->route_addon : [];
+                $_addon_detail = isset($request->route_addon_detail) ? $request->route_addon_detail : [];
                 $_promotion = null;
 
                 $_booking = $this->setBooking($request->departdate[0], $request->passenger, $request->child_passenger,
@@ -126,7 +128,7 @@ class BookingController extends Controller
                                                     $request->mobile_code, $request->th_mobile, $request->country,
                                                     $request->titlename, $request->birth_day);
                 $_route = $this->setRoutes($request->route_id, $request->departdate, $request->returndate,
-                                            $request->passenger, $request->child_passenger, $request->infant_passenger, [], []);
+                                            $request->passenger, $request->child_passenger, $request->infant_passenger, $_addons, $_addon_detail);
 
                 $_extra = array_merge($_extra_meal[1], $_extra_activity[1], $_extra_shuttle_bus[1], $_extra_longtail_boat[1]);
 
@@ -154,7 +156,7 @@ class BookingController extends Controller
                 $response = PaymentHelper::postTo_2c2p($payload);
                 $result = PaymentHelper::decodeResponse($response);
 
-                return response()->json(['result' => true, 'data' => $result, 'booking' => $booking->bookingno], 200);
+                return response()->json(['result' => true, 'data' => $result, 'booking' => $booking->bookingno, 'email' => $request->email], 200);
             }
             return response()->json(['result' => false, 'data' => 'No Route.'], 200);
         }
@@ -282,7 +284,7 @@ class BookingController extends Controller
                 $amount += $r->infant_price*$infant;
 
                 // Log::debug($addons);
-                if(!empty($addons[0])) {
+                if(!empty($addons[$key])) {
                     $route_addons = $this->setRouteAddon($addons[$key], $addon_detail[$key]);
                 }
 

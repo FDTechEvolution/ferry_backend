@@ -35,10 +35,27 @@ class BookingsController extends Controller
         $departdate = request()->departdate;
         $ticketno = request()->ticketno;
         $bookingno = request()->bookingno;
+        $daterange = request()->daterange;
 
-        $sql = 'select b.id,b.created_at,b.bookingno,t.ticketno,b.trip_type,concat(sf.nickname,"-",st.nickname) as route,br.traveldate,b.ispayment,b.book_channel,u.firstname,r.depart_time,r.arrive_time,b.totalamt from bookings b join booking_routes br on b.id = br.booking_id join routes r on br.route_id = r.id join stations sf on r.station_from_id = sf.id join stations st on r.station_to_id = st.id left join users u on b.user_id = u.id left join tickets t on b.id= t.booking_id where :conditions order by br.traveldate ASC,b.created_at ASC  ';
+        $sql = 'select b.id,b.created_at,b.bookingno,b.adult_passenger,b.child_passenger,b.infant_passenger,t.ticketno,b.trip_type,concat(sf.nickname,"-",st.nickname) as route,br.traveldate,b.ispayment,b.book_channel,u.firstname,r.depart_time,r.arrive_time,b.totalamt from bookings b join booking_routes br on b.id = br.booking_id join routes r on br.route_id = r.id join stations sf on r.station_from_id = sf.id join stations st on r.station_to_id = st.id left join users u on b.user_id = u.id left join tickets t on b.id= t.booking_id where :conditions order by br.traveldate ASC,b.created_at ASC  ';
+
+        $startDate = date('d/m/Y');
+        $endDate = date('d/m/Y', strtotime('+30 day', time()));
 
         $conditionStr = '1=1';
+
+        if (!is_null($daterange) && $daterange != '') {
+            $dates = explode('-', $daterange);
+            $startDate = trim($dates[0]);
+            $endDate = trim($dates[1]);
+
+        }
+
+        $startDateSql = Carbon::createFromFormat('d/m/Y', $startDate)->format('Y-m-d');
+        $endDateSql = Carbon::createFromFormat('d/m/Y', $endDate)->format('Y-m-d');
+
+        $conditionStr .= ' and (b.departdate >="' . $startDateSql . '" and b.departdate <="' . $endDateSql . '") ';
+
         if (!is_null($station_from) && $station_from != '') {
             $conditionStr .= ' and sf.id = "' . $station_from . '"';
         }
@@ -69,7 +86,15 @@ class BookingsController extends Controller
         $station = StationsController::avaliableStation();
 
         //dd($bookings);
-        return view('pages.bookings.index', ['bookings' => $bookings, 'station' => $station, 'station_from' => $station_from, 'station_to' => $station_to, 'bookingno' => $bookingno, 'ticketno' => $ticketno]);
+        return view('pages.bookings.index', [
+            'bookings' => $bookings,
+            'station' => $station,
+            'station_from' => $station_from,
+            'station_to' => $station_to,
+            'bookingno' => $bookingno,
+            'ticketno' => $ticketno,
+            'startDate' => $startDate,'endDate' => $endDate,
+        ]);
     }
 
     public function route()
@@ -245,24 +270,24 @@ class BookingsController extends Controller
         $yesterday = $now->add(-1, 'day');
 
         $bookings = Bookings::where('ispayment', 'N')
-            ->where('created_at','<', $yesterday)
-            ->where('book_channel','ONLINE')
+            ->where('created_at', '<', $yesterday)
+            ->where('book_channel', 'ONLINE')
             ->get();
-        
-            foreach($bookings as $booking){
-                foreach($booking->bookingCustomers as $item){
-                    $item->delete();
-                }
 
-                foreach($booking->bookingRoutes as $item){
-                    $item->delete();
-                }
-
-                foreach($booking->payments as $item){
-                    $item->delete();
-                }
-
-                $booking->delete();
+        foreach ($bookings as $booking) {
+            foreach ($booking->bookingCustomers as $item) {
+                $item->delete();
             }
+
+            foreach ($booking->bookingRoutes as $item) {
+                $item->delete();
+            }
+
+            foreach ($booking->payments as $item) {
+                $item->delete();
+            }
+
+            $booking->delete();
+        }
     }
 }

@@ -20,7 +20,7 @@
             <div class="col-12 col-md-3">
                 <div class="form-floating mb-3">
                     <select class="form-select" id="station_from" aria-label="" name="station_from">
-                        <option selected></option>
+                        <option value="" selected>-- All --</option>
                         @foreach ($station['station_from'] as $item)
                             <option value="{{ $item['id'] }}" @if ($item['id'] == $station_from) selected @endif>
                                 {{ $item['name'] }}</option>
@@ -32,38 +32,67 @@
             <div class="col-12 col-md-3">
                 <div class="form-floating mb-3">
                     <select class="form-select" id="station_to" aria-label="" name="station_to">
-                        <option selected></option>
+                        <option value="" selected>-- All --</option>
                         @foreach ($station['station_to'] as $item)
                             <option value="{{ $item['id'] }}" @if ($item['id'] == $station_to) selected @endif>
                                 {{ $item['name'] }}</option>
                         @endforeach
                     </select>
-                    <label for="station_to">Station From</label>
+                    <label for="station_to">Station To</label>
                 </div>
             </div>
-            <div class="col-12 col-md-2">
+            <div class="col-12 col-md-3">
                 <div class="form-floating mb-3">
-                    <input type="text" name="departdate" id="departdate" class="form-control form-control-sm datepicker"
-                        data-show-weeks="true" data-today-highlight="true" data-today-btn="true" data-clear-btn="false"
-                        data-autoclose="true" data-date-start="today" data-format="DD/MM/YYYY" value="">
+                    <select class="form-select" id="station_to" aria-label="" name="station_to">
+                        <option value="" selected>-- All --</option>
+
+                    </select>
+                    <label for="station_to">Trip Type</label>
+                </div>
+            </div>
+            <div class="col-12 col-md-3">
+                <div class="form-floating mb-3">
+                    <select class="form-select" id="station_to" aria-label="" name="station_to">
+                        <option value="" selected>-- All --</option>
+
+                    </select>
+                    <label for="station_to">Salse Channel</label>
+                </div>
+            </div>
+            <div class="col-12 col-md-3">
+                <div class="form-floating mb-3">
+                    <input autocomplete="off" type="text" name="daterange" id="daterange"
+                        class="form-control form-control-sm rangepicker" data-bs-placement="left" data-ranges="false" 
+
+                        data-date-start="{{ $startDate}}"
+                        data-date-end="{{ $endDate }}" 
+
+                        data-date-format="DD/MM/YYYY"
+                        data-quick-locale='{
+		"lang_apply"	: "Apply",
+		"lang_cancel" : "Cancel",
+		"lang_crange" : "Custom Range",
+		"lang_months"	 : ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+		"lang_weekdays" : ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+	}' >
                     <label for="departdate">Depart Date</label>
                 </div>
             </div>
-            <div class="col-12 col-md-2">
+            <div class="col-12 col-md-3">
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" id="ticketno" name="ticketno" value="{{ $ticketno }}">
                     <label for="ticketno">Ticket Number</label>
                 </div>
             </div>
-            <div class="col-12 col-md-2">
+            <div class="col-12 col-md-3">
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" id="bookingno" name="bookingno" value="{{ $bookingno }}">
                     <label for="bookingno">Invoice Number</label>
                 </div>
             </div>
             <div class="col-12 text-center">
-                <button type="reset" class="btn btn-secondary">Clear</button>
-                <button type="submit" class="btn btn-ferry">Search</button>
+                <a class="btn btn-sm btn-secondary" href="{{route('booking-index')}}"><i class="fa-solid fa-arrows-rotate"></i> Clear</a>
+                <button type="submit" class="btn btn-sm btn-ferry"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
             </div>
         </div>
     </form>
@@ -111,7 +140,7 @@
                             </th>
                             <th class="">Issue Date</th>
                             <th>Invoice No</th>
-                            <th>Ticket No</th>
+                            <th class="text-center">Passengers</th>
                             <th>Type</th>
                             <th>Route</th>
                             <th>Depart Date</th>
@@ -137,7 +166,7 @@
                                 </td>
                                 <td><small>{{ date('d/m/Y H:i', strtotime($item['created_at'])) }}</small></td>
                                 <td>{{ $item['bookingno'] }}</td>
-                                <td><strong>{{ $item['ticketno'] }}</strong>
+                                <td class="text-center">{{ $item['adult_passenger'] + $item['child_passenger'] + $item['infant_passenger'] }}</strong>
                                 </td>
                                 <td>{{ $item['trip_type'] }}</td>
                                 <td>
@@ -254,7 +283,7 @@
 
                 settingActionLink(false);
                 $.each(all_booking_checks, function(index, item) {
-                    if(item.checked){
+                    if (item.checked) {
                         settingActionLink(true);
                         return true;
                     }

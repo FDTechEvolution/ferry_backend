@@ -31,7 +31,9 @@ class PromotionController extends Controller
     {
         $tirpTypes = BookingHelper::tripType();
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
-        $routes = Route::where('isactive', 'Y')->where('status', 'CO')->with('station_from', 'station_to')->get();
+        $routes = Route::where('isactive', 'Y')
+            ->where('ispromocode','Y')
+            ->with('station_from', 'station_to')->get();
 
         return view('pages.promotion.create', ['stations' => $stations, 'routes' => $routes, 'tirpTypes' => $tirpTypes]);
     }
@@ -149,9 +151,9 @@ class PromotionController extends Controller
         $promotion->times_use_max = $request->times_use_max;
         $promotion->isactive = $request->isactive;
         $promotion->description = $request->description;
-        $promotion->depart_date_start =  $startDate;
+        $promotion->depart_date_start = $startDate;
         $promotion->depart_date_end = $endDate;
-        $promotion->trip_type =  $request->trip_type;
+        $promotion->trip_type = $request->trip_type;
         $promotion->isfreecreditcharge = isset($request->isfreecreditcharge) ? 'Y' : 'N';
         $promotion->isfreepremiumflex = isset($request->isfreepremiumflex) ? 'Y' : 'N';
 

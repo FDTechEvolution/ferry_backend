@@ -41,7 +41,7 @@ class BookingHelper
     public static function getBookingInfoByBookingNo($bookingno)
     {
         $booking = Bookings::where(['bookingno' => $bookingno])
-            ->with('bookingCustomers','tickets.customer', 'user', 'bookingRoutes', 'bookingRoutesX.bookingExtraAddons', 'bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingRoutes.station_lines', 'payments')
+            ->with('bookingCustomers', 'tickets.customer', 'user', 'bookingRoutes', 'bookingRoutesX.bookingExtraAddons', 'bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingRoutes.station_lines', 'payments')
             ->first();
 
         //dd($booking);
@@ -52,7 +52,17 @@ class BookingHelper
     public static function getBookingInfoByBookingId($booking_id)
     {
         $booking = Bookings::where(['id' => $booking_id])
-            ->with('bookingCustomers','tickets.customer', 'user', 'bookingRoutes', 'bookingRoutesX.bookingExtraAddons', 'bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingRoutes.station_lines', 'payments')
+            ->with(
+                'bookingCustomers',
+                'tickets.customer',
+                'user',
+                'bookingRoutes',
+                'bookingRoutesX.bookingExtraAddons',
+                'bookingRoutes.station_from',
+                'bookingRoutes.station_to',
+                'bookingRoutes.station_lines',
+                'payments'
+            )
             ->first();
 
         //dd($booking);
@@ -131,7 +141,7 @@ class BookingHelper
             'bookingno' => newSequenceNumber('BOOKING'),
             'book_channel' => isset($_b['book_channel']) ? $_b['book_channel'] : 'ONLINE',
             'ispremiumflex' => isset($_b['ispremiumflex']) ? $_b['ispremiumflex'] : 'N',
-            'promotion_id' => $_b['promotion_id']
+            'promotion_id' => isset($_b['promotion_id'])?$_b['promotion_id']:NULL,
         ]);
 
         $amount += $_b['amount'];
@@ -177,7 +187,7 @@ class BookingHelper
             if (isset($routeData["extras"])) {
                 $_extra = $routeData['extras'];
                 foreach ($_extra as $index => $extra) {
-                    $addon = Addon::where('id',$extra['addon_id'])->first();
+                    $addon = Addon::where('id', $extra['addon_id'])->first();
 
                     $bookingExtra = BookingExtras::create([
                         'addon_id' => $addon->id,
@@ -188,13 +198,13 @@ class BookingHelper
                 }
             }
 
-            if(isset($routeData['route_addons'])) {
-                foreach($routeData['route_addons'] as $addon) {
+            if (isset($routeData['route_addons'])) {
+                foreach ($routeData['route_addons'] as $addon) {
                     BookingExtras::create([
                         'booking_route_id' => $bookingRoute->id,
                         'route_addon_id' => $addon['route_addon_id'],
                         'amount' => $addon['amount'],
-                        'description' => $addon['description']
+                        'description' => $addon['description'],
                     ]);
                 }
             }

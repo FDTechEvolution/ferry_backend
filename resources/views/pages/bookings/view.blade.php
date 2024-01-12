@@ -19,8 +19,9 @@
     <div class="row">
         <div class="col-12">
             @if ($booking['ispayment'] == 'Y')
-            <a href="{{ route('print-ticket', ['bookingno' => $booking['bookingno']]) }}" class="btn btn-primary transition-hover-top" rel="noopener" target="_blank"><i
-                    class="fa-solid fa-print"></i> Print Ticket</a>
+                <a href="{{ route('print-ticket', ['bookingno' => $booking['bookingno']]) }}"
+                    class="btn btn-primary transition-hover-top" rel="noopener" target="_blank"><i
+                        class="fa-solid fa-print"></i> Print Ticket</a>
             @endif
             <a href="#" class="btn btn-success transition-hover-top" rel="noopener" target="_blank"><i
                     class="fa-brands fa-cc-visa"></i> Make Payment</a>
@@ -87,7 +88,7 @@
                                     <td>{{ $customer->passportno }}</td>
                                     <td class="text-end">
 
-                                        <button type="button" class="btn btn-sm rounded-circle btn-outline-secondary mb-2">
+                                        <button type="button" class="btn btn-sm rounded-circle btn-outline-secondary mb-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                             <i class="fa-solid fa-pen"></i>
                                         </button>
                                     </td>
@@ -108,4 +109,27 @@
 
         </div>
     </div>
+@stop
+
+
+@section('modal')
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Edit Passenger <span class="text-main-color-2">XXX</span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Understood</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @stop

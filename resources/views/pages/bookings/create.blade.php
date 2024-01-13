@@ -25,6 +25,9 @@
 
             <div class="col-12 col-md-3">
                 Regular Price: {{ number_format($route['regular_price']) }}THB
+                <input type="hidden" id="regular_price" value="{{$route['regular_price']}}">
+                <input type="hidden" id="child_price" value="{{$route['child_price']}}">
+                <input type="hidden" id="infant_price" value="{{$route['infant_price']}}">
             </div>
             <div class="col-12 col-md-3">
                 Child Price: {{ number_format($route['child_price']) }}THB
@@ -247,11 +250,41 @@
 @section('script')
     <script>
         function calculateTotalPrice() {
+            let regular_price = {{$route['regular_price']}};
+            let child_price = {{$route['child_price']}};
+            let infant_price = {{$route['infant_price']}};
+
+            let adult_passenger = parseInt($('#adult_passenger').val());
+            let child_passenger = parseInt($('#child_passenger').val());
+            let infant_passenger = parseInt($('#infant_passenger').val());
+
+            
+
             let price = isNaN($('#price').val()) ? 0 : $('#price').val();
-            let extra_price = isNaN($('#extra_price').val()) ? 0 : $('#extra_price').val();
-            let total_price = parseFloat(price) + parseFloat(extra_price);
+            let extra_price = parseFloat(isNaN($('#extra_price').val()) ? 0 : $('#extra_price').val());
+            let total_price = parseFloat(price) + (extra_price);
 
             $('#total_price').val(total_price);
+        }
+
+        function calculateTotalPassengerPrice() {
+            let regular_price = {{$route['regular_price']}};
+            let child_price = {{$route['child_price']}};
+            let infant_price = {{$route['infant_price']}};
+
+            let adult_passenger = parseInt($('#adult_passenger').val());
+            let child_passenger = parseInt($('#child_passenger').val());
+            let infant_passenger = parseInt($('#infant_passenger').val());
+
+            let price = isNaN($('#price').val()) ? 0 : $('#price').val();
+            let extra_price = parseFloat(isNaN($('#extra_price').val()) ? 0 : $('#extra_price').val());
+            let total_price = parseFloat(price) + (extra_price);
+
+            let estimatePrice = (adult_passenger*regular_price)+(child_passenger*child_price)+(infant_passenger*infant_price);
+            let estimateTotalPrice = (adult_passenger*regular_price)+(child_passenger*child_price)+(infant_passenger*infant_price)+extra_price;
+
+            $('#price').val(estimatePrice);
+            $('#total_price').val(estimateTotalPrice);
         }
 
         function calculateExtraPrice() {
@@ -275,6 +308,16 @@
                 }else{
                     $('#box-payment-option').hide();
                 }
+            });
+
+            $('#adult_passenger').on('keyup', function() {
+                calculateTotalPassengerPrice();
+            });
+            $('#child_passenger').on('keyup', function() {
+                calculateTotalPassengerPrice();
+            });
+            $('#infant_passenger').on('keyup', function() {
+                calculateTotalPassengerPrice();
             });
 
             $('#price').on('keyup', function() {

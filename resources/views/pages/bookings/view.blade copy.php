@@ -16,45 +16,17 @@
 @stop
 
 @section('content')
-    <div class="row g-3 align-items-center">
-        <div class="col">
-            <h4 class="mb-0">#{{ $booking['bookingno'] }}</h4>
-            <ul class="list-unstyled m-0 p-0">
-                <li class="list-item">
-                    <span class="text-muted small">{{$booking->created_at}}</span>
-                </li>
-                <li class="list-item">
-                    @if ($booking['ispayment'] == 'Y')
-                    <span class="badge bg-success-soft rounded-pill d-inline-flex align-items-center">
-                        <span class="bull bull-lg bg-success me-2 animate-pulse-success"></span>
-                        <span>Paid</span>
-                    </span>
-
-                    @else
-
-                    @endif
-                    <span class="badge bg-secondary-soft rounded-pill">
-                        {{$booking['trip_type'] }}
-                    </span>
-                </li>
-            </ul>
-
-        </div>
-        <div class="col-md-6 text-md-end">
+    <div class="row">
+        <div class="col-12">
             @if ($booking['ispayment'] == 'Y')
                 <a href="{{ route('print-ticket', ['bookingno' => $booking['bookingno']]) }}"
                     class="btn btn-primary transition-hover-top" rel="noopener" target="_blank"><i
                         class="fa-solid fa-print"></i> Print Ticket</a>
             @endif
+            
         </div>
     </div>
-
-    <div class="row g-2">
-
-        <div class="col">
-        </div>
-    </div>
-
+    <hr>
     <div class="row">
         <div class="col-12 col-lg-8 border-end">
             <div class="row">
@@ -81,7 +53,7 @@
                                         {{ $route->station_to->name }}
                                     </td>
                                     <td class="text-end align-middle">
-                                        <h4>{{ number_format($route->regular_price) }}THB/Person</h4>
+                                        <h4>{{ number_format($route->regular_price) }}THB</h4>
                                     </td>
                                 </tr>
                             @endforeach
@@ -89,14 +61,9 @@
                     </table>
                 </div>
                 <div class="col-12">
-                    <h4>
-                        <i class="fa-solid fa-users"></i> <span
+                    <h4><i class="fa-solid fa-users"></i> <span
                             class="text-main-color-2">{{ $booking->adult_passenger + $booking->child_passenger + $booking->infant_passenger }}</span>
-                        Passengers
-                    </h4>
-                    <span class="badge rounded-pill bg-secondary-soft">Adult {{$booking->adult_passenger}} </span>
-                    <span class="badge rounded-pill bg-secondary-soft">Child {{$booking->child_passenger}} </span>
-                    <span class="badge rounded-pill bg-secondary-soft">Infant {{$booking->infant_passenger}} </span>
+                        Passengers</h4>
                     <table class="table">
                         <thead>
                             <tr>
@@ -119,11 +86,9 @@
                                     </td>
                                     <td>{{ $customer->passportno }}</td>
                                     <td class="text-end">
-                                        
-                                        <button type="button" class="btn btn-sm mb-2"
-                                            data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                            <span class="fw-normal">edit</span><i class="fa-regular fa-pen-to-square"></i>
-                      </svg>
+
+                                        <button type="button" class="btn btn-sm rounded-circle btn-outline-secondary mb-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                            <i class="fa-solid fa-pen"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -139,9 +104,6 @@
                 <div class="col-12">
                     <h4 class="text-main-color-2">Booking Sumary</h4>
                 </div>
-                <div class="col-12">
-
-                </div>
             </div>
 
         </div>
@@ -155,8 +117,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Edit Passenger <span
-                            class="text-main-color-2">XXX</span></h5>
+                    <h5 class="modal-title" id="staticBackdropLabel">Edit Passenger <span class="text-main-color-2">XXX</span></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

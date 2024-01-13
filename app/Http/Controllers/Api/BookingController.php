@@ -272,11 +272,11 @@ class BookingController extends Controller
 
     private function setRoutes($route_id, $departdate, $returndate = null, $adult, $child, $infant, $addons, $addon_detail) {
         $route = [];
-        $route_addons = [];
         $traveldate = $returndate != null ? [$departdate, $returndate] : $departdate;
 
         if(is_array($traveldate)) {
             foreach($route_id as $key => $_route) {
+                $route_addons = [];
                 $amount = 0;
                 $r = $this->getRoute($_route);
                 $amount += $r->regular_price*$adult;
@@ -299,6 +299,7 @@ class BookingController extends Controller
         }
         else {
             $amount = 0;
+            $route_addons = [];
             $r = $this->getRoute($route_id[0]);
             $amount += $r->regular_price*$adult;
             $amount += $r->child_price*$child;
@@ -324,7 +325,7 @@ class BookingController extends Controller
         $_addon = [];
         foreach($addons as $index => $addon) {
             $a = $this->getRouteAddonById($addon);
-            if($a != NULL) {
+            if($a) {
                 $amount = $a->isservice_charge == 'Y' ? $a->price : 0;
                 array_push($_addon, [
                     'route_addon_id' => $a->id,
@@ -340,7 +341,7 @@ class BookingController extends Controller
     private function getRouteAddonById($id) {
         $addon = RouteAddons::find($id);
         if(isset($addon)) return $addon;
-        else return NULL;
+        else return false;
     }
 
     private function getRoute($route_id) {

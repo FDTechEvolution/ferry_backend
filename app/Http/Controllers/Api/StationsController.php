@@ -60,6 +60,7 @@ class StationsController extends Controller
                 'piername' => $route['station_from']['piername'],
                 'nickname' => $route['station_from']['nickname'],
                 'section' => $route['station_from']['section']['name'],
+                'sort' => $route['station_from']['sort'],
                 'col' => $route['station_from']['section']['sectionscol']
             ];
             if(!in_array($_from, $stations['from'])) array_push($stations['from'], $_from);
@@ -70,6 +71,7 @@ class StationsController extends Controller
                 'piername' => $route['station_to']['piername'],
                 'nickname' => $route['station_to']['nickname'],
                 'section' => $route['station_to']['section']['name'],
+                'sort' => $route['station_to']['sort'],
                 'col' => $route['station_to']['section']['sectionscol']
             ];
             if(!in_array($_to, $stations['to'])) array_push($stations['to'], $_to);

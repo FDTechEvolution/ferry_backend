@@ -303,7 +303,7 @@ class PaymentHelper
         $promotion = Promotions::find($promotion_id);
 
         if (!is_null($payment)) {
-            $discountAmount = $discountamt - $payment->totalamt;
+            // $discountAmount = $payment->totalamt - $discountamt;
             $discount = number_format($promotion->discount);
             $discount_type = $promotion->discount_type == 'PERCENT' ? '%' : 'THB';
 
@@ -312,11 +312,11 @@ class PaymentHelper
                 'payment_id' => $payment->id,
                 'type' => 'ROUTE',
                 'title' => sprintf('PromoCode Discount %s %s [%s]', $discount, $discount_type, $promotion->code),
-                'amount' => $discountAmount,
+                'amount' => $discountamt,
             ]);
 
             if ($paymentLine) {
-                $payment->totalamt = $payment->totalamt + $discountAmount;
+                $payment->totalamt = $payment->totalamt + $discountamt;
 
                 $payment->save();
             }

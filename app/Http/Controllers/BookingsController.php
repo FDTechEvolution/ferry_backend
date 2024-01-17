@@ -28,7 +28,7 @@ class BookingsController extends Controller
     public function index()
     {
 
-        $this->clearUnpayBooking();
+        //$this->clearUnpayBooking();
 
         $station_from = request()->station_from;
         $station_to = request()->station_to;
@@ -140,7 +140,21 @@ class BookingsController extends Controller
 
     public function view($booking_id)
     {
-        $booking = BookingHelper::getBookingInfoByBookingId($booking_id);
+        $booking = Bookings::where(['id' => $booking_id])
+            ->with(
+                'bookingCustomers',
+                'user',
+                'bookingRoutes',
+                'bookingRoutesX.bookingExtraAddons',
+                'bookingRoutesX.bookingRouteAddons',
+                'bookingRoutes.station_from',
+                'bookingRoutes.station_to',
+                'bookingRoutes.station_lines',
+                'payments',
+                'payments.paymentLines'
+            )
+            ->first();
+                //dd($booking);
         return view('pages.bookings.view', ['booking' => $booking]);
     }
 

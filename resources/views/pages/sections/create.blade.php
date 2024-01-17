@@ -2,13 +2,13 @@
 
 @section('page-title')
     <h1 class="ms-2 mb-0" id="station-page-title"><span class="text-main-color-2">Add</span> Section</h1>
-    <x-a-href-orange :text="_('Manage Section')" :href="route('manage-section')" :target="_('_self')" class="ms-3 btn-sm w--15" />
+    <x-a-href-orange :text="_('Manage Section')" :href="route('section.index')" :target="_('_self')" class="ms-3 btn-sm w--15" />
 @stop
 
 @section('content')
     <div class="row mt-3">
         <div class="col-12 col-md-6">
-            <form novalidate class="bs-validate" id="section-create-form" method="POST" action="{{ route('section-create') }}">
+            <form novalidate class="bs-validate" id="section-create-form" method="POST" action="{{ route('section.store') }}">
                 @csrf
                 <fieldset id="section-create">
                     <div class="row bg-transparent">

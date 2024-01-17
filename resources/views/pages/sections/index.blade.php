@@ -2,7 +2,7 @@
 
 @section('page-title')
     <h1 class="ms-2 mb-0" id="station-page-title"><span class="text-main-color-2">Manage</span> Section</h1>
-    <x-a-href-green :text="_('Add Section')" :href="route('create-section')" :target="_('_self')" class="ms-3 btn-sm w--15" />
+    <x-a-href-green :text="_('Add Section')" :href="route('section.create')" :target="_('_self')" class="ms-3 btn-sm w--15" />
 @stop
 
 @section('content')
@@ -42,14 +42,18 @@
                                 <tr>
                                     <th class="text-center w--5">#</th>
                                     <th>name</th>
+                                    <th>Status</th>
                                     <th class="text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($sections as $index => $section)
                                     <tr class="text-center">
-                                        <td>{{ $index +1 }}</td>
+                                        <td id="section-sort-{{ $index }}">{{ $section->sort}}</td>
                                         <td id="section-name-{{ $index }}" class="text-start">{{ $section['name'] }}</td>
+                                        <td>
+                                            <x-isactive :isactive="$section->isactive" />
+                                        </td>
                                         <td>
                                             <input type="hidden" name="section_id" id="section-id-{{ $index }}" value="{{ $section['id'] }}">
                                             <x-action-edit 
@@ -59,7 +63,7 @@
                                                 onClick="updateSectionEditData({{ $index }})"
                                             />
                                             <x-action-delete 
-                                                :url="route('section-delete', ['id' => $section['id']])"
+                                                :url="route('section.destroy', ['id' => $section])"
                                                 :message="_('Are you sure? Delete '. $section['name'] .'?')"
                                             />
                                         </td>
@@ -71,7 +75,7 @@
                 </div>
 
                 <div id="to-section-edit" class="m-auto d-none">
-                    <form novalidate class="bs-validate" id="section-edit-form" method="POST" action="{{ route('section-update') }}">
+                    <form novalidate class="bs-validate" id="section-edit-form" method="POST" action="{{ route('section.update') }}">
                         @csrf
                         <fieldset id="section-edit">
                             <div class="row bg-transparent mt-3">
@@ -82,6 +86,12 @@
                                         <label for="section-name-edit" class="col-sm-3 col-form-label-sm text-start">Section* :</label>
                                         <div class="col-sm-9">
                                             <input type="text" required class="form-control form-control-sm" id="section-name-edit" name="name" value="">
+                                        </div>
+                                    </div>
+                                    <div class="mb-4 row">
+                                        <label for="section-name-edit" class="col-sm-3 col-form-label-sm text-start">Sort* :</label>
+                                        <div class="col-sm-9">
+                                            <input type="number" required class="form-control form-control-sm" id="section-sort-edit" name="sort" value="">
                                         </div>
                                     </div>
 

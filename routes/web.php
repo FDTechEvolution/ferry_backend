@@ -3,6 +3,7 @@
 use App\Http\Controllers\BookingsController;
 use App\Http\Controllers\InformationsController;
 use App\Http\Controllers\PartnerController;
+use App\Http\Controllers\SectionsController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\AuthController;
@@ -56,6 +57,11 @@ Route::controller(ForgotPasswordController::class)->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::resources([
+        'section' => SectionsController::class,
+    ]);
+
+
     Route::controller(UsersController::class)->group(function () {
         Route::get('/account', 'index')->name('users-index');
         Route::get('/delete-user/{id}', 'destroy')->name('user-delete');
@@ -73,13 +79,11 @@ Route::middleware('auth')->group(function () {
         Route::post('/station-create', 'store')->name('station-create');
         Route::post('/update-station', 'update')->name('station-update');
 
-        // section
-        Route::get('/section-create', 'sectionCreate')->name('create-section');
-        Route::get('/delete-section/{id}', 'destroySection')->name('section-delete');
-        Route::get('/section-manage', 'sectionManage')->name('manage-section');
+    });
 
-        Route::post('/create-section', 'storeSection')->name('section-create');
-        Route::post('/update-section', 'updateSection')->name('section-update');
+    Route::controller(SectionsController::class)->group(function () {
+        Route::get('/section/destroy/{id}', 'destroy')->name('section.destroy');
+        Route::post('/section/update', 'update')->name('section.update');
     });
 
     Route::controller(StationInfomationsController::class)->group(function () {

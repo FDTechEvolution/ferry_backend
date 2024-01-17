@@ -214,6 +214,7 @@ function setClassListRemove(element_id) {
 function updateSectionEditData(index) {
     let id = document.querySelector(`#section-id-${index}`)
     let name = document.querySelector(`#section-name-${index}`)
+    let sort = document.querySelector(`#section-sort-${index}`);
     
     setClassListAdd('to-section-list')
     setClassListAdd('btn-section-cancel-manage')
@@ -221,6 +222,7 @@ function updateSectionEditData(index) {
 
     document.querySelector('#section-name-edit').value = name.innerText
     document.querySelector('#section-id-edit').value = id.value
+    document.querySelector('#section-sort-edit').value = sort.innerText
 }
 
 function updateStationEditData(index) {

@@ -21,20 +21,18 @@
             <h4 class="mb-0">#{{ $booking['bookingno'] }}</h4>
             <ul class="list-unstyled m-0 p-0">
                 <li class="list-item">
-                    <span class="text-muted small">{{$booking->created_at}}</span>
+                    <span class="text-muted small">{{ $booking->created_at }}</span>
                 </li>
                 <li class="list-item">
                     @if ($booking['ispayment'] == 'Y')
-                    <span class="badge bg-success-soft rounded-pill d-inline-flex align-items-center">
-                        <span class="bull bull-lg bg-success me-2 animate-pulse-success"></span>
-                        <span>Paid</span>
-                    </span>
-
+                        <span class="badge bg-success-soft rounded-pill d-inline-flex align-items-center">
+                            <span class="bull bull-lg bg-success me-2 animate-pulse-success"></span>
+                            <span>Paid</span>
+                        </span>
                     @else
-
                     @endif
                     <span class="badge bg-secondary-soft rounded-pill">
-                        {{$booking['trip_type'] }}
+                        {{ $booking['trip_type'] }}
                     </span>
                 </li>
             </ul>
@@ -56,7 +54,7 @@
     </div>
 
     <div class="row">
-        <div class="col-12 col-lg-8 border-end">
+        <div class="col-12 col-lg-7 border-end">
             <div class="row">
                 <div class="col-12 mb-2">
                     <table class="table">
@@ -81,7 +79,7 @@
                                         {{ $route->station_to->name }}
                                     </td>
                                     <td class="text-end align-middle">
-                                        <h4>{{ number_format($route->regular_price) }}THB/Person</h4>
+                                        <h5>{{ number_format($route->regular_price) }}THB/Person</h5>
                                     </td>
                                 </tr>
                             @endforeach
@@ -94,9 +92,9 @@
                             class="text-main-color-2">{{ $booking->adult_passenger + $booking->child_passenger + $booking->infant_passenger }}</span>
                         Passengers
                     </h4>
-                    <span class="badge rounded-pill bg-secondary-soft">Adult {{$booking->adult_passenger}} </span>
-                    <span class="badge rounded-pill bg-secondary-soft">Child {{$booking->child_passenger}} </span>
-                    <span class="badge rounded-pill bg-secondary-soft">Infant {{$booking->infant_passenger}} </span>
+                    <span class="badge rounded-pill bg-secondary-soft">Adult {{ $booking->adult_passenger }} </span>
+                    <span class="badge rounded-pill bg-secondary-soft">Child {{ $booking->child_passenger }} </span>
+                    <span class="badge rounded-pill bg-secondary-soft">Infant {{ $booking->infant_passenger }} </span>
                     <table class="table">
                         <thead>
                             <tr>
@@ -119,11 +117,11 @@
                                     </td>
                                     <td>{{ $customer->passportno }}</td>
                                     <td class="text-end">
-                                        
-                                        <button type="button" class="btn btn-sm mb-2"
-                                            data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+
+                                        <button type="button" class="btn btn-sm mb-2" data-bs-toggle="modal"
+                                            data-bs-target="#staticBackdrop">
                                             <span class="fw-normal">edit</span><i class="fa-regular fa-pen-to-square"></i>
-                      </svg>
+                                            </svg>
                                         </button>
                                     </td>
                                 </tr>
@@ -134,13 +132,49 @@
             </div>
 
         </div>
-        <div class="col-12 col-lg-4">
+        <div class="col-12 col-lg-5">
             <div class="row">
                 <div class="col-12">
-                    <h4 class="text-main-color-2">Booking Sumary</h4>
+                    <h4 class="text-main-color-2">Payment Details</h4>
                 </div>
                 <div class="col-12">
-
+                    @php
+                        $payments = $booking->payments;
+                    @endphp
+                    @if (is_null($payments))
+                        <p class="text-center"><span class="text-danger">-- no payment --</span></p>
+                    @else
+                        @foreach ($payments as $index => $payment)
+                            <div class="row">
+                                <div class="col">
+                                    <ul class="list-unstyled m-0 p-0">
+                                        <li class="list-item">
+                                            Payment method: <span
+                                                class="badge bg-primary">{{ $payment->payment_method }}</span>
+                                        </li>
+                                        <li class="list-item">
+                                            Payment date: <span
+                                                class="badge bg-primary">{{ $payment->payment_date }}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-12">
+                                    <table class="table table-sm">
+                                        @foreach ($payment->paymentLines as $i=>$line)
+                                            <tr>
+                                                <td>
+                                                    #{{$line->title}}
+                                                </td>
+                                                <td class="text-end">
+                                                    {{$line->amount}}
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </table>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
                 </div>
             </div>
 

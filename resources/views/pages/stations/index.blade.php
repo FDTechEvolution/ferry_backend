@@ -9,7 +9,7 @@
             <x-a-href-green :text="_('Add')" :href="route('create-station')" :target="_('_self')" class="" />
 
 
-            <x-a-href-orange :text="_('Manage Section')" :href="route('manage-section')" :target="_('_self')" class="" />
+            <x-a-href-orange :text="_('Manage Section')" :href="route('section.index')" :target="_('_self')" class="" />
         </div>
     </div>
 @stop

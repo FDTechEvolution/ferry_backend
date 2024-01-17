@@ -44,7 +44,7 @@ class StationsController extends Controller
     public function index()
     {
         //$stations = Station::where('status', 'CO')->with(['image'])->orderBy('section_id', 'ASC')->orderBy('sort', 'ASC')->get();
-        $sections = Section::where('isactive', 'Y')->with(['stations'])->orderBy('seq', 'ASC')->get();
+        $sections = Section::with(['stations'])->orderBy('sort', 'ASC')->get();
         //$info = StationInfomation::where('status', 'Y')->get();
         $status = $this->_Status;
 
@@ -58,20 +58,6 @@ class StationsController extends Controller
         $info = StationInfomation::where('status', 'Y')->get();
 
         return view('pages.stations.create', ['sections' => $sections, 'info' => $info]);
-    }
-
-    public function sectionCreate()
-    {
-        $sections = Section::where('isactive', 'Y')->orderBy('created_at', 'DESC')->get();
-
-        return view('pages.stations.section_create', ['sections' => $sections]);
-    }
-
-    public function sectionManage()
-    {
-        $sections = Section::where('isactive', 'Y')->orderBy('created_at', 'DESC')->get();
-
-        return view('pages.stations.section_manage', ['sections' => $sections]);
     }
 
     public function edit(string $id = null)
@@ -238,26 +224,6 @@ class StationsController extends Controller
         return redirect()->route('create-section')->withFail('Section name is exist.');
     }
 
-    public function updateSection(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string',
-        ]);
-
-        if ($this->checkSectionName($request->name, $request->section_id)) {
-            $section = Section::find($request->section_id);
-            if (isset($section)) {
-                $section->name = $request->name;
-                if ($section->save())
-                    return redirect()->route('manage-section')->withSuccess('Section created...');
-                else
-                    return redirect()->route('manage-section')->withFail('Something is wrong. Please try again.');
-            }
-            return redirect()->route('manage-section')->withFail('Section record not exist. Please check again.');
-        }
-        return redirect()->route('manage-section')->withFail('Section name is exist.');
-    }
-
     public function destroySection(string $id = null)
     {
         $section = Section::find($id);
@@ -272,14 +238,7 @@ class StationsController extends Controller
         return redirect()->route('manage-section')->withWarning('Section is in use. Can not delete this item...');
     }
 
-    private function checkSectionName(string $name = null, string $section_id = null)
-    {
-        $section = Section::where('name', $name)->where('id', '!=', $section_id)->where('isactive', 'Y')->first();
-        if (isset($section))
-            return false;
-        return true;
-    }
-
+   
     private function getMaxSortBySection($section_id,$sort = 'DESC')
     {
         $stations = Station::where('section_id', $section_id)

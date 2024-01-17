@@ -73,8 +73,22 @@ class BookingController extends Controller
 
             // update promoCode
             if(isset($_promo)) {
-                $discount_amount = PromotionHelper::promoDiscount($_amount, $_promo);
-                $payment = PaymentHelper::updatePromoCodeDiscount($payment_id, $_promo->id, $discount_amount);
+                $_discount_amount = 0;
+                foreach($request->route_id as $_route) {
+                    $amount = 0;
+                    $discount_amount = 0;
+                    $_r = $this->getRoute($_route);
+                    if($_r->ispromocode == 'Y') {
+                        $amount += $_r->regular_price*$request->passenger;
+                        $amount += $_r->child_price*$request->child_passenger;
+                        $amount += $_r->infant_price*$request->infant_passenger;
+                        $discount_amount = PromotionHelper::promoDiscount($amount, $_promo);
+
+                        $_discount_amount += $discount_amount - $amount;
+                    }
+                }
+
+                $payment = PaymentHelper::updatePromoCodeDiscount($payment_id, $_promo->id, $_discount_amount);
             }
             $payment_amt = $payment->totalamt;
 
@@ -110,6 +124,12 @@ class BookingController extends Controller
 
             $route = $this->getRoute($request->route_id[0]);
             if($route) {
+                $_pro = NULL;
+                $_promo = [];
+                $_promotion = [];
+                $_promo_id = '';
+                $_promo_isfreepremiumflex = 'N';
+                $_promo_isfreecreditcharge = 'N';
                 $_amount = $this->routeAmount($request->route_id, $request->passenger, $request->child_passenger, $request->infant_passenger);
                 $_extra_meal = isset($request->meal_id) ? $this->extraAddon($request->meal_id, $request->meal_qty) : [0, []];
                 $_extra_activity = isset($request->activity_id) ? $this->extraAddon($request->activity_id, $request->activity_qty) : [0, []];
@@ -117,12 +137,34 @@ class BookingController extends Controller
                 $_extra_longtail_boat = isset($request->boat_id) ? $this->extraAddon($request->boat_id, $request->boat_qty) : [0, []];
                 $_addons = isset($request->route_addon) ? $request->route_addon : [];
                 $_addon_detail = isset($request->route_addon_detail) ? $request->route_addon_detail : [];
-                $_promotion = null;
+                if($request->promocode != '') {
+                    foreach($request->route_id as $index => $route_id) {
+                        $has_promo = $this->promoCode($request->promocode, $request->route_id);
+                        if($has_promo != NULL) {
+                            $_pro = $has_promo;
+                            array_push($_promotion, $has_promo);
+                        }
+                        else array_push($_promotion, []);
+                    }
+                }
+
+                if(!empty($_promotion)) {
+                    foreach($_promotion as $index => $_p) {
+                        $is_promo = $this->setPromotionCode($_p, $request->trip_type, $request->departdate[$index]);
+                        if($is_promo != NULL) {
+                            $_promo_id = $is_promo->id;
+                            if($is_promo->isfreepremiumflex == 'Y') $_promo_isfreepremiumflex = 'Y';
+                            if($is_promo->isfreecreditcharge == 'Y') $_promo_isfreecreditcharge = 'Y';
+                            array_push($_promo, $is_promo);
+                        }
+                        else array_push($_promo, []);
+                    }
+                }
 
                 $_booking = $this->setBooking($request->departdate[0], $request->passenger, $request->child_passenger,
                                                 $request->infant_passenger, $request->trip_type, $request->book_channel,
                                                 $_amount, $_extra_meal[0], $_extra_activity[0], $_extra_shuttle_bus[0],
-                                                $_extra_longtail_boat[0], $request->ispremiumflex, $_promotion);
+                                                $_extra_longtail_boat[0], $request->ispremiumflex, $_pro);
                 $_customer = $this->setPassenger($request->fullname, $request->mobile, $request->passenger_type,
                                                     $request->passportno, $request->email, $request->address,
                                                     $request->mobile_code, $request->th_mobile, $request->country,
@@ -145,11 +187,44 @@ class BookingController extends Controller
                 ];
 
                 $payment_channel = $this->PaymentMethod[$request->payment_method];
+                $isfreepremiumflex = !empty($_promo) ? $_promo_isfreepremiumflex : 'N';
+                $isfreecreditcharge = !empty($_promo) ? $_promo_isfreecreditcharge : 'N';
 
                 $booking = BookingHelper::createBooking($data);
                 $payment = PaymentHelper::createPaymentFromBooking($booking->id);
-                if($request->ispremiumflex == 'Y') $payment = PaymentHelper::updatePremiumFlex($payment->id);
-                if($payment_channel == 'CC') $payment = PaymentHelper::updatePayWithCreditCard($payment->id);
+
+                // update promoCode
+                if(!empty($_promo)) {
+                    $_discount_amount = 0;
+                    foreach($request->route_id as $index => $_route) {
+                        $amount = 0;
+                        $discount_amount = 0;
+                        $_r = $this->getRoute($_route);
+                        if($_r->ispromocode == 'Y') {
+                            $amount += $_r->regular_price*$request->passenger;
+                            $amount += $_r->child_price*$request->child_passenger;
+                            $amount += $_r->infant_price*$request->infant_passenger;
+                            $discount_amount = PromotionHelper::promoDiscount($amount, $_promo[$index]);
+
+                            $_discount_amount += $discount_amount - $amount;
+                        }
+                    }
+
+                    $payment = PaymentHelper::updatePromoCodeDiscount($payment->id, $_promo_id, $_discount_amount);
+                }
+
+                $payment_amt = $payment->totalamt;
+                if($request->ispremiumflex == 'Y')
+                    $payment = PaymentHelper::updatePremiumFlex($payment->id);
+                if($request->ispremiumflex == 'Y' && $isfreepremiumflex == 'Y')
+                    $payment = PaymentHelper::updatePremiumFlexFree($payment->id, $payment_amt);
+
+                $payment_amt = $payment->totalamt;
+                if($payment_channel == 'CC')
+                    $payment = PaymentHelper::updatePayWithCreditCard($payment->id);
+                if($payment_channel == 'CC' && $isfreecreditcharge == 'Y')
+                    $payment = PaymentHelper::updatePayWithCreditCardFree($payment->id, $payment_amt);
+
                 $payment->totalamt = number_format($payment->totalamt, 2, '.', '');
 
                 $payload = PaymentHelper::encodeRequest($payment, $payment_channel);

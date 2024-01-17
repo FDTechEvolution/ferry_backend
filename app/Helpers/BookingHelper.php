@@ -15,6 +15,7 @@ use App\Models\BookingRelated;
 use App\Models\BookingRouteAddon;
 use Ramsey\Uuid\Uuid;
 use App\Helpers\SequentNumber;
+use App\Models\Promotions;
 
 
 class BookingHelper
@@ -230,6 +231,12 @@ class BookingHelper
         $booking->status = 'CO';
         $booking->ispayment = 'Y';
         $booking->save();
+
+        if($booking->promotion_id != NULL) {
+            $promotion = Promotions::find($booking->promotion_id);
+            $promotion->times_used = $promotion->times_used+1;
+            $promotion->save();
+        }
 
         //Create ticket
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Models\Section;
 
 class SectionsController extends Controller
@@ -13,8 +14,9 @@ class SectionsController extends Controller
     public function index()
     {
         $sections = Section::orderBy('sort', 'ASC')->get();
+        $max_sort = Section::max('sort');
 
-        return view('pages.sections.index', ['sections' => $sections]);
+        return view('pages.sections.index', ['sections' => $sections, 'max_sort' => $max_sort]);
     }
 
     /**
@@ -101,7 +103,7 @@ class SectionsController extends Controller
     {
         //dd($id);
         $section = Section::find($id);
-       
+
         //dd(sizeof($section->stations));
 
         if (sizeof($section->stations)>0) {
@@ -135,5 +137,15 @@ class SectionsController extends Controller
         }
 
         return sizeof($sections);
+    }
+
+    public function updateStatus($id) {
+        $section = Section::find($id);
+        $section->isactive = $section->isactive == 'Y' ? 'N' : 'Y';
+
+        if($section->save()) {
+            return response()->json(['result' => true, 'section' => $section->name], 200);
+        }
+        return response()->json(['result' => false, 'section' => $section->name], 200);
     }
 }

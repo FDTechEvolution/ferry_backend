@@ -29,10 +29,10 @@ class StationsController extends Controller
 
     public static function avaliableStation()
     {
-        $sql = 'select s.id,s.name,s.piername,s.nickname from stations s join routes r on s.id = r.station_from_id left join sections sec on s.section_id = sec.id where r.isactive ="Y" group by s.id,s.name,s.piername,s.nickname order by sec.name ASC,s.name ASC';
+        $sql = 'select s.id,s.name,s.piername,s.nickname from stations s join routes r on s.id = r.station_from_id left join sections sec on s.section_id = sec.id where r.isactive ="Y" group by s.id,s.name,s.piername,s.nickname order by sec.sort ASC,s.sort ASC';
         $stationFroms = DB::select($sql);
 
-        $sql = 'select s.id,s.name,s.piername,s.nickname from stations s join routes r on s.id = r.station_to_id left join sections sec on s.section_id = sec.id where r.isactive ="Y" group by s.id,s.name,s.piername,s.nickname order by sec.name ASC,s.name ASC';
+        $sql = 'select s.id,s.name,s.piername,s.nickname from stations s join routes r on s.id = r.station_to_id left join sections sec on s.section_id = sec.id where r.isactive ="Y" group by s.id,s.name,s.piername,s.nickname order by sec.sort ASC,s.sort ASC';
         $stationTos = DB::select($sql);
 
         return [
@@ -96,7 +96,7 @@ class StationsController extends Controller
             if ($request->station_info_to_list != '')
                 $this->storeInfoLine($station->id, $request->station_info_to_list, 'to');
             */
-            
+
 
             //check has image
             if ($request->hasFile('image_file')) {
@@ -140,7 +140,7 @@ class StationsController extends Controller
         if (isset($station)) {
             $oldSort = $station->sort;
             $station->update($request->all());
-            
+
             if ($station->save()) {
                 //check update sort
                 if ($oldSort != $request->sort) {
@@ -202,7 +202,7 @@ class StationsController extends Controller
 
             //StationInfomation::where('station_id',$id)->delete();
             $station->forceDelete();
-            
+
             return redirect()->route('stations-index')->withSuccess('Station deleted...');
         }
 
@@ -238,7 +238,7 @@ class StationsController extends Controller
         return redirect()->route('manage-section')->withWarning('Section is in use. Can not delete this item...');
     }
 
-   
+
     private function getMaxSortBySection($section_id,$sort = 'DESC')
     {
         $stations = Station::where('section_id', $section_id)
@@ -253,5 +253,15 @@ class StationsController extends Controller
         }
 
         return sizeof($stations);
+    }
+
+    public function updateStatus($id) {
+        $station = Station::find($id);
+        $station->isactive = $station->isactive == 'Y' ? 'N' : 'Y';
+
+        if($station->save()) {
+            return response()->json(['result' => true, 'station' => $station->name], 200);
+        }
+        return response()->json(['result' => false, 'station' => $station->name], 200);
     }
 }

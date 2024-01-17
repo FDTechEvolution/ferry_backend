@@ -6,6 +6,7 @@
     $extras = $booking['bookingExtraAddons'];
     $bookingRoutes = $booking['bookingRoutes'];
     $bookingCustomers = $booking['bookingCustomers'];
+    $bookingRoutesX = $booking['bookingRoutesX'];
     $payment = sizeof($booking['payments']) > 0 ? $booking['payments'][0] : null;
 @endphp
 
@@ -59,7 +60,7 @@
                 <div class="col-12 mb-2">
                     <table class="table">
                         <tbody>
-                            @foreach ($bookingRoutes as $route)
+                            @foreach ($bookingRoutes as $index => $route)
                                 <tr>
                                     <td class="align-middle p-3" style="width: 15%;">
                                         @if (isset($route['partner']['image']['path']))
@@ -117,11 +118,16 @@
                                     </td>
                                     <td>{{ $customer->passportno }}</td>
                                     <td class="text-end">
-
-                                        <button type="button" class="btn btn-sm mb-2" data-bs-toggle="modal"
-                                            data-bs-target="#staticBackdrop">
-                                            <span class="fw-normal">edit</span><i class="fa-regular fa-pen-to-square"></i>
-                                            </svg>
+                                        <button type="button" class="btn btn-sm mb-2 customer-btn-edit" data-bs-toggle="modal"
+                                            data-bs-target="#staticBackdrop"
+                                            data-title="{{ $customer->title }}"
+                                            data-fullname="{{ $customer->fullname }}"
+                                            data-email="{{ $customer->email }}"
+                                            data-mobile="{{ $customer->mobile }}"
+                                            data-th_mobile="{{ $customer->mobile_th }}"
+                                            data-bday="{{ $customer->birth_day }}"
+                                            data-address="{{ $customer->fulladdress }}">
+                                            <i class="fa-regular fa-pen-to-square"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -186,7 +192,7 @@
 @section('modal')
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">Edit Passenger <span
@@ -194,7 +200,102 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    ...
+                    <div class="row mt-2 mb-5 border-radius-10 border border-booking-passenger">
+                        <div class="col-12 mt-3" id="lead-passenger">
+                            <div class="row">
+                                <div class="col-12 col-lg-2 form-floating mb-3">
+                                    <select required class="form-select form-select-sm" name="title" id="passenger-title" aria-label="Floating label select example">
+                                        <option value="" selected disabled>Select Title</option>
+                                        <option value="mr">Mr.</option>
+                                        <option value="mrs">Mrs.</option>
+                                        <option value="ms">Ms.</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                    <label for="passenger-title">Title<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-12 col-lg-5 form-floating mb-3">
+                                    <input required type="text" class="form-control form-control-sm" name="full_name" id="passenger-full-name" placeholder="Full name" value="">
+                                    <label for="passenger-first-name" class="ms-2">Full name<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-12 col-lg-5 form-floating mb-3">
+                                    <input required type="text" name="birth_day" class="form-control form-control-sm datepicker lead-passenger-b-day"
+                                        data-show-weeks="true"
+                                        data-today-highlight="true"
+                                        data-today-btn="false"
+                                        data-clear-btn="false"
+                                        data-autoclose="true"
+                                        data-format="DD/MM/YYYY"
+                                        data-date-start="1924-01-01"
+                                        autocomplete="off"
+                                        placeholder="Date of Birth">
+                                    <label class="ms-2">Date of Birth<span class="text-danger">*</span></label>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3 mb-lg-0">
+                                <div class="col-12 col-lg-6">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-floating mb-3">
+                                                <input required type="email" name="email" class="form-control form-control-sm" id="passenger-email" placeholder="E-mail" autocomplete="true">
+                                                <label for="passenger-email" class="ms-2">E-mail<span class="text-danger">*</span></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6 form-floating mb-3">
+                                    <select required class="form-select form-select-sm" name="country" id="passenger-country" aria-label="Floating label select example" autocomplete="true">
+                                        <option value="" selected disabled>Select Country</option>
+                                        {{-- @foreach($country_list as $country)
+                                            <option value="{{ $country }}">{{ $country }}</option>
+                                        @endforeach --}}
+                                    </select>
+                                    <label for="passenger-country">Country<span class="text-danger">*</span></label>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-12 col-lg-6">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <label class="form-label">Telephone number<span class="text-danger">*</span> ( <i class="fi fi-phone"></i> )</label>
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <select required class="form-select" name="mobile_code">
+                                                        <option value="" selected disabled></option>
+                                                        {{-- @foreach($code_country as $code)
+                                                            <option value="{{ $code }}">+{{ $code }}</option>
+                                                        @endforeach --}}
+                                                    </select>
+                                                </div>
+                                                <div class="col-8">
+                                                    <input required type="number" class="form-control" id="passenger-mobile" name="mobile">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <label class="form-label">Thai telephone number</label>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <input type="text" name="th_code" class="form-control" value="+66" readonly>
+                                        </div>
+                                        <div class="col-8">
+                                            <input type="number" name="th_mobile" id="passenger-mobile-th" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12 form-floating mb-3">
+                                    <textarea class="form-control" placeholder="Address" id="passenger-address" name="address" style="height: 100px" autocomplete="true"></textarea>
+                                    <label for="passenger-address" class="ms-2">Address</label>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="passenger_type" value="Adult">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -204,4 +305,8 @@
         </div>
     </div>
 
+@stop
+
+@section('script')
+<script src="{{ asset('assets/js/app/booking.js') }}"></script>
 @stop

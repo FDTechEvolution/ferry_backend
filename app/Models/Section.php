@@ -13,7 +13,8 @@ class Section extends Model
     protected $fillable = [
         'name',
         'sectionscol',
-        'sort'
+        'sort',
+        'isactive'
     ];
 
     protected $hidden = [

@@ -18,7 +18,7 @@
     <div class="row">
         <div class="col-12">
             <table class="table table-hover">
-                
+
                 <tbody>
                     @foreach ($sections as $i=> $section)
                     <tr>
@@ -31,7 +31,7 @@
                         <th>Station Name</th>
                         <th>Nick Name</th>
                         <th>Pier</th>
-                        <th>Status</th>
+                        <th class="text-center">Status</th>
                         <th>Image</th>
                         <th>Google Map</th>
                         <th></th>
@@ -42,8 +42,15 @@
                                 <td>{{ $station->name }}</td>
                                 <td>{{ $station->nickname }}</td>
                                 <td>{{ $station->piername }}</td>
-                                
-                                <td>{!! $status[$station['isactive']] !!}</td>
+
+                                <td>
+                                    {{-- {!! $status[$station['isactive']] !!} --}}
+                                    <label class="d-flex justify-content-center align-items-center">
+                                        <input class="d-none-cloaked station-isactive" type="checkbox" name="isactive" value="{{ $station->id }}" @checked(old('isactive', $station->isactive == 'Y'))>
+                                        <i class="switch-icon switch-icon-success switch-icon-sm"></i>
+                                        {{-- <span class="px-2 user-select-none">{{ $station->isactive == 'Y' ? 'On' : 'Off' }}</span> --}}
+                                    </label>
+                                </td>
                                 <td>
                                     @if (isset($station->image->path))
                                         <div class="avatar avatar-sm"

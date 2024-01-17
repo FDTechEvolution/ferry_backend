@@ -53,8 +53,4 @@ class Bookings extends Model
     public function payments() {
         return $this->hasMany(Payments::class,'booking_id', 'id')->with('paymentLines');
     }
-
-
-
-
 }

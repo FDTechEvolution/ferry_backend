@@ -15,7 +15,7 @@
             <div class="col-12">
                 <div id="to-section-list" class="table-responsive">
                     <div class="card-body">
-                        <table class="table-datatable table table-datatable-custom" id="section-datatable" 
+                        <table class="table-datatable table table-datatable-custom" id="section-datatable"
                             data-lng-empty="No data available in table"
                             data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
                             data-lng-filtered="(filtered from _MAX_ total entries)"
@@ -42,7 +42,7 @@
                                 <tr>
                                     <th class="text-center w--5">#</th>
                                     <th>name</th>
-                                    <th>Status</th>
+                                    <th class="text-center">Status</th>
                                     <th class="text-center">Action</th>
                                 </tr>
                             </thead>
@@ -51,18 +51,23 @@
                                     <tr class="text-center">
                                         <td id="section-sort-{{ $index }}">{{ $section->sort}}</td>
                                         <td id="section-name-{{ $index }}" class="text-start">{{ $section['name'] }}</td>
-                                        <td>
-                                            <x-isactive :isactive="$section->isactive" />
+                                        <td class="text-center">
+                                            {{-- <x-isactive :isactive="$section->isactive" /> --}}
+                                            <label class="d-flex justify-content-center align-items-center">
+                                                <input class="d-none-cloaked section-isactive" type="checkbox" name="isactive" value="{{ $section->id }}" @checked(old('isactive', $section->isactive == 'Y'))>
+                                                <i class="switch-icon switch-icon-success switch-icon-sm"></i>
+                                                {{-- <span class="px-2 user-select-none">{{ $section->isactive == 'Y' ? 'On' : 'Off' }}</span> --}}
+                                            </label>
                                         </td>
                                         <td>
                                             <input type="hidden" name="section_id" id="section-id-{{ $index }}" value="{{ $section['id'] }}">
-                                            <x-action-edit 
+                                            <x-action-edit
                                                 class="me-2"
                                                 :url="_('javascript:void(0)')"
                                                 id="btn-section-edit"
                                                 onClick="updateSectionEditData({{ $index }})"
                                             />
-                                            <x-action-delete 
+                                            <x-action-delete
                                                 :url="route('section.destroy', ['id' => $section])"
                                                 :message="_('Are you sure? Delete '. $section['name'] .'?')"
                                             />
@@ -91,12 +96,17 @@
                                     <div class="mb-4 row">
                                         <label for="section-name-edit" class="col-sm-3 col-form-label-sm text-start">Sort* :</label>
                                         <div class="col-sm-9">
-                                            <input type="number" required class="form-control form-control-sm" id="section-sort-edit" name="sort" value="">
+                                            <select class="form-select form-select-sm" id="section-sort-edit" name="sort">
+                                                @for($i = 1; $i <= $max_sort; $i++)
+                                                    <option id="option_{{ $i }}" value="{{ $i }}">{{ $i }}</option>
+                                                @endfor
+                                            </select>
+                                            {{-- <input type="number" required class="form-control form-control-sm" id="section-sort-edit" name="sort" value=""> --}}
                                         </div>
                                     </div>
 
                                     <div class="text-center mt-5">
-                                        <x-button-submit-loading 
+                                        <x-button-submit-loading
                                             class="btn-lg w--30 me-5"
                                             :form_id="_('section-edit-form')"
                                             :fieldset_id="_('section-edit')"

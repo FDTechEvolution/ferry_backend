@@ -78,12 +78,14 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/station-create', 'store')->name('station-create');
         Route::post('/update-station', 'update')->name('station-update');
-
+        Route::get('/ajax/station/update-status/{id}', 'updateStatus')->name('ajax-station-update-status');
     });
 
     Route::controller(SectionsController::class)->group(function () {
         Route::get('/section/destroy/{id}', 'destroy')->name('section.destroy');
         Route::post('/section/update', 'update')->name('section.update');
+
+        Route::get('/ajax/section/update-status/{id}', 'updateStatus')->name('ajax-update-status');
     });
 
     Route::controller(StationInfomationsController::class)->group(function () {

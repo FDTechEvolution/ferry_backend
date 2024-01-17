@@ -40,7 +40,7 @@ class Station extends Model
     ];
 
     public function section() {
-        return $this->hasOne(Section::class, 'id', 'section_id');
+        return $this->hasOne(Section::class, 'id', 'section_id')->orderBy('sort', 'ASC');
     }
 
     public function image(){

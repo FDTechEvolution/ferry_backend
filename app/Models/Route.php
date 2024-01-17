@@ -43,11 +43,11 @@ class Route extends Model
     }
 
     public function station_from() {
-        return $this->hasOne(Station::class, 'id', 'station_from_id')->with('section');
+        return $this->hasOne(Station::class, 'id', 'station_from_id')->where('isactive', 'Y')->orderBy('sort', 'ASC')->with('section');
     }
 
     public function station_to() {
-        return $this->hasOne(Station::class, 'id', 'station_to_id')->with('section');
+        return $this->hasOne(Station::class, 'id', 'station_to_id')->where('isactive', 'Y')->orderBy('sort', 'ASC')->with('section');
     }
 
     public function icons() {

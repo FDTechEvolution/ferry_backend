@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 use App\Helpers\ImageHelper;
 use Illuminate\Support\Carbon;
 
-
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
 class BookingsController extends Controller
@@ -154,7 +154,7 @@ class BookingsController extends Controller
                 'payments.paymentLines'
             )
             ->first();
-                //dd($booking);
+                // Log::debug($booking->toArray());
         return view('pages.bookings.view', ['booking' => $booking]);
     }
 

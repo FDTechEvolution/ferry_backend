@@ -44,6 +44,7 @@ class StationsController extends Controller
                 ->get();
 
         $stations = $this->groupStation($routes);
+        // Log::debug($stations);
         return response()->json(['data' => $stations], 200);
     }
 
@@ -54,27 +55,33 @@ class StationsController extends Controller
         ];
 
         foreach($routes as $route) {
-            $_from = [
-                'id' => $route['station_from']['id'],
-                'name' => $route['station_from']['name'],
-                'piername' => $route['station_from']['piername'],
-                'nickname' => $route['station_from']['nickname'],
-                'section' => $route['station_from']['section']['name'],
-                'sort' => $route['station_from']['sort'],
-                'col' => $route['station_from']['section']['sectionscol']
-            ];
-            if(!in_array($_from, $stations['from'])) array_push($stations['from'], $_from);
+            if($route['station_from']['section']['isactive'] == 'Y') {
+                $_from = [
+                    'id' => $route['station_from']['id'],
+                    'name' => $route['station_from']['name'],
+                    'piername' => $route['station_from']['piername'],
+                    'nickname' => $route['station_from']['nickname'],
+                    'section' => $route['station_from']['section']['name'],
+                    'sort' => $route['station_from']['sort'],
+                    's_sort' => $route['station_from']['section']['sort'],
+                    'col' => $route['station_from']['section']['sectionscol']
+                ];
+                if(!in_array($_from, $stations['from'])) array_push($stations['from'], $_from);
+            }
 
-            $_to = [
-                'id' => $route['station_to']['id'],
-                'name' => $route['station_to']['name'],
-                'piername' => $route['station_to']['piername'],
-                'nickname' => $route['station_to']['nickname'],
-                'section' => $route['station_to']['section']['name'],
-                'sort' => $route['station_to']['sort'],
-                'col' => $route['station_to']['section']['sectionscol']
-            ];
-            if(!in_array($_to, $stations['to'])) array_push($stations['to'], $_to);
+            if($route['station_to']['section']['isactive'] == 'Y') {
+                $_to = [
+                    'id' => $route['station_to']['id'],
+                    'name' => $route['station_to']['name'],
+                    'piername' => $route['station_to']['piername'],
+                    'nickname' => $route['station_to']['nickname'],
+                    'section' => $route['station_to']['section']['name'],
+                    'sort' => $route['station_to']['sort'],
+                    's_sort' => $route['station_to']['section']['sort'],
+                    'col' => $route['station_to']['section']['sectionscol']
+                ];
+                if(!in_array($_to, $stations['to'])) array_push($stations['to'], $_to);
+            }
         }
 
         return $stations;

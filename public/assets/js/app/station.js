@@ -157,7 +157,7 @@ function setDataInfo(type) {
     let info_id = type === 'to' ? info_to_id : info_from_id
     let info_type = type === 'to' ? 'Master Info To : ' : 'Master Info From : '
     let info = station_info.find((item, index) => { return item.id === info_id })
-        
+
     document.querySelector('#station-info-modal-title').innerHTML = `<strong>${info_type}</strong> ${info.name}`
     document.querySelector('#station-info-modal-content').innerHTML = info.text
 }
@@ -197,7 +197,7 @@ function toSectionManage() {
     // setClassListAdd('btn-station-edit')
     // setClassListAdd('btn-section-create')
     // setClassListAdd('btn-section-manage')
-    
+
     // setClassListRemove('to-section-manage')
     setClassListRemove('to-section-list')
     setClassListRemove('btn-section-cancel-manage')
@@ -215,21 +215,22 @@ function updateSectionEditData(index) {
     let id = document.querySelector(`#section-id-${index}`)
     let name = document.querySelector(`#section-name-${index}`)
     let sort = document.querySelector(`#section-sort-${index}`);
-    
+
     setClassListAdd('to-section-list')
     setClassListAdd('btn-section-cancel-manage')
     setClassListRemove('to-section-edit')
 
     document.querySelector('#section-name-edit').value = name.innerText
     document.querySelector('#section-id-edit').value = id.value
-    document.querySelector('#section-sort-edit').value = sort.innerText
+    // document.querySelector('#section-sort-edit').value = sort.innerText
+    document.querySelector(`#option_${sort.innerText}`).selected = true
 }
 
 function updateStationEditData(index) {
     clearSection()
     setClassListRemove('to-station-edit')
     station_title.innerHTML = `<span class="text-main-color-2">Edit</span> section`
-    
+
     let station = stations.find((item, key) => { return key === index })
     document.querySelector('#edit-station-id').value = station.id
     document.querySelector('#edit-station-name').value = station.name
@@ -278,7 +279,7 @@ function addMasterInfoFrom(e, index) {
         let li = document.createElement('li')
         li.classList.add('info-from-active-on')
         li.id = rand
-        li.innerHTML = `${_info.name} 
+        li.innerHTML = `${_info.name}
                         <i class="${info_icon} ms-2 text-primary cursor-pointer" title="View" onClick="viewInfo('${_info.id}', 'from')"></i>
                         <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoFrom('${rand}', ${index}, '${_info.id}')"></i>`
         info_from_list.appendChild(li)
@@ -325,7 +326,7 @@ function addMasterInfoTo(e, index) {
         let li = document.createElement('li')
         li.classList.add('info-to-active-on')
         li.id = rand
-        li.innerHTML = `${_info.name} 
+        li.innerHTML = `${_info.name}
                         <i class="${info_icon} ms-2 text-primary cursor-pointer" title="View" onClick="viewInfo('${_info.id}', 'to')"></i>
                         <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeInfoTo('${rand}', ${index}, '${_info.id}')"></i>`
                         info_to_list.appendChild(li)
@@ -376,7 +377,7 @@ function viewInfo(info_id, type) {
 function setMasterInfo() {
     const info_from_list = document.querySelector('#station-info-from-list')
     const info_to_list = document.querySelector('#station-info-to-list')
-    
+
     info_lines.forEach((_info, index) => {
         let rand = generateString(8)
         let li = document.createElement('li')
@@ -440,6 +441,30 @@ function setDataInfoChecked(name, rand, id, type) {
             _index = index
         }
     })
-    
+
     return _index
+}
+
+const section_active = document.querySelectorAll('.section-isactive')
+if(section_active) {
+    section_active.forEach((item, index) => {
+        item.addEventListener('change', async (e) => {
+            let response = await fetch(`/ajax/section/update-status/${e.target.value}`)
+            let res = await response.json()
+            if(res['result']) $.SOW.core.toast.show('success', '', `${res['section']} section status updated.`, 'top-right', 0, true);
+            else $.SOW.core.toast.show('danger', '', `Something wrong ${res['section']}.`, 'top-right', 0, true);
+        })
+    })
+}
+
+const station_active = document.querySelectorAll('.station-isactive')
+if(station_active) {
+    station_active.forEach((item, index) => {
+        item.addEventListener('change', async (e) => {
+            let response = await fetch(`/ajax/station/update-status/${e.target.value}`)
+            let res = await response.json()
+            if(res['result']) $.SOW.core.toast.show('success', '', `${res['station']} station status updated.`, 'top-right', 0, true);
+            else $.SOW.core.toast.show('danger', '', `Something wrong ${res['station']}.`, 'top-right', 0, true);
+        })
+    })
 }

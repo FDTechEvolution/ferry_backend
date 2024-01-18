@@ -20,9 +20,14 @@ use Illuminate\Http\Request;
 
 class BookingsController extends Controller
 {
+    protected $CodeCountry;
+    protected $CountryList;
+
     public function __construct()
     {
         $this->middleware('auth');
+        $this->CodeCountry = config('services.code_country');
+        $this->CountryList = config('services.country_list');
     }
 
     public function index()
@@ -155,7 +160,7 @@ class BookingsController extends Controller
             )
             ->first();
                 // Log::debug($booking->toArray());
-        return view('pages.bookings.view', ['booking' => $booking]);
+        return view('pages.bookings.view', ['booking' => $booking, 'country_list' => $this->CountryList, 'code_country' => $this->CodeCountry]);
     }
 
     public function store(Request $request)
@@ -303,5 +308,29 @@ class BookingsController extends Controller
 
             $booking->delete();
         }
+    }
+
+    public function updateCustomer(Request $request) {
+        $b_day = explode('/', $request->birth_day);
+        $customer = Customers::find($request->customer_id);
+        $customer->title = strtoupper($request->title);
+        $customer->fullname = $request->full_name;
+        $customer->birth_day = $b_day[2].'-'.$b_day[1].'-'.$b_day[0];
+
+        if($customer->email != NULL) {
+            $customer->email = $request->email;
+            $customer->mobile_code = $request->mobile_code;
+            $customer->mobile = $request->mobile;
+            $customer->mobile_th = $request->th_mobile;
+            $customer->country = $request->country;
+            $customer->passportno = $request->passport_number;
+            $customer->fulladdress = $request->address;
+        }
+
+        if($customer->save()) {
+            return redirect()->back()->withSuccess('Customer updated.');
+        }
+        return redirect()->back()->withFail('Something is wrong. Please try again.');
+
     }
 }

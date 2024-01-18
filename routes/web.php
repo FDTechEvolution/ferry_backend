@@ -234,6 +234,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/booking/view/{id}', 'view')->name('booking-view');
         Route::get('/booking/create', 'create')->name('booking-create');
         Route::post('/booking/store', 'store')->name('booking-store');
+
+        Route::post('/booking/update/customer', 'updateCustomer')->name('booking-update-customer');
     });
 
 

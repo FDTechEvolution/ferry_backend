@@ -68,16 +68,24 @@
                                                 class="img-fluid rounded-circle">
                                         @endif
                                     </td>
-                                    <td class="text-center align-middle">
+                                    <td class="text-center align-top">
                                         <h4>{{ date('H:i', strtotime($route['depart_time'])) }}</h4>
                                         {{ $route->station_from->name }}
+                                        <x-booking-view-addon
+                                            :booking_route="$bookingRoutesX[$index]['bookingRouteAddons']"
+                                            :subtype="_('from')"
+                                        />
                                     </td>
                                     <td class="align-middle text-center">
                                         <i class="fa-solid fa-right-long fs-5"></i>
                                     </td>
-                                    <td class="text-center align-middle ">
+                                    <td class="text-center align-top">
                                         <h4>{{ date('H:i', strtotime($route['arrive_time'])) }}</h4>
                                         {{ $route->station_to->name }}
+                                        <x-booking-view-addon
+                                            :booking_route="$bookingRoutesX[$index]['bookingRouteAddons']"
+                                            :subtype="_('to')"
+                                        />
                                     </td>
                                     <td class="text-end align-middle">
                                         <h5>{{ number_format($route->regular_price) }}THB/Person</h5>
@@ -114,20 +122,24 @@
                                     <td>
                                         @if ($customer->title != '')
                                             {{ $customer->title }}.
-                                        @endif {{ $customer->fullname }}
+                                        @endif {{ $customer->fullname }} @if($customer->email != NULL) <span class="badge bg-primary">Lead passenger</span> @endif
                                     </td>
                                     <td>{{ $customer->passportno }}</td>
                                     <td class="text-end">
-                                        <button type="button" class="btn btn-sm mb-2 customer-btn-edit" data-bs-toggle="modal"
+                                        <button type="button" class="btn btn-sm mb-2 py-0 customer-btn-edit" data-bs-toggle="modal"
                                             data-bs-target="#staticBackdrop"
+                                            data-customer_id="{{ $customer->id }}"
                                             data-title="{{ $customer->title }}"
                                             data-fullname="{{ $customer->fullname }}"
                                             data-email="{{ $customer->email }}"
                                             data-mobile="{{ $customer->mobile }}"
                                             data-th_mobile="{{ $customer->mobile_th }}"
                                             data-bday="{{ $customer->birth_day }}"
-                                            data-address="{{ $customer->fulladdress }}">
-                                            <i class="fa-regular fa-pen-to-square"></i>
+                                            data-address="{{ $customer->fulladdress }}"
+                                            data-passport="{{ $customer->passportno }}"
+                                            data-code_mobile="{{ $customer->mobile_code }}"
+                                            data-country="{{ $customer->country }}">
+                                            <i class="fa-regular fa-pen-to-square me-0"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -176,6 +188,10 @@
                                                 </td>
                                             </tr>
                                         @endforeach
+                                            <tr>
+                                                <td class="fw-bold">Total</td>
+                                                <td class="text-end">{{ $payment->totalamt }}</td>
+                                            </tr>
                                     </table>
                                 </div>
                             </div>
@@ -196,110 +212,121 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">Edit Passenger <span
-                            class="text-main-color-2">XXX</span></h5>
+                            class="text-main-color-2"></span></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row mt-2 mb-5 border-radius-10 border border-booking-passenger">
-                        <div class="col-12 mt-3" id="lead-passenger">
-                            <div class="row">
-                                <div class="col-12 col-lg-2 form-floating mb-3">
-                                    <select required class="form-select form-select-sm" name="title" id="passenger-title" aria-label="Floating label select example">
-                                        <option value="" selected disabled>Select Title</option>
-                                        <option value="mr">Mr.</option>
-                                        <option value="mrs">Mrs.</option>
-                                        <option value="ms">Ms.</option>
-                                        <option value="other">Other</option>
-                                    </select>
-                                    <label for="passenger-title">Title<span class="text-danger">*</span></label>
-                                </div>
-                                <div class="col-12 col-lg-5 form-floating mb-3">
-                                    <input required type="text" class="form-control form-control-sm" name="full_name" id="passenger-full-name" placeholder="Full name" value="">
-                                    <label for="passenger-first-name" class="ms-2">Full name<span class="text-danger">*</span></label>
-                                </div>
-                                <div class="col-12 col-lg-5 form-floating mb-3">
-                                    <input required type="text" name="birth_day" class="form-control form-control-sm datepicker lead-passenger-b-day"
-                                        data-show-weeks="true"
-                                        data-today-highlight="true"
-                                        data-today-btn="false"
-                                        data-clear-btn="false"
-                                        data-autoclose="true"
-                                        data-format="DD/MM/YYYY"
-                                        data-date-start="1924-01-01"
-                                        autocomplete="off"
-                                        placeholder="Date of Birth">
-                                    <label class="ms-2">Date of Birth<span class="text-danger">*</span></label>
-                                </div>
-                            </div>
-
-                            <div class="row mb-3 mb-lg-0">
-                                <div class="col-12 col-lg-6">
+                    <form novalidate class="bs-validate" id="booking-customer-form" method="POST" action="{{ route('booking-update-customer') }}">
+                        @csrf
+                        <fieldset id="booking-customer-field">
+                            <div class="row mt-2 mb-5 border-radius-10 border border-booking-passenger">
+                                <div class="col-12 mt-3" id="lead-passenger">
                                     <div class="row">
-                                        <div class="col-12">
-                                            <div class="form-floating mb-3">
-                                                <input required type="email" name="email" class="form-control form-control-sm" id="passenger-email" placeholder="E-mail" autocomplete="true">
-                                                <label for="passenger-email" class="ms-2">E-mail<span class="text-danger">*</span></label>
-                                            </div>
+                                        <div class="col-12 col-lg-2 form-floating mb-3">
+                                            <select required class="form-select form-select-sm" name="title" id="passenger-title" aria-label="Floating label select example">
+                                                <option value="" selected disabled>Select Title</option>
+                                                <option value="mr">Mr.</option>
+                                                <option value="mrs">Mrs.</option>
+                                                <option value="ms">Ms.</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                            <label for="passenger-title">Title<span class="text-danger">*</span></label>
+                                        </div>
+                                        <div class="col-12 col-lg-5 form-floating mb-3">
+                                            <input required type="text" class="form-control form-control-sm" name="full_name" id="passenger-full-name" placeholder="Full name" value="">
+                                            <label for="passenger-first-name" class="ms-2">Full name<span class="text-danger">*</span></label>
+                                        </div>
+                                        <div class="col-12 col-lg-5 form-floating mb-3">
+                                            <input required type="text" name="birth_day" class="form-control form-control-sm datepicker passenger-b-day"
+                                                data-show-weeks="true"
+                                                data-today-highlight="true"
+                                                data-today-btn="false"
+                                                data-clear-btn="false"
+                                                data-autoclose="true"
+                                                data-format="DD/MM/YYYY"
+                                                data-date-start="1924-01-01"
+                                                autocomplete="off"
+                                                placeholder="Date of Birth">
+                                            <label class="ms-2">Date of Birth<span class="text-danger">*</span></label>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12 col-lg-6 form-floating mb-3">
-                                    <select required class="form-select form-select-sm" name="country" id="passenger-country" aria-label="Floating label select example" autocomplete="true">
-                                        <option value="" selected disabled>Select Country</option>
-                                        {{-- @foreach($country_list as $country)
-                                            <option value="{{ $country }}">{{ $country }}</option>
-                                        @endforeach --}}
-                                    </select>
-                                    <label for="passenger-country">Country<span class="text-danger">*</span></label>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-12 col-lg-6">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <label class="form-label">Telephone number<span class="text-danger">*</span> ( <i class="fi fi-phone"></i> )</label>
+
+                                <div class="col-12" id="sub-passenger">
+                                    <div class="row mb-3 mb-lg-0">
+                                        <div class="col-12 col-lg-6">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="form-floating mb-3">
+                                                        <input required type="email" name="email" class="form-control form-control-sm" id="passenger-email" placeholder="E-mail" autocomplete="true">
+                                                        <label for="passenger-email" class="ms-2">E-mail<span class="text-danger">*</span></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-lg-6 form-floating mb-3">
+                                            <select required class="form-select form-select-sm" name="country" id="passenger-country" aria-label="Floating label select example" autocomplete="true">
+                                                <option value="" selected disabled>Select Country</option>
+                                                @foreach($country_list as $key => $country)
+                                                    <option value="{{ $country }}">{{ $country }}</option>
+                                                @endforeach
+                                            </select>
+                                            <label for="passenger-country">Country<span class="text-danger">*</span></label>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-12 col-lg-6">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <label class="form-label">Telephone number<span class="text-danger">*</span> ( <i class="fi fi-phone"></i> )</label>
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <select required class="form-select" name="mobile_code" id="passenger-mobile-code">
+                                                                <option value="" selected disabled></option>
+                                                                @foreach($code_country as $code)
+                                                                    <option id="code-{{ $code }}" value="{{ $code }}">+{{ $code }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-8">
+                                                            <input required type="number" class="form-control" id="passenger-mobile" name="mobile">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-lg-6">
+                                            <label class="form-label">Thai telephone number</label>
                                             <div class="row">
                                                 <div class="col-4">
-                                                    <select required class="form-select" name="mobile_code">
-                                                        <option value="" selected disabled></option>
-                                                        {{-- @foreach($code_country as $code)
-                                                            <option value="{{ $code }}">+{{ $code }}</option>
-                                                        @endforeach --}}
-                                                    </select>
+                                                    <input type="text" name="th_code" class="form-control" value="+66" readonly>
                                                 </div>
                                                 <div class="col-8">
-                                                    <input required type="number" class="form-control" id="passenger-mobile" name="mobile">
+                                                    <input type="number" name="th_mobile" id="passenger-mobile-th" class="form-control">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-12 col-lg-6">
-                                    <label class="form-label">Thai telephone number</label>
+
                                     <div class="row">
-                                        <div class="col-4">
-                                            <input type="text" name="th_code" class="form-control" value="+66" readonly>
+                                        <div class="col-12 col-lg-4 form-floating mb-3">
+                                            <input type="text" name="passport_number" class="form-control form-control-sm" id="passenger-passport" placeholder="Passport Number">
+                                            <label for="passenger-passport" class="ms-2">Passport Number</label>
                                         </div>
-                                        <div class="col-8">
-                                            <input type="number" name="th_mobile" id="passenger-mobile-th" class="form-control">
+                                        <div class="col-12 col-lg-8 form-floating mb-3">
+                                            <textarea class="form-control" placeholder="Address" id="passenger-address" name="address" style="height: 100px" autocomplete="true"></textarea>
+                                            <label for="passenger-address" class="ms-2">Address</label>
                                         </div>
                                     </div>
                                 </div>
+                                <input type="hidden" name="customer_id" id="customer-id" value="">
                             </div>
-
-                            <div class="row">
-                                <div class="col-12 form-floating mb-3">
-                                    <textarea class="form-control" placeholder="Address" id="passenger-address" name="address" style="height: 100px" autocomplete="true"></textarea>
-                                    <label for="passenger-address" class="ms-2">Address</label>
-                                </div>
-                            </div>
-                        </div>
-                        <input type="hidden" name="passenger_type" value="Adult">
-                    </div>
+                        </fieldset>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Understood</button>
+                    <button type="button" class="btn btn-primary" id="booking-customer-update">Update</button>
                 </div>
             </div>
         </div>

@@ -17,7 +17,7 @@ class Customers extends Model
         'email',
         'mobile',
         'fulladdress',
-        'mobil_code',
+        'mobile_code',
         'mobile_th',
         'title',
         'country',

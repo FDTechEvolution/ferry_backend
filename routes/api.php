@@ -105,8 +105,9 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
 
     Route::controller(NewsController::class)->group(function() {
         Route::get('news', 'getNews');
-        Route::get('news/get/{id}', 'getNewsById');
+        // Route::get('news/get/{id}', 'getNewsById');
         Route::get('news/view', 'getNewByView');
+        Route::get('news/get/{slug}', 'getNewsBySlug');
     });
 });
 

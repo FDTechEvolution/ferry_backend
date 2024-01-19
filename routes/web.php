@@ -254,6 +254,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/news/update/{news}', 'update')->name('news-update');
 
         Route::get('/news/delete/{id}', 'destroy')->name('news-delete');
+
+        // AJAX
+        Route::get('/ajax/news/status/{id}', 'updateStatus')->name('news-update-status');
     });
 
 });

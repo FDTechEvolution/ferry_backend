@@ -16,7 +16,7 @@ class NewsController extends Controller
     }
 
     public function getNewByView() {
-        $news = News::where('isactive', 'Y')->select(['id', 'title', 'created_at'])->orderBy('view', 'DESC')->limit(10)->get();
+        $news = News::where('isactive', 'Y')->select(['id', 'title', 'slug', 'created_at'])->orderBy('view', 'DESC')->limit(10)->get();
 
         return response()->json(['data' => $news], 200);
     }
@@ -31,7 +31,19 @@ class NewsController extends Controller
                 return response()->json(['data' => $news], 200);
             }
         }
-        
+
+        return response()->json(['data' => false], 200);
+    }
+
+    public function getNewsBySlug(string $slug = null) {
+        $news = News::where('slug', $slug)->where('isactive', 'Y')->first();
+        if(isset($news)) {
+            $news->view = $news->view +1;
+            $news->save();
+
+            return response()->json(['data' => $news], 200);
+        }
+
         return response()->json(['data' => false], 200);
     }
 }

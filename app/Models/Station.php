@@ -32,7 +32,8 @@ class Station extends Model
         'private_taxi_mouseover',
         'longtail_boat_price',
         'longtail_boat_text',
-        'longtail_boat_mouseover'
+        'longtail_boat_mouseover',
+        'thai_name'
     ];
 
     protected $hidden = [

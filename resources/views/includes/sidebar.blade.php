@@ -158,8 +158,8 @@
               <span>Backup</span>
           </a>
       </li>
-      <li class="nav-item">
-          <a class="nav-link" href="#">
+      <li class="nav-item {{ (request()->is('api*')) ? 'active' : '' }}">
+          <a class="nav-link" href="{{route('api.index')}}">
               <i class="fi fi-arrow-right"></i>
               <span>API</span>
           </a>

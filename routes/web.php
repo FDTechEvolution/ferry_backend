@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\ApiMerchants;
+use App\Http\Controllers\ApiMerchantsController;
+use App\Http\Controllers\ApiRoutes;
+use App\Http\Controllers\ApiRoutesController;
 use App\Http\Controllers\BookingsController;
 use App\Http\Controllers\InformationsController;
 use App\Http\Controllers\PartnerController;
@@ -59,6 +63,8 @@ Route::controller(ForgotPasswordController::class)->group(function () {
 Route::middleware('auth')->group(function () {
     Route::resources([
         'section' => SectionsController::class,
+        'api' => ApiMerchantsController::class,
+        'apiroute' => ApiRoutesController::class,
     ]);
 
 

@@ -12,6 +12,7 @@ class News extends Model
 
     public $fillable = [
         'title',
+        'slug',
         'body',
         'isactive',
         'view'

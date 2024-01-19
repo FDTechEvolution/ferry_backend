@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 use App\Models\News;
 
@@ -42,8 +43,14 @@ class NewsController extends Controller
             'body'=>'required|string'
         ]);
 
+        $random = Str::random(6);
+        $_news = News::where('title', $request->title)->first();
+        if(isset($_news)) $_slug = Str::slug($request->title, '-').'-'.Str::lower($random);
+        else $_slug = Str::slug($request->title, '-');
+
         $news = News::create([
             'title' => $request->title,
+            'slug' => $_slug,
             'body' => $request->body,
             'isactive' => 'Y'
         ]);
@@ -78,5 +85,17 @@ class NewsController extends Controller
         }
 
         return redirect()->route('news-index');
+    }
+
+    public function updateStatus($id) {
+        $news = News::find($id);
+        if(isset($news)) {
+            $news->isactive = $news->isactive == 'Y' ? 'N' : 'Y';
+            if($news->save()) {
+                return response()->json(['result' => true], 200);
+            }
+            return response()->json(['result' => false], 200);
+        }
+        return response()->json(['result' => false], 200);
     }
 }

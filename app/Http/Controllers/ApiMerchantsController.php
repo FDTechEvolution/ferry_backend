@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\ApiMerchants;
+use App\Models\ApiRoutes;
+use App\Models\Route;
+
 class ApiMerchantsController extends Controller
 {
     /**
@@ -11,7 +15,8 @@ class ApiMerchantsController extends Controller
      */
     public function index()
     {
-        return view('pages.api_merchants.index');
+        $api_merchant = ApiMerchants::get();
+        return view('pages.api_merchants.index', ['merchant' => $api_merchant]);
     }
 
     /**
@@ -60,5 +65,18 @@ class ApiMerchantsController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function updateroute($merchant_id) {
+        $routes = Route::where('isactive', 'Y')->where('status', 'CO')->select(['id', 'regular_price'])->get();
+        foreach($routes as $route) {
+            ApiRoutes::create([
+                'route_id' => $route->id,
+                'regular_price' => $route->regular_price,
+                'api_merchant_id' => $merchant_id
+            ]);
+        }
+
+        return redirect()->back();
     }
 }

@@ -47,6 +47,14 @@
                                 </div>
                             </div>
                             <div class="mb-3 row">
+                                <label for="station-name" class="col-sm-4 col-form-label-sm text-start">Station
+                                    Name (TH)<strong class="text-danger">*</strong> :</label>
+                                <div class="col-sm-8">
+                                    <input type="text" required class="form-control form-control-sm" id="station-nameขะ้"
+                                        name="thai_name" value="">
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
                                 <label for="station-pier" class="col-sm-4 col-form-label-sm text-start">Station Pier
                                     :</label>
                                 <div class="col-sm-8">
@@ -212,7 +220,7 @@
                                             <div class="col-12 mb-3">
                                                 <strong class="text-main-color"><i class="fa-solid fa-circle-info"></i>
                                                     {{ $info['title'] }}</strong>
-                                               
+
                                             </div>
                                             <div class="col-12 col-lg-8">
                                                 <div class="row mb-2">

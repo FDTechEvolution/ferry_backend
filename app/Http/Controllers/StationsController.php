@@ -80,6 +80,7 @@ class StationsController extends Controller
             'piername' => 'string|nullable',
             'nickname' => 'required|string|unique:stations',
             'section_id' => 'required|string',
+            'thai_name' => 'required|string'
         ]);
 
         //dd($request);
@@ -133,6 +134,7 @@ class StationsController extends Controller
             'nickname' => 'required|string',
             'section_id' => 'required|string',
             'sort' => 'required|integer',
+            'thai_name' => 'required|string'
         ]);
 
         $station = Station::find($request->id);

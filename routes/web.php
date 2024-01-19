@@ -64,9 +64,14 @@ Route::middleware('auth')->group(function () {
     Route::resources([
         'section' => SectionsController::class,
         'api' => ApiMerchantsController::class,
-        'apiroute' => ApiRoutesController::class,
     ]);
 
+    Route::controller(ApiRoutesController::class)->group(function () {
+        Route::get('/apiroute/{merchant_id}', 'index')->name('api-route-index');
+
+        // AJAX
+        Route::post('/ajax/update', 'update');
+    });
 
     Route::controller(UsersController::class)->group(function () {
         Route::get('/account', 'index')->name('users-index');

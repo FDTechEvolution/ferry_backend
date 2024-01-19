@@ -165,7 +165,7 @@
           </a>
       </li>
 
-      
+
     </ul>
   </nav>
 
@@ -177,7 +177,7 @@
 <div class="d-flex align-self-baseline w-100 py-3 px-3 border-top border-light small">
 
   <p class="d-inline-grid gap-auto-3 mb-0">
-    <x-ajax-button-confirm 
+    <x-ajax-button-confirm
       class="link-normal"
       :url="route('logout')"
       :message="_('Logout?')"

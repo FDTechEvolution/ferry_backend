@@ -20,6 +20,8 @@ use App\Models\RouteShuttlebus;
 use App\Models\RouteLongtailboat;
 use App\Models\BookingRoutes;
 use App\Models\Fare;
+use App\Models\ApiMerchants;
+use App\Models\ApiRoutes;
 
 class RouteController extends Controller
 {
@@ -61,7 +63,7 @@ class RouteController extends Controller
         $routes = Route::where('status', 'CO')->with('station_from', 'station_to', 'icons')->orderBy('created_at', 'DESC')->get();
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
-        
+
 
         //$this->make($routes);
         $status = $this->_Status;
@@ -103,8 +105,8 @@ class RouteController extends Controller
         if(sizeof($route->routeAddons) ==0){
             $_route = Route::where('id',$id)->with('station_from','station_to')->first();
 
-            
-            
+
+
             $infos = $this->getRouteAddons();
             $stationFrom = $route->station_from;
             $stationTo = $route->station_to;
@@ -168,7 +170,7 @@ class RouteController extends Controller
         $infos = $this->getRouteAddons();
 
         $stationjsons = $stations->toJson();
-       
+
 
         return view('pages.route_control.edit', [
             'route' => $route, 'icons' => $icons, 'stations' => $stations, 'activities' => $activities,
@@ -178,10 +180,10 @@ class RouteController extends Controller
     }
 
     private function make($routes){
-        
+
         $count =0;
         foreach($routes as $route){
-            
+
             if(sizeof($route->routeAddons) > 0){
                 continue;
             }
@@ -285,7 +287,7 @@ class RouteController extends Controller
                 if(isset($request->info_to_selected)) $this->storeRouteStationInfoLine($route->id, $request->info_to_selected, 'to', 'N');
                 return redirect()->route('route-index')->withSuccess('Route created...');
             }
-            
+
             else return redirect()->back()->withFail('Something is wrong. Please try again.');
             */
 
@@ -319,6 +321,8 @@ class RouteController extends Controller
                 ]);
             }
 
+            $this->createApiRoute($route->id, $route->regular_price);
+
             return redirect()->route('route-index')->withSuccess('Route created...');
 
         }
@@ -326,6 +330,18 @@ class RouteController extends Controller
         // Log::debug($request);
 
         return redirect()->back()->withFail('Something is wrong. Please try again.');
+    }
+
+    private function createApiRoute($route_id, $route_price) {
+        $api_merchant = ApiMerchants::get();
+        foreach($api_merchant as $merchant) {
+            ApiRoutes::create([
+                'route_id' => $route_id,
+                'regular_price' => $route_price,
+                'totalamt' => $route_price,
+                'api_merchant_id' => $merchant->id
+            ]);
+        }
     }
 
     private function shuttlebusStore($name, $price, $description, $route_id) {

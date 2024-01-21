@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 use App\Models\ApiRoutes;
+use App\Models\Route;
 
 class ApiRoutesController extends Controller
 {
@@ -15,9 +16,8 @@ class ApiRoutesController extends Controller
     public function index($merchant_id)
     {
         $api_routes = ApiRoutes::where('api_merchant_id', $merchant_id)->with('route')->get();
-        // Log::debug($api_routes->toArray());
 
-        return view('pages.api_routes.index', ['routes' => $api_routes]);
+        return view('pages.api_routes.index', ['routes' => $api_routes, 'merchant_id' => $merchant_id]);
     }
 
     /**
@@ -62,9 +62,7 @@ class ApiRoutesController extends Controller
         $api_route->discount = $request->discount;
         $api_route->totalamt = $request->amount;
 
-        if($api_route->save()) {
-            return response()->json(['result' => true], 200);
-        }
+        if($api_route->save()) return response()->json(['result' => true], 200);
         return response()->json(['result' => false], 200);
     }
 
@@ -74,5 +72,27 @@ class ApiRoutesController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function updateroute($merchant_id) {
+        $routes = Route::where('isactive', 'Y')->where('status', 'CO')->select(['id', 'regular_price'])->get();
+        foreach($routes as $route) {
+            ApiRoutes::create([
+                'route_id' => $route->id,
+                'regular_price' => $route->regular_price,
+                'api_merchant_id' => $merchant_id,
+                'totalamt' => $route->regular_price
+            ]);
+        }
+
+        return redirect()->back();
+    }
+
+    public function updateStatus($id) {
+        $api_route = ApiRoutes::find($id);
+        $api_route->isactive = $api_route->isactive == 'Y' ? 'N' : 'Y';
+
+        if($api_route->save()) return response()->json(['result' => true], 200);
+        return response()->json(['result' => false], 200);
     }
 }

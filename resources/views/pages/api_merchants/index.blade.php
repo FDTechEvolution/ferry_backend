@@ -28,7 +28,10 @@
                             </label>
                         </td>
                         <td class="text-end">
-                            <a href="{{ route('api-route-index', ['merchant_id' => $item['id']]) }}">View</a>
+                            <a href="{{ route('api-route-index', ['merchant_id' => $item['id']]) }}"
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="View API List">
+                            <i class="fa-solid fa-eye"></i>
+                            </a>
                         </td>
                     </tr>
                 @endforeach

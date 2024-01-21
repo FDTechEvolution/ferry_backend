@@ -51,13 +51,17 @@
                 <tbody>
                     @foreach ($routes as $index => $item)
                         @php
-                            $station_from = $item['route']['station_from'];
-                            $station_to = $item['route']['station_to'];
+                            $f_nickname = $item['route'] ? $item['route']['station_from']['nickname'] : '';
+                            $f_name = $item['route'] ? $item['route']['station_from']['name'] : '';
+                            $t_name = $item['route'] ? $item['route']['station_to']['name'] : '';
+                            $t_nickname = $item['route'] ? $item['route']['station_to']['nickname'] : '';
+                            $depart = $item['route'] ? $item['route']['depart_time'] : '';
+                            $arrive = $item['route'] ? $item['route']['arrive_time'] : '';
                         @endphp
                         <tr>
                             <td>
-                                <p class="mb-0">[{{ $station_from['nickname'] }}] {{ $station_from['name'] }} --> [{{ $station_to['nickname'] }}] {{ $station_to['name'] }}</p>
-                                <p class="mb-0 small">Depart : {{ date('H:i', strtotime($item['route']['depart_time'])) }} | Arrive : {{ date('H:i', strtotime($item['route']['arrive_time'])) }}</p>
+                                <p class="mb-0">[{{ $f_nickname }}] {{ $f_name }} --> [{{ $t_nickname }}] {{ $t_name }}</p>
+                                <p class="mb-0 small">Depart : {{ date('H:i', strtotime($depart)) }} | Arrive : {{ date('H:i', strtotime($arrive)) }}</p>
                             </td>
                             <td class="position-relative">
                                 <input type="number" class="form-control form-control-sm input-regular" id="regular-{{ $index }}"

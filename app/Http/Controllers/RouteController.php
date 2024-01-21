@@ -36,8 +36,8 @@ class RouteController extends Controller
     protected $LongtailBoat = 'LBOAT';
     protected $ShuttleBus = 'SBUS';
     protected $_Status = [
-        'Y' => '<span class="text-success">On</span>',
-        'N' => '<span class="text-danger">Off</span>'
+        'Y' => '<i class="fa-solid fa-circle text-success"></i>',
+        'N' => '<i class="fa-solid fa-circle text-secondary"></i>'
     ];
 
     public static function getRouteAddons(){
@@ -60,7 +60,7 @@ class RouteController extends Controller
     }
 
     public function index() {
-        $routes = Route::where('status', 'CO')->with('station_from', 'station_to', 'icons')->orderBy('created_at', 'DESC')->get();
+        $routes = Route::where('status', 'CO')->with('station_from', 'station_to', 'icons', 'routeAddons')->orderBy('created_at', 'DESC')->get();
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
 

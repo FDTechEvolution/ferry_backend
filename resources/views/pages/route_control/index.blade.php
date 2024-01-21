@@ -81,14 +81,17 @@
                         "searching":false
                     }'>
                     <thead>
-                        <tr>
+                        <tr class="small">
                             <th class="text-center" style="width: 60px;">Choose</th>
                             <th class="text-start">Station From</th>
                             <th class="text-start">Station To</th>
                             <th class="text-center">Depart</th>
                             <th class="text-center">Arrive</th>
                             <th class="text-center fix-width-120">Icon</th>
-                            <th class="text-center">Price</th>
+                            <th class="text-center">Adult</th>
+                            <th class="text-center">Child</th>
+                            <th class="text-center">Infant</th>
+                            <th class="text-center">Promotion</th>
                             <th class="text-center">status</th>
                             <th class="text-center">Action</th>
                         </tr>
@@ -103,18 +106,26 @@
                                         onClick="routeSelectedAction(this)">
                                 </td>
                                 <td class="text-start lh--1-2">
-                                    {{ $route['station_from']['name'] }}
+                                    <p class="mb-0">{{ $route['station_from']['name'] }}
                                     @if ($route['station_from']['piername'] != '')
-                                        <small
-                                            class="text-secondary fs-d-80">({{ $route['station_from']['piername'] }})</small>
+                                        <small class="text-secondary fs-d-80">({{ $route['station_from']['piername'] }})</small>
                                     @endif
+                                    </p>
+                                    <x-route-addon-icon
+                                        :routeAddons="$route['routeAddons']"
+                                        :subtype="_('from')"
+                                    />
                                 </td>
                                 <td class="text-start lh--1-2">
-                                    {{ $route['station_to']['name'] }}
+                                    <p class="mb-0">{{ $route['station_to']['name'] }}
                                     @if ($route['station_to']['piername'] != '')
-                                        <small
-                                            class="text-secondary fs-d-80">({{ $route['station_to']['piername'] }})</small>
+                                        <small class="text-secondary fs-d-80">({{ $route['station_to']['piername'] }})</small>
                                     @endif
+                                    </p>
+                                    <x-route-addon-icon
+                                        :routeAddons="$route['routeAddons']"
+                                        :subtype="_('to')"
+                                    />
                                 </td>
                                 <td>{{ date('H:i', strtotime($route['depart_time'])) }}</td>
                                 <td>{{ date('H:i', strtotime($route['arrive_time'])) }}</td>
@@ -128,6 +139,9 @@
                                     </div>
                                 </td>
                                 <td>{{ number_format($route['regular_price']) }}</td>
+                                <td>{{ number_format($route['child_price']) }}</td>
+                                <td>{{ number_format($route['infant_price']) }}</td>
+                                <td>{!! $route_status[$route['ispromocode']] !!}</td>
                                 <td>{!! $route_status[$route['isactive']] !!}</td>
                                 <td>
                                     <x-action-edit class="me-2" :url="route('route-edit', ['id' => $route['id']])" id="btn-route-edit" />

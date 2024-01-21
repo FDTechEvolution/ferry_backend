@@ -947,17 +947,41 @@ function searchRouteStation(e) {
     is_routes.forEach((route, index) => {
         let obj = {
             choose: `<input class="form-check-input form-check-input-primary route-selected-action" type="checkbox" value="${route.id}" id="route-check-${index}" onClick="routeSelectedAction(this)">`,
-            station_from: route.station_from,
-            station_to: route.station_to,
+            station_from: [route.station_from, route.route_addons],
+            station_to: [route.station_to, route.route_addons],
             depart: route.depart_time,
             arrive: route.arrive_time,
             icon: route.icons,
             price: route.regular_price,
+            child: route.child_price,
+            infant: route.infant_price,
+            promotion: route.ispromocode,
             status: route.status,
             action: route.id
         }
         _routes.push(obj)
     })
+}
+
+function setRouteAddon(route_addons, subtype) {
+    let addon = ''
+    let https = window.location.protocol
+    let host = window.location.hostname
+    if(route_addons.length > 0) {
+        route_addons.forEach((item) => {
+            if(item.type === 'shuttle_bus' && item.subtype === subtype) {
+                if(item.isactive === 'Y') addon += `<img class="me-1 cursor-pointer" src="${https}//${host}:8080/icon/route/ico-bus.png" width="20" data-bs-toggle="tooltip" data-bs-placement="bottom" title="${item.name}">`
+            }
+            if(item.type === 'longtail_boat' && item.subtype === subtype) {
+                if(item.isactive === 'Y') addon += `<img class="me-1 cursor-pointer" src="${https}//${host}:8080/icon/route/ico-long-tail-boat.png" width="20" data-bs-toggle="tooltip" data-bs-placement="bottom" title="${item.name}">`
+            }
+            if(item.type === 'private_taxi' && item.subtype === subtype) {
+                if(item.isactive === 'Y') addon += `<img class="me-1 cursor-pointer" src="${https}//${host}:8080/icon/route/ico-private-taxi.png" width="20" data-bs-toggle="tooltip" data-bs-placement="bottom" title="${item.name}">`
+            }
+        })
+    }
+
+    return addon
 }
 
 function updateDatatableData() {
@@ -973,18 +997,18 @@ function updateDatatableData() {
             },
             {
                 data: 'station_from',
-                className: "text-start",
+                className: "text-start w--20 lh--1-2",
                 render: (data) => {
-                    let pier =  data.piername !== null ? `<small class="text-secondary fs-d-80">(${data.piername})</small>` : ''
-                    return `${data.name} ${pier}`
+                    let pier =  data[0].piername !== null ? `<small class="text-secondary fs-d-80">(${data[0].piername})</small>` : ''
+                    return `<p class="mb-0">${data[0].name} ${pier}</p> ${setRouteAddon(data[1], 'from')}`
                 }
             },
             {
                 data: 'station_to',
-                className: "text-start",
+                className: "text-start w--20 lh--1-2",
                 render: (data) => {
-                    let pier =  data.piername !== null ? `<small class="text-secondary fs-d-80">(${data.piername})</small>` : ''
-                    return `${data.name} ${pier}`
+                    let pier =  data[0].piername !== null ? `<small class="text-secondary fs-d-80">(${data[0].piername})</small>` : ''
+                    return `<p class="mb-0">${data[0].name} ${pier}</p> ${setRouteAddon(data[1], 'to')}`
                 }
             },
             {
@@ -1025,10 +1049,33 @@ function updateDatatableData() {
                 }
             },
             {
+                data: 'child',
+                className: "text-center",
+                render: (data) => {
+                    let _price = data.split('.')
+                    return _price[0]
+                }
+            },
+            {
+                data: 'infant',
+                className: "text-center",
+                render: (data) => {
+                    let _price = data.split('.')
+                    return _price[0]
+                }
+            },
+            {
+                data: 'promotion',
+                className: "text-center",
+                render: (data) => {
+                    return data === 'Y' ? `<i class="fa-solid fa-circle text-success"></i>` : `<i class="fa-solid fa-circle text-secondary"></i>`
+                }
+            },
+            {
                 data: 'status',
                 className: "text-center",
                 render: (data) => {
-                    return data === 'CO' ? `<span class="text-success">On</span>` : `<span class="text-danger">Off</span>`
+                    return data === 'CO' ? `<i class="fa-solid fa-circle text-success"></i>` : `<i class="fa-solid fa-circle text-secondary"></i>`
                 }
             },
             {

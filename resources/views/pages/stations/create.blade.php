@@ -50,7 +50,7 @@
                                 <label for="station-name" class="col-sm-4 col-form-label-sm text-start">Station
                                     Name (TH)<strong class="text-danger">*</strong> :</label>
                                 <div class="col-sm-8">
-                                    <input type="text" required class="form-control form-control-sm" id="station-nameขะ้"
+                                    <input type="text" required class="form-control form-control-sm" id="station-name-th"
                                         name="thai_name" value="">
                                 </div>
                             </div>
@@ -60,6 +60,14 @@
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control form-control-sm" id="station-pier"
                                         name="piername" value="">
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="station-pier" class="col-sm-4 col-form-label-sm text-start">Station Pier (TH)
+                                    :</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control form-control-sm" id="station-pier-th"
+                                        name="thai_piername" value="">
                                 </div>
                             </div>
                             <div class="mb-3 row">

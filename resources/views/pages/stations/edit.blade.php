@@ -78,6 +78,14 @@
                                 </div>
                             </div>
                             <div class="mb-3 row">
+                                <label for="station-name" class="col-sm-4 col-form-label-sm text-start">Station
+                                    Pier (TH)</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control form-control-sm" id="station-piername-th"
+                                        name="thai_piername" value="{{ $station['thai_piername'] }}">
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
                                 <label for="station-nickname" class="col-sm-4 col-form-label-sm text-start">Station
                                     Nickname <strong class="text-danger">*</strong> :</label>
                                 <div class="col-sm-8">

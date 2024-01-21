@@ -970,13 +970,13 @@ function setRouteAddon(route_addons, subtype) {
     if(route_addons.length > 0) {
         route_addons.forEach((item) => {
             if(item.type === 'shuttle_bus' && item.subtype === subtype) {
-                if(item.isactive === 'Y') addon += `<img class="me-1 cursor-pointer" src="${https}//${host}:8080/icon/route/ico-bus.png" width="20" data-bs-toggle="tooltip" data-bs-placement="bottom" title="${item.name}">`
+                if(item.isactive === 'Y') addon += `<img class="me-1 cursor-pointer" src="${https}//${host}/icon/route/ico-bus.png" width="20" data-bs-toggle="tooltip" data-bs-placement="bottom" title="${item.name}">`
             }
             if(item.type === 'longtail_boat' && item.subtype === subtype) {
-                if(item.isactive === 'Y') addon += `<img class="me-1 cursor-pointer" src="${https}//${host}:8080/icon/route/ico-long-tail-boat.png" width="20" data-bs-toggle="tooltip" data-bs-placement="bottom" title="${item.name}">`
+                if(item.isactive === 'Y') addon += `<img class="me-1 cursor-pointer" src="${https}//${host}/icon/route/ico-long-tail-boat.png" width="20" data-bs-toggle="tooltip" data-bs-placement="bottom" title="${item.name}">`
             }
             if(item.type === 'private_taxi' && item.subtype === subtype) {
-                if(item.isactive === 'Y') addon += `<img class="me-1 cursor-pointer" src="${https}//${host}:8080/icon/route/ico-private-taxi.png" width="20" data-bs-toggle="tooltip" data-bs-placement="bottom" title="${item.name}">`
+                if(item.isactive === 'Y') addon += `<img class="me-1 cursor-pointer" src="${https}//${host}/icon/route/ico-private-taxi.png" width="20" data-bs-toggle="tooltip" data-bs-placement="bottom" title="${item.name}">`
             }
         })
     }

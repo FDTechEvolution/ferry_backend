@@ -91,8 +91,14 @@
                             <th class="text-center">Adult</th>
                             <th class="text-center">Child</th>
                             <th class="text-center">Infant</th>
-                            <th class="text-center">Promotion</th>
-                            <th class="text-center">status</th>
+                            <th class="text-center">Meal</th>
+                            <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Activity">Act.</th>
+                            <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Shuttle Bus From">SBF.</th>
+                            <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Shuttle Bus To">SBT.</th>
+                            <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Long Tail Boat From">LTBF.</th>
+                            <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Long Tail Boat To">LTBT.</th>
+                            <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Promotion">Pro.</th>
+                            <th class="text-center">Status</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
@@ -106,26 +112,16 @@
                                         onClick="routeSelectedAction(this)">
                                 </td>
                                 <td class="text-start lh--1-2">
-                                    <p class="mb-0">{{ $route['station_from']['name'] }}
+                                    <p class="mb-0">{{ $route['station_from']['name'] }}</p>
                                     @if ($route['station_from']['piername'] != '')
                                         <small class="text-secondary fs-d-80">({{ $route['station_from']['piername'] }})</small>
                                     @endif
-                                    </p>
-                                    <x-route-addon-icon
-                                        :routeAddons="$route['routeAddons']"
-                                        :subtype="_('from')"
-                                    />
                                 </td>
                                 <td class="text-start lh--1-2">
-                                    <p class="mb-0">{{ $route['station_to']['name'] }}
+                                    <p class="mb-0">{{ $route['station_to']['name'] }}</p>
                                     @if ($route['station_to']['piername'] != '')
                                         <small class="text-secondary fs-d-80">({{ $route['station_to']['piername'] }})</small>
                                     @endif
-                                    </p>
-                                    <x-route-addon-icon
-                                        :routeAddons="$route['routeAddons']"
-                                        :subtype="_('to')"
-                                    />
                                 </td>
                                 <td>{{ date('H:i', strtotime($route['depart_time'])) }}</td>
                                 <td>{{ date('H:i', strtotime($route['arrive_time'])) }}</td>
@@ -141,8 +137,70 @@
                                 <td>{{ number_format($route['regular_price']) }}</td>
                                 <td>{{ number_format($route['child_price']) }}</td>
                                 <td>{{ number_format($route['infant_price']) }}</td>
-                                <td>{!! $route_status[$route['ispromocode']] !!}</td>
-                                <td>{!! $route_status[$route['isactive']] !!}</td>
+                                <td>
+                                    <i @class([
+                                        'fa-solid fa-circle',
+                                        'text-success' => sizeof($route['meal_lines']) > 0,
+                                        'text-secondary' => sizeof($route['meal_lines']) <= 0
+                                        ])
+                                        data-bs-toggle="tooltip" data-bs-placement="top"
+                                        title="Meal on board"
+                                    >
+                                    </i>
+                                </td>
+                                <td>
+                                    <i @class([
+                                        'fa-solid fa-circle',
+                                        'text-success' => sizeof($route['activity_lines']) > 0,
+                                        'text-secondary' => sizeof($route['activity_lines']) <= 0
+                                        ])
+                                        data-bs-toggle="tooltip" data-bs-placement="top"
+                                        title="Activity"
+                                    >
+                                    </i>
+                                </td>
+                                <td>
+                                    <x-route-addon-active
+                                        :routeAddons="$route['routeAddons']"
+                                        :name="_('Shuttle Bus From')"
+                                        :type="_('shuttle_bus')"
+                                        :subtype="_('from')"
+                                    />
+                                </td>
+                                <td>
+                                    <x-route-addon-active
+                                        :routeAddons="$route['routeAddons']"
+                                        :name="_('Shuttle Bus To')"
+                                        :type="_('shuttle_bus')"
+                                        :subtype="_('to')"
+                                    />
+                                </td>
+                                <td>
+                                    <x-route-addon-active
+                                        :routeAddons="$route['routeAddons']"
+                                        :name="_('Long Tail Boat From')"
+                                        :type="_('longtail_boat')"
+                                        :subtype="_('from')"
+                                    />
+                                </td>
+                                <td>
+                                    <x-route-addon-active
+                                        :routeAddons="$route['routeAddons']"
+                                        :name="_('Long Tail Boat To')"
+                                        :type="_('longtail_boat')"
+                                        :subtype="_('to')"
+                                    />
+                                </td>
+                                <td>
+                                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="Promotion">
+                                        {!! $route_status[$route['ispromocode']] !!}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="Status">
+                                        {!! $route_status[$route['isactive']] !!}
+                                    </span>
+                                </td>
                                 <td>
                                     <x-action-edit class="me-2" :url="route('route-edit', ['id' => $route['id']])" id="btn-route-edit" />
                                     <x-action-delete :url="route('route-delete', ['id' => $route['id']])" :message="_('Are you sure? Delete this route ?')" />

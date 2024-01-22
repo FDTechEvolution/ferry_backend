@@ -60,10 +60,12 @@ class RouteController extends Controller
     }
 
     public function index() {
-        $routes = Route::where('status', 'CO')->with('station_from', 'station_to', 'icons', 'routeAddons')->orderBy('created_at', 'DESC')->get();
+        $routes = Route::where('status', 'CO')
+                    ->with('station_from', 'station_to', 'icons', 'routeAddons', 'activity_lines', 'meal_lines')
+                    ->orderBy('created_at', 'DESC')
+                    ->get();
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
-
 
         //$this->make($routes);
         $status = $this->_Status;

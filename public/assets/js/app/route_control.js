@@ -947,14 +947,20 @@ function searchRouteStation(e) {
     is_routes.forEach((route, index) => {
         let obj = {
             choose: `<input class="form-check-input form-check-input-primary route-selected-action" type="checkbox" value="${route.id}" id="route-check-${index}" onClick="routeSelectedAction(this)">`,
-            station_from: [route.station_from, route.route_addons],
-            station_to: [route.station_to, route.route_addons],
+            station_from: route.station_from,
+            station_to: route.station_to,
             depart: route.depart_time,
             arrive: route.arrive_time,
             icon: route.icons,
             price: route.regular_price,
             child: route.child_price,
             infant: route.infant_price,
+            meal: route.meal_lines.length > 0 ? 'Y' : 'N',
+            activity: route.activity_lines.length > 0 ? 'Y' : 'N',
+            shuttle_bus_from: route.route_addons,
+            shuttle_bus_to: route.route_addons,
+            longtail_boat_from: route.route_addons,
+            longtail_boat_to: route.route_addons,
             promotion: route.ispromocode,
             status: route.status,
             action: route.id
@@ -997,18 +1003,18 @@ function updateDatatableData() {
             },
             {
                 data: 'station_from',
-                className: "text-start w--20 lh--1-2",
+                className: "text-start w--12 lh--1-2",
                 render: (data) => {
-                    let pier =  data[0].piername !== null ? `<small class="text-secondary fs-d-80">(${data[0].piername})</small>` : ''
-                    return `<p class="mb-0">${data[0].name} ${pier}</p> ${setRouteAddon(data[1], 'from')}`
+                    let pier =  data.piername !== null ? `<small class="text-secondary fs-d-80">(${data.piername})</small>` : ''
+                    return `<p class="mb-0">${data.name}</p> ${pier}`
                 }
             },
             {
                 data: 'station_to',
-                className: "text-start w--20 lh--1-2",
+                className: "text-start w--12 lh--1-2",
                 render: (data) => {
-                    let pier =  data[0].piername !== null ? `<small class="text-secondary fs-d-80">(${data[0].piername})</small>` : ''
-                    return `<p class="mb-0">${data[0].name} ${pier}</p> ${setRouteAddon(data[1], 'to')}`
+                    let pier =  data.piername !== null ? `<small class="text-secondary fs-d-80">(${data.piername})</small>` : ''
+                    return `<p class="mb-0">${data.name}</p> ${pier}`
                 }
             },
             {
@@ -1065,6 +1071,48 @@ function updateDatatableData() {
                 }
             },
             {
+                data: 'meal',
+                className: "text-center",
+                render: (data) => {
+                    return data === 'Y' ? `<i class="fa-solid fa-circle text-success"></i>` : `<i class="fa-solid fa-circle text-secondary"></i>`
+                }
+            },
+            {
+                data: 'activity',
+                className: "text-center",
+                render: (data) => {
+                    return data === 'Y' ? `<i class="fa-solid fa-circle text-success"></i>` : `<i class="fa-solid fa-circle text-secondary"></i>`
+                }
+            },
+            {
+                data: 'shuttle_bus_from',
+                className: "text-center",
+                render: (data) => {
+                    return setRouteAddonActive(data, 'shuttle_bus', 'from')
+                }
+            },
+            {
+                data: 'shuttle_bus_to',
+                className: "text-center",
+                render: (data) => {
+                    return setRouteAddonActive(data, 'shuttle_bus', 'to')
+                }
+            },
+            {
+                data: 'longtail_boat_from',
+                className: "text-center",
+                render: (data) => {
+                    return setRouteAddonActive(data, 'longtail_boat', 'from')
+                }
+            },
+            {
+                data: 'longtail_boat_to',
+                className: "text-center",
+                render: (data) => {
+                    return setRouteAddonActive(data, 'longtail_boat', 'to')
+                }
+            },
+            {
                 data: 'promotion',
                 className: "text-center",
                 render: (data) => {
@@ -1112,6 +1160,21 @@ function updateDatatableData() {
             [10, 15, 30, 50, 100, 'All']
         ]
     })
+}
+
+function setRouteAddonActive(route_addons, type, subtype) {
+    let isactive = ''
+    if(route_addons.length > 0) {
+        route_addons.forEach((item) => {
+            if(item.type === type && item.subtype === subtype) {
+                if(item.isactive === 'Y') isactive = '<i class="fa-solid fa-circle text-success"></i>'
+                else isactive = '<i class="fa-solid fa-circle text-secondary"></i>'
+            }
+        })
+    }
+    else isactive = '<i class="fa-solid fa-circle text-secondary"></i>'
+
+    return isactive
 }
 
 function setConfirmDelete(id) {

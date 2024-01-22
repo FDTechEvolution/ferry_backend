@@ -1074,56 +1074,56 @@ function updateDatatableData() {
                 data: 'meal',
                 className: "text-center",
                 render: (data) => {
-                    return data === 'Y' ? `<i class="fa-solid fa-circle text-success"></i>` : `<i class="fa-solid fa-circle text-secondary"></i>`
+                    return data === 'Y' ? `<i class="fa-solid fa-circle text-success" title="Meal on board"></i>` : `<i class="fa-solid fa-circle text-secondary" title="Meal on board"></i>`
                 }
             },
             {
                 data: 'activity',
                 className: "text-center",
                 render: (data) => {
-                    return data === 'Y' ? `<i class="fa-solid fa-circle text-success"></i>` : `<i class="fa-solid fa-circle text-secondary"></i>`
+                    return data === 'Y' ? `<i class="fa-solid fa-circle text-success" title="Activity"></i>` : `<i class="fa-solid fa-circle text-secondary" title="Activity"></i>`
                 }
             },
             {
                 data: 'shuttle_bus_from',
                 className: "text-center",
                 render: (data) => {
-                    return setRouteAddonActive(data, 'shuttle_bus', 'from')
+                    return setRouteAddonActive(data, 'Shuttle Bus From', 'shuttle_bus', 'from')
                 }
             },
             {
                 data: 'shuttle_bus_to',
                 className: "text-center",
                 render: (data) => {
-                    return setRouteAddonActive(data, 'shuttle_bus', 'to')
+                    return setRouteAddonActive(data, 'Shuttle Bus To', 'shuttle_bus', 'to')
                 }
             },
             {
                 data: 'longtail_boat_from',
                 className: "text-center",
                 render: (data) => {
-                    return setRouteAddonActive(data, 'longtail_boat', 'from')
+                    return setRouteAddonActive(data, 'Long Tail Boat From', 'longtail_boat', 'from')
                 }
             },
             {
                 data: 'longtail_boat_to',
                 className: "text-center",
                 render: (data) => {
-                    return setRouteAddonActive(data, 'longtail_boat', 'to')
+                    return setRouteAddonActive(data, 'Long Tail Boat To', 'longtail_boat', 'to')
                 }
             },
             {
                 data: 'promotion',
                 className: "text-center",
                 render: (data) => {
-                    return data === 'Y' ? `<i class="fa-solid fa-circle text-success"></i>` : `<i class="fa-solid fa-circle text-secondary"></i>`
+                    return data === 'Y' ? `<i class="fa-solid fa-circle text-success" title="Promotion"></i>` : `<i class="fa-solid fa-circle text-secondary" title="Promotion"></i>`
                 }
             },
             {
                 data: 'status',
                 className: "text-center",
                 render: (data) => {
-                    return data === 'CO' ? `<i class="fa-solid fa-circle text-success"></i>` : `<i class="fa-solid fa-circle text-secondary"></i>`
+                    return data === 'CO' ? `<i class="fa-solid fa-circle text-success" title="Status"></i>` : `<i class="fa-solid fa-circle text-secondary" title="Status"></i>`
                 }
             },
             {
@@ -1162,17 +1162,17 @@ function updateDatatableData() {
     })
 }
 
-function setRouteAddonActive(route_addons, type, subtype) {
+function setRouteAddonActive(route_addons, name, type, subtype) {
     let isactive = ''
     if(route_addons.length > 0) {
         route_addons.forEach((item) => {
             if(item.type === type && item.subtype === subtype) {
-                if(item.isactive === 'Y') isactive = '<i class="fa-solid fa-circle text-success"></i>'
-                else isactive = '<i class="fa-solid fa-circle text-secondary"></i>'
+                if(item.isactive === 'Y') isactive = `<i class="fa-solid fa-circle text-success" data-bs-toggle="tooltip" data-bs-placement="top" title="${name}"></i>`
+                else isactive = `<i class="fa-solid fa-circle text-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="${name}"></i>`
             }
         })
     }
-    else isactive = '<i class="fa-solid fa-circle text-secondary"></i>'
+    else isactive = `<i class="fa-solid fa-circle text-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="${name}"></i>`
 
     return isactive
 }

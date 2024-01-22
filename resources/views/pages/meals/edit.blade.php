@@ -2,10 +2,10 @@
     @csrf
     <fieldset id="meal-update">
         <div class="row bg-transparent mt-lg-5">
-            <div class="col-sm-12 col-lg-9 mx-auto">
+            <div class="col-sm-12 col-lg-12 mx-auto">
 
                 <div class="row">
-                    <div class="col-sm-12 col-md-7 col-lg-7 px-4" id="edit-meal-input">
+                    <div class="col-sm-12 col-md-12 col-lg-12 px-4" id="edit-meal-input">
                         <h1 class="fw-bold text-second-color mb-4"><span>Edit Meal</h1>
 
                         <div class="mb-4 row">
@@ -38,7 +38,7 @@
                             </div>
                             <label class="col-sm-1 col-form-label-sm text-end ps-1">
                                 <a href="javascript:void(0)" class="text-dark me-1" data-bs-toggle="modal" data-bs-target="#upload-icon" onClick="showIconList()">
-                                    <svg width="22px" height="22px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus-slash-minus" viewBox="0 0 16 16">  
+                                    <svg width="22px" height="22px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus-slash-minus" viewBox="0 0 16 16">
                                         <path d="m1.854 14.854 13-13a.5.5 0 0 0-.708-.708l-13 13a.5.5 0 0 0 .708.708ZM4 1a.5.5 0 0 1 .5.5v2h2a.5.5 0 0 1 0 1h-2v2a.5.5 0 0 1-1 0v-2h-2a.5.5 0 0 1 0-1h2v-2A.5.5 0 0 1 4 1Zm5 11a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5A.5.5 0 0 1 9 12Z"></path>
                                     </svg>
                                 </a>
@@ -79,7 +79,7 @@
                                 <div class="row" id="update-image">
                                     <div class="col-10">
                                         <div class="js-file-input-container-multiple-list-static-picture position-relative hide-empty mt-2">
-                                            
+
                                         </div>
                                     </div>
                                     <div class="col-2 text-center">
@@ -91,7 +91,7 @@
                                 </div>
 
                                 <div class="row d-none" id="current-image">
-                                    <div class="col-10">
+                                    <div class="col-10 col-lg-3">
                                         <div class="position-relative hide-empty mt-2">
                                             <div class="d-flex clearfix position-relative show-hover-container shadow-md mb-2 rounded">
                                                 <div class="position-relative d-inline-block bg-cover" id="edit-image-cover">
@@ -110,37 +110,39 @@
                                         </a>
                                     </div>
                                 </div>
-                                <svg id="restore-image" title="Restore Images" data-bs-toggle="tooltip" onClick="restoreCurrentImage('current-image', 'has-image', 'restore-image')" width="18px" height="18px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-counterclockwise d-none cursor-pointer" viewBox="0 0 16 16">  
-                                    <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"></path>  
+                                <svg id="restore-image" title="Restore Images" data-bs-toggle="tooltip" onClick="restoreCurrentImage('current-image', 'has-image', 'restore-image')" width="18px" height="18px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-counterclockwise d-none cursor-pointer" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"></path>
                                     <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"></path>
                                 </svg>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-5 col-lg-5">
-                        <div class="bg-light p-4 rounded">
-                            <p>View</p>
-                            <div class="form-check ms-3 mb-3">
-                                <input class="form-check-input form-check-input-primary" type="checkbox" name="route_station" value="1" id="edit-route-station">
-                                <label class="form-check-label" for="edit-route-station">
-                                    Route station
-                                </label>
-                            </div>
-                            <div class="form-check ms-3 mb-3">
-                                <input class="form-check-input form-check-input-primary" type="checkbox" name="main_menu" value="1" id="edit-main-menu">
-                                <label class="form-check-label" for="edit-main-menu">
-                                    Main menu
-                                </label>
+                    <div class="col-sm-12 col-md-12 col-lg-12 px-4 mt-4">
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label-sm text-start">View : </label>
+                            <div class="col-sm-9 py-2">
+                                <div class="form-check ms-3 mb-3">
+                                    <input class="form-check-input form-check-input-primary" type="checkbox" name="route_station" value="1" id="edit-route-station">
+                                    <label class="form-check-label" for="edit-route-station">
+                                        Route station
+                                    </label>
+                                </div>
+                                <div class="form-check ms-3 mb-3">
+                                    <input class="form-check-input form-check-input-primary" type="checkbox" name="main_menu" value="1" id="edit-main-menu">
+                                    <label class="form-check-label" for="edit-main-menu">
+                                        Main menu
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <input type="hidden" name="id" id="edit-id" value=""> 
+                    <input type="hidden" name="id" id="edit-id" value="">
                     <input type="hidden" name="_image" id="has-image" value="0">
                     <input type="hidden" name="_icon" id="has-icon" value="0">
                     <div class="col-12 text-center mt-5">
-                        <x-button-submit-loading 
+                        <x-button-submit-loading
                             class="btn-lg w--20 me-2"
                             :form_id="_('meal-edit-form')"
                             :fieldset_id="_('meal-update')"

@@ -2,10 +2,10 @@
     @csrf
     <fieldset id="meal-create">
         <div class="row bg-transparent mt-lg-5">
-            <div class="col-sm-12 col-lg-9 mx-auto">
+            <div class="col-sm-12 col-lg-12 mx-auto">
 
                 <div class="row">
-                    <div class="col-sm-12 col-md-7 col-lg-7 px-4">
+                    <div class="col-sm-12 col-md-12 col-lg-12 px-4">
                         <h1 class="fw-bold text-second-color mb-4"><span>Add new Meal</h1>
 
                         <div class="mb-3 row">
@@ -38,7 +38,7 @@
                             </div>
                             <label class="col-sm-1 col-form-label-sm text-end ps-1">
                                 <a href="javascript:void(0)" class="text-dark me-1" data-bs-toggle="modal" data-bs-target="#upload-icon" onClick="showIconList()">
-                                    <svg width="22px" height="22px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus-slash-minus" viewBox="0 0 16 16">  
+                                    <svg width="22px" height="22px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus-slash-minus" viewBox="0 0 16 16">
                                         <path d="m1.854 14.854 13-13a.5.5 0 0 0-.708-.708l-13 13a.5.5 0 0 0 .708.708ZM4 1a.5.5 0 0 1 .5.5v2h2a.5.5 0 0 1 0 1h-2v2a.5.5 0 0 1-1 0v-2h-2a.5.5 0 0 1 0-1h2v-2A.5.5 0 0 1 4 1Zm5 11a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5A.5.5 0 0 1 9 12Z"></path>
                                     </svg>
                                 </a>
@@ -91,26 +91,28 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-5 col-lg-5">
-                        <div class="bg-light p-4 rounded">
-                            <p>View</p>
-                            <div class="form-check ms-3 mb-3">
-                                <input class="form-check-input form-check-input-primary" type="checkbox" name="route_station" value="1" id="route-station">
-                                <label class="form-check-label" for="route-station">
-                                    Route station
-                                </label>
-                            </div>
-                            <div class="form-check ms-3 mb-3">
-                                <input class="form-check-input form-check-input-primary" type="checkbox" name="main_menu" value="1" id="main-menu">
-                                <label class="form-check-label" for="main-menu">
-                                    Main menu
-                                </label>
+                    <div class="col-sm-12 col-md-12 col-lg-12 px-4 mt-4">
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label-sm text-start">View : </label>
+                            <div class="col-sm-9 py-2">
+                                <div class="form-check ms-3 mb-3">
+                                    <input class="form-check-input form-check-input-primary" type="checkbox" name="route_station" value="1" id="route-station">
+                                    <label class="form-check-label" for="route-station">
+                                        Route station
+                                    </label>
+                                </div>
+                                <div class="form-check ms-3 mb-3">
+                                    <input class="form-check-input form-check-input-primary" type="checkbox" name="main_menu" value="1" id="main-menu">
+                                    <label class="form-check-label" for="main-menu">
+                                        Main menu
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="col-12 text-center mt-5">
-                        <x-button-submit-loading 
+                        <x-button-submit-loading
                             class="btn-lg w--20 me-2"
                             :form_id="_('meal-create-form')"
                             :fieldset_id="_('meal-created')"

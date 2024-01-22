@@ -47,6 +47,15 @@ class SlideController extends Controller
         else return redirect()->route('slide-index')->withFail('Something is wrong. Please try again.');
     }
 
+    public function edit($id) {
+        $slide = Slide::where('id', $id)->where('status', 'CO')->with('image')->first();
+
+        // Log::debug($slide->toArray());
+
+        if(isset($slide)) return view('pages.slide.edit', ['slide' => $slide]);
+        return redirect()->route('slide-index')->withFail('No slide.');
+    }
+
     public function update(Request $request) {
         $request->validate([
             'sort' => 'integer|nullable',

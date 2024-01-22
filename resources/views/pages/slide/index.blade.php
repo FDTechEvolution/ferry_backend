@@ -12,7 +12,7 @@
         </div>
 
         <div class="card bg-main-color d-none" id="edit-slide">
-            @include('pages.slide.edit')
+
         </div>
 
         <div class="card mt-3">
@@ -79,13 +79,12 @@
                                 </td>
                                 <td>{{ $slide->sort }}</td>
                                 <td>
-                                    <x-action-edit 
+                                    <x-action-edit
                                         class="me-2"
-                                        :url="_('javascript:void(0)')"
+                                        :url="route('slide-edit', ['id' => $slide->id])"
                                         id="btn-slide-edit"
-                                        onClick="updateEditData({{ $index }})"
                                     />
-                                    <x-action-delete 
+                                    <x-action-delete
                                         :url="route('slide-delete', ['id' => $slide->id])"
                                         :message="_('Are you sure? Delete this slide ?')"
                                     />

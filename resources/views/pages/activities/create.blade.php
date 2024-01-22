@@ -15,7 +15,7 @@
                     <div class="col-sm-12 col-lg-10 mx-auto">
 
                         <div class="row">
-                            <div class="col-sm-12 col-md-8 col-lg-7 px-4">
+                            <div class="col-sm-12 col-md-12 col-lg-12 px-4">
                                 <h1 class="fw-bold text-second-color mb-4"><span>Add new Activity manage</h1>
 
                                 <div class="mb-3 row">
@@ -150,26 +150,28 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-12 col-md-4 col-lg-5">
-                                <div class="bg-light p-4 rounded">
-                                    <p>View</p>
-                                    <div class="form-check ms-3 mb-3">
-                                        <input class="form-check-input form-check-input-primary" type="checkbox" name="route_station" value="1" id="route-station">
-                                        <label class="form-check-label" for="route-station">
-                                            Route station
-                                        </label>
-                                    </div>
-                                    <div class="form-check ms-3 mb-3">
-                                        <input class="form-check-input form-check-input-primary" type="checkbox" name="main_menu" value="1" id="main-menu">
-                                        <label class="form-check-label" for="main-menu">
-                                            Main menu
-                                        </label>
+                            <div class="col-sm-12 col-md-12 col-lg-12 px-4 mt-4">
+                                <div class="mb-3 row">
+                                    <label for="activity-name" class="col-sm-3 col-form-label-sm text-start">View : </label>
+                                    <div class="col-sm-9">
+                                        <div class="form-check ms-3 mb-3">
+                                            <input class="form-check-input form-check-input-primary" type="checkbox" name="route_station" value="1" id="route-station">
+                                            <label class="form-check-label" for="route-station">
+                                                Route station
+                                            </label>
+                                        </div>
+                                        <div class="form-check ms-3 mb-3">
+                                            <input class="form-check-input form-check-input-primary" type="checkbox" name="main_menu" value="1" id="main-menu">
+                                            <label class="form-check-label" for="main-menu">
+                                                Main menu
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="col-12 text-center mt-4">
-                                <x-button-submit-loading 
+                                <x-button-submit-loading
                                     class="btn-lg w--20 me-5"
                                     :form_id="_('activity-create-form')"
                                     :fieldset_id="_('activity-create')"

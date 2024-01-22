@@ -18,6 +18,8 @@ class StationResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'piername' => $this->piername,
+            'name_th' => $this->thai_name,
+            'piername_th' => $this->thai_piername,
             'nickname' => $this->nickname
         ];
     }

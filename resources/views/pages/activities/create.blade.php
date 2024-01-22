@@ -32,7 +32,7 @@
                                 </div>
                                 <div class="mb-3 row">
                                     <label class="col-sm-3 col-form-label-sm text-start">Detail Activity :</label>
-                                    <div class="col-sm-9">
+                                    <div class="col-sm-9" style="height: 250px;">
                                         <div class="quill-editor"
                                             data-ajax-url="_ajax/demo.summernote.php"
                                             data-ajax-params="['action','upload']['param2','value2']"

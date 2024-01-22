@@ -23,7 +23,7 @@
                         <div class="mb-4 row">
                             <label for="meal-detail" class="col-sm-3 col-form-label-sm text-start">Detail Meal :</label>
                             <div class="col-sm-9">
-                                <textarea class="form-control form-control-sm" id="edit-meal-detail" data-set="description" name="detail" row="3"></textarea>
+                                <textarea class="form-control form-control-sm" id="edit-meal-detail" data-set="description" name="detail" rows="7"></textarea>
                             </div>
                         </div>
                         <div class="mb-4 row">

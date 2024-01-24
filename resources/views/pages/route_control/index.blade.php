@@ -11,11 +11,14 @@
             <input type="text" class="form-control form-control-sm" id="filter-station-from" value=""
                 placeholder="Station From">
         </div>
-        <div class="col-12 mb-2 col-lg-3">
+        <div class="col-12 mb-2 col-lg-4">
             <input type="text" class="form-control form-control-sm" id="filter-station-to" value=""
                 placeholder="Station To">
         </div>
-        <div class="col-6 col-lg-1 offset-lg-4">
+        <div class="col-6 col-lg-3">
+            <a href="{{route('routeSchedule.index')}}" class="btn btn-outline-primary btn-sm"><i class="fi fi-calendar"></i> Open/Close Schedule</a>
+        </div>
+        <div class="col-6 col-lg-1">
             <form novalidate class="bs-validate" method="POST" target="_blank" action="{{ route('route-selected-pdf') }}">
                 @csrf
                 <input type="hidden" name="route_selected" id="input-pdf-selected" value="">

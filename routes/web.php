@@ -7,6 +7,7 @@ use App\Http\Controllers\ApiRoutesController;
 use App\Http\Controllers\BookingsController;
 use App\Http\Controllers\InformationsController;
 use App\Http\Controllers\PartnerController;
+use App\Http\Controllers\RouteSchedulesController;
 use App\Http\Controllers\SectionsController;
 use Illuminate\Support\Facades\Route;
 
@@ -64,6 +65,7 @@ Route::middleware('auth')->group(function () {
     Route::resources([
         'section' => SectionsController::class,
         'api' => ApiMerchantsController::class,
+        'routeSchedule' => RouteSchedulesController::class,
     ]);
 
     Route::controller(ApiRoutesController::class)->group(function () {

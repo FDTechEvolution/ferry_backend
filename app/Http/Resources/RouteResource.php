@@ -19,41 +19,45 @@ class RouteResource extends JsonResource
             'id' => $this->id,
             'depart_time' => date('h:i', strtotime($this->depart_time)),
             'arrive_time' => date('h:i', strtotime($this->arrive_time)),
-            'regular_price' => $this->regular_price - ($this->regular_price*0.2),
+            'regular_price' => intval($this->api_route->totalamt),
             'avaliable_seat' => 100,
-            'master_from_info' => $this->master_from_info,
-            'master_to_info' => $this->master_to_info,
-            'ispromocode' => $this->ispromocode,
+            // 'master_from_info' => $this->master_from_info,
+            // 'master_to_info' => $this->master_to_info,
+            // 'ispromocode' => $this->ispromocode,
             'station_from' => [
                 'name' => $this->station_from->name,
+                'name_th' => $this->station_from->this_name,
                 'piername' => $this->station_from->piername,
+                'piername_th' => $this->station_from->thai_piername,
                 'nickname' => $this->station_from->nickname
             ],
             'station_to' => [
                 'name' => $this->station_to->name,
+                'name_th' => $this->station_to->this_name,
                 'piername' => $this->station_to->piername,
+                'piername_th' => $this->station_to->thai_piername,
                 'nickname' => $this->station_to->nickname
             ],
-            'activities' => !$this->activity_lines ? '' : $this->activity_lines->map(function($activity) {
-                if($activity->status == 'CO') {
-                    return [
-                        'id' => $activity->id,
-                        'name' => $activity->name,
-                        'amount' => $activity->price,
-                        'detail' => $activity->detail
-                    ];
-                }
-            }),
-            'meals' => !$this->meal_lines ? '' : $this->meal_lines->map(function($meal) {
-                if($meal->isactive == 'Y' && $meal->status == 'CO') {
-                    return [
-                        'id' => $meal->id,
-                        'name' => $meal->name,
-                        'amount' => $meal->amount,
-                        'detail' => $meal->description
-                    ];
-                }
-            }),
+            // 'activities' => !$this->activity_lines ? '' : $this->activity_lines->map(function($activity) {
+            //     if($activity->status == 'CO') {
+            //         return [
+            //             'id' => $activity->id,
+            //             'name' => $activity->name,
+            //             'amount' => $activity->price,
+            //             'detail' => $activity->detail
+            //         ];
+            //     }
+            // }),
+            // 'meals' => !$this->meal_lines ? '' : $this->meal_lines->map(function($meal) {
+            //     if($meal->isactive == 'Y' && $meal->status == 'CO') {
+            //         return [
+            //             'id' => $meal->id,
+            //             'name' => $meal->name,
+            //             'amount' => $meal->amount,
+            //             'detail' => $meal->description
+            //         ];
+            //     }
+            // }),
         ];
     }
 }

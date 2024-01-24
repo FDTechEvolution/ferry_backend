@@ -16,10 +16,13 @@ use App\Http\Controllers\Api\InfomationController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\NewsController;
+use App\Http\Controllers\ReviewsController;
 
 // 7 Controller
 use App\Http\Controllers\Api\Seven\BookingController as SevenBooking;
-use App\Http\Controllers\ReviewsController;
+use App\Http\Controllers\Api\Seven\StationController as SevenStation;
+use App\Http\Controllers\Api\Seven\RouteController as SevenRoute;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -114,17 +117,17 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
 
 // Route Api for 7seven
 Route::middleware(['seven'])->prefix('v1')->group(function() {
-    Route::controller(RouteController::class)->group(function() {
-        // Route::get('route/all', 'getAllRoute');
-        // Route::get('route/{id}', 'getRouteById');
-        Route::get('route/from/{id}', 'getRouteByStationFrom');
-        Route::get('route/to/{id}', 'getRouteByStationTo');
+
+    // Route
+    Route::controller(SevenRoute::class)->group(function() {
         Route::get('route/get/{from}/{to}', 'getRouteByStation');
     });
 
-    Route::controller(StationsController::class)->group(function() {
-        // Route::get('stations/all', 'getAllStation');
+    // Station
+    Route::controller(SevenStation::class)->group(function() {
         Route::get('stations', 'getStationFromRoute');
+        Route::get('stations/depart', 'stationDepart');
+        Route::get('stations/arrive/{from_id}', 'stationArrive');
     });
 
     // Booking

@@ -16,7 +16,7 @@
                 placeholder="Station To">
         </div>
         <div class="col-6 col-lg-3">
-            <a href="{{route('routeSchedule.index')}}" class="btn btn-outline-primary btn-sm"><i class="fi fi-calendar"></i> Open/Close Schedule</a>
+            <a href="{{route('routeSchedules.index')}}" class="btn btn-outline-primary btn-sm"><i class="fi fi-calendar"></i> Open/Close Schedule</a>
         </div>
         <div class="col-6 col-lg-1">
             <form novalidate class="bs-validate" method="POST" target="_blank" action="{{ route('route-selected-pdf') }}">

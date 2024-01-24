@@ -8,7 +8,7 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            <a href="{{ route('routeSchedule.create') }}" class="btn button-orange-bg">Create New</a>
+            <a href="{{ route('routeSchedules.create') }}" class="btn button-orange-bg">Create New</a>
         </div>
     </div>
     <hr>
@@ -53,9 +53,8 @@
                                    
                                     <td><small>{{ $routeSchedule->description }}</small></td>
                                     <td class="text-end">
-                                        <x-action-edit class="me-2" :url="_('javascript:void(0)')" id="btn-section-edit"
-                                            onClick="updateSectionEditData({{ $index }})" />
-                                        <x-delete-button :url="route('routeSchedule.destroy', ['routeSchedule' => $routeSchedule])" :id="$routeSchedule->id" />
+                                        <x-action-edit class="me-2" :url="route('routeSchedules.edit',['routeSchedule'=>$routeSchedule])" id="btn-section-edit" />
+                                        <x-delete-button :url="route('routeSchedules.destroy', ['routeSchedule' => $routeSchedule])" :id="$routeSchedule->id" />
                                     </td>
                                 </tr>
                             @else
@@ -77,7 +76,7 @@
                                    
                                     <td class="text-blue-gray-200"><small>{{ $routeSchedule->description }}</small></td>
                                     <td class="text-end">
-                                        <x-delete-button :url="route('routeSchedule.destroy', ['routeSchedule' => $routeSchedule])" :id="$routeSchedule->id" />
+                                        <x-delete-button :url="route('routeSchedules.destroy', ['routeSchedule' => $routeSchedule])" :id="$routeSchedule->id" />
                                     </td>
                                 </tr>
                             @endif

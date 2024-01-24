@@ -71,8 +71,8 @@ class RouteSchedulesController extends Controller
         $startDate = trim($dates[0]);
         $endDate = trim($dates[1]);
 
-        $startDateSql = Carbon::createFromFormat('d/m/Y', $startDate)->format('Y-m-d H:i');
-        $endDateSql = Carbon::createFromFormat('d/m/Y', $endDate)->format('Y-m-d H:i');
+        $startDateSql = Carbon::createFromFormat('d/m/Y', $startDate)->format('Y-m-d');
+        $endDateSql = Carbon::createFromFormat('d/m/Y', $endDate)->format('Y-m-d');
 
         $route_ids = $request->route_id;
         foreach ($route_ids as $index => $route_id) {
@@ -93,7 +93,7 @@ class RouteSchedulesController extends Controller
             ]);
         }
 
-        return redirect()->route('routeSchedule.index')->withSuccess('');
+        return redirect()->route('routeSchedules.index')->withSuccess('');
     }
 
     /**
@@ -109,7 +109,11 @@ class RouteSchedulesController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $routeSchedule = RouteSchedules::where('id',$id)->with(['route'])->first();
+
+        return view('pages.route_schedules.edit', [
+            'routeSchedule' => $routeSchedule,
+        ]);
     }
 
     /**
@@ -117,7 +121,38 @@ class RouteSchedulesController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        //dd($request);
+        $request->validate([
+            'type' => 'required|string',
+            'daterange' => 'required|string',
+        ]);
+
+        
+
+        $routeSchedule = RouteSchedules::where('id',$id)->first();
+
+        $dates = explode('-', $request->daterange);
+        $startDate = trim($dates[0]);
+        $endDate = trim($dates[1]);
+
+        $startDateSql = Carbon::createFromFormat('d/m/Y', $startDate)->format('Y-m-d');
+        $endDateSql = Carbon::createFromFormat('d/m/Y', $endDate)->format('Y-m-d');
+
+        $updateDatas = [
+            'start_datetime' => $startDateSql,
+            'end_datetime' => $endDateSql,
+            'description' => $request->description,
+            'mon'=>isset($request->mon)?'Y':'N',
+            'tru'=>isset($request->tru)?'Y':'N',
+            'wed'=>isset($request->wed)?'Y':'N',
+            'thu'=>isset($request->thu)?'Y':'N',
+            'fri'=>isset($request->fri)?'Y':'N',
+            'sat'=>isset($request->sat)?'Y':'N',
+            'sun'=>isset($request->sun)?'Y':'N'
+        ];
+
+        $routeSchedule->update($updateDatas);
+        return redirect()->route('routeSchedules.index')->withSuccess('');
     }
 
     /**
@@ -127,6 +162,6 @@ class RouteSchedulesController extends Controller
     {
         $routeSchedule = RouteSchedules::where('id',$id)->first();
         $routeSchedule->delete();
-        return redirect()->route('routeSchedule.index')->withSuccess('');
+        return redirect()->route('routeSchedules.index')->withSuccess('');
     }
 }

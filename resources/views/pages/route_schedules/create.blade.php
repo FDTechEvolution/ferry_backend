@@ -8,11 +8,11 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            <a href="{{ route('routeSchedule.index') }}" class="btn btn-secondary"><i class="fi fi-arrow-left"></i> Back</a>
+            <a href="{{ route('routeSchedules.index') }}" class="btn btn-secondary"><i class="fi fi-arrow-left"></i> Back</a>
         </div>
     </div>
     <hr>
-    <form action="{{ route('routeSchedule.create') }}" method="GET" id="frm-search">
+    <form action="{{ route('routeSchedules.create') }}" method="GET" id="frm-search">
         <div class="row">
             <div class="col-12 col-lg-4">
                 <div class="form-floating mb-3">
@@ -109,7 +109,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row mb-3">
                             <div class="col-12">
                                 <div class="form-check mb-2 form-check-inline">
@@ -174,7 +174,7 @@
                     <div class="col-12 text-center">
                         <x-button-submit-loading class="btn-lg w--30 me-4 button-orange-bg" :form_id="_('frm')"
                             :fieldset_id="_('field-frm')" :text="_('Create')" />
-                        <a href="{{ route('routeSchedule.index') }}" class="btn btn-secondary btn-lg w--30">Cancel</a>
+                        <a href="{{ route('routeSchedules.index') }}" class="btn btn-secondary btn-lg w--30">Cancel</a>
                         <small id="user-create-error-notice" class="text-danger mt-3"></small>
                     </div>
                 </div>

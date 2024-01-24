@@ -65,7 +65,7 @@ Route::middleware('auth')->group(function () {
     Route::resources([
         'section' => SectionsController::class,
         'api' => ApiMerchantsController::class,
-        'routeSchedule' => RouteSchedulesController::class,
+        'routeSchedules' => RouteSchedulesController::class,
     ]);
 
     Route::controller(ApiRoutesController::class)->group(function () {

@@ -8,7 +8,7 @@
 
 @section('content')
 
-    <form novalidate class="bs-validate" id="frm" method="GET" action="{{ route('booking-route') }}">
+    <form novalidate class="bs-validate" id="frm-search" method="GET" action="{{ route('booking-route') }}">
 
         <div class="section bg-main-color mb-3">
             <fieldset id="">
@@ -19,12 +19,12 @@
                                 :</label>
                             <div class="col-12 col-md-8">
 
-                                <select required class="form-select form-select-sm" id="station-from-selected"
-                                    name="station_from">
-                                    <option value="" selected disabled>--- Choose ---</option>
-                                    @foreach ($stations['station_from'] as $station)
-                                        <option value="{{ $station['id'] }}">{{ $station['name'] }} @if ($station['piername'] != '')
-                                                [{{ $station['piername'] }}]
+                                <select required class="form-select form-select-sm" id="station_from_id"
+                                    name="station_from_id">
+                           
+                                    @foreach ($stationFroms as $station)
+                                        <option value="{{ $station->id }}" @selected($stationFromId == $station->id)>{{ $station->name }} @if ($station->piername != '')
+                                                [{{ $station->piername }}]
                                             @endif
                                         </option>
                                     @endforeach
@@ -38,12 +38,11 @@
                             <label class="col-12 col-md-4 col-form-label-sm text-start fw-bold text-white">Station To *
                                 :</label>
                             <div class="col-12 col-md-8">
-                                <select required class="form-select form-select-sm" id="station-from-selected"
-                                    name="station_to">
+                                <select class="form-select form-select-sm" id="station_to_id" name="station_to_id">
                                     <option value="" selected disabled>--- Choose ---</option>
-                                    @foreach ($stations['station_to'] as $station)
-                                        <option value="{{ $station['id'] }}">{{ $station['name'] }} @if ($station['piername'] != '')
-                                                [{{ $station['piername'] }}]
+                                    @foreach ($stationTos as $station)
+                                        <option value="{{ $station->id }}" @selected($stationToId == $station->id)>{{ $station->name }} @if ($station->piername != '')
+                                                [{{ $station->piername }}]
                                             @endif
                                         </option>
                                     @endforeach
@@ -62,7 +61,7 @@
                                     class="form-control form-control-sm datepicker" data-show-weeks="true"
                                     data-today-highlight="true" data-today-btn="true" data-clear-btn="false"
                                     data-autoclose="true" data-date-start="today" data-format="DD/MM/YYYY"
-                                    value="{{ date('d/m/Y') }}">
+                                    value="{{ $departdate }}">
                             </div>
                         </div>
                     </div>
@@ -81,7 +80,7 @@
     @if (sizeof($routes) != 0)
         <div class="section mb-3">
             <div class="row">
-                <div class="col-12 col-md-10 offset-md-1">
+                <div class="col-12">
                     <h2 class="text-main-color-2">Route Table : {{ $departdate }}</h2>
                     <div class="table-responsive">
                         <table class="table table-hover">
@@ -143,4 +142,27 @@
             </div>
         </div>
     @endif
+@stop
+
+@section('script')
+    <script>
+        $(document).ready(function() {
+            $('#station_from_id').on('change', function() {
+                $('#page-loader').show();
+                $('#station_to_id').empty();
+                $('#frm-search').submit();
+            });
+
+            $('#station_to_id').on('change', function() {
+                $('#page-loader').show();
+                $('#frm-search').submit();
+            });
+
+            //departdate
+            $('#departdate').on('change', function() {
+                $('#page-loader').show();
+                $('#frm-search').submit();
+            });
+        });
+    </script>
 @stop

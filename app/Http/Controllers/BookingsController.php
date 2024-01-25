@@ -14,6 +14,7 @@ use App\Helpers\BookingHelper;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\ImageHelper;
 use Illuminate\Support\Carbon;
+use App\Helpers\RouteHelper;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
@@ -98,31 +99,42 @@ class BookingsController extends Controller
             'station_to' => $station_to,
             'bookingno' => $bookingno,
             'ticketno' => $ticketno,
-            'startDate' => $startDate,'endDate' => $endDate,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ]);
     }
 
     public function route()
     {
-        $station_from = request()->station_from;
-        $station_to = request()->station_to;
+
         $departdate = request()->departdate;
-
         $routes = [];
+        $stationFromId = request()->station_from_id;
+        $stationToId = request()->station_to_id;
 
-        if (!is_null($station_from) && !is_null($station_to)) {
-            $routes = Route::where('station_from_id', $station_from)
-                ->where('station_to_id', $station_to)
-                ->where('isactive', 'Y')
-                ->with('station_from', 'station_to', 'icons')
-                ->orderBy('depart_time', 'ASC')
-                ->get();
+        if(is_null($departdate)){
+            $departdate = date('d/m/Y');
         }
+        $stationFroms = RouteHelper::getStationFrom();
+        if (is_null($stationFromId) && sizeof($stationFroms) > 0) {
+            $stationFromId = $stationFroms[0]->id;
+        }
+        $stationTos = RouteHelper::getStationTo($stationFromId);
 
-        //dd($routes);
+        if (!is_null($stationFromId) && !is_null($stationToId)) {
+            $departdateSql = Carbon::createFromFormat('d/m/Y', $departdate)->format('Y-m-d');
+            $routes = RouteHelper::getAvaliableRoutes($stationFromId, $stationToId,$departdateSql);
+        }
+        //dd($stationFroms);
 
-        $station = StationsController::avaliableStation();
-        return view('pages.bookings.route', ['routes' => $routes, 'stations' => $station, 'station_from' => $station_from, 'station_to' => $station_to, 'departdate' => $departdate]);
+        return view('pages.bookings.route', [
+            'stationFroms' => $stationFroms,
+            'stationTos' => $stationTos,
+            'stationFromId' => $stationFromId,
+            'stationToId' => $stationToId,
+            'routes' => $routes,
+            'departdate' => $departdate,
+        ]);
     }
 
     public function create()
@@ -156,10 +168,10 @@ class BookingsController extends Controller
                 'bookingRoutes.station_to',
                 'bookingRoutes.station_lines',
                 'payments',
-                'payments.paymentLines'
+                'payments.paymentLines',
             )
             ->first();
-                // Log::debug($booking->toArray());
+        // Log::debug($booking->toArray());
         return view('pages.bookings.view', ['booking' => $booking, 'country_list' => $this->CountryList, 'code_country' => $this->CodeCountry]);
     }
 
@@ -310,14 +322,15 @@ class BookingsController extends Controller
         }
     }
 
-    public function updateCustomer(Request $request) {
+    public function updateCustomer(Request $request)
+    {
         $b_day = explode('/', $request->birth_day);
         $customer = Customers::find($request->customer_id);
         $customer->title = strtoupper($request->title);
         $customer->fullname = $request->full_name;
-        $customer->birth_day = $b_day[2].'-'.$b_day[1].'-'.$b_day[0];
+        $customer->birth_day = $b_day[2] . '-' . $b_day[1] . '-' . $b_day[0];
 
-        if($customer->email != NULL) {
+        if ($customer->email != NULL) {
             $customer->email = $request->email;
             $customer->mobile_code = $request->mobile_code;
             $customer->mobile = $request->mobile;
@@ -327,7 +340,7 @@ class BookingsController extends Controller
             $customer->fulladdress = $request->address;
         }
 
-        if($customer->save()) {
+        if ($customer->save()) {
             return redirect()->back()->withSuccess('Customer updated.');
         }
         return redirect()->back()->withFail('Something is wrong. Please try again.');

@@ -16,6 +16,7 @@ class RouteSchedulesController extends Controller
     {
         //set inactive
         $date = date('Y-m-d');
+        //RouteHelper::getAvaliableRoutes('9ad24c8e-47c4-4f2c-823d-32d7b2812711','9ad26407-81ce-4ad3-99ae-b4bcb47d16f6','2024-02-05');
         $routeSchedules = RouteSchedules::with('isactive','Y')
             ->where('end_datetime','<',$date)
             ->update(['isactive' => 'N']);

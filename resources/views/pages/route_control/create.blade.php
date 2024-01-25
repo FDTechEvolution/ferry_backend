@@ -582,7 +582,8 @@
                 $('#box_master_' + type + '_info').hide();
             }
 
-            let types = ['shuttle_bus', 'private_taxi', 'longtail_boat'];
+            //let types = ['shuttle_bus', 'private_taxi', 'longtail_boat'];
+            let types = ['shuttle_bus', 'longtail_boat'];
 
             $.each(types, function(index, _type) {
                 let isactive = false;

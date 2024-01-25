@@ -46,10 +46,11 @@ class RouteController extends Controller
                 'title' => 'Shuttle Bus',
                 'key' => 'shuttle_bus',
             ],
+            /*
             [
                 'title' => 'Private Taxi',
                 'key' => 'private_taxi',
-            ],
+            ],*/
             [
                 'title' => 'Longtail boat',
                 'key' => 'longtail_boat',

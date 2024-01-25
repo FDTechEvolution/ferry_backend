@@ -562,7 +562,8 @@
             $('#master_' + type).text(station['master_' + type]);
             //$('#master_to').text(station.master_to);
 
-            let types = ['shuttle_bus', 'private_taxi', 'longtail_boat'];
+            //let types = ['shuttle_bus', 'private_taxi', 'longtail_boat'];
+            let types = ['shuttle_bus', 'longtail_boat'];
 
             $.each(types, function(index, _type) {
                 let isactive = false;

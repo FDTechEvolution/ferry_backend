@@ -76,7 +76,7 @@ class RouteSchedulesController extends Controller
         $endDateSql = Carbon::createFromFormat('d/m/Y', $endDate)->format('Y-m-d');
 
         $route_ids = $request->route_id;
-        if(sizeof($route_ids) ==0){
+        if(!isset($route_ids) || sizeof($route_ids) ==0){
             return redirect()->route('routeSchedules.index');
         }
         foreach ($route_ids as $index => $route_id) {

@@ -5,6 +5,7 @@
 @stop
 
 @section('content')
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
     <div class="section mb-3">
         <form novalidate class="bs-validate" id="frm-information-update" method="POST"
             action="{{ route('information-update', $information->id) }}">
@@ -12,6 +13,21 @@
             <fieldset id="fs-information-update">
                 <div class="row mt-4">
                     <div class="col-md-10 col-12 mx-auto px-4">
+                        <div class="mb-3 row">
+                            <label for="position" class="col-md-3 col-12 col-form-label">Position<span
+                                    class="text-danger">*</span></label>
+                            <div class="col-md-9 col-12">
+                                <select class="form-select" aria-label="" name="position" id="position">
+                                    <option value="">-- please select --</option>
+                                    @foreach ($positions as $key => $position)
+                                        <option value="{{ $key }}"
+                                            @if ($information->position == $key) @selected(true) @endif>
+                                            {{ $position }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="mb-3 row">
                             <label for="title" class="col-md-3 col-12 col-form-label">Title<span
                                     class="text-danger">*</span></label>
@@ -21,44 +37,31 @@
                             </div>
                         </div>
 
-                        <div class="mb-3 row">
-                            <label for="position" class="col-md-3 col-12 col-form-label">Position<span
-                                    class="text-danger">*</span></label>
-                            <div class="col-md-9 col-12">
-                                <select class="form-select form-select-sm" aria-label="" name="position" id="position">
-                                    <option value="">-- please select --</option>
-                                    @foreach ($positions as $key => $position)
-                                        <option value="{{ $key }}" @if($information->position==$key)@selected(true) @endif>{{ $position }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
+
 
                         <div class="mb-3 row mb-6">
-                            <label for="body" class="col-md-3 col-12 col-form-label">Text/Message<span
-                                    class="text-danger">*</span></label>
-                            <div class="col-md-9 col-12">
-                                <div class="quill-editor w-100" data-ajax-url="_ajax/demo.summernote.php"
-                                    data-ajax-params="['action','upload']['param2','value2']" data-textarea-name="body"
-                                    data-quill-config='{
-                                "modules": {
-                                    "toolbar": [
-                          
-                                        ["bold", "italic", "underline", "strike"],
-                                        [{ "color": [] }, { "background": [] }],
-                                        [{ "script": "super" }, { "script": "sub" }],
-                                        ["blockquote"],
-                                        [{ "list": "ordered" }, { "list": "bullet"}, { "indent": "-1" }, { "indent": "+1" }],
-                                        [{ "align": [] }]
-                                       
-                                    ]
-                                },
-
-                                "placeholder": "Type here..."
-                            }'>
-                                    <p>{!! $information->body !!}</p>
-                                </div>
+                            <div class="col-12">
+                                <textarea name="body" class="summernote-editor w-100"
+                                    data-summernote-config='{
+            "placeholder":	"Type here...",
+            "focus":		false,
+            "lang":			"en-US",
+            "minHeight":	 500,
+            "maxHeight":	 1500,
+    
+            "toolbar": [
+                ["font", ["bold", "italic", "underline", "clear"]],
+                ["para", ["ul", "ol", "paragraph"]],
+                ["insert", ["link", "picture", "video", "hr"]],
+                ["view", []]
+            ],
+    
+            "disableDragAndDrop":	 false,
+            "codeviewFilter":		 false,
+            "codeviewIframeFilter":	 true
+        }'>{!! $information->body !!}</textarea>
                             </div>
+
                         </div>
                         <hr />
                         <div>

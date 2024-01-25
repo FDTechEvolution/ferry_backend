@@ -3,7 +3,7 @@
 
 <head>
     @include('includes.head')
-    <script src="https://kit.fontawesome.com/4e1914be33.js" crossorigin="anonymous"></script>
+    
     @yield('head_meta')
 </head>
 

@@ -20,6 +20,7 @@
 
 <!-- Custom Style -->
 <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+<script src="https://kit.fontawesome.com/4e1914be33.js" crossorigin="anonymous"></script>
 
 <!-- favicon -->
 <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">

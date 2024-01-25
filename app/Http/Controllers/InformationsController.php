@@ -12,7 +12,12 @@ class InformationsController extends Controller
     public static function getPosition(){
         return [
             'TERM'=>'Terms & Conditions',
-            'TERM_TICKET'=>'Ticket Terms & Conditions'
+            'TERM_TICKET'=>'Ticket Terms & Conditions (Show on ticket PDF)',
+            'BAGGAGE_POLICY'=>'Baggage Policy',
+            'TERMS_OF_SERVICE'=>'Terms of Service',
+            'PRIVACY_POLICY'=>'Privacy Policy',
+            'Q&A'=>'Q&A',
+            'PRIVATE_CHATER_BOAT'=>'Private Chater Boat'
         ];
     }
 

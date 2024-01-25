@@ -61,7 +61,7 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
         Route::get('slide/get', 'getSlide');
     });
     Route::controller(RouteController::class)->group(function() {
-        Route::get('route/search/{from}/{to}', 'searchRoute');
+        Route::get('route/search/{from}/{to}/{date}', 'searchRoute');
     });
 
     Route::prefix('online-booking')->group(function() {
@@ -95,7 +95,7 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
     });
 
     Route::controller(InfomationController::class)->group(function() {
-        Route::get('term-and-condition/get', 'getTermAndCondition');
+        Route::get('infomation/get/{type}', 'getInfomation');
     });
 
     Route::controller(ReviewController::class)->group(function() {

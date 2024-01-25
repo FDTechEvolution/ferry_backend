@@ -9,9 +9,12 @@ use App\Models\Informations;
 
 class InfomationController extends Controller
 {
-    public function getTermAndCondition() {
-        $info = Informations::where('position', 'TERM_TICKET')->select(['body'])->first();
+    public function getInfomation($type) {
+        $info = Informations::where('position', $type)->select(['title', 'body'])->first();
 
-        return response()->json(['data' => $info], 200);
+        if(isset($info))
+            return response()->json(['result' => true, 'data' => $info], 200);
+        else
+            return response()->json(['result' => false, 'data' => ''], 200);
     }
 }

@@ -9,4 +9,11 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 class ApiMerchants extends Model
 {
     use HasFactory, HasUuids;
+
+    protected $fillable = [
+        'name',
+        'key',
+        'commission',
+        'vat'
+    ];
 }

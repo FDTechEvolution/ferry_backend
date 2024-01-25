@@ -15,11 +15,17 @@ class ApiRoutes extends Model
         'isactive',
         'regular_price',
         'discount',
+        'commission',
+        'vat',
         'totalamt',
         'api_merchant_id'
     ];
 
     public function route() {
         return $this->hasOne(Route::class, 'id', 'route_id')->with('station_from', 'station_to');
+    }
+
+    public function api_merchant() {
+        return $this->hasOne(ApiMerchants::class, 'id', 'api_merchant_id');
     }
 }

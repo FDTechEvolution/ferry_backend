@@ -40,7 +40,7 @@
     </form>
     <hr>
     @if (sizeof($routes) > 0)
-        <form novalidate class="bs-validate" id="frm" method="POST" action="{{ route('routeSchedule.store') }}">
+        <form novalidate class="bs-validate" id="frm" method="POST" action="{{ route('routeSchedules.store') }}">
             @csrf
             <fieldset id="field-frm">
                 <div class="row">

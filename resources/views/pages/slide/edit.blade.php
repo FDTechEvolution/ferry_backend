@@ -86,10 +86,10 @@
                 </div>
                 <hr/>
                 <div class="mb-4 row">
-                    <label class="col-sm-12 col-lg-3 col-form-label-sm fw-bold">Sort</label>
+                    <label class="col-sm-12 col-lg-3 col-form-label-sm fw-bold">Sort </label>
                     <div class="col-sm-12 col-lg-9">
                         <select class="form-select form-slect-sm" name="sort">
-                            @for ($sort = 1; $sort < $max_sort; $sort++)
+                            @for ($sort = 1; $sort <= $max_sort; $sort++)
                                 <option value="{{ $sort }}" @selected($sort == $slide->sort)>{{ $sort }}</option>
                             @endfor
                         </select>

@@ -57,7 +57,7 @@ class SlideController extends Controller
     private function createTitleSlug($title) {
         $_slug = '';
         $random = Str::random(6);
-        $_blog = Slide::where('title', $title)->first();
+        $_blog = Slide::where('title', $title)->where('type', 'BLOG')->first();
         if(isset($_blog)) $_slug = Str::slug($title, '-').'-'.Str::lower($random);
         else $_slug = Str::slug($title, '-');
 
@@ -65,7 +65,7 @@ class SlideController extends Controller
     }
 
     private function updateSortList($last_id) {
-        $slide = Slide::where('id', '!=', $last_id)->get();
+        $slide = Slide::where('id', '!=', $last_id)->where('type', 'BLOG')->get();
         foreach($slide as $item) {
             $item->sort = $item->sort+1;
             $item->save();
@@ -74,11 +74,11 @@ class SlideController extends Controller
 
     public function edit($id) {
         $slide = Slide::where('id', $id)->where('status', 'CO')->with('image')->first();
-        $max_sort =Slide::max('sort');
+        $max_sort = Slide::where('type', 'BLOG')->orderBy('sort', 'DESC')->first();
 
         // Log::debug($slide->toArray());
 
-        if(isset($slide)) return view('pages.slide.edit', ['slide' => $slide, 'max_sort' => $max_sort]);
+        if(isset($slide)) return view('pages.slide.edit', ['slide' => $slide, 'max_sort' => $max_sort->sort]);
         return redirect()->route('blog-index')->withFail('No blog.');
     }
 
@@ -118,7 +118,7 @@ class SlideController extends Controller
 
     private function setBlogSort($sort = 'DESC')
     {
-        $blogs = Slide::orderBy('sort', 'ASC')
+        $blogs = Slide::where('type', 'BLOG')->orderBy('sort', 'ASC')
             ->orderBy('updated_at', $sort)
             ->get();
 

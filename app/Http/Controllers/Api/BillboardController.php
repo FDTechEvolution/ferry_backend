@@ -8,16 +8,15 @@ use Illuminate\Support\Facades\Log;
 
 use App\Models\Slide;
 
-class SlideController extends Controller
+class BillboardController extends Controller
 {
-    public function getBlog() {
-        $blog = Slide::where('isactive', 'Y')
+    public function getBillboard() {
+        $billboard = Slide::where('isactive', 'Y')
                         ->where('status', 'CO')
-                        ->where('type', 'BLOG')
-                        ->with('image')
+                        ->where('type', 'BOARD')
                         ->orderBy('sort', 'ASC')
                         ->get();
 
-        return response()->json(['data' => $blog, 'status' => 'success']);
+        return response()->json(['data' => $billboard, 'status' => 'success']);
     }
 }

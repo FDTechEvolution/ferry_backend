@@ -16,6 +16,7 @@ class Slide extends Model
         'link',
         'sort',
         'type',
+        'color',
         'image_id',
         'isactive',
         'status',

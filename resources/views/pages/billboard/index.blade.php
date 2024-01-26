@@ -3,10 +3,10 @@
 @section('page-title')
     <div class="row ms-md-2 d-md-flex flex-md-wrap flex-lg-nowrap">
         <div class="col-12 col-md-7 my-auto">
-            <h1 class="ms-2 mb-0 text-main-color-2" style="width: 300px;">Media <small class="fs-4">/ Blog</small></h1>
+            <h1 class="ms-2 mb-0 text-main-color-2" style="width: 340px;">Media <small class="fs-4">/ Billboard</small></h1>
         </div>
         <div class="col-12 col-md-12 col-lg-12">
-            <x-a-href-green :text="_('Add')" :href="route('blog-create')" :target="_('_self')" class="" />
+            <x-a-href-green :text="_('Add')" :href="route('billboard-create')" :target="_('_self')" class="" />
         </div>
     </div>
 @stop
@@ -14,14 +14,6 @@
 @section('content')
 <div class="row">
     <div class="col-12">
-        <div class="card bg-main-color d-none" id="create-slide">
-
-        </div>
-
-        <div class="card bg-main-color d-none" id="edit-slide">
-
-        </div>
-
         <div class="card mt-3">
             <div class="card-body">
                 <table class="table-datatable table table-datatable-custom"
@@ -65,37 +57,36 @@
                     <thead>
                         <tr>
                             <th class="text-center">#</th>
-                            <th class="text-center">Image</th>
                             <th>Title</th>
                             <th class="text-center">Status</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($slides as $index => $slide)
+                        @foreach($billboard as $index => $item)
                             <tr class="text-center align-middle">
-                                <td>{{ $slide->sort }}</td>
-                                <td class="px-3" style="max-width: 40px;">
-                                    <a class="fancybox" href="{{ asset($slide->image->path.'/'.$slide->image->name) }}">
-                                        <img src="{{ asset($slide->image->path.'/'.$slide->image->name) }}" class="w-100">
-                                    </a>
+                                <td>{{ $item->sort }}</td>
+                                <td class="text-start">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar avatar-xs me-2" style="background-color:{{ $item->color }}"></div>
+                                        {{ $item->title }}
+                                    </div>
                                 </td>
-                                <td class="text-start">{{ $slide->title }}</td>
                                 <td>
-                                    <label class="align-items-center text-center">
-                                        <input class="d-none-cloaked" type="checkbox" name="switch-checkbox" value="{{ $slide->id }}" @checked($slide->isactive == 'Y') onClick="showInHomepage(this)">
+                                    <label class="d-flex align-items-center justify-content-center">
+                                        <input class="d-none-cloaked billboard-isactive" type="checkbox" name="switch-checkbox" value="{{ $item->id }}" @checked($item->isactive == 'Y')>
                                         <i class="switch-icon switch-icon-primary switch-icon-sm"></i>
                                     </label>
                                 </td>
                                 <td>
                                     <x-action-edit
                                         class="me-2"
-                                        :url="route('blog-edit', ['id' => $slide->id])"
+                                        :url="route('billboard-edit', ['id' => $item->id])"
                                         id="btn-slide-edit"
                                     />
                                     <x-action-delete
-                                        :url="route('blog-delete', ['id' => $slide->id])"
-                                        :message="_('Are you sure? Delete this blog ?')"
+                                        :url="route('billboard-delete', ['id' => $item->id])"
+                                        :message="_('Are you sure? Delete this billboard ?')"
                                     />
                                 </td>
                             </tr>
@@ -106,17 +97,8 @@
         </div>
     </div>
 </div>
-
-<style>
-    main#middle {
-        padding-top: 0 !important;
-    }
-    .position-relative.d-inline-block.bg-cover {
-        width: 220px !important;
-    }
-</style>
 @stop
 
 @section('script')
-<script src="{{ asset('assets/js/app/slide.js') }}"></script>
+<script src="{{ asset('assets/js/app/billboard.js') }}"></script>
 @stop

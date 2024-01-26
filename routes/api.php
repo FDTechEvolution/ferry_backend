@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\ReviewsController;
+use App\Http\Controllers\Api\BillboardController;
 
 // 7 Controller
 use App\Http\Controllers\Api\Seven\BookingController as SevenBooking;
@@ -58,7 +59,10 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
         Route::get('stations/get/nickname/{nickname}', 'getStationByNickname');
     });
     Route::controller(SlideController::class)->group(function() {
-        Route::get('slide/get', 'getSlide');
+        Route::get('slide/get', 'getBlog');
+    });
+    Route::controller(BillboardController::class)->group(function() {
+        Route::get('billboard/get', 'getBillboard');
     });
     Route::controller(RouteController::class)->group(function() {
         Route::get('route/search/{from}/{to}/{date}', 'searchRoute');

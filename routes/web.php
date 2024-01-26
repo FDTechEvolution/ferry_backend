@@ -27,6 +27,7 @@ use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\FareController;
 use App\Http\Controllers\PrintController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\BillboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -227,6 +228,19 @@ Route::middleware('auth')->group(function () {
 
         // AJAX
         Route::get('/ajax/slide/show-in-homepage/{id}', 'updateShowInHomepage')->name('slide-show');
+    });
+
+    Route::controller(BillboardController::class)->group(function() {
+        Route::get('/media/billboard', 'index')->name('billboard-index');
+        Route::get('/media/billboard/create', 'create')->name('billboard-create');
+        Route::get('/media/billboard/edit/{id}', 'edit')->name('billboard-edit');
+        Route::get('/media/billboard/delete/{id}', 'destroy')->name('billboard-delete');
+
+        Route::post('/media/billboard/store', 'store')->name('billboard-store');
+        Route::post('/media/billboard/update', 'update')->name('billboard-update');
+
+        // AJAX
+        Route::get('/ajax/media/billboard/status/{id}', 'updateStatus')->name('billboard-update-status');
     });
 
     Route::controller(PromotionController::class)->group(function () {

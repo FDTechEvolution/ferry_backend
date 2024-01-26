@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 use App\Models\Slide;
 use App\Models\Image;
@@ -18,69 +19,113 @@ class SlideController extends Controller
     protected $ImagePath = '/uploads/slide';
 
     public function index() {
-        $slides = Slide::where('status', 'CO')->orderBy('sort', 'ASC')->get();
+        $slides = Slide::where('status', 'CO')->where('type', 'BLOG')->orderBy('sort', 'ASC')->get();
 
         return view('pages.slide.index', ['slides' => $slides]);
     }
 
+    public function create() {
+        return view('pages.slide.create');
+    }
+
     public function store(Request $request) {
         $request->validate([
-            'sort' => 'integer|nullable',
-            'link' => 'string|nullable',
+            'title' => 'required|string',
             'description' => 'string|nullable',
             'file_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        if($request->sort == '')
-            $_sort = Slide::where('status', 'CO')->max('sort');
-
+        $slug = $this->createTitleSlug($request->title);
         $image_id = $this->storeImage($request->file_picture, $this->ImagePath);
 
         $slide = Slide::create([
-            'link' => $request->link,
-            'sort' => $request->sort != '' ? $request->sort : $_sort+1,
+            'title' => $request->title,
+            'slug' => $slug,
+            'sort' => 1,
             'image_id' => $image_id,
-            'description' => $request->description
+            'description' => $request->description,
+            'type' => 'BLOG'
         ]);
 
-        if($slide) return redirect()->route('slide-index')->withSuccess('Slide created.');
-        else return redirect()->route('slide-index')->withFail('Something is wrong. Please try again.');
+        if($slide) {
+            $this->updateSortList($slide->id);
+            return redirect()->route('blog-index')->withSuccess('Content created.');
+        }
+        else return redirect()->route('blog-index')->withFail('Something is wrong. Please try again.');
+    }
+
+    private function createTitleSlug($title) {
+        $_slug = '';
+        $random = Str::random(6);
+        $_blog = Slide::where('title', $title)->first();
+        if(isset($_blog)) $_slug = Str::slug($title, '-').'-'.Str::lower($random);
+        else $_slug = Str::slug($title, '-');
+
+        return $_slug;
+    }
+
+    private function updateSortList($last_id) {
+        $slide = Slide::where('id', '!=', $last_id)->get();
+        foreach($slide as $item) {
+            $item->sort = $item->sort+1;
+            $item->save();
+        }
     }
 
     public function edit($id) {
         $slide = Slide::where('id', $id)->where('status', 'CO')->with('image')->first();
+        $max_sort =Slide::max('sort');
 
         // Log::debug($slide->toArray());
 
-        if(isset($slide)) return view('pages.slide.edit', ['slide' => $slide]);
-        return redirect()->route('slide-index')->withFail('No slide.');
+        if(isset($slide)) return view('pages.slide.edit', ['slide' => $slide, 'max_sort' => $max_sort]);
+        return redirect()->route('blog-index')->withFail('No blog.');
     }
 
     public function update(Request $request) {
         $request->validate([
-            'sort' => 'integer|nullable',
-            'link' => 'string|nullable',
+            'title' => 'required|string',
+            'sort' => 'required|integer',
             'description' => 'string|nullable',
             'file_picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable'
         ]);
 
         $slide = Slide::find($request->slide_id);
         $slide->image;
+        $oldSort = $slide->sort;
 
+        $slug = $this->createTitleSlug($request->title);
         $image_id = null;
         if ($request->hasFile('file_picture')) {
             $image_id = $this->storeImage($request->file_picture, $this->ImagePath);
             $this->destroyImage($slide->image_id, $slide->image);
         }
-        if($request->sort == '') $_sort = Slide::where('status', 'CO')->max('sort');
 
-        $slide->link = $request->link;
-        $slide->sort = $request->sort != '' ? $request->sort : $_sort;
+        $slide->title = $request->title;
+        $slide->slug = $slug;
+        $slide->sort = $request->sort;
         $slide->description = $request->description;
         if($image_id != null) $slide->image_id = $image_id;
 
-        if($slide->save()) return redirect()->route('slide-index')->withSuccess('Slide updated.');
-        else return redirect()->route('slide-index')->withFail('Something is wrong. Please try again.');
+        if($slide->save()) {
+            if ($oldSort != $request->sort) {
+                $this->setBlogSort(($request->sort > $oldSort ? 'ASC' : 'DESC'));
+            }
+            return redirect()->route('blog-index')->withSuccess('Slide updated.');
+        }
+        else return redirect()->route('blog-index')->withFail('Something is wrong. Please try again.');
+    }
+
+    private function setBlogSort($sort = 'DESC')
+    {
+        $blogs = Slide::orderBy('sort', 'ASC')
+            ->orderBy('updated_at', $sort)
+            ->get();
+
+        foreach ($blogs as $index => $blog) {
+            $blog->sort = ($index + 1);
+            $blog->save();
+        }
     }
 
     public function destroy(string $id = null) {

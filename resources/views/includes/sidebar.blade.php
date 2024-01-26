@@ -114,9 +114,9 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{ route('slide-index') }}">
+            <a class="nav-link" href="{{ route('blog-index') }}">
               <i class="fi fi-arrow-right"></i>
-              Slide
+              Blog
             </a>
           </li>
         </ul>

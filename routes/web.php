@@ -217,12 +217,13 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::controller(SlideController::class)->group(function () {
-        Route::get('/media/slide', 'index')->name('slide-index');
-        Route::get('/media/slide/edit/{id}', 'edit')->name('slide-edit');
-        Route::get('/media/slide/delete/{id}', 'destroy')->name('slide-delete');
+        Route::get('/media/blog', 'index')->name('blog-index');
+        Route::get('/media/blog/create', 'create')->name('blog-create');
+        Route::get('/media/blog/edit/{id}', 'edit')->name('blog-edit');
+        Route::get('/media/blog/delete/{id}', 'destroy')->name('blog-delete');
 
-        Route::post('/media/slide/create', 'store')->name('slide-create');
-        Route::post('/media/slide/update', 'update')->name('slide-update');
+        Route::post('/media/blog/create', 'store')->name('blog-store');
+        Route::post('/media/blog/update', 'update')->name('blog-update');
 
         // AJAX
         Route::get('/ajax/slide/show-in-homepage/{id}', 'updateShowInHomepage')->name('slide-show');

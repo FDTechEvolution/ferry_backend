@@ -11,8 +11,11 @@ class Slide extends Model
     use HasFactory, HasUuids;
 
     protected $fillable = [
+        'title',
+        'slug',
         'link',
         'sort',
+        'type',
         'image_id',
         'isactive',
         'status',

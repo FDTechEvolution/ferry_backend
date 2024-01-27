@@ -65,7 +65,7 @@
                     <thead>
                         <tr>
                             <th class="text-center">#</th>
-                            <th class="text-center">Image</th>
+                            <th class="text-center" style="width: 120px;">Image</th>
                             <th>Title</th>
                             <th class="text-center">Status</th>
                             <th class="text-center">Action</th>

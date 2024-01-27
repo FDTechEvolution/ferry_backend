@@ -59,7 +59,8 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
         Route::get('stations/get/nickname/{nickname}', 'getStationByNickname');
     });
     Route::controller(SlideController::class)->group(function() {
-        Route::get('slide/get', 'getBlog');
+        Route::get('blog/get', 'getBlog');
+        Route::get('blog/get-blog/{slug}', 'getBlogBySlug');
     });
     Route::controller(BillboardController::class)->group(function() {
         Route::get('billboard/get', 'getBillboard');

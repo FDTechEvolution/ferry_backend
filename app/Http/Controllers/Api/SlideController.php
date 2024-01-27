@@ -20,4 +20,16 @@ class SlideController extends Controller
 
         return response()->json(['data' => $blog, 'status' => 'success']);
     }
+
+    public function getBlogBySlug(string $slug = null) {
+        $blog = Slide::where('slug', $slug)
+                        ->where('isactive', 'Y')
+                        ->where('status', 'CO')
+                        ->where('type', 'BLOG')
+                        ->with('image')
+                        ->first();
+
+        if(isset($blog)) return response()->json(['result' => true, 'data' => $blog, 'status' => 'success']);
+        return response()->json(['result' => false, 'data' => '', 'status' => 'fail']);
+    }
 }

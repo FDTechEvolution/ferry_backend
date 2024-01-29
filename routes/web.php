@@ -28,6 +28,7 @@ use App\Http\Controllers\FareController;
 use App\Http\Controllers\PrintController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\BillboardController;
+use App\Http\Controllers\PremiumFlexController;
 
 /*
 |--------------------------------------------------------------------------
@@ -283,6 +284,11 @@ Route::middleware('auth')->group(function () {
 
         // AJAX
         Route::get('/ajax/news/status/{id}', 'updateStatus')->name('news-update-status');
+    });
+
+    Route::controller(PremiumFlexController::class)->group(function() {
+        Route::get('/premium-flex', 'index')->name('pmf-index');
+        Route::post('/premium-flex/update', 'update')->name('pmf-update');
     });
 
 });

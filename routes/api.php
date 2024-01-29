@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\Api\BillboardController;
+use App\Http\Controllers\Api\PremiumFlexController;
 
 // 7 Controller
 use App\Http\Controllers\Api\Seven\BookingController as SevenBooking;
@@ -116,6 +117,10 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
         // Route::get('news/get/{id}', 'getNewsById');
         Route::get('news/view', 'getNewByView');
         Route::get('news/get/{slug}', 'getNewsBySlug');
+    });
+
+    Route::controller(PremiumFlexController::class)->group(function() {
+        Route::get('premium-flex', 'index');
     });
 });
 

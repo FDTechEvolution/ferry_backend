@@ -152,6 +152,12 @@
             <span>Partner</span>
         </a>
     </li>
+    <li class="nav-item {{ (request()->is('premium-flex*')) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('pmf-index') }}">
+            <i class="fi fi-arrow-right"></i>
+            <span>Premium Flex</span>
+        </a>
+    </li>
       <li class="nav-item" style="display: none;">
           <a class="nav-link" href="#">
               <i class="fi fi-arrow-right"></i>

@@ -29,6 +29,7 @@ use App\Http\Controllers\PrintController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\BillboardController;
 use App\Http\Controllers\PremiumFlexController;
+use App\Http\Controllers\ReportsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -293,6 +294,12 @@ Route::middleware('auth')->group(function () {
     Route::controller(PremiumFlexController::class)->group(function() {
         Route::get('/premium-flex', 'index')->name('pmf-index');
         Route::post('/premium-flex/update', 'update')->name('pmf-update');
+    });
+
+    Route::controller(ReportsController::class)->group(function() {
+        Route::get('/report', 'index')->name('report-index');
+
+        Route::post('/report', 'getRoute')->name('report-get');
     });
 
 });

@@ -43,11 +43,11 @@ class Route extends Model
     }
 
     public function station_from() {
-        return $this->hasOne(Station::class, 'id', 'station_from_id')->where('isactive', 'Y')->orderBy('sort', 'ASC')->with('section');
+        return $this->hasOne(Station::class, 'id', 'station_from_id')->where('isactive', 'Y')->orderBy('sort', 'ASC')->with('section', 'image');
     }
 
     public function station_to() {
-        return $this->hasOne(Station::class, 'id', 'station_to_id')->where('isactive', 'Y')->orderBy('sort', 'ASC')->with('section');
+        return $this->hasOne(Station::class, 'id', 'station_to_id')->where('isactive', 'Y')->orderBy('sort', 'ASC')->with('section', 'image');
     }
 
     public function icons() {
@@ -81,5 +81,9 @@ class Route extends Model
 
     public function api_route() {
         return $this->hasOne(ApiRoutes::class, 'route_id', 'id');
+    }
+
+    public function booking_route() {
+        return $this->belongsToMany(Bookings::class, 'booking_routes', 'route_id', 'booking_id')->withPivot('traveldate');
     }
 }

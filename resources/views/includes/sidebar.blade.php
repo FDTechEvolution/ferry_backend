@@ -128,8 +128,8 @@
         </a>
       </li>
 
-      <li class="nav-item">
-          <a class="nav-link" href="#">
+      <li class="nav-item {{ (request()->is('reports*')) ? 'active' : '' }}">
+          <a class="nav-link" href="{{ route('report-index') }}">
               <i class="fi fi-arrow-right"></i>
               <span>Report</span>
           </a>

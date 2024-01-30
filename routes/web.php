@@ -66,9 +66,13 @@ Route::controller(ForgotPasswordController::class)->group(function () {
 Route::middleware('auth')->group(function () {
     Route::resources([
         'section' => SectionsController::class,
-        'api' => ApiMerchantsController::class,
         'routeSchedules' => RouteSchedulesController::class,
     ]);
+
+    Route::controller(ApiMerchantsController::class)->group(function() {
+        Route::get('/api', 'index')->name('api.index');
+        Route::post('/api/update/{id}', 'update')->name('api.update');
+    });
 
     Route::controller(ApiRoutesController::class)->group(function () {
         Route::get('/apiroute/get/{merchant_id}', 'index')->name('api-route-index');

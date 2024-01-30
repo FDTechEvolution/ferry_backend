@@ -8,9 +8,12 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            @if(is_null($merchant_id))
 
+            @if(is_null($merchant_id))
+                <a href="{{ route('route-index') }}" class="btn btn-secondary"><i class="fi fi-arrow-left"></i> Back</a>
+                <a href="{{ route('routeSchedules.create') }}" class="btn button-orange-bg">Create New</a>
             @else
+            <a href="{{ route('api-route-index',['merchant_id'=>$merchant_id]) }}" class="btn btn-secondary"><i class="fi fi-arrow-left"></i> Back</a>
                 <a href="{{ route('routeSchedules.create') }}?merchant_id={{$merchant_id}}" class="btn button-orange-bg">Create New</a>
             @endif
         </div>

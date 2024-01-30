@@ -8,7 +8,7 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            <a href="{{ route('routeSchedules.index') }}" class="btn btn-secondary"><i class="fi fi-arrow-left"></i> Back</a>
+            <a href="{{ route('routeSchedules.index') }}?merchant_id={{$merchant_id}}" class="btn btn-secondary"><i class="fi fi-arrow-left"></i> Back</a>
         </div>
     </div>
     <hr>

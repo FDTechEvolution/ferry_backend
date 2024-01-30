@@ -1,14 +1,14 @@
 @extends('layouts.default')
 
 @section('page-title')
-    <h1 class="ms-2 mb-0" id="station-page-title"><span class="text-main-color-2">Edit Route</span> Schedule</h1>
+    <h1 class="ms-2 mb-0" id="station-page-title"><span class="text-main-color-2">Edit @if(!is_null($routeSchedule->api_merchant_id))API @endif Route</span> Schedule</h1>
 
 @stop
 
 @section('content')
     <div class="row">
         <div class="col-12">
-            <a href="{{ route('routeSchedules.index') }}" class="btn btn-secondary"><i class="fi fi-arrow-left"></i> Back</a>
+            <a href="{{ route('routeSchedules.index') }}?merchant_id={{$routeSchedule->api_merchant_id}}" class="btn btn-secondary"><i class="fi fi-arrow-left"></i> Back</a>
         </div>
     </div>
     <hr>
@@ -17,7 +17,7 @@
         
         @csrf
         @method('PUT')
-
+        
         <fieldset id="field-frm">
             <div class="row">
                 <div class="col-12 col-lg-6 border-end">
@@ -131,7 +131,7 @@
                 <div class="col-12 text-center">
                     <x-button-submit-loading class="btn-lg w--30 me-4 button-orange-bg" :form_id="_('frm')" :fieldset_id="_('field-frm')"
                         :text="_('Save')" />
-                    <a href="{{ route('routeSchedules.index') }}" class="btn btn-secondary btn-lg w--30">Cancel</a>
+                    <a href="{{ route('routeSchedules.index') }}?merchant_id={{$routeSchedule->api_merchant_id}}" class="btn btn-secondary btn-lg w--30">Cancel</a>
                     <small id="user-create-error-notice" class="text-danger mt-3"></small>
                 </div>
             </div>

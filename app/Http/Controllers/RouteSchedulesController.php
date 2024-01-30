@@ -105,10 +105,18 @@ class RouteSchedulesController extends Controller
         $startDateSql = Carbon::createFromFormat('d/m/Y', $startDate)->format('Y-m-d');
         $endDateSql = Carbon::createFromFormat('d/m/Y', $endDate)->format('Y-m-d');
 
+        $merchant_id = NULL;
+        if(isset($request->merchant_id) && $request->merchant_id !=''){
+            $merchant_id = $request->merchant_id;
+        }
+        
+
         $route_ids = $request->route_id;
         if (!isset($route_ids) || sizeof($route_ids) == 0) {
-            return redirect()->route('routeSchedules.index');
+            return redirect()->route('routeSchedules.index',['merchant_id'=>$merchant_id]);
         }
+
+        
         foreach ($route_ids as $index => $route_id) {
             $routeSchedule = RouteSchedules::create([
                 'route_id' => $route_id,
@@ -124,11 +132,11 @@ class RouteSchedulesController extends Controller
                 'fri' => isset($request->fri) ? 'Y' : 'N',
                 'sat' => isset($request->sat) ? 'Y' : 'N',
                 'sun' => isset($request->sun) ? 'Y' : 'N',
-                'api_merchant_id'=> (isset($request->merchant_id) && $request->merchant_id !='')?$request->merchant_id:NULL
+                'api_merchant_id'=> $merchant_id
             ]);
         }
 
-        return redirect()->route('routeSchedules.index')->withSuccess('');
+        return redirect()->route('routeSchedules.index',['merchant_id'=>$merchant_id])->withSuccess('');
     }
 
     /**
@@ -187,7 +195,7 @@ class RouteSchedulesController extends Controller
         ];
 
         $routeSchedule->update($updateDatas);
-        return redirect()->route('routeSchedules.index')->withSuccess('');
+        return redirect()->route('routeSchedules.index',['merchant_id'=>$routeSchedule->api_merchant_id])->withSuccess('');
     }
 
     /**
@@ -196,7 +204,8 @@ class RouteSchedulesController extends Controller
     public function destroy(string $id)
     {
         $routeSchedule = RouteSchedules::where('id', $id)->first();
+        $merchant_id = $routeSchedule->api_merchant_id;
         $routeSchedule->delete();
-        return redirect()->route('routeSchedules.index')->withSuccess('');
+        return redirect()->route('routeSchedules.index',['merchant_id'=>$merchant_id])->withSuccess('');
     }
 }

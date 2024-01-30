@@ -14,19 +14,47 @@ class RouteSchedulesController extends Controller
      */
     public function index()
     {
-        //set inactive
-        $date = date('Y-m-d');
-        //RouteHelper::getAvaliableRoutes('9ad24c8e-47c4-4f2c-823d-32d7b2812711','9ad26407-81ce-4ad3-99ae-b4bcb47d16f6','2024-02-05');
-        $routeSchedules = RouteSchedules::with('isactive','Y')
-            ->where('end_datetime','<',$date)
-            ->update(['isactive' => 'N']);
+        $merchant_id = request()->merchant_id;
+        $routeSchedules = [];
+        $title = 'Route';
 
 
-        $routeSchedules = RouteSchedules::with('route')
-            ->orderBy('isactive', 'asc')
-            ->orderBy('start_datetime', 'desc')->get();
+        //check normal route
+        if (is_null($merchant_id) || $merchant_id == '') {
+            //set inactive
+            $date = date('Y-m-d');
+            //RouteHelper::getAvaliableRoutes('9ad24c8e-47c4-4f2c-823d-32d7b2812711','9ad26407-81ce-4ad3-99ae-b4bcb47d16f6','2024-02-05');
+            $routeSchedules = RouteSchedules::with('isactive', 'Y')
+                ->where('end_datetime', '<', $date)
+                ->whereNull('api_merchant_id')
+                ->update(['isactive' => 'N']);
 
-        return view('pages.route_schedules.index',['routeSchedules'=>$routeSchedules]);
+
+            $routeSchedules = RouteSchedules::with('route')
+                ->orderBy('isactive', 'asc')
+                ->whereNull('api_merchant_id')
+                ->orderBy('start_datetime', 'desc')->get();
+
+            
+        }else{
+            $title = 'API Route';
+
+            //set inactive
+            $date = date('Y-m-d');
+            $routeSchedules = RouteSchedules::with('isactive', 'Y')
+                ->where('end_datetime', '<', $date)
+                ->where('api_merchant_id',$merchant_id)
+                ->update(['isactive' => 'N']);
+
+
+            $routeSchedules = RouteSchedules::with('route')
+                ->orderBy('isactive', 'asc')
+                ->where('api_merchant_id',$merchant_id)
+                ->orderBy('start_datetime', 'desc')->get();
+        }
+
+        return view('pages.route_schedules.index', ['routeSchedules' => $routeSchedules, 'merchant_id' => $merchant_id,'title'=>$title]);
+
     }
 
     /**
@@ -34,6 +62,7 @@ class RouteSchedulesController extends Controller
      */
     public function create()
     {
+        $merchant_id = request()->merchant_id;
         $routes = [];
         $stationFromId = request()->station_from_id;
         $stationToId = request()->station_to_id;
@@ -55,6 +84,7 @@ class RouteSchedulesController extends Controller
             'stationFromId' => $stationFromId,
             'stationToId' => $stationToId,
             'routes' => $routes,
+            'merchant_id'=>$merchant_id
         ]);
     }
 
@@ -76,7 +106,7 @@ class RouteSchedulesController extends Controller
         $endDateSql = Carbon::createFromFormat('d/m/Y', $endDate)->format('Y-m-d');
 
         $route_ids = $request->route_id;
-        if(!isset($route_ids) || sizeof($route_ids) ==0){
+        if (!isset($route_ids) || sizeof($route_ids) == 0) {
             return redirect()->route('routeSchedules.index');
         }
         foreach ($route_ids as $index => $route_id) {
@@ -87,13 +117,14 @@ class RouteSchedulesController extends Controller
                 'end_datetime' => $endDateSql,
                 'isactive' => 'Y',
                 'description' => $request->description,
-                'mon'=>isset($request->mon)?'Y':'N',
-                'tru'=>isset($request->tru)?'Y':'N',
-                'wed'=>isset($request->wed)?'Y':'N',
-                'thu'=>isset($request->thu)?'Y':'N',
-                'fri'=>isset($request->fri)?'Y':'N',
-                'sat'=>isset($request->sat)?'Y':'N',
-                'sun'=>isset($request->sun)?'Y':'N',
+                'mon' => isset($request->mon) ? 'Y' : 'N',
+                'tru' => isset($request->tru) ? 'Y' : 'N',
+                'wed' => isset($request->wed) ? 'Y' : 'N',
+                'thu' => isset($request->thu) ? 'Y' : 'N',
+                'fri' => isset($request->fri) ? 'Y' : 'N',
+                'sat' => isset($request->sat) ? 'Y' : 'N',
+                'sun' => isset($request->sun) ? 'Y' : 'N',
+                'api_merchant_id'=> (isset($request->merchant_id) && $request->merchant_id !='')?$request->merchant_id:NULL
             ]);
         }
 
@@ -113,7 +144,7 @@ class RouteSchedulesController extends Controller
      */
     public function edit(string $id)
     {
-        $routeSchedule = RouteSchedules::where('id',$id)->with(['route'])->first();
+        $routeSchedule = RouteSchedules::where('id', $id)->with(['route'])->first();
 
         return view('pages.route_schedules.edit', [
             'routeSchedule' => $routeSchedule,
@@ -131,9 +162,9 @@ class RouteSchedulesController extends Controller
             'daterange' => 'required|string',
         ]);
 
-        
 
-        $routeSchedule = RouteSchedules::where('id',$id)->first();
+
+        $routeSchedule = RouteSchedules::where('id', $id)->first();
 
         $dates = explode('-', $request->daterange);
         $startDate = trim($dates[0]);
@@ -146,13 +177,13 @@ class RouteSchedulesController extends Controller
             'start_datetime' => $startDateSql,
             'end_datetime' => $endDateSql,
             'description' => $request->description,
-            'mon'=>isset($request->mon)?'Y':'N',
-            'tru'=>isset($request->tru)?'Y':'N',
-            'wed'=>isset($request->wed)?'Y':'N',
-            'thu'=>isset($request->thu)?'Y':'N',
-            'fri'=>isset($request->fri)?'Y':'N',
-            'sat'=>isset($request->sat)?'Y':'N',
-            'sun'=>isset($request->sun)?'Y':'N'
+            'mon' => isset($request->mon) ? 'Y' : 'N',
+            'tru' => isset($request->tru) ? 'Y' : 'N',
+            'wed' => isset($request->wed) ? 'Y' : 'N',
+            'thu' => isset($request->thu) ? 'Y' : 'N',
+            'fri' => isset($request->fri) ? 'Y' : 'N',
+            'sat' => isset($request->sat) ? 'Y' : 'N',
+            'sun' => isset($request->sun) ? 'Y' : 'N'
         ];
 
         $routeSchedule->update($updateDatas);
@@ -164,7 +195,7 @@ class RouteSchedulesController extends Controller
      */
     public function destroy(string $id)
     {
-        $routeSchedule = RouteSchedules::where('id',$id)->first();
+        $routeSchedule = RouteSchedules::where('id', $id)->first();
         $routeSchedule->delete();
         return redirect()->route('routeSchedules.index')->withSuccess('');
     }

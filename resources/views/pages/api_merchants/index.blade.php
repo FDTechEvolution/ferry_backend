@@ -7,7 +7,7 @@
 @section('content')
 <div class="row">
     <div class="col-12 col-lg-8">
-        <table class="table table-hover">
+        <table class="table table-hover table-lg">
             <thead>
                 <tr>
                     <th class="text-center">#</th>
@@ -32,10 +32,10 @@
                             </label>
                         </td> --}}
                         <td class="d-flex justify-content-end align-items-center">
-                            <x-api-merchant-comm-vat :comm="$item['commission']" :vat="$item['vat']" :id="$item['id']" />
+                            <x-api-merchant-comm-vat :comm="$item['commission']" :vat="$item['vat']" :id="$item['id']" /> 
                             <a href="{{ route('api-route-index', ['merchant_id' => $item['id']]) }}"
-                                data-bs-toggle="tooltip" data-bs-placement="top" title="View API List" class="ms-2">
-                                <i class="fa-solid fa-eye"></i>
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="" class="ms-2">
+                                <i class="fa-solid fa-gear"></i> Routes Setting 
                             </a>
                         </td>
                     </tr>

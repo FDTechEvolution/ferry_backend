@@ -30,14 +30,14 @@
                 <div class="col-12 col-lg-6">
                     <div class="row mb-3">
                         <div class="col-12">
-                            <div class="form-check form-check-inline" style="display: none;">
+                            <div class="form-check form-check-inline">
                                 <input class="form-check-input form-check-input-success" type="radio" name="type"
-                                    id="type_open" value="OPEN">
+                                    id="type_open" value="OPEN" @checked($routeSchedule->type=='OPEN')>
                                 <label class="form-check-label" for="type_open">Open Route</label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input form-check-input-danger" type="radio" name="type"
-                                    id="type_close" value="CLOSE" checked>
+                                    id="type_close" value="CLOSE" @checked($routeSchedule->type=='CLOSE')>
                                 <label class="form-check-label" for="type_close">Close Route</label>
                             </div>
                         </div>
@@ -60,7 +60,7 @@
                         </div>
                     </div>
 
-                    <div class="row mb-3">
+                    <div class="row mb-3" style="display: none;">
                         <div class="col-12">
                             <div class="form-check mb-2 form-check-inline">
                                 <input class="form-check-input form-check-input-success" type="checkbox" value="Y"

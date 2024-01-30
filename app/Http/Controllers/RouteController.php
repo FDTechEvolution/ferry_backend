@@ -65,13 +65,13 @@ class RouteController extends Controller
                     ->with('station_from', 'station_to', 'icons', 'routeAddons', 'activity_lines', 'meal_lines')
                     ->orderBy('created_at', 'DESC')
                     ->get();
-        $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
+        //$stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
 
         //$this->make($routes);
         $status = $this->_Status;
         return view('pages.route_control.index',
-                    ['routes' => $routes, 'stations' => $stations, 'route_status' => $status, 'icons' => $icons]
+                    ['routes' => $routes, 'route_status' => $status, 'icons' => $icons]
                 );
     }
 

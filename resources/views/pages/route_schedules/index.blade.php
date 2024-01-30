@@ -1,14 +1,18 @@
 @extends('layouts.default')
 
 @section('page-title')
-    <h1 class="ms-2 mb-0" id="station-page-title"><span class="text-main-color-2">Route</span> Schedule</h1>
+    <h1 class="ms-2 mb-0" id="station-page-title"><span class="text-main-color-2">{{$title}}</span> Schedule</h1>
 
 @stop
 
 @section('content')
     <div class="row">
         <div class="col-12">
-            <a href="{{ route('routeSchedules.create') }}" class="btn button-orange-bg">Create New</a>
+            @if(is_null($merchant_id))
+
+            @else
+                <a href="{{ route('routeSchedules.create') }}?merchant_id={{$merchant_id}}" class="btn button-orange-bg">Create New</a>
+            @endif
         </div>
     </div>
     <hr>
@@ -35,7 +39,7 @@
                                             class="badge @if ($routeSchedule->type == 'CLOSE') bg-danger @else bg-success @endif">{{ $routeSchedule->type }}</span>
                                         {{ $routeSchedule->route->station_from->name }} -
                                         {{ $routeSchedule->route->station_to->name }}</p>
-                                        
+                                        <!--
                                         @if($routeSchedule->mon =='Y') <span class="badge bg-danger-soft">Mon</span> @endif
                                         @if($routeSchedule->tru =='Y') <span class="badge bg-danger-soft">Tru</span> @endif
                                         @if($routeSchedule->wed =='Y') <span class="badge bg-danger-soft">Wed</span> @endif
@@ -43,6 +47,7 @@
                                         @if($routeSchedule->fri =='Y') <span class="badge bg-danger-soft">Fri</span> @endif
                                         @if($routeSchedule->sat =='Y') <span class="badge bg-danger-soft">Sat</span> @endif
                                         @if($routeSchedule->sun =='Y') <span class="badge bg-danger-soft">Sun</span> @endif
+                                        -->
                                     </td>
                                     <td>
                                         <span

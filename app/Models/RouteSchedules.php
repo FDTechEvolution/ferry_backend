@@ -23,7 +23,8 @@ class RouteSchedules extends Model
         'thu',
         'fri',
         'sat',
-        'sun'
+        'sun',
+        'api_merchant_id'
     ];
 
     public function route() {

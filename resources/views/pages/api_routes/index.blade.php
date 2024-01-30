@@ -13,6 +13,7 @@
     <div class="col-12 mb-3">
         <a href="{{ route('api.index') }}" class="btn btn-sm btn-secondary">Back</a>
         {{-- <a href="{{ route('api-route-updatecommission') }}" class="btn btn-sm btn-primary">Update</a> --}}
+        <a href="{{route('routeSchedules.index')}}?merchant_id={{$merchant_id}}" class="btn btn-warning btn-sm"><i class="fi fi-calendar"></i> Open/Close API Route Schedule</a>
     </div>
     <div class="col-12 col-lg-12 ">
         <div class="card card-body mx-3 table-responsiv">

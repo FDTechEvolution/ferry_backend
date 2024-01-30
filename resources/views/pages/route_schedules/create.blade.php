@@ -13,6 +13,9 @@
     </div>
     <hr>
     <form action="{{ route('routeSchedules.create') }}" method="GET" id="frm-search">
+        @if (!is_null($merchant_id))
+            <input type="hidden" value="{{ $merchant_id }}" name="merchant_id" />
+        @endif
         <div class="row">
             <div class="col-12 col-lg-4">
                 <div class="form-floating mb-3">
@@ -42,6 +45,9 @@
     @if (sizeof($routes) > 0)
         <form novalidate class="bs-validate" id="frm" method="POST" action="{{ route('routeSchedules.store') }}">
             @csrf
+            @if (!is_null($merchant_id))
+                <input type="hidden" value="{{ $merchant_id }}" name="merchant_id" />
+            @endif
             <fieldset id="field-frm">
                 <div class="row">
                     <div class="col-12 col-lg-6 border-end">
@@ -60,7 +66,8 @@
                                             <td>
                                                 <div class="form-check mb-2">
                                                     <input class="form-check-input form-check-input-success" type="checkbox"
-                                                        value="{{ $route->id }}" name="route_id[]" id="{{ $route->id }}" checked>
+                                                        value="{{ $route->id }}" name="route_id[]"
+                                                        id="{{ $route->id }}" checked>
                                                     <label class="form-check-label" for="{{ $route->id }}">
                                                         <strong>{{ $route->station_from->name }} -
                                                             {{ $route->station_to->name }}</strong>
@@ -79,7 +86,7 @@
                     <div class="col-12 col-lg-6">
                         <div class="row mb-3">
                             <div class="col-12">
-                                <div class="form-check form-check-inline" style="display: none;">
+                                <div class="form-check form-check-inline">
                                     <input class="form-check-input form-check-input-success" type="radio" name="type"
                                         id="type_open" value="OPEN">
                                     <label class="form-check-label" for="type_open">Open Route</label>
@@ -96,8 +103,8 @@
                                 <div class="form-floating mb-3">
                                     <input autocomplete="off" type="text" name="daterange" id="daterange"
                                         class="form-control form-control-sm rangepicker" data-bs-placement="left"
-                                        data-ranges="false" data-date-start=""
-                                        data-date-end="" data-date-format="DD/MM/YYYY"
+                                        data-ranges="false" data-date-start="" data-date-end=""
+                                        data-date-format="DD/MM/YYYY"
                                         data-quick-locale='{
                         "lang_apply"	: "Apply",
                         "lang_cancel" : "Cancel",
@@ -110,53 +117,60 @@
                             </div>
                         </div>
 
-                        <div class="row mb-3">
+                        <div class="row mb-3" style="display: none;">
                             <div class="col-12">
                                 <div class="form-check mb-2 form-check-inline">
-                                    <input class="form-check-input form-check-input-success" type="checkbox" value="Y" id="mon" name="mon" checked>
+                                    <input class="form-check-input form-check-input-success" type="checkbox" value="Y"
+                                        id="mon" name="mon" checked>
                                     <label class="form-check-label" for="mon">
                                         Monday
                                     </label>
                                 </div>
                                 <div class="form-check mb-2 form-check-inline">
-                                    <input class="form-check-input form-check-input-success" type="checkbox" value="Y" id="tru" name="tru" checked>
+                                    <input class="form-check-input form-check-input-success" type="checkbox" value="Y"
+                                        id="tru" name="tru" checked>
                                     <label class="form-check-label" for="tru">
                                         Tuesday
                                     </label>
                                 </div>
                                 <div class="form-check mb-2 form-check-inline">
-                                    <input class="form-check-input form-check-input-success" type="checkbox" value="Y" id="wed" name="wed" checked>
+                                    <input class="form-check-input form-check-input-success" type="checkbox"
+                                        value="Y" id="wed" name="wed" checked>
                                     <label class="form-check-label" for="wed">
                                         Wednesday
                                     </label>
                                 </div>
                                 <div class="form-check mb-2 form-check-inline">
-                                    <input class="form-check-input form-check-input-success" type="checkbox" value="Y" id="thu" name="thu" checked>
+                                    <input class="form-check-input form-check-input-success" type="checkbox"
+                                        value="Y" id="thu" name="thu" checked>
                                     <label class="form-check-label" for="thu">
                                         Thursday
                                     </label>
                                 </div>
                                 <div class="form-check mb-2 form-check-inline">
-                                    <input class="form-check-input form-check-input-success" type="checkbox" value="Y" id="fri" name="fri" checked>
+                                    <input class="form-check-input form-check-input-success" type="checkbox"
+                                        value="Y" id="fri" name="fri" checked>
                                     <label class="form-check-label" for="fri">
                                         Friday
                                     </label>
                                 </div>
                                 <div class="form-check mb-2 form-check-inline">
-                                    <input class="form-check-input form-check-input-success" type="checkbox" value="Y" id="sat" name="sat" checked>
+                                    <input class="form-check-input form-check-input-success" type="checkbox"
+                                        value="Y" id="sat" name="sat" checked>
                                     <label class="form-check-label" for="sat">
                                         Saturday
                                     </label>
                                 </div>
                                 <div class="form-check mb-2 form-check-inline">
-                                    <input class="form-check-input form-check-input-success" type="checkbox" value="Y" id="sun" name="sun" checked>
+                                    <input class="form-check-input form-check-input-success" type="checkbox"
+                                        value="Y" id="sun" name="sun" checked>
                                     <label class="form-check-label" for="sun">
                                         Sunday
                                     </label>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-floating mb-3">

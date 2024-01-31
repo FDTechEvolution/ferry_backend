@@ -29,8 +29,7 @@ a.dt-button.dropdown-item.buttons-print {
 }
 
 .table-datatable-custom tbody tr td {
-    line-height: 2.2rem;
-    border-bottom-color: #dbdbdb;
+   border-bottom-color: #dbdbdb;
 }
 
 table.table-datatable-custom {

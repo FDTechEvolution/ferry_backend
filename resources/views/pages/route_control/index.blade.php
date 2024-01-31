@@ -11,11 +11,11 @@
             <input type="text" class="form-control form-control-sm" id="filter-station-from" value=""
                 placeholder="Station From">
         </div>
-        <div class="col-12 mb-2 col-lg-4">
+        <div class="col-12 mb-2 col-lg-3">
             <input type="text" class="form-control form-control-sm" id="filter-station-to" value=""
                 placeholder="Station To">
         </div>
-        <div class="col-6 col-lg-3">
+        <div class="col-6 col-lg-4">
             <a href="{{route('routeSchedules.index')}}" class="btn btn-warning btn-sm"><i class="fi fi-calendar"></i> Open/Close Route Schedule</a>
         </div>
         <div class="col-6 col-lg-1">
@@ -68,7 +68,7 @@
         <div class="col-12">
             <div id="to-route-list" class="table-responsive">
 
-                <table class="table-datatable table table-datatable-custom table-hover" id="route-datatable"
+                <table class="table-datatable table table-datatable-custom table-hover table table-align-middle" id="route-datatable"
                     data-lng-empty="No data available in table"
                     data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
                     data-lng-filtered="(filtered from _MAX_ total entries)" data-lng-loading="Loading..."
@@ -86,14 +86,13 @@
                     <thead>
                         <tr class="small">
                             <th class="text-center" style="width: 60px;">Choose</th>
+                            <th class="text-center">PN</th>
                             <th class="text-start">Station From</th>
                             <th class="text-start">Station To</th>
                             <th class="text-center">Depart</th>
                             <th class="text-center">Arrive</th>
                             <th class="text-center fix-width-120">Icon</th>
-                            <th class="text-center">Adult</th>
-                            <th class="text-center">Child</th>
-                            <th class="text-center">Infant</th>
+                            <th class="">Price</th>
                             <th class="text-center">Meal</th>
                             <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Activity">Act.</th>
                             <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Shuttle Bus From">SBF.</th>
@@ -114,17 +113,24 @@
                                         type="checkbox" value="{{ $route['id'] }}" id="route-check-{{ $index }}"
                                         onClick="routeSelectedAction(this)">
                                 </td>
+                                <td class="text-center">
+                                    @if(!is_null($route->partner))
+                                    <img src="{{asset($route->partner->image->path)}}" width="25" class="img-circle" alt="{{$route->partner->name}}"/> 
+                                    @endif
+                                </td>
                                 <td class="text-start lh--1-2">
-                                    <p class="mb-0">{{ $route['station_from']['name'] }}</p>
+                                    {{ $route['station_from']['name'] }}
                                     @if ($route['station_from']['piername'] != '')
                                         <small class="text-secondary fs-d-80">({{ $route['station_from']['piername'] }})</small>
                                     @endif
                                 </td>
-                                <td class="text-start lh--1-2">
+                                <td class="text-start lh--1-2">   
                                     <p class="mb-0">{{ $route['station_to']['name'] }}</p>
                                     @if ($route['station_to']['piername'] != '')
                                         <small class="text-secondary fs-d-80">({{ $route['station_to']['piername'] }})</small>
                                     @endif
+
+
                                 </td>
                                 <td>{{ date('H:i', strtotime($route['depart_time'])) }}</td>
                                 <td>{{ date('H:i', strtotime($route['arrive_time'])) }}</td>
@@ -137,9 +143,11 @@
                                         @endforeach
                                     </div>
                                 </td>
-                                <td>{{ number_format($route['regular_price']) }}</td>
-                                <td>{{ number_format($route['child_price']) }}</td>
-                                <td>{{ number_format($route['infant_price']) }}</td>
+                                <td>
+                                    <span class="d-flex"><span class="badge bg-primary-soft">A:</span>{{ number_format($route['regular_price']) }}</span>
+                                    <span class="d-flex"><span class="badge bg-info-soft">C:</span>{{ number_format($route['child_price']) }}</span>
+                                    <span class="d-flex"><span class="badge bg-secondary-soft">I:</span>{{ number_format($route['infant_price']) }}</span>
+                                </td>
                                 <td>
                                     <i @class([
                                         'fa-solid fa-circle',
@@ -209,6 +217,7 @@
                                     <x-action-delete :url="route('route-delete', ['id' => $route['id']])" :message="_('Are you sure? Delete this route ?')" />
                                 </td>
                             </tr>
+
                         @endforeach
                     </tbody>
                 </table>
@@ -247,7 +256,7 @@
         }
 
         .lh--1-2 {
-            line-height: 1.2rem !important;
+            line-height: 1rem !important;
         }
     </style>
 @stop

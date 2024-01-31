@@ -185,6 +185,7 @@ class RouteSchedulesController extends Controller
             'start_datetime' => $startDateSql,
             'end_datetime' => $endDateSql,
             'description' => $request->description,
+            'type' => $request->type,
             'mon' => isset($request->mon) ? 'Y' : 'N',
             'tru' => isset($request->tru) ? 'Y' : 'N',
             'wed' => isset($request->wed) ? 'Y' : 'N',

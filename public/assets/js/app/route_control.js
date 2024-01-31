@@ -941,8 +941,10 @@ if(filter_to) {
 
 function searchRouteStation(e) {
     let is_routes = routes.filter((item, key) => {
-        return item.station_from.name.toLowerCase().includes(keyup_from.toLowerCase()) &&
-                item.station_to.name.toLowerCase().includes(keyup_to.toLowerCase())
+        let _station_from_label = item.station_from.nickname+' '+item.station_from.name;
+        let _station_to_label = item.station_to.nickname+' '+item.station_to.name;
+        return _station_from_label.toLowerCase().includes(keyup_from.toLowerCase()) &&
+        _station_to_label.toLowerCase().includes(keyup_to.toLowerCase())
     })
     is_routes.forEach((route, index) => {
         let obj = {

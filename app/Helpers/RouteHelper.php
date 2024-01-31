@@ -64,7 +64,7 @@ class RouteHelper
             //Log::debug(array_search($avaliableOpenRoute->route_id, $avaliableRouteIds));
 
             if(!$_departDate->between($start, $end)){
-                //Log::debug('not between');
+
                 $_avaliableRouteIds = $avaliableRouteIds;
                 foreach($_avaliableRouteIds as $index => $avaliableRouteId){
                     if($avaliableRouteId['id'] == $avaliableOpenRoute->route_id){

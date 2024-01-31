@@ -57,7 +57,7 @@
                                             class="badge rounded-pill bg-secondary">{{ date('H:i', strtotime($routeSchedule['route']['depart_time'])) }}-{{ date('H:i', strtotime($routeSchedule['route']['arrive_time'])) }}</span>
                                     </td>
 
-                                    <td>{{ date('d/m/Y', strtotime($routeSchedule->start_datetime)) }} - {{ date('d/m/Y', strtotime($routeSchedule->end_datetime)) }}</td>
+                                    <td>{{ date('D,d M Y', strtotime($routeSchedule->start_datetime)) }} - {{ date('D,d M Y', strtotime($routeSchedule->end_datetime)) }}</td>
                                    
                                     <td><small>{{ $routeSchedule->description }}</small></td>
                                     <td class="text-end">

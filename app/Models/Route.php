@@ -84,6 +84,6 @@ class Route extends Model
     }
 
     public function booking_route() {
-        return $this->belongsToMany(Bookings::class, 'booking_routes', 'route_id', 'booking_id')->withPivot('traveldate');
+        return $this->belongsToMany(Bookings::class, 'booking_routes', 'route_id', 'booking_id')->withPivot('traveldate')->with('promotion');
     }
 }

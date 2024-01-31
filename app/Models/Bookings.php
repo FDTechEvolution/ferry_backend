@@ -53,4 +53,8 @@ class Bookings extends Model
     public function payments() {
         return $this->hasMany(Payments::class,'booking_id', 'id')->with('paymentLines');
     }
+
+    public function promotion() {
+        return $this->hasOne(Promotions::class, 'id', 'promotion_id');
+    }
 }

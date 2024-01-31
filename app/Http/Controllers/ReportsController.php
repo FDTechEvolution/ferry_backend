@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 use App\Models\Section;
 use App\Models\Station;
@@ -26,19 +27,40 @@ class ReportsController extends Controller
     public function getRoute(Request $request) {
         $sections = $this->getSection();
         $depart_date = $this->setDepartDate($request->daterange);
-        // Log::debug($depart_date);
+        $start_date = Carbon::createFromFormat('Y-m-d', $depart_date[0])->startOfDay();
+        $end_date = Carbon::createFromFormat('Y-m-d', $depart_date[1])->startOfDay();
 
         $routes = Route::where('station_from_id', $request->station_from)
                         ->where('station_to_id', $request->station_to)
-                        ->with(['booking_route'])
-                        ->whereHas('booking_route', function($br) use ($depart_date) {
-                            $br->where('traveldate', '>=', '2024-01-20')->where('traveldate', '<=', '2024-01-25');
-                        })
+                        ->with(['booking_route' => function($br) use ($start_date, $end_date) {
+                            return $br->whereDate('traveldate', '>=', $start_date)->whereDate('traveldate', '<=', $end_date);
+                        }])
                         ->get();
 
-        Log::debug($routes->toArray());
+        $booking_route = $this->getOnlyBookingRoutes($routes);
+        // Log::debug($booking_route);
 
-        return view('pages.reports.index', ['sections' => $sections, 'reports' => $routes]);
+        return view('pages.reports.index', ['sections' => $sections, 'reports' => $booking_route]);
+    }
+
+    private function getOnlyBookingRoutes($routes) {
+        $booking_routes = [];
+
+        foreach($routes as $route) {
+            if(sizeof($route['booking_route']) > 0) {
+                foreach($route['booking_route'] as $br) {
+                    $br->traveldate = $br->pivot->traveldate;
+                    $br->travel_date = date('d/m/Y', strtotime($br->pivot->traveldate));
+                    array_push($booking_routes, $br->toArray());
+                }
+            }
+        }
+
+        usort($booking_routes, function ($a, $b) {
+            return strtotime($a['traveldate']) - strtotime($b['traveldate']);
+        });
+
+        return $booking_routes;
     }
 
     private function getSection() {

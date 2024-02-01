@@ -62,7 +62,7 @@ class RouteController extends Controller
 
     public function index() {
         $routes = Route::where('status', 'CO')
-                    ->with('station_from', 'station_to', 'icons', 'routeAddons', 'activity_lines', 'meal_lines','partner')
+                    ->with('station_from', 'station_to', 'icons', 'routeAddons', 'activity_lines', 'meal_lines','partner','lastSchedule')
                     ->orderBy('station_from_id', 'ASC')
                     ->orderBy('depart_time', 'ASC')
                     ->get();

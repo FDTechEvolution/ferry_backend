@@ -38,6 +38,10 @@ class Route extends Model
 
     ];
 
+    public function lastSchedule(){
+        return $this->hasMany(RouteSchedules::class,'route_id','id')->latest();
+    }
+
     public function partner() {
         return $this->hasOne(Partners::class, 'id', 'partner_id')->with('image');
     }

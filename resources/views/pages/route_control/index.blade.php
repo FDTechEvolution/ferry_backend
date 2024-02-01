@@ -6,17 +6,19 @@
 @stop
 
 @section('content')
+    <link rel="stylesheet" href="https:////cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" />
     <div class="row mt-3">
         <div class="col-12 mb-2 col-lg-3">
-            <input type="text" class="form-control form-control-sm" id="filter-station-from" value=""
+            <input type="text" class="form-control form-control-sm" id="search-station-from" value=""
                 placeholder="Station From">
         </div>
         <div class="col-12 mb-2 col-lg-3">
-            <input type="text" class="form-control form-control-sm" id="filter-station-to" value=""
+            <input type="text" class="form-control form-control-sm" id="search-station-to" value=""
                 placeholder="Station To">
         </div>
         <div class="col-6 col-lg-4">
-            <a href="{{route('routeSchedules.index')}}" class="btn btn-warning btn-sm"><i class="fi fi-calendar"></i> Open/Close Route Schedule</a>
+            <a href="{{ route('routeSchedules.index') }}" class="btn btn-warning btn-sm"><i class="fi fi-calendar"></i>
+                Open/Close Route Schedule</a>
         </div>
         <div class="col-6 col-lg-1">
             <form novalidate class="bs-validate" method="POST" target="_blank" action="{{ route('route-selected-pdf') }}">
@@ -68,7 +70,7 @@
         <div class="col-12">
             <div id="to-route-list" class="table-responsive">
 
-                <table class="table-datatable table table-datatable-custom table-hover table table-align-middle" id="route-datatable"
+                <table class="table table-datatable-custom table-hover table table-align-middle" id="route-datatable"
                     data-lng-empty="No data available in table"
                     data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
                     data-lng-filtered="(filtered from _MAX_ total entries)" data-lng-loading="Loading..."
@@ -79,27 +81,33 @@
                     data-items-per-page="15" data-enable-column-visibility="false" data-enable-export="false"
                     data-lng-export="<i class='fi fi-squared-dots fs-5 lh-1'></i>" data-lng-pdf="PDF" data-lng-xls="XLS"
                     data-lng-all="All" data-export-pdf-disable-mobile="true" data-responsive="false"
-                    data-export='["pdf", "xls"]'
+                    data-export='["pdf", "xls"]' data-main-search="false" data-column-search="false"
                     data-custom-config='{
-                        "searching":false
+                        
                     }'>
                     <thead>
                         <tr class="small">
                             <th class="text-center" style="width: 60px;">Choose</th>
                             <th class="text-center">PN</th>
-                            <th class="text-start">Station From</th>
-                            <th class="text-start">Station To</th>
+                            <th class="text-start">Station From/To</th>
+
                             <th class="text-center">Depart</th>
                             <th class="text-center">Arrive</th>
                             <th class="text-center fix-width-120">Icon</th>
                             <th class="">Price</th>
                             <th class="text-center">Meal</th>
-                            <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Activity">Act.</th>
-                            <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Shuttle Bus From">SBF.</th>
-                            <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Shuttle Bus To">SBT.</th>
-                            <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Long Tail Boat From">LTBF.</th>
-                            <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Long Tail Boat To">LTBT.</th>
-                            <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Promotion">Pro.</th>
+                            <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Activity">
+                                Act.</th>
+                            <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="Shuttle Bus From">SBF.</th>
+                            <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="Shuttle Bus To">SBT.</th>
+                            <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="Long Tail Boat From">LTBF.</th>
+                            <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="Long Tail Boat To">LTBT.</th>
+                            <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Promotion">
+                                Pro.</th>
                             <th class="text-center">Status</th>
                             <th class="text-center">Action</th>
                         </tr>
@@ -114,22 +122,47 @@
                                         onClick="routeSelectedAction(this)">
                                 </td>
                                 <td class="text-center">
-                                    @if(!is_null($route->partner))
-                                    <img src="{{asset($route->partner->image->path)}}" width="25" class="img-circle" alt="{{$route->partner->name}}"/> 
+                                    @if (!is_null($route->partner))
+                                        <img src="{{ asset($route->partner->image->path) }}" width="25"
+                                            class="img-circle" alt="{{ $route->partner->name }}" />
                                     @endif
                                 </td>
                                 <td class="text-start lh--1-2">
-                                    {{ $route['station_from']['name'] }}
-                                    @if ($route['station_from']['piername'] != '')
-                                        <small class="text-secondary fs-d-80">({{ $route['station_from']['piername'] }})</small>
-                                    @endif
-                                </td>
-                                <td class="text-start lh--1-2">   
-                                    <p class="mb-0">{{ $route['station_to']['name'] }}</p>
-                                    @if ($route['station_to']['piername'] != '')
-                                        <small class="text-secondary fs-d-80">({{ $route['station_to']['piername'] }})</small>
-                                    @endif
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                {{ $route['station_from']['name'] }}
+                                                @if ($route['station_from']['piername'] != '')
+                                                    <br>
+                                                    <small
+                                                        class="text-secondary fs-d-80">({{ $route['station_from']['piername'] }})</small>
+                                                @endif
+                                            </td>
+                                            <td><i class="fa-solid fa-angles-right px-2 fa-2x"></i></td>
+                                            <td>
+                                                <p class="mb-0">{{ $route['station_to']['name'] }}</p>
+                                                @if ($route['station_to']['piername'] != '')
+                                                    <small
+                                                        class="text-secondary fs-d-80">({{ $route['station_to']['piername'] }})</small>
+                                                @endif
+                                            </td>
+                                        </tr>
 
+                                        @if (sizeof($route->lastSchedule) > 0)
+                                            @php
+                                                $lastSchedule = $route->lastSchedule[0];
+                                            @endphp
+                                            <tr>
+                                                <td colspan="3">
+                                                    @if ($lastSchedule->type == 'CLOSE')
+                                                        <span class="badge bg-warning-soft">Close on </span>
+                                                    @else
+                                                        <span class="badge bg-warning-success">Open on </span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    </table>
 
                                 </td>
                                 <td>{{ date('H:i', strtotime($route['depart_time'])) }}</td>
@@ -144,63 +177,46 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="d-flex"><span class="badge bg-primary-soft">A:</span>{{ number_format($route['regular_price']) }}</span>
-                                    <span class="d-flex"><span class="badge bg-info-soft">C:</span>{{ number_format($route['child_price']) }}</span>
-                                    <span class="d-flex"><span class="badge bg-secondary-soft">I:</span>{{ number_format($route['infant_price']) }}</span>
+                                    <span class="d-flex"><span
+                                            class="badge bg-primary-soft">A:</span>{{ number_format($route['regular_price']) }}</span>
+                                    <span class="d-flex"><span
+                                            class="badge bg-info-soft">C:</span>{{ number_format($route['child_price']) }}</span>
+                                    <span class="d-flex"><span
+                                            class="badge bg-warning-soft">I:</span>{{ number_format($route['infant_price']) }}</span>
                                 </td>
                                 <td>
                                     <i @class([
                                         'fa-solid fa-circle',
                                         'text-success' => sizeof($route['meal_lines']) > 0,
-                                        'text-secondary' => sizeof($route['meal_lines']) <= 0
-                                        ])
-                                        data-bs-toggle="tooltip" data-bs-placement="top"
-                                        title="Meal on board"
-                                    >
+                                        'text-secondary' => sizeof($route['meal_lines']) <= 0,
+                                    ]) data-bs-toggle="tooltip" data-bs-placement="top"
+                                        title="Meal on board">
                                     </i>
                                 </td>
                                 <td>
                                     <i @class([
                                         'fa-solid fa-circle',
                                         'text-success' => sizeof($route['activity_lines']) > 0,
-                                        'text-secondary' => sizeof($route['activity_lines']) <= 0
-                                        ])
-                                        data-bs-toggle="tooltip" data-bs-placement="top"
-                                        title="Activity"
-                                    >
+                                        'text-secondary' => sizeof($route['activity_lines']) <= 0,
+                                    ]) data-bs-toggle="tooltip" data-bs-placement="top"
+                                        title="Activity">
                                     </i>
                                 </td>
                                 <td>
-                                    <x-route-addon-active
-                                        :routeAddons="$route['routeAddons']"
-                                        :name="_('Shuttle Bus From')"
-                                        :type="_('shuttle_bus')"
-                                        :subtype="_('from')"
-                                    />
+                                    <x-route-addon-active :routeAddons="$route['routeAddons']" :name="_('Shuttle Bus From')" :type="_('shuttle_bus')"
+                                        :subtype="_('from')" />
                                 </td>
                                 <td>
-                                    <x-route-addon-active
-                                        :routeAddons="$route['routeAddons']"
-                                        :name="_('Shuttle Bus To')"
-                                        :type="_('shuttle_bus')"
-                                        :subtype="_('to')"
-                                    />
+                                    <x-route-addon-active :routeAddons="$route['routeAddons']" :name="_('Shuttle Bus To')" :type="_('shuttle_bus')"
+                                        :subtype="_('to')" />
                                 </td>
                                 <td>
-                                    <x-route-addon-active
-                                        :routeAddons="$route['routeAddons']"
-                                        :name="_('Long Tail Boat From')"
-                                        :type="_('longtail_boat')"
-                                        :subtype="_('from')"
-                                    />
+                                    <x-route-addon-active :routeAddons="$route['routeAddons']" :name="_('Long Tail Boat From')" :type="_('longtail_boat')"
+                                        :subtype="_('from')" />
                                 </td>
                                 <td>
-                                    <x-route-addon-active
-                                        :routeAddons="$route['routeAddons']"
-                                        :name="_('Long Tail Boat To')"
-                                        :type="_('longtail_boat')"
-                                        :subtype="_('to')"
-                                    />
+                                    <x-route-addon-active :routeAddons="$route['routeAddons']" :name="_('Long Tail Boat To')" :type="_('longtail_boat')"
+                                        :subtype="_('to')" />
                                 </td>
                                 <td>
                                     <span data-bs-toggle="tooltip" data-bs-placement="top" title="Promotion">
@@ -213,11 +229,13 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <x-action-edit class="me-2" :url="route('route-edit', ['id' => $route['id']])" id="btn-route-edit" />
+                                    <a class="pb-3" style="font-size: 1.3rem;"
+                                        href="{{ route('route-edit', ['id' => $route['id']]) }}"><i
+                                            class="fa-solid fa-pen-to-square"></i></a><br>
+
                                     <x-action-delete :url="route('route-delete', ['id' => $route['id']])" :message="_('Are you sure? Delete this route ?')" />
                                 </td>
                             </tr>
-
                         @endforeach
                     </tbody>
                 </table>
@@ -262,9 +280,26 @@
 @stop
 
 @section('script')
+
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script>
         const icons = {{ Js::from($icons) }}
         const routes = {{ Js::from($routes) }}
+
+        $('#page-loader').show();
+        $(document).ready(function() {
+            $('#page-loader').hide();
+
+            let table = new DataTable('#route-datatable', {
+                searching: false,
+                ordering: false
+            });
+
+            $('#search-station-from').on('keyup', function() {
+                //console.log(table.columns(2).search(this.value));
+                table.column(2).search(this.value).draw();
+            });
+        });
     </script>
     <script src="{{ asset('assets/js/app/route_control.js') }}"></script>
 @stop

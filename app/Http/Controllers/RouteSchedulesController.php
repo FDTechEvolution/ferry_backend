@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\RouteHelper;
+use App\Models\ApiMerchants;
 use App\Models\RouteSchedules;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class RouteSchedulesController extends Controller
 {
@@ -15,47 +17,104 @@ class RouteSchedulesController extends Controller
      */
     public function index()
     {
+        
         $merchant_id = request()->merchant_id;
+        $stationFromId = request()->station_from_id;
+        $stationToId = request()->station_to_id;
+
         $routeSchedules = [];
         $title = 'Route';
 
+        $stationFroms = DB::table('routes')
+            ->select('stations.id', 'stations.name', 'stations.nickname', 'route_schedules.api_merchant_id')
+            ->join('stations', 'routes.station_from_id', '=', 'stations.id')
+            ->join('route_schedules', 'routes.id', '=', 'route_schedules.route_id');
 
-        //check normal route
+        if (!is_null($merchant_id) || $merchant_id != '') {
+            $apiMerchant = ApiMerchants::where('id',$merchant_id)->first();
+            $stationFroms = $stationFroms->where('api_merchant_id', $merchant_id);
+        }
+        $stationFroms = $stationFroms->groupBy('stations.id', 'stations.name', 'stations.nickname','route_schedules.api_merchant_id')
+            ->Get();
+
+        $stationTos = [];
+        if (!is_null($stationFromId) && $stationFromId != 'all') {
+            // ->where('routes.station_to_id', $stationFromId)
+            $stationTos = DB::table('routes')
+                ->select('stations.id', 'stations.name', 'stations.nickname','route_schedules.api_merchant_id')
+                ->join('stations', 'routes.station_to_id', '=', 'stations.id')
+                ->join('route_schedules', 'routes.id', '=', 'route_schedules.route_id')
+                ->where('routes.station_from_id', $stationFromId);
+        } else {
+            $stationTos = DB::table('routes')
+                ->select('stations.id', 'stations.name', 'stations.nickname','route_schedules.api_merchant_id')
+                ->join('stations', 'routes.station_to_id', '=', 'stations.id')
+                ->join('route_schedules', 'routes.id', '=', 'route_schedules.route_id');
+
+        }
+
+        if (!is_null($merchant_id) || $merchant_id != '') {
+            $stationTos = $stationTos->where('api_merchant_id', $merchant_id);
+        }
+
+        $stationTos = $stationTos->groupBy('stations.id', 'stations.name', 'stations.nickname','route_schedules.api_merchant_id')
+        ->Get();
+
+
+
+        //check normal ruote
         if (is_null($merchant_id) || $merchant_id == '') {
             //set inactive
             $date = date('Y-m-d');
-            //RouteHelper::getAvaliableRoutes('9ad24c8e-47c4-4f2c-823d-32d7b2812711','9ad26407-81ce-4ad3-99ae-b4bcb47d16f6','2024-02-05');
             $routeSchedules = RouteSchedules::with('isactive', 'Y')
                 ->where('end_datetime', '<', $date)
                 ->whereNull('api_merchant_id')
                 ->update(['isactive' => 'N']);
 
+            $routeSchedules = DB::table('routes')
+                ->select('sfrom.name as station_from_name', 'sto.name as station_to_name', 'routes.*', 'route_schedules.*')
+                ->join('stations as sfrom', 'routes.station_from_id', '=', 'sfrom.id')
+                ->join('stations as sto', 'routes.station_to_id', '=', 'sto.id')
+                ->join('route_schedules', 'routes.id', '=', 'route_schedules.route_id')
+                ->whereNull('route_schedules.api_merchant_id');
 
-            $routeSchedules = RouteSchedules::with('route')
-                ->orderBy('isactive', 'asc')
-                ->whereNull('api_merchant_id')
-                ->orderBy('start_datetime', 'desc')->get();
+            if (!is_null($stationFromId) && $stationFromId != 'all') {
+                $routeSchedules = $routeSchedules->where('routes.station_from_id', $stationFromId);
+            }
 
-            
-        }else{
+            if (!is_null($stationToId) && $stationToId != 'all') {
+                $routeSchedules = $routeSchedules->where('routes.station_to_id', $stationToId);
+            }
+
+            $routeSchedules = $routeSchedules->orderBy('sfrom.name', 'ASC')
+                ->orderBy('routes.depart_time', 'ASC')
+                ->get();
+
+        } else {
             $title = 'API Route';
 
             //set inactive
             $date = date('Y-m-d');
             $routeSchedules = RouteSchedules::with('isactive', 'Y')
                 ->where('end_datetime', '<', $date)
-                ->where('api_merchant_id',$merchant_id)
+                ->where('api_merchant_id', $merchant_id)
                 ->update(['isactive' => 'N']);
 
 
-            $routeSchedules = RouteSchedules::with('route')
-                ->orderBy('isactive', 'asc')
-                ->where('api_merchant_id',$merchant_id)
-                ->orderBy('start_datetime', 'desc')->get();
+            $routeSchedules = DB::table('routes')
+                ->select('sfrom.name as station_from_name', 'sto.name as station_to_name', 'routes.*', 'route_schedules.*')
+                ->join('stations as sfrom', 'routes.station_from_id', '=', 'sfrom.id')
+                ->join('stations as sto', 'routes.station_to_id', '=', 'sto.id')
+                ->join('route_schedules', 'routes.id', '=', 'route_schedules.route_id')
+                ->where('route_schedules.api_merchant_id', $merchant_id)
+                ->orderBy('sfrom.name', 'ASC')
+                ->orderBy('routes.depart_time', 'ASC')
+                ->get();
         }
 
-        return view('pages.route_schedules.index', ['routeSchedules' => $routeSchedules, 'merchant_id' => $merchant_id,'title'=>$title]);
+        //
 
+        return view('pages.route_schedules.index', ['routeSchedules' => $routeSchedules, 'merchant_id' => $merchant_id, 'title' => $title, 'stationFroms' => $stationFroms, 'stationTos' => $stationTos, 'stationFromId' => $stationFromId, 'stationToId' => $stationToId,'apiMerchant'=>$apiMerchant]);
     }
 
     /**
@@ -63,6 +122,7 @@ class RouteSchedulesController extends Controller
      */
     public function create()
     {
+        
         $merchant_id = request()->merchant_id;
         $routes = [];
         $stationFromId = request()->station_from_id;
@@ -72,6 +132,13 @@ class RouteSchedulesController extends Controller
         if (is_null($stationFromId) && sizeof($stationFroms) > 0) {
             $stationFromId = $stationFroms[0]->id;
         }
+
+        $apiMerchant = NULL;
+        if (!is_null($merchant_id) || $merchant_id != '') {
+            $apiMerchant = ApiMerchants::where('id',$merchant_id)->first();
+        }
+
+    
         $stationTos = RouteHelper::getStationTo($stationFromId);
 
         if (!is_null($stationFromId) && !is_null($stationToId)) {
@@ -79,13 +146,13 @@ class RouteSchedulesController extends Controller
         }
 
         //dd($stationFrom);
-        return view('pages.route_schedules.modal.create', [
+        return view('pages.route_schedules.create', [
             'stationFroms' => $stationFroms,
             'stationTos' => $stationTos,
             'stationFromId' => $stationFromId,
             'stationToId' => $stationToId,
             'routes' => $routes,
-            'merchant_id'=>$merchant_id
+            'merchant_id' => $merchant_id,'apiMerchant'=>$apiMerchant
         ]);
     }
 
@@ -107,17 +174,17 @@ class RouteSchedulesController extends Controller
         $endDateSql = Carbon::createFromFormat('d/m/Y', $endDate)->format('Y-m-d');
 
         $merchant_id = NULL;
-        if(isset($request->merchant_id) && $request->merchant_id !=''){
+        if (isset($request->merchant_id) && $request->merchant_id != '') {
             $merchant_id = $request->merchant_id;
         }
-        
+
 
         $route_ids = $request->route_id;
         if (!isset($route_ids) || sizeof($route_ids) == 0) {
-            return redirect()->route('routeSchedules.index',['merchant_id'=>$merchant_id]);
+            return redirect()->route('routeSchedules.index', ['merchant_id' => $merchant_id]);
         }
 
-        
+
         foreach ($route_ids as $index => $route_id) {
             $routeSchedule = RouteSchedules::create([
                 'route_id' => $route_id,
@@ -133,12 +200,12 @@ class RouteSchedulesController extends Controller
                 'fri' => isset($request->fri) ? 'Y' : 'N',
                 'sat' => isset($request->sat) ? 'Y' : 'N',
                 'sun' => isset($request->sun) ? 'Y' : 'N',
-                'api_merchant_id'=> $merchant_id,
-                'created_by'=>Auth::id()
+                'api_merchant_id' => $merchant_id,
+                'created_by' => Auth::id(),
             ]);
         }
 
-        return redirect()->route('routeSchedules.index',['merchant_id'=>$merchant_id])->withSuccess('');
+        return redirect()->route('routeSchedules.index', ['merchant_id' => $merchant_id])->withSuccess('');
     }
 
     /**
@@ -155,9 +222,21 @@ class RouteSchedulesController extends Controller
     public function edit(string $id)
     {
         $routeSchedule = RouteSchedules::where('id', $id)->with(['route'])->first();
+        $route_id = $routeSchedule->route_id;
+
+        $apiMerchant = NULL;
+        if (!is_null($routeSchedule->api_merchant_id) || $routeSchedule->api_merchant_id != '') {
+            $apiMerchant = ApiMerchants::where('id',$routeSchedule->api_merchant_id)->first();
+        }
+
+
+        $routeScheduleInRoutes = RouteSchedules::where('route_id', $route_id)
+        ->where('api_merchant_id',$routeSchedule->api_merchant_id)
+        ->orderBy('updated_at', 'DESC')->get();
 
         return view('pages.route_schedules.edit', [
             'routeSchedule' => $routeSchedule,
+            'routeScheduleInRoutes' => $routeScheduleInRoutes,'apiMerchant'=>$apiMerchant
         ]);
     }
 
@@ -195,11 +274,11 @@ class RouteSchedulesController extends Controller
             'fri' => isset($request->fri) ? 'Y' : 'N',
             'sat' => isset($request->sat) ? 'Y' : 'N',
             'sun' => isset($request->sun) ? 'Y' : 'N',
-            'updated_by'=>Auth::id()
+            'updated_by' => Auth::id(),
         ];
 
         $routeSchedule->update($updateDatas);
-        return redirect()->route('routeSchedules.index',['merchant_id'=>$routeSchedule->api_merchant_id])->withSuccess('');
+        return redirect()->route('routeSchedules.index', ['merchant_id' => $routeSchedule->api_merchant_id])->withSuccess('');
     }
 
     /**
@@ -210,6 +289,6 @@ class RouteSchedulesController extends Controller
         $routeSchedule = RouteSchedules::where('id', $id)->first();
         $merchant_id = $routeSchedule->api_merchant_id;
         $routeSchedule->delete();
-        return redirect()->route('routeSchedules.index',['merchant_id'=>$merchant_id])->withSuccess('');
+        return redirect()->route('routeSchedules.index', ['merchant_id' => $merchant_id])->withSuccess('');
     }
 }

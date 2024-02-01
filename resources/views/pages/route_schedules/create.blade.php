@@ -9,6 +9,10 @@
     <div class="row">
         <div class="col-12">
             <a href="{{ route('routeSchedules.index') }}?merchant_id={{$merchant_id}}" class="btn btn-secondary"><i class="fi fi-arrow-left"></i> Back</a>
+
+            @if (!is_null($apiMerchant))
+            <img src="{{$apiMerchant->logo}}" width="200px" class="px-2"/>
+            @endif
         </div>
     </div>
     <hr>

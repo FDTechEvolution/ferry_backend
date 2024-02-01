@@ -6,11 +6,12 @@
 
 @section('content')
 <div class="row">
-    <div class="col-12 col-lg-8">
+    <div class="col-12 col-lg-12">
         <table class="table table-hover table-lg">
             <thead>
                 <tr>
                     <th class="text-center">#</th>
+                    <th></th>
                     <th>Name</th>
                     <th class="text-center">Commission (%)</th>
                     <th class="text-center">Vat. (%)</th>
@@ -22,6 +23,9 @@
                 @foreach ($merchant as $index => $item)
                     <tr>
                         <td class="text-center">{{ $index +1 }}</td>
+                        <td>
+                            <img src="{{$item->logo}}" width="100px" />
+                        </td>
                         <td>{{ $item['name'] }}</td>
                         <td class="text-center">{{ $item['commission'] }}</td>
                         <td class="text-center">{{ $item['vat'] }}</td>

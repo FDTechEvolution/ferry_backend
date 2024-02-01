@@ -9,6 +9,10 @@
     <div class="row">
         <div class="col-12">
             <a href="{{ route('routeSchedules.index') }}?merchant_id={{$routeSchedule->api_merchant_id}}" class="btn btn-secondary"><i class="fi fi-arrow-left"></i> Back</a>
+
+            @if (!is_null($apiMerchant))
+            <img src="{{$apiMerchant->logo}}" width="200px" class="px-2"/>
+            @endif
         </div>
     </div>
     <hr>
@@ -20,14 +24,39 @@
         
         <fieldset id="field-frm">
             <div class="row">
-                <div class="col-12 col-lg-6 border-end">
-                    <h3>{{ $routeSchedule->route->station_from->name }} -
-                        {{ $routeSchedule->route->station_to->name }}</h3>
-                    <span
-                        class="badge rounded-pill bg-secondary">{{ date('H:i', strtotime($routeSchedule['route']['depart_time'])) }}-{{ date('H:i', strtotime($routeSchedule['route']['arrive_time'])) }}</span>
+                <div class="col-12 col-lg-7 border-end">
+                    <h4>{{ $routeSchedule->route->station_from->name }} <i class="fa-solid fa-angles-right px-2 fa-1x"></i>
+                        {{ $routeSchedule->route->station_to->name }}</h4>
+                    <h3 class="text-main-color">
+                        {{ date('H:i', strtotime($routeSchedule['route']['depart_time'])) }}-{{ date('H:i', strtotime($routeSchedule['route']['arrive_time'])) }}
+                    </h3>
+
+                    <table class="table table-striped">
+                        <tbody>
+                            @foreach ($routeScheduleInRoutes as $index => $routeScheduleInRoute)
+                                <tr>
+                                    <td>
+                                        <p class="p-0 m-0">
+                                            <span
+                                                class="badge @if ($routeScheduleInRoute->type == 'CLOSE') bg-danger @else bg-success @endif">{{ $routeScheduleInRoute->type }}</span>
+                                            {{ date('D,d M Y', strtotime($routeScheduleInRoute->start_datetime)) }} -
+                                            {{ date('D,d M Y', strtotime($routeScheduleInRoute->end_datetime)) }}</p>
+                                        <small>{{ $routeScheduleInRoute->description }}</small>
+                                    </td>
+                                    <td class="text-end">
+                                        @if($routeScheduleInRoute->id == $routeSchedule->id)
+                                            Current <span class="animate-blink text-success"><i class="fa-regular fa-circle-dot"></i></span>
+                                        @else
+                                        <x-action-edit class="me-2" :url="route('routeSchedules.edit', ['routeSchedule' => $routeScheduleInRoute->id])" id="btn-section-edit" />
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
 
-                <div class="col-12 col-lg-6">
+                <div class="col-12 col-lg-5">
                     <div class="row mb-3">
                         <div class="col-12">
                             <div class="form-check form-check-inline">

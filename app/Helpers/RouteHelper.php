@@ -103,9 +103,9 @@ class RouteHelper
 
         $stations = DB::table('routes')
             ->select('stations.id', 'stations.name', 'stations.piername', 'stations.nickname')
-            ->join('stations', 'routes.station_from_id', '=', 'stations.id')
+            ->join('stations', 'routes.station_to_id', '=', 'stations.id')
             ->where('routes.isactive', 'Y')
-            ->where('routes.station_to_id', $stationFromId)
+            ->where('routes.station_from_id', $stationFromId)
             ->groupBy('stations.id', 'stations.name', 'stations.piername', 'stations.nickname')
             ->Get();
 

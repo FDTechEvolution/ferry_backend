@@ -96,7 +96,8 @@
                             <th class="text-center " style="width: 100px;">Icon</th>
                             <th class="">Price</th>
                             <th class="text-center p-0">Meal</th>
-                            <th class="text-center p-0" data-bs-toggle="tooltip" data-bs-placement="top" title="Activity">
+                            <th class="text-center p-0" data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="Activity">
                                 Act.</th>
                             <th class="text-center p-0" data-bs-toggle="tooltip" data-bs-placement="top"
                                 title="Shuttle Bus From">SBF.</th>
@@ -106,7 +107,8 @@
                                 title="Long Tail Boat From">LTBF.</th>
                             <th class="text-center p-0" data-bs-toggle="tooltip" data-bs-placement="top"
                                 title="Long Tail Boat To">LTBT.</th>
-                            <th class="text-center p-0" data-bs-toggle="tooltip" data-bs-placement="top" title="Promotion">
+                            <th class="text-center p-0" data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="Promotion">
                                 Pro.</th>
                             <th class="text-center">Status</th>
                             <th class="text-center">Action</th>
@@ -131,7 +133,8 @@
                                     <table>
                                         <tr>
                                             <td>
-                                                {{ $route['station_from']['nickname'] }}-{{ $route['station_from']['name'] }}
+                                                [{{ $route['station_from']['nickname'] }}]
+                                                {{ $route['station_from']['name'] }}
                                                 @if ($route['station_from']['piername'] != '')
                                                     <br>
                                                     <small
@@ -140,7 +143,8 @@
                                             </td>
                                             <td><i class="fa-solid fa-angles-right px-2 fa-2x"></i></td>
                                             <td>
-                                                {{ $route['station_to']['nickname'] }}-{{ $route['station_to']['name'] }}
+                                                [{{ $route['station_to']['nickname'] }}]
+                                                {{ $route['station_to']['name'] }}
                                                 @if ($route['station_to']['piername'] != '')
                                                     <br>
                                                     <small
@@ -156,10 +160,22 @@
                                             <tr>
                                                 <td colspan="3" class="p-0">
                                                     @if ($routeSchedule->type == 'CLOSE')
-                                                        <span class="badge bg-warning-soft">Close on {{ date('D,d M Y', strtotime($routeSchedule->start_datetime)) }} - {{ date('D,d M Y', strtotime($routeSchedule->end_datetime)) }}</span>
+                                                        <span class="badge bg-warning-soft">Close on
+                                                            {{ date('D,d M Y', strtotime($routeSchedule->start_datetime)) }}
+                                                            -
+                                                            {{ date('D,d M Y', strtotime($routeSchedule->end_datetime)) }}</span>
                                                     @else
-                                                        <span class="badge bg-success-soft">Open on {{ date('D,d M Y', strtotime($routeSchedule->start_datetime)) }} - {{ date('D,d M Y', strtotime($routeSchedule->end_datetime)) }}</span>
+                                                        <span class="badge bg-success-soft">Open on
+                                                            {{ date('D,d M Y', strtotime($routeSchedule->start_datetime)) }}
+                                                            -
+                                                            {{ date('D,d M Y', strtotime($routeSchedule->end_datetime)) }}</span>
                                                     @endif
+
+                                                    <a class="px-2 text-warning"
+                                            href="{{ route('routeSchedules.edit', ['routeSchedule' => $routeSchedule->id]) }}"
+                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                            title="edit latest Route Schedule"><i class="fa-regular fa-pen-to-square"></i></a>
+
                                                 </td>
                                             </tr>
                                         @endif
@@ -226,14 +242,16 @@
                                 </td>
                                 <td>
                                     <label class="d-flex justify-content-center align-items-center">
-                                        <input class="d-none-cloaked routes-isactive" type="checkbox" name="isactive" value="{{ $route['id'] }}" @checked(old('isactive', $route['isactive'] == 'Y'))>
+                                        <input class="d-none-cloaked routes-isactive" type="checkbox" name="isactive"
+                                            value="{{ $route['id'] }}" @checked(old('isactive', $route['isactive'] == 'Y'))>
                                         <i class="switch-icon switch-icon-success switch-icon-xs"></i>
                                     </label>
                                 </td>
                                 <td>
+                                    
                                     <a class="pb-3" style="font-size: 1.3rem;"
                                         href="{{ route('route-edit', ['id' => $route['id']]) }}"><i
-                                            class="fa-solid fa-pen-to-square"></i></a><br>
+                                            class="fa-solid fa-pen-to-square"></i></a>
 
                                     <x-action-delete :url="route('route-delete', ['id' => $route['id']])" :message="_('Are you sure? Delete this route ?')" />
                                 </td>

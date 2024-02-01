@@ -18,7 +18,7 @@ class ApiRoutesController extends Controller
         // Log::debug($api_routes->toArray());
 
         return view('pages.api_routes.index', ['routes' => $api_routes, 'merchant_id' => $merchant_id,
-                    'commission' => $api_merchant->commission, 'vat' => $api_merchant->vat]);
+                    'commission' => $api_merchant->commission, 'vat' => $api_merchant->vat,'api_merchant'=>$api_merchant]);
     }
 
     private function getApiMerchantById($id) {

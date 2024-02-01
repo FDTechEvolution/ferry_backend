@@ -299,52 +299,7 @@
                         </div>
                     </div>
                     <hr>
-                    <div class="row">
-                        <div class="col-10">
-                            <h4 class="text-main-color-2"><i class="fa-solid fa-calendar-days"></i> Open/Close Schedule</h4>
-                        </div>
-                        <div class="col-2 text-end mb-2">
-                            <a href="#" data-href="{{ route('routeSchedules.create') }}?merchant_id=" data-ajax-modal-size="modal-lg"
-                            data-ajax-modal-centered="true" data-ajax-modal-backdrop="static" 
-                            data-ajax-modal-callback-function="" class="btn button-orange-bg btn-sm js-ajax-modal">Create New</a>
-                        </div>
-                        <div class="col-12 ">
-                            <table class="table table-hover border rounded">
-                                <thead class="bg-light">
-                                    <tr>
-                                        <td>Effective date</td>
-                                        <td>Note/Description</td>
-                                        <td>Created</td>
-                                        <td>Updated</td>
-                                        <td></td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($routeSchedules as $index => $schedule)
-                                        <tr>
-                                            <td>
-                                                <span
-                                            class="badge @if ($schedule->type == 'CLOSE') bg-danger @else bg-success @endif">{{ $schedule->type }}</span>
-                                                {{ date('D,d M Y', strtotime($schedule->start_datetime)) }} - {{ date('D,d M Y', strtotime($schedule->end_datetime)) }}
-                                            </td>
-                                            <td>{{$schedule->description}}</td>
-                                            <td>
-                                               @if(!is_null($schedule->createdBy)) {{$schedule->createdBy->name}} @endif
-                                            </td>
-                                            <td>
-                                                @if(!is_null($schedule->updatedBy)) {{$schedule->updatedBy->name}} @endif
-                                            </td>
-                                            <td>
-                                                <x-action-edit class="me-2" :url="route('routeSchedules.edit',['routeSchedule'=>$schedule])" id="btn-section-edit" />
-                                                    <x-delete-button :url="route('routeSchedules.destroy', ['routeSchedule' => $schedule])" :id="$schedule->id" />
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <hr>
+                    
                     <div class="row">
                         <div class="col-12">
                             <div class="row mb-4">

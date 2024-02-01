@@ -88,25 +88,25 @@
                     <thead>
                         <tr class="small">
                             <th class="text-center" style="width: 60px;">Choose</th>
-                            <th class="text-center">PN</th>
+                            <th class="text-center p-0">PN</th>
                             <th class="text-start">Station From/To</th>
 
                             <th class="text-center">Depart</th>
                             <th class="text-center">Arrive</th>
-                            <th class="text-center fix-width-120">Icon</th>
+                            <th class="text-center " style="width: 100px;">Icon</th>
                             <th class="">Price</th>
-                            <th class="text-center">Meal</th>
-                            <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Activity">
+                            <th class="text-center p-0">Meal</th>
+                            <th class="text-center p-0" data-bs-toggle="tooltip" data-bs-placement="top" title="Activity">
                                 Act.</th>
-                            <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top"
+                            <th class="text-center p-0" data-bs-toggle="tooltip" data-bs-placement="top"
                                 title="Shuttle Bus From">SBF.</th>
-                            <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top"
+                            <th class="text-center p-0" data-bs-toggle="tooltip" data-bs-placement="top"
                                 title="Shuttle Bus To">SBT.</th>
-                            <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top"
+                            <th class="text-center p-0" data-bs-toggle="tooltip" data-bs-placement="top"
                                 title="Long Tail Boat From">LTBF.</th>
-                            <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top"
+                            <th class="text-center p-0" data-bs-toggle="tooltip" data-bs-placement="top"
                                 title="Long Tail Boat To">LTBT.</th>
-                            <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Promotion">
+                            <th class="text-center p-0" data-bs-toggle="tooltip" data-bs-placement="top" title="Promotion">
                                 Pro.</th>
                             <th class="text-center">Status</th>
                             <th class="text-center">Action</th>
@@ -121,7 +121,7 @@
                                         type="checkbox" value="{{ $route['id'] }}" id="route-check-{{ $index }}"
                                         onClick="routeSelectedAction(this)">
                                 </td>
-                                <td class="text-center">
+                                <td class="text-center p-0">
                                     @if (!is_null($route->partner))
                                         <img src="{{ asset($route->partner->image->path) }}" width="25"
                                             class="img-circle" alt="{{ $route->partner->name }}" />
@@ -131,7 +131,7 @@
                                     <table>
                                         <tr>
                                             <td>
-                                                {{ $route['station_from']['name'] }}
+                                                {{ $route['station_from']['nickname'] }}-{{ $route['station_from']['name'] }}
                                                 @if ($route['station_from']['piername'] != '')
                                                     <br>
                                                     <small
@@ -140,8 +140,9 @@
                                             </td>
                                             <td><i class="fa-solid fa-angles-right px-2 fa-2x"></i></td>
                                             <td>
-                                                <p class="mb-0">{{ $route['station_to']['name'] }}</p>
+                                                {{ $route['station_to']['nickname'] }}-{{ $route['station_to']['name'] }}
                                                 @if ($route['station_to']['piername'] != '')
+                                                    <br>
                                                     <small
                                                         class="text-secondary fs-d-80">({{ $route['station_to']['piername'] }})</small>
                                                 @endif
@@ -150,14 +151,14 @@
 
                                         @if (sizeof($route->lastSchedule) > 0)
                                             @php
-                                                $lastSchedule = $route->lastSchedule[0];
+                                                $routeSchedule = $route->lastSchedule[0];
                                             @endphp
                                             <tr>
-                                                <td colspan="3">
-                                                    @if ($lastSchedule->type == 'CLOSE')
-                                                        <span class="badge bg-warning-soft">Close on </span>
+                                                <td colspan="3" class="p-0">
+                                                    @if ($routeSchedule->type == 'CLOSE')
+                                                        <span class="badge bg-warning-soft">Close on {{ date('D,d M Y', strtotime($routeSchedule->start_datetime)) }} - {{ date('D,d M Y', strtotime($routeSchedule->end_datetime)) }}</span>
                                                     @else
-                                                        <span class="badge bg-warning-success">Open on </span>
+                                                        <span class="badge bg-success-soft">Open on {{ date('D,d M Y', strtotime($routeSchedule->start_datetime)) }} - {{ date('D,d M Y', strtotime($routeSchedule->end_datetime)) }}</span>
                                                     @endif
                                                 </td>
                                             </tr>
@@ -170,7 +171,7 @@
                                 <td>
                                     <div class="row mx-auto justify-center-custom">
                                         @foreach ($route['icons'] as $icon)
-                                            <div class="col-sm-4 px-0" style="max-width: 30px;">
+                                            <div class="col-sm-4 px-0" style="width: 25px;">
                                                 <img src="{{ $icon['path'] }}" class="w-100">
                                             </div>
                                         @endforeach
@@ -184,7 +185,7 @@
                                     <span class="d-flex"><span
                                             class="badge bg-warning-soft">I:</span>{{ number_format($route['infant_price']) }}</span>
                                 </td>
-                                <td>
+                                <td class="p-0">
                                     <i @class([
                                         'fa-solid fa-circle',
                                         'text-success' => sizeof($route['meal_lines']) > 0,
@@ -193,7 +194,7 @@
                                         title="Meal on board">
                                     </i>
                                 </td>
-                                <td>
+                                <td class="p-0">
                                     <i @class([
                                         'fa-solid fa-circle',
                                         'text-success' => sizeof($route['activity_lines']) > 0,
@@ -291,14 +292,23 @@
             $('#page-loader').hide();
 
             let table = new DataTable('#route-datatable', {
-                searching: false,
+                searching: true,
                 ordering: false
             });
 
             $('#search-station-from').on('keyup', function() {
                 //console.log(table.columns(2).search(this.value));
+                //console.log(this.value);
                 table.column(2).search(this.value).draw();
             });
+
+            $('#search-station-to').on('keyup', function() {
+                //console.log(table.columns(2).search(this.value));
+                //console.log(this.value);
+                table.column(2).search(this.value).draw();
+            });
+
+            $('#route-datatable_filter').empty();
         });
     </script>
     <script src="{{ asset('assets/js/app/route_control.js') }}"></script>

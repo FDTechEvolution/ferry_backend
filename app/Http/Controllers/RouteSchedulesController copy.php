@@ -79,7 +79,7 @@ class RouteSchedulesController extends Controller
         }
 
         //dd($stationFrom);
-        return view('pages.route_schedules.modal.create', [
+        return view('pages.route_schedules.create', [
             'stationFroms' => $stationFroms,
             'stationTos' => $stationTos,
             'stationFromId' => $stationFromId,

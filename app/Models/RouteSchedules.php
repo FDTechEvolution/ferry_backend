@@ -24,10 +24,20 @@ class RouteSchedules extends Model
         'fri',
         'sat',
         'sun',
-        'api_merchant_id'
+        'api_merchant_id',
+        'created_by',
+        'updated_by'
     ];
 
     public function route() {
         return $this->hasOne(Route::class, 'id', 'route_id')->with('station_from','station_to');
+    }
+
+    public function createdBy() {
+        return $this->hasOne(User::class, 'id', 'created_by');
+    }
+
+    public function updatedBy() {
+        return $this->hasOne(User::class, 'id', 'updated_by');
     }
 }

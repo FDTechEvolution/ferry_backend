@@ -38,6 +38,10 @@ class Route extends Model
 
     ];
 
+    public function schedules(){
+        return $this->hasMany(RouteSchedules::class,'route_id','id')->orderBy('updated_at','DESC');
+    }
+
     public function lastSchedule(){
         return $this->hasMany(RouteSchedules::class,'route_id','id')->latest();
     }

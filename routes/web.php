@@ -301,6 +301,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/report', 'index')->name('report-index');
 
         Route::post('/report', 'getRoute')->name('report-get');
+        Route::post('/report-pdf', 'reportPdfGenerate')->name('report-pdf');
     });
 
 });

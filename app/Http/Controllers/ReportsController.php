@@ -30,12 +30,7 @@ class ReportsController extends Controller
         $start_date = Carbon::createFromFormat('Y-m-d', $depart_date[0])->startOfDay();
         $end_date = Carbon::createFromFormat('Y-m-d', $depart_date[1])->startOfDay();
 
-        $routes = Route::where('station_from_id', $request->station_from)
-                        ->where('station_to_id', $request->station_to)
-                        ->with(['booking_route' => function($br) use ($start_date, $end_date) {
-                            return $br->whereDate('traveldate', '>=', $start_date)->whereDate('traveldate', '<=', $end_date);
-                        }])
-                        ->get();
+        $routes = $this->routeGetReport($request->station_from, $request->station_to, $start_date, $end_date);
 
         $booking_route = $this->getOnlyBookingRoutes($routes);
         $station_from = $this->getStationById($request->station_from);
@@ -43,6 +38,31 @@ class ReportsController extends Controller
         // Log::debug($booking_route);
 
         return view('pages.reports.index', ['sections' => $sections, 'reports' => $booking_route, 'depart_date' => $request->daterange, 'from' => $station_from, 'to' => $station_to]);
+    }
+
+    public function reportPdfGenerate(Request $request) {
+        $depart_date = $this->setDepartDate($request->daterange);
+        $start_date = Carbon::createFromFormat('Y-m-d', $depart_date[0])->startOfDay();
+        $end_date = Carbon::createFromFormat('Y-m-d', $depart_date[1])->startOfDay();
+
+        $routes = $this->routeGetReport($request->station_from, $request->station_to, $start_date, $end_date);
+
+        $booking_route = $this->getOnlyBookingRoutes($routes);
+        $station_from = $this->getStationById($request->station_from);
+        $station_to = $this->getStationById($request->station_to);
+
+        return view('pages.reports.pdf', ['reports' => $booking_route, 'depart_date' => $request->daterange, 'from' => $station_from, 'to' => $station_to]);
+    }
+
+    private function routeGetReport($station_from, $station_to, $start_date, $end_date) {
+        $routes = Route::where('station_from_id', $station_from)
+                        ->where('station_to_id', $station_to)
+                        ->with(['booking_route' => function($br) use ($start_date, $end_date) {
+                            return $br->whereDate('traveldate', '>=', $start_date)->whereDate('traveldate', '<=', $end_date);
+                        }])
+                        ->get();
+
+        return $routes;
     }
 
     private function getStationById($id) {

@@ -162,6 +162,7 @@ Route::middleware('auth')->group(function () {
 
         // AJAX
         Route::get('/ajax/get-route-info/{route_id}/{station_id}/{type}', 'getRouteInfo')->name('get-route-info');
+        Route::get('/ajax/route/update-status/{id}', 'updateStatus');
     });
 
     Route::controller(ReviewsController::class)->group(function () {

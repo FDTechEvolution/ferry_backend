@@ -79,7 +79,10 @@
         @if (!empty($reports))
             <div class="card">
                 <div class="card-body">
-                    <div id="to-user-list" class="table-responsive">
+                    <p class="">
+                        <span class="fw-bold">Depart Date :</span> <span class="">{{ $depart_date }}</span>
+                    </p>
+                    <div id="report-list" class="table-responsive">
                         <table class="table-datatable table table-datatable-custom" id="report-datatable"
                             data-lng-empty="No data available in table"
                             data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
@@ -112,7 +115,7 @@
                                         <td class="text-center">{{ $index+1 }}</td>
                                         <td>{{ $item['bookingno'] }}</td>
                                         <td class="text-center">{{ $item['travel_date'] }}</td>
-                                        <td class="text-center">{{ intval($item['adult_passenger']) + intval($item['adult_passenger']) + intval($item['adult_passenger']) }}</td>
+                                        <td class="text-center">{{ intval($item['adult_passenger']) + intval($item['child_passenger']) + intval($item['infant_passenger']) }}</td>
                                         <td class="text-center">{{ number_format($item['totalamt']) }}</td>
                                         <td class="text-center">{{ number_format($item['extraamt']) }}</td>
                                         <td class="text-center">

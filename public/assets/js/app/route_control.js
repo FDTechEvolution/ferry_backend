@@ -1188,3 +1188,16 @@ function setConfirmDelete(id) {
     const confirm_link = confirm_id.querySelector('.btn-confirm-yes')
     confirm_link.href = `${currentUrl}/route/delete/${id}`
 }
+
+
+const routes_isactive = document.querySelectorAll('.routes-isactive')
+if(routes_isactive) {
+    routes_isactive.forEach((item) => {
+        item.addEventListener('change', async (e) => {
+            let response = await fetch(`/ajax/route/update-status/${e.target.value}`)
+            let res = await response.json()
+            if(res['result']) $.SOW.core.toast.show('success', '', `Route status updated.`, 'top-right', 0, true);
+            else $.SOW.core.toast.show('danger', '', `Something wrong! Please try again.`, 'top-right', 0, true);
+        })
+    })
+}

@@ -38,9 +38,15 @@ class ReportsController extends Controller
                         ->get();
 
         $booking_route = $this->getOnlyBookingRoutes($routes);
+        $station_from = $this->getStationById($request->station_from);
+        $station_to = $this->getStationById($request->station_to);
         // Log::debug($booking_route);
 
-        return view('pages.reports.index', ['sections' => $sections, 'reports' => $booking_route]);
+        return view('pages.reports.index', ['sections' => $sections, 'reports' => $booking_route, 'depart_date' => $request->daterange, 'from' => $station_from, 'to' => $station_to]);
+    }
+
+    private function getStationById($id) {
+        return Station::find($id);
     }
 
     private function getOnlyBookingRoutes($routes) {

@@ -83,7 +83,7 @@
                     data-lng-all="All" data-export-pdf-disable-mobile="true" data-responsive="false"
                     data-export='["pdf", "xls"]' data-main-search="false" data-column-search="false"
                     data-custom-config='{
-                        
+
                     }'>
                     <thead>
                         <tr class="small">
@@ -225,9 +225,10 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="Status">
-                                        {!! $route_status[$route['isactive']] !!}
-                                    </span>
+                                    <label class="d-flex justify-content-center align-items-center">
+                                        <input class="d-none-cloaked routes-isactive" type="checkbox" name="isactive" value="{{ $route['id'] }}" @checked(old('isactive', $route['isactive'] == 'Y'))>
+                                        <i class="switch-icon switch-icon-success switch-icon-xs"></i>
+                                    </label>
                                 </td>
                                 <td>
                                     <a class="pb-3" style="font-size: 1.3rem;"

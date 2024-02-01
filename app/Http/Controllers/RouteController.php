@@ -618,4 +618,14 @@ class RouteController extends Controller
 
         return view('pages.route_control.pdf', ['routes' => $_routes]);
     }
+
+    public function updateStatus(string $id = null) {
+        $route = Route::find($id);
+        if(isset($route)) {
+            $route->isactive = $route->isactive == 'Y' ? 'N' : 'Y';
+            if($route->save()) return response()->json(['result' => true], 200);
+        }
+
+        return response()->json(['result' => false], 200);
+    }
 }

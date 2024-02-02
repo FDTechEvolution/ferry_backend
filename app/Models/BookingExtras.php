@@ -22,4 +22,8 @@ class BookingExtras extends Model
         return $this->hasOne(Addon::class, 'id', 'addon_id');
     }
 
+    public function route_addon() {
+        return $this->hasMany(RouteAddons::class, 'id', 'route_addon_id');
+    }
+
 }

@@ -91,7 +91,12 @@ class Route extends Model
         return $this->hasOne(ApiRoutes::class, 'route_id', 'id');
     }
 
-    public function booking_route() {
-        return $this->belongsToMany(Bookings::class, 'booking_routes', 'route_id', 'booking_id')->withPivot('traveldate')->with('promotion', 'payments');
+    public function bookings() {
+        return $this->belongsToMany(Bookings::class, 'booking_routes', 'route_id', 'booking_id')->withPivot('traveldate', 'id')
+                    ->with('promotion', 'payments', 'bookingCustomers');
+    }
+
+    public function booking_extra() {
+        return $this->belongsTo(BookingExtras::class, 'booking_routes', 'route_id', 'id')->with('route_addon');
     }
 }

@@ -89,6 +89,8 @@
                         <tr class="small">
                             <th class="text-center" style="width: 60px;">Choose</th>
                             <th class="text-center p-0">PN</th>
+                            <th style="display: none;">Form</th>
+                            <th style="display: none;">To</th>
                             <th class="text-start">Station From/To</th>
 
                             <th class="text-center">Depart</th>
@@ -128,6 +130,14 @@
                                         <img src="{{ asset($route->partner->image->path) }}" width="25"
                                             class="img-circle" alt="{{ $route->partner->name }}" />
                                     @endif
+                                </td>
+                                <td style="display: none;">
+                                    [{{ $route['station_from']['nickname'] }}]
+                                    {{ $route['station_from']['name'] }}
+                                </td>
+                                <td style="display: none;">
+                                    [{{ $route['station_to']['nickname'] }}]
+                                                {{ $route['station_to']['name'] }}
                                 </td>
                                 <td class="text-start lh--1-2">
                                     <table>
@@ -324,7 +334,7 @@
             $('#search-station-to').on('keyup', function() {
                 //console.log(table.columns(2).search(this.value));
                 //console.log(this.value);
-                table.column(2).search(this.value).draw();
+                table.column(3).search(this.value).draw();
             });
 
             $('#route-datatable_filter').empty();

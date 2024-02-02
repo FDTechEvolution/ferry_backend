@@ -34,6 +34,53 @@ class RouteHelper
             $routeSchedules = RouteSchedules::where('route_id', $route->id)->where('isactive', 'Y')->whereNull('api_merchant_id')->orderBy('updated_at', 'DESC')->get();
 
             if (sizeof($routeSchedules) > 0) {
+                $isClose = false;
+
+                foreach ($routeSchedules as $index => $routeSchedule) {
+                    $dayRange = 0;
+                    $matchDate = false;
+
+                    $start = Carbon::createFromFormat('Y-m-d', $routeSchedule->start_datetime)->startOfDay();
+                    $end = Carbon::createFromFormat('Y-m-d', $routeSchedule->end_datetime)->endOfDay();
+                    $dayRange = $start->diffInDays($end);
+
+                    if ($_departDate->between($start, $end)) {
+                        $matchDate = true;
+                    }
+
+                    if ($routeSchedule->type == 'CLOSE') {
+                        if ($matchDate) {
+                            $isClose = true;
+                            break;
+                        } else {
+                            if (($index + 1) == sizeof($routeSchedules)) {
+                                $isClose = false;
+                                break;
+                            }
+                        }
+                    } else {
+
+                        //OPEN Section
+                        if ($matchDate) {
+                            $isClose = false;
+                            break;
+                        } else {
+                            if (($index + 1) == sizeof($routeSchedules)) {
+                                //is last loop
+                                $isClose = true;
+                            }
+                        }
+                    }
+                }
+
+                if ($isClose) {
+                    array_push($fillOutRouteIds, $route->id);
+                }
+
+            }
+
+            /*
+            if (sizeof($routeSchedules) > 0) {
                 $isFillOut = true;
                 $rules = [];
 
@@ -59,7 +106,7 @@ class RouteHelper
 
                 usort($rules, fn($a, $b) => $a['day_range'] <=> $b['day_range']);
 
-                Log::debug($route->arrive_time);
+                //Log::debug($route->arrive_time);
                 //Log::debug($rules);
 
                 if (sizeof($rules) > 1) {
@@ -79,6 +126,10 @@ class RouteHelper
                     if ($rule['type'] == 'OPEN' && $rule['match_date']) {
                         $isFillOut = false;
                         //Log::debug('C');
+                    }elseif($rule['type'] == 'CLOSE' && $rule['match_date'] == false){
+                        $isFillOut = false;
+                        //Log::debug('B');
+             
                     } 
                 }else{
                     $isFillOut = false;
@@ -89,6 +140,7 @@ class RouteHelper
                 }
 
             }
+            */
         }
 
         /*
@@ -159,6 +211,7 @@ class RouteHelper
         $routes = Route::with('station_from', 'station_to', 'icons', 'activity_lines', 'meal_lines', 'partner', 'station_lines', 'routeAddons')
             ->whereNotIn('id', $fillOutRouteIds)
             ->where('station_from_id', $stationFromId)
+            ->where('status','CO') 
             ->where('station_to_id', $stationToId)
             ->get();
 

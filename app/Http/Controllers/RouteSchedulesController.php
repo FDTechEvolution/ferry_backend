@@ -19,46 +19,16 @@ class RouteSchedulesController extends Controller
     {
         
         $merchant_id = request()->merchant_id;
+        $apiMerchant = null;
         $stationFromId = request()->station_from_id;
         $stationToId = request()->station_to_id;
 
         $routeSchedules = [];
         $title = 'Route';
 
-        $stationFroms = DB::table('routes')
-            ->select('stations.id', 'stations.name', 'stations.nickname', 'route_schedules.api_merchant_id')
-            ->join('stations', 'routes.station_from_id', '=', 'stations.id')
-            ->join('route_schedules', 'routes.id', '=', 'route_schedules.route_id');
+        $stationFroms = RouteHelper::getStationFrom();
 
-        if (!is_null($merchant_id) || $merchant_id != '') {
-            $apiMerchant = ApiMerchants::where('id',$merchant_id)->first();
-            $stationFroms = $stationFroms->where('api_merchant_id', $merchant_id);
-        }
-        $stationFroms = $stationFroms->groupBy('stations.id', 'stations.name', 'stations.nickname','route_schedules.api_merchant_id')
-            ->Get();
-
-        $stationTos = [];
-        if (!is_null($stationFromId) && $stationFromId != 'all') {
-            // ->where('routes.station_to_id', $stationFromId)
-            $stationTos = DB::table('routes')
-                ->select('stations.id', 'stations.name', 'stations.nickname','route_schedules.api_merchant_id')
-                ->join('stations', 'routes.station_to_id', '=', 'stations.id')
-                ->join('route_schedules', 'routes.id', '=', 'route_schedules.route_id')
-                ->where('routes.station_from_id', $stationFromId);
-        } else {
-            $stationTos = DB::table('routes')
-                ->select('stations.id', 'stations.name', 'stations.nickname','route_schedules.api_merchant_id')
-                ->join('stations', 'routes.station_to_id', '=', 'stations.id')
-                ->join('route_schedules', 'routes.id', '=', 'route_schedules.route_id');
-
-        }
-
-        if (!is_null($merchant_id) || $merchant_id != '') {
-            $stationTos = $stationTos->where('api_merchant_id', $merchant_id);
-        }
-
-        $stationTos = $stationTos->groupBy('stations.id', 'stations.name', 'stations.nickname','route_schedules.api_merchant_id')
-        ->Get();
+        $stationTos = RouteHelper::getStationTo($stationFromId);
 
 
 
@@ -66,10 +36,12 @@ class RouteSchedulesController extends Controller
         if (is_null($merchant_id) || $merchant_id == '') {
             //set inactive
             $date = date('Y-m-d');
+            /*
             $routeSchedules = RouteSchedules::with('isactive', 'Y')
                 ->where('end_datetime', '<', $date)
                 ->whereNull('api_merchant_id')
                 ->update(['isactive' => 'N']);
+            */
 
             $routeSchedules = DB::table('routes')
                 ->select('sfrom.name as station_from_name', 'sto.name as station_to_name', 'routes.*', 'route_schedules.*')
@@ -95,10 +67,13 @@ class RouteSchedulesController extends Controller
 
             //set inactive
             $date = date('Y-m-d');
+
+            /*
             $routeSchedules = RouteSchedules::with('isactive', 'Y')
                 ->where('end_datetime', '<', $date)
                 ->where('api_merchant_id', $merchant_id)
                 ->update(['isactive' => 'N']);
+            */
 
 
             $routeSchedules = DB::table('routes')

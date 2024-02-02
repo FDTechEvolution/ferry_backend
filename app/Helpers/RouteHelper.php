@@ -14,7 +14,84 @@ class RouteHelper
      */
     public static function getAvaliableRoutes($stationFromId, $stationToId, $departDate)
     {
+        /*
+        $avaliableRouteIds = [];
         
+
+        foreach($routes as $route){
+            array_push($avaliableRouteIds,$route->id);
+        }
+        */
+        $routes = RouteHelper::getRoutes($stationFromId, $stationToId);
+
+
+
+        //Check condition schedule
+        $_departDate = Carbon::createFromFormat('Y-m-d', $departDate);
+        $fillOutRouteIds = [];
+
+        foreach ($routes as $route) {
+            $routeSchedules = RouteSchedules::where('route_id', $route->id)->where('isactive', 'Y')->whereNull('api_merchant_id')->orderBy('updated_at', 'DESC')->get();
+
+            if (sizeof($routeSchedules) > 0) {
+                $isFillOut = true;
+                $rules = [];
+
+                foreach ($routeSchedules as $routeSchedule) {
+                    $dayRange = 0;
+                    $type = $routeSchedule->type;
+                    $matchDate = false;
+
+                    $start = Carbon::createFromFormat('Y-m-d', $routeSchedule->start_datetime)->startOfDay();
+                    $end = Carbon::createFromFormat('Y-m-d', $routeSchedule->end_datetime)->endOfDay();
+                    $dayRange = $start->diffInDays($end);
+
+                    if ($_departDate->between($start, $end)) {
+                        $matchDate = true;
+                    }
+
+                    array_push($rules, [
+                        'day_range' => $dayRange,
+                        'type' => $type,
+                        'match_date' => $matchDate,
+                    ]);
+                }
+
+                usort($rules, fn($a, $b) => $a['day_range'] <=> $b['day_range']);
+
+                Log::debug($route->arrive_time);
+                //Log::debug($rules);
+
+                if (sizeof($rules) > 1) {
+                    foreach ($rules as $rule) {
+                        if ($rule['type'] == 'OPEN' && $rule['match_date'] == true) {
+                            $isFillOut = false;
+                            //Log::debug('A');
+                            break;
+                        }elseif($rule['type'] == 'CLOSE' && $rule['match_date'] == true){
+                            $isFillOut = true;
+                            //Log::debug('B');
+                            break;
+                        }
+                    }
+                } elseif(sizeof($rules)==1) {
+                    $rule = $rules[0];
+                    if ($rule['type'] == 'OPEN' && $rule['match_date']) {
+                        $isFillOut = false;
+                        //Log::debug('C');
+                    } 
+                }else{
+                    $isFillOut = false;
+                }
+
+                if ($isFillOut) {
+                    array_push($fillOutRouteIds, $route->id);
+                }
+
+            }
+        }
+
+        /*
 
         $sql = 'select r.id 
         from 
@@ -77,11 +154,13 @@ class RouteHelper
 
         //end
         
+        */
 
         $routes = Route::with('station_from', 'station_to', 'icons', 'activity_lines', 'meal_lines', 'partner', 'station_lines', 'routeAddons')
-            ->whereIn('id',$avaliableRouteIds)
+            ->whereNotIn('id', $fillOutRouteIds)
+            ->where('station_from_id', $stationFromId)
+            ->where('station_to_id', $stationToId)
             ->get();
-        //dd($routes);
 
         return ($routes);
     }
@@ -104,9 +183,14 @@ class RouteHelper
         $stations = DB::table('routes')
             ->select('stations.id', 'stations.name', 'stations.piername', 'stations.nickname')
             ->join('stations', 'routes.station_to_id', '=', 'stations.id')
-            ->where('routes.isactive', 'Y')
-            ->where('routes.station_from_id', $stationFromId)
-            ->groupBy('stations.id', 'stations.name', 'stations.piername', 'stations.nickname')
+            ->where('routes.isactive', 'Y');
+        if ($stationFromId == null || $stationFromId == '' || $stationFromId == 'all') {
+
+        } else {
+            $stations = $stations->where('routes.station_from_id', $stationFromId);
+        }
+
+        $stations = $stations->groupBy('stations.id', 'stations.name', 'stations.piername', 'stations.nickname')
             ->Get();
 
         return $stations;

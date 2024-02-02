@@ -18,7 +18,7 @@
                 <a href="{{ route('routeSchedules.create') }}?merchant_id={{ $merchant_id }}"
                     class="btn button-orange-bg">Create New</a>
 
-                    <img src="{{$apiMerchant->logo}}" width="200px" class="px-2" />
+                <img src="{{ $apiMerchant->logo }}" width="200px" class="px-2" />
             @endif
         </div>
     </div>
@@ -90,34 +90,55 @@
                         @foreach ($routeSchedules as $index => $routeSchedule)
                             <tr>
                                 <td>
-                                    @if($route_id != $routeSchedule->route_id)
-                                    <p class="pb-0 mb-0">
-                                        {{ $routeSchedule->station_from_name }}
-                                        <i class="fa-solid fa-angles-right px-2 fa-1x"></i>
-                                        {{ $routeSchedule->station_to_name }}
-                                    </p>
+                                    @if ($route_id != $routeSchedule->route_id)
+                                        <p class="pb-0 mb-0">
+                                            {{ $routeSchedule->station_from_name }}
+                                            <i class="fa-solid fa-angles-right px-2 fa-1x"></i>
+                                            {{ $routeSchedule->station_to_name }}
+                                        </p>
                                     @endif
                                 </td>
                                 <td>
                                     <span class="">{{ date('H:i', strtotime($routeSchedule->depart_time)) }}<i
                                             class="fa-solid fa-angles-right px-2 fa-1x"></i>{{ date('H:i', strtotime($routeSchedule->arrive_time)) }}
-                                        </span>
+                                    </span>
                                 </td>
                                 <td>
-                                    <p class="p-0 m-0">
-                                        <span
-                                            class="badge @if ($routeSchedule->type == 'CLOSE') bg-danger @else bg-success @endif">{{ $routeSchedule->type }}</span>
-                                        {{ date('D,d M Y', strtotime($routeSchedule->start_datetime)) }} -
-                                        {{ date('D,d M Y', strtotime($routeSchedule->end_datetime)) }}</p>
-                                    <small>{{ $routeSchedule->description }}</small>
+                                    @if ($routeSchedule->isactive == 'Y')
+                                        <p class="p-0 m-0">
+                                            <span
+                                                class="badge @if ($routeSchedule->type == 'CLOSE') bg-danger @else bg-success @endif">{{ $routeSchedule->type }}</span>
+                                            {{ date('D,d M Y', strtotime($routeSchedule->start_datetime)) }} -
+                                            {{ date('D,d M Y', strtotime($routeSchedule->end_datetime)) }}
+                                        </p>
+                                        <small>{{ $routeSchedule->description }}</small>
+                                    @else
+                                        <p class="p-0 m-0 text-gray-400">
+                                            <span class="text-warning pe-2">Auto disable</span><span
+                                                class="badge bg-secondary text-dark">{{ $routeSchedule->type }}</span>
+                                            {{ date('D,d M Y', strtotime($routeSchedule->start_datetime)) }} -
+                                            {{ date('D,d M Y', strtotime($routeSchedule->end_datetime)) }}
+                                        </p>
+                                        <small class="text-gray-400">{{ $routeSchedule->description }}</small>
+                                    @endif
                                 </td>
 
                                 <td>
-                                    
+
                                 </td>
                                 <td class="text-end">
-                                    <x-action-edit class="me-2" :url="route('routeSchedules.edit', ['routeSchedule' => $routeSchedule->id])" id="btn-section-edit" />
-                                    <x-delete-button :url="route('routeSchedules.destroy', ['routeSchedule' => $routeSchedule->id])" :id="$routeSchedule->id" />
+                                    @if ($routeSchedule->isactive == 'Y')
+                                        <x-action-edit class="me-2" :url="route('routeSchedules.edit', [
+                                            'routeSchedule' => $routeSchedule->id,
+                                        ])" id="btn-section-edit" />
+                                        <x-delete-button :url="route('routeSchedules.destroy', [
+                                            'routeSchedule' => $routeSchedule->id,
+                                        ])" :id="$routeSchedule->id" />
+                                    @else
+                                        <x-delete-button :url="route('routeSchedules.destroy', [
+                                            'routeSchedule' => $routeSchedule->id,
+                                        ])" :id="$routeSchedule->id" />
+                                    @endif
                                 </td>
                             </tr>
                             @php
@@ -151,6 +172,5 @@
                 $('#frm-search').submit();
             });
         });
-
     </script>
 @stop

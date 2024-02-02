@@ -124,7 +124,10 @@
                                 </td>
 
                                 <td>
-
+                                    <small class="d-flex">Created By {{$routeSchedule->created_name}}: {{ date('D,d M Y H:i', strtotime($routeSchedule->created_at)) }}</small>
+                                    @if(!is_null($routeSchedule->updated_name) && $routeSchedule->updated_name !='')
+                                    <small>Updated By {{$routeSchedule->updated_name}}: {{ date('D,d M Y H:i', strtotime($routeSchedule->updated_at)) }}</small>
+                                    @endif
                                 </td>
                                 <td class="text-end">
                                     @if ($routeSchedule->isactive == 'Y')

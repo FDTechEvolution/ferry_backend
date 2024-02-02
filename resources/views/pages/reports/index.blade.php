@@ -5,7 +5,7 @@
 @stop
 
 @section('content')
-<div class="row">
+<div class="row mb-4">
     <div class="col-12">
         <form class="bs-validate" id="report-create-form" method="POST" action="{{ route('report-get') }}">
             @csrf
@@ -30,7 +30,7 @@
                     <div class="col-12 col-lg-3">
                         <div class="form-floating mb-3">
                             <select required class="form-select" name="station_from" id="station-from" aria-label="Station From Select">
-                                <option selected disabled>Select</option>
+                                <option value="all" selected>- ALL -</option>
                                 @foreach ($sections as $index => $section)
                                     <optgroup label="{{ $section['name'] }}">
                                         @foreach ($section['stations'] as $station)
@@ -49,7 +49,7 @@
                     <div class="col-12 col-lg-3">
                         <div class="form-floating mb-3">
                             <select required class="form-select" name="station_to" id="station-to" aria-label="Station To Select">
-                                <option selected disabled>Select</option>
+                                <option value="all" selected>- ALL -</option>
                                 @foreach ($sections as $index => $section)
                                     <optgroup label="{{ $section['name'] }}">
                                         @foreach ($section['stations'] as $station)
@@ -69,6 +69,19 @@
                         <button type="submit" class="btn btn-sm btn-primary">Search</button>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-3">
+                        <div class="form-floating mb-3">
+                            <select required class="form-select" name="booking_channel" id="booking-channel" aria-label="Station To Select">
+                                <option value="all" selected>- ALL -</option>
+                                <option value="ONLINE">ONLINE</option>
+                                <option value="SEVEN">SEVEN</option>
+                                <option value="ADMIN">ADMIN</option>
+                            </select>
+                            <label for="booking-channel">Booking Channel</label>
+                        </div>
+                    </div>
+                </div>
             </fieldset>
         </form>
     </div>
@@ -84,14 +97,21 @@
                             <p class="small">
                                 <span class="fw-bold">Depart Date :</span> <span class="">{{ $depart_date }}</span>
                                 <span class="fw-bold ms-3">Station From : </span>
-                                <span class="">@if($from->nickname != '') [{{ $from->nickname }}] @endif {{ $from->name }} @if($from->piername != '') ({{ $from->piername }}) @endif</span>
+                                @if($from == 'ALL')
+                                    <span class="">{{ $from }}</span>
+                                @else
+                                    <span class="">@if($from->nickname != '') [{{ $from->nickname }}] @endif {{ $from->name }} @if($from->piername != '') ({{ $from->piername }}) @endif</span>
+                                @endif
                                 <span class="fw-bold ms-3">Station To : </span>
-                                <span class="">@if($to->nickname != '') [{{ $to->nickname }}] @endif {{ $to->name }} @if($to->piername != '') ({{ $to->piername }}) @endif</span>
+                                @if($to == 'ALL')
+                                    <span class="">{{ $to }}</span>
+                                @else
+                                    <span class="">@if($to->nickname != '') [{{ $to->nickname }}] @endif {{ $to->name }} @if($to->piername != '') ({{ $to->piername }}) @endif</span>
+                                @endif
                             </p>
                         </div>
 
-                        {{-- PDF Button : display: none; --}}
-                        <div class="col-12 col-lg-2 text-end d-none">
+                        <div class="col-12 col-lg-2 text-end">
                             <form novalidate class="bs-validate" method="POST" target="_blank" action="{{ route('report-pdf') }}">
                                 @csrf
                                 <button class="btn btn-sm btn-outline-dark w-50 me-1 a-href-disabled"
@@ -107,8 +127,8 @@
                                     </svg>
                                 </button>
                                 <input type="hidden" name="daterange" value="{{ $depart_date }}">
-                                <input type="hidden" name="station_from" value="{{ $from->id }}">
-                                <input type="hidden" name="station_to" value="{{ $to->id }}">
+                                {{-- <input type="hidden" name="station_from" value="@if($from != 'all') {{ $from->id }} @else all @endif">
+                                <input type="hidden" name="station_to" value="@if($to != 'all') {{ $to->id }} @else all @endif"> --}}
                             </form>
                         </div>
                     </div>
@@ -126,7 +146,7 @@
                             data-enable-col-sorting="false"
                             data-items-per-page="15"
                             data-enable-column-visibility="false"
-                            data-enable-export="true"
+                            data-enable-export="false"
                             data-lng-export="<i class='fi fi-squared-dots fs-5 lh-1'></i>"
                             data-lng-pdf="PDF"
                             data-lng-xls="XLS"
@@ -137,14 +157,17 @@
                             <thead>
                                 <tr class="small">
                                     <th class="text-center">#</th>
-                                    <th class="">InvoiceNo.</th>
-                                    <th class="text-center">Route</th>
+                                    <th width="90">InvoiceNo.</th>
+                                    <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Premium Flex">P.Flex</th>
+                                    <th>Route</th>
+                                    <th>Lead Name</th>
+                                    <th>Contact</th>
                                     <th class="text-center">Passenger</th>
-                                    <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Route Amount">
-                                        <p class="mb-0">R.Amount</p>(THB)
+                                    <th class="text-center">
+                                        <p class="mb-0">Shuttle Bus</p>(From)
                                     </th>
-                                    <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Extra Amount">
-                                        <p class="mb-0">E.Amount</p>(THB)
+                                    <th class="text-center">
+                                        <p class="mb-0">Shuttle Bus</p>(To)
                                     </th>
                                     <th class="text-center">Discount</th>
                                     <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Total Amount">
@@ -152,7 +175,6 @@
                                     </th>
                                     <th class="text-center">Trip Type</th>
                                     <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Booking Channel">B.Channel</th>
-                                    <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Premium Flex">P.Flex</th>
                                     <th class="text-center">Payment</th>
                                 </tr>
                             </thead>
@@ -162,10 +184,38 @@
                                         <td class="text-center">{{ $index+1 }}</td>
                                         <td>{{ $item['bookingno'] }}</td>
                                         <td class="text-center">
-                                            <p class="mb-0">{{ $from->nickname }} - {{ $to->nickname }}</p>
+                                            @if($item['ispremiumflex'] == 'Y') <i class="fa-regular fa-circle-check"></i> @endif
+                                        </td>
+                                        <td>
+                                            <p class="mb-0">{{ $item['station_from']['nickname'] }} - {{ $item['station_to']['nickname'] }}</p>
                                             <small>{{ $item['travel_date'] }}</small>
                                         </td>
-                                        <td class="text-center">{{ intval($item['adult_passenger']) + intval($item['child_passenger']) + intval($item['infant_passenger']) }}</td>
+                                        <td>
+                                            @php
+                                                $mobile = ''; $email = '';
+                                            @endphp
+                                            @foreach ($item['booking_customers'] as $cus)
+                                                @php
+                                                    if($cus['mobile'] != '') $mobile = $cus['mobile'];
+                                                    if($cus['email'] != '') $email = $cus['email'];
+                                                @endphp
+                                                @if($cus['pivot']['isdefault'] == 'Y')
+                                                    <p class="small mb-0">
+                                                        {{ strtolower($cus['title']) }}.
+                                                        {{ $cus['fullname'] }}
+                                                    </p>
+                                                @endif
+                                            @endforeach
+                                        </td>
+                                        <td>
+                                            <p class="smaller mb-0">{{ $mobile }}</p>
+                                            <p class="smaller mb-0">{{ $email }}</p>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="me-1">A:{{ $item['adult_passenger'] }}</span>
+                                            <span class="me-1">C:{{ $item['child_passenger'] }}</span>
+                                            <span class="">I:{{ $item['infant_passenger'] }}</span>
+                                        </td>
                                         <td class="text-center">{{ number_format($item['totalamt']) }}</td>
                                         <td class="text-center">{{ number_format($item['extraamt']) }}</td>
                                         <td class="text-center">
@@ -181,7 +231,6 @@
                                         <td class="text-center">{{ number_format($item['payments'][0]['totalamt']) }}</td>
                                         <td class="text-center">{{ $item['trip_type'] }}</td>
                                         <td class="text-center">{{ $item['book_channel'] }}</td>
-                                        <td class="text-center">@if($item['ispremiumflex'] == 'Y') <i class="fa-regular fa-circle-check"></i> @else - @endif</td>
                                         <td class="text-center">
                                             @if($item['payments'][0]['status'] == 'CO') {{ $item['payments'][0]['payment_method'] }}
                                             @else -

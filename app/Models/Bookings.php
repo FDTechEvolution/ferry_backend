@@ -39,7 +39,7 @@ class Bookings extends Model
     }
 
     public function bookingRoutes() {
-        return $this->belongsToMany(Route::class, 'booking_routes', 'booking_id', 'route_id')->withPivot('type', 'traveldate','amount')->with('station_from', 'station_to');
+        return $this->belongsToMany(Route::class, 'booking_routes', 'booking_id', 'route_id')->withPivot('type', 'traveldate','amount')->with('station_from', 'station_to', 'bookingRouteAddons');
     }
 
     public function bookingRoutesX(){

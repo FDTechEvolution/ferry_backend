@@ -13,6 +13,12 @@ use App\Models\Route;
 
 class ReportsController extends Controller
 {
+    protected $CustomerType = [
+        'ADULT' => '[A]',
+        'CHILD' => '[C]',
+        'INFANT' => '[I]'
+    ];
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -29,15 +35,23 @@ class ReportsController extends Controller
         $depart_date = $this->setDepartDate($request->daterange);
         $start_date = Carbon::createFromFormat('Y-m-d', $depart_date[0])->startOfDay();
         $end_date = Carbon::createFromFormat('Y-m-d', $depart_date[1])->startOfDay();
+        $station_from = 'ALL';
+        $station_to = 'ALL';
 
-        $routes = $this->routeGetReport($request->station_from, $request->station_to, $start_date, $end_date);
+
+        $from = $request->station_from != 'all' ? $request->station_from : '';
+        $to = $request->station_to != 'all' ? $request->station_to : '';
+
+        $routes = $this->routeGetReport($from, $to, $start_date, $end_date);
 
         $booking_route = $this->getOnlyBookingRoutes($routes);
-        $station_from = $this->getStationById($request->station_from);
-        $station_to = $this->getStationById($request->station_to);
-        // Log::debug($booking_route);
+        if($from != '') $station_from = $this->getStationById($request->station_from);
+        if($to != '') $station_to = $this->getStationById($request->station_to);
+        // Log::debug($routes->toArray());
 
-        return view('pages.reports.index', ['sections' => $sections, 'reports' => $booking_route, 'depart_date' => $request->daterange, 'from' => $station_from, 'to' => $station_to]);
+        return view('pages.reports.index', ['sections' => $sections, 'reports' => $booking_route,
+                'depart_date' => $request->daterange, 'from' => $station_from, 'to' => $station_to,
+                'cus_type' => $this->CustomerType]);
     }
 
     public function reportPdfGenerate(Request $request) {
@@ -51,15 +65,25 @@ class ReportsController extends Controller
         $station_from = $this->getStationById($request->station_from);
         $station_to = $this->getStationById($request->station_to);
 
-        return view('pages.reports.pdf', ['reports' => $booking_route, 'depart_date' => $request->daterange, 'from' => $station_from, 'to' => $station_to]);
+        return view('pages.reports.pdf', ['reports' => $booking_route, 'depart_date' => $request->daterange,
+                    'from' => $station_from, 'to' => $station_to]);
     }
 
     private function routeGetReport($station_from, $station_to, $start_date, $end_date) {
-        $routes = Route::where('station_from_id', $station_from)
-                        ->where('station_to_id', $station_to)
-                        ->with(['booking_route' => function($br) use ($start_date, $end_date) {
+        $_from = $station_from != '' ? $station_from : '';
+        $_to = $station_to != '' ? $station_to : '';
+
+        $routes = Route::where(function($f) use ($_from) {
+                            if($_from != '') return $f->where('station_from_id', $_from);
+                            else return $f->where('station_from_id', '!=', NULL);
+                        })
+                        ->where(function($t) use ($_to) {
+                            if($_to != '') return $t->where('station_to_id', $_to);
+                            else return $t->where('station_to_id', '!=', NULL);
+                        })
+                        ->with(['bookings' => function($br) use ($start_date, $end_date) {
                             return $br->whereDate('traveldate', '>=', $start_date)->whereDate('traveldate', '<=', $end_date);
-                        }])
+                        }, 'booking_extra'])
                         ->get();
 
         return $routes;
@@ -72,11 +96,13 @@ class ReportsController extends Controller
     private function getOnlyBookingRoutes($routes) {
         $booking_routes = [];
 
-        foreach($routes as $route) {
-            if(sizeof($route['booking_route']) > 0) {
-                foreach($route['booking_route'] as $br) {
+        foreach($routes as $index => $route) {
+            if(sizeof($route['bookings']) > 0) {
+                foreach($route['bookings'] as $br) {
                     $br->traveldate = $br->pivot->traveldate;
                     $br->travel_date = date('d/m/Y', strtotime($br->pivot->traveldate));
+                    $br->station_from = $this->setStationToBookingRoute($routes[$index]->station_from);
+                    $br->station_to = $this->setStationToBookingRoute($routes[$index]->station_to);
                     array_push($booking_routes, $br->toArray());
                 }
             }
@@ -87,6 +113,14 @@ class ReportsController extends Controller
         });
 
         return $booking_routes;
+    }
+
+    private function setStationToBookingRoute($station) {
+        return [
+            'name' => $station->name,
+            'nickname' => $station->nickname,
+            'piername' => $station->piername
+        ];
     }
 
     private function getSection() {

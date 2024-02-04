@@ -97,6 +97,6 @@ class Route extends Model
     }
 
     public function booking_extra() {
-        return $this->belongsTo(BookingExtras::class, 'booking_routes', 'route_id', 'id')->with('route_addon');
+        return $this->belongsToMany(BookingExtras::class, 'booking_routes', 'route_id', 'id');
     }
 }

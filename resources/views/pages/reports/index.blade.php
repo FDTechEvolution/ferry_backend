@@ -11,22 +11,6 @@
             @csrf
             <fieldset id="report-create">
                 <div class="row">
-                    <div class="col-12 col-lg-4">
-                        <div class="form-floating mb-3">
-                            <input autocomplete="off" type="text" name="daterange" id="daterange"
-                                class="form-control form-control-sm rangepicker" data-bs-placement="left"
-                                data-ranges="false" data-date-start=""
-                                data-date-end="" data-date-format="DD/MM/YYYY"
-                                data-quick-locale='{
-                                        "lang_apply"	: "Apply",
-                                        "lang_cancel" : "Cancel",
-                                        "lang_crange" : "Custom Range",
-                                        "lang_months"	 : ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                                        "lang_weekdays" : ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
-                                    }'>
-                            <label for="daterange">Depart Date</label>
-                        </div>
-                    </div>
                     <div class="col-12 col-lg-3">
                         <div class="form-floating mb-3">
                             <select required class="form-select" name="station_from" id="station-from" aria-label="Station From Select">
@@ -65,21 +49,46 @@
                             <label for="station-to">Station To</label>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-2">
-                        <button type="submit" class="btn btn-sm btn-primary">Search</button>
+                    <div class="col-12 col-lg-3">
+                        <div class="form-floating mb-3">
+                            <input autocomplete="off" type="text" name="daterange" id="daterange"
+                                class="form-control form-control-sm rangepicker" data-bs-placement="left"
+                                data-ranges="false" data-date-start=""
+                                data-date-end="" data-date-format="DD/MM/YYYY"
+                                data-quick-locale='{
+                                        "lang_apply"	: "Apply",
+                                        "lang_cancel" : "Cancel",
+                                        "lang_crange" : "Custom Range",
+                                        "lang_months"	 : ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                                        "lang_weekdays" : ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+                                    }'>
+                            <label for="daterange">Depart Date</label>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-3">
+                        <div class="form-floating mb-3">
+                            <select required class="form-select" name="partner" id="partner" aria-label="Partner">
+                                <option value="all" selected>- ALL -</option>
+                                @foreach ($partners as $partner)
+                                    <option value="{{ $partner['id'] }}">{{ $partner['name'] }}</option>
+                                @endforeach
+                            </select>
+                            <label for="partner">Partner</label>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-3">
+                    <div class="col-12 col-lg-3">
                         <div class="form-floating mb-3">
-                            <select required class="form-select" name="booking_channel" id="booking-channel" aria-label="Station To Select">
+                            <select required class="form-select" name="depart_time" id="depart_time" aria-label="Depart / Arrive Time">
                                 <option value="all" selected>- ALL -</option>
-                                <option value="ONLINE">ONLINE</option>
-                                <option value="SEVEN">SEVEN</option>
-                                <option value="ADMIN">ADMIN</option>
+
                             </select>
-                            <label for="booking-channel">Booking Channel</label>
+                            <label for="depart_time">Depart / Arrive Time</label>
                         </div>
+                    </div>
+                    <div class="col-12 col-lg-9 text-end">
+                        <button type="submit" class="btn btn-sm btn-primary">Search</button>
                     </div>
                 </div>
             </fieldset>
@@ -89,14 +98,13 @@
 
 <div class="row">
     <div class="col-12">
-        @if (!empty($reports))
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-12 col-lg-10">
-                            <p class="small">
-                                <span class="fw-bold">Depart Date :</span> <span class="">{{ $depart_date }}</span>
-                                <span class="fw-bold ms-3">Station From : </span>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 col-lg-10">
+                        @if (!empty($reports))
+                            <p class="small mb-2">
+                                <span class="fw-bold">Station From : </span>
                                 @if($from == 'ALL')
                                     <span class="">{{ $from }}</span>
                                 @else
@@ -108,10 +116,41 @@
                                 @else
                                     <span class="">@if($to->nickname != '') [{{ $to->nickname }}] @endif {{ $to->name }} @if($to->piername != '') ({{ $to->piername }}) @endif</span>
                                 @endif
+                                <span class="fw-bold ms-3">Depart Date :</span> <span class="">{{ $depart_date }}</span>
                             </p>
-                        </div>
+                            <p class="small">
+                                <span class="fw-bold">Depart Time : </span>
+                                @if($depart_arrive == 'ALL')
+                                    <span class="">{{ $depart_arrive }}</span>
+                                @else
+                                    @php
+                                        $d_ex = explode('-', $depart_arrive)
+                                    @endphp
+                                    <span class="">{{ $d_ex[0] }}</span>
+                                @endif
 
-                        <div class="col-12 col-lg-2 text-end">
+                                <span class="fw-bold ms-3">Arrive Time : </span>
+                                @if($depart_arrive == 'ALL')
+                                    <span class="">{{ $depart_arrive }}</span>
+                                @else
+                                    @php
+                                        $d_ex = explode('-', $depart_arrive)
+                                    @endphp
+                                    <span class="">{{ $d_ex[1] }}</span>
+                                @endif
+
+                                <span class="fw-bold ms-3">Partner : </span>
+                                @if($partner == 'ALL')
+                                    <span class="">{{ $is_partner }}</span>
+                                @else
+                                    <span class="">{{ $is_partner->name }}</span>
+                                @endif
+                            </p>
+                        @endif
+                    </div>
+
+                    <div class="col-12 col-lg-2 text-end">
+                        @if (!empty($reports))
                             <form novalidate class="bs-validate" method="POST" target="_blank" action="{{ route('report-pdf') }}">
                                 @csrf
                                 <button class="btn btn-sm btn-outline-dark w-50 me-1 a-href-disabled"
@@ -126,124 +165,59 @@
                                         </path>
                                     </svg>
                                 </button>
+
                                 <input type="hidden" name="daterange" value="{{ $depart_date }}">
-                                {{-- <input type="hidden" name="station_from" value="@if($from != 'all') {{ $from->id }} @else all @endif">
-                                <input type="hidden" name="station_to" value="@if($to != 'all') {{ $to->id }} @else all @endif"> --}}
+                                @if($from != 'ALL')
+                                    <input type="hidden" name="station_from" value="{{ $from->id }}">
+                                @else
+                                    <input type="hidden" name="station_from" value="all">
+                                @endif
+
+                                @if($to != 'ALL')
+                                    <input type="hidden" name="station_to" value="{{ $to->id }}">
+                                @else
+                                    <input type="hidden" name="station_to" value="all">
+                                @endif
+
+                                @if($is_partner != 'ALL')
+                                    <input type="hidden" name="partner" value="{{ $is_partner->id }}">
+                                @else
+                                    <input type="hidden" name="partner" value="all">
+                                @endif
+                                <input type="hidden" name="depart_time" value="{{ $depart_arrive }}">
                             </form>
-                        </div>
-                    </div>
-                    <div id="report-list" class="table-responsive">
-                        <table class="table-datatable table table-datatable-custom" id="report-datatable"
-                            data-lng-empty="No data available in table"
-                            data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
-                            data-lng-filtered="(filtered from _MAX_ total entries)"
-                            data-lng-loading="Loading..."
-                            data-lng-processing="Processing..."
-                            data-lng-search="Search..."
-                            data-lng-norecords="No matching records found"
-                            data-lng-sort-ascending=": activate to sort column ascending"
-                            data-lng-sort-descending=": activate to sort column descending"
-                            data-enable-col-sorting="false"
-                            data-items-per-page="15"
-                            data-enable-column-visibility="false"
-                            data-enable-export="false"
-                            data-lng-export="<i class='fi fi-squared-dots fs-5 lh-1'></i>"
-                            data-lng-pdf="PDF"
-                            data-lng-xls="XLS"
-                            data-lng-all="All"
-                            data-export-pdf-disable-mobile="true"
-                            data-export='["pdf", "xls"]'
-                            data-responsive="true">
-                            <thead>
-                                <tr class="small">
-                                    <th class="text-center">#</th>
-                                    <th width="90">InvoiceNo.</th>
-                                    <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Premium Flex">P.Flex</th>
-                                    <th>Route</th>
-                                    <th>Lead Name</th>
-                                    <th>Contact</th>
-                                    <th class="text-center">Passenger</th>
-                                    <th class="text-center">
-                                        <p class="mb-0">Shuttle Bus</p>(From)
-                                    </th>
-                                    <th class="text-center">
-                                        <p class="mb-0">Shuttle Bus</p>(To)
-                                    </th>
-                                    <th class="text-center">Discount</th>
-                                    <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Total Amount">
-                                        <p class="mb-0">T.Amount</p>(THB)
-                                    </th>
-                                    <th class="text-center">Trip Type</th>
-                                    <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Booking Channel">B.Channel</th>
-                                    <th class="text-center">Payment</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($reports as $index => $item)
-                                    <tr class="">
-                                        <td class="text-center">{{ $index+1 }}</td>
-                                        <td>{{ $item['bookingno'] }}</td>
-                                        <td class="text-center">
-                                            @if($item['ispremiumflex'] == 'Y') <i class="fa-regular fa-circle-check"></i> @endif
-                                        </td>
-                                        <td>
-                                            <p class="mb-0">{{ $item['station_from']['nickname'] }} - {{ $item['station_to']['nickname'] }}</p>
-                                            <small>{{ $item['travel_date'] }}</small>
-                                        </td>
-                                        <td>
-                                            @php
-                                                $mobile = ''; $email = '';
-                                            @endphp
-                                            @foreach ($item['booking_customers'] as $cus)
-                                                @php
-                                                    if($cus['mobile'] != '') $mobile = $cus['mobile'];
-                                                    if($cus['email'] != '') $email = $cus['email'];
-                                                @endphp
-                                                @if($cus['pivot']['isdefault'] == 'Y')
-                                                    <p class="small mb-0">
-                                                        {{ strtolower($cus['title']) }}.
-                                                        {{ $cus['fullname'] }}
-                                                    </p>
-                                                @endif
-                                            @endforeach
-                                        </td>
-                                        <td>
-                                            <p class="smaller mb-0">{{ $mobile }}</p>
-                                            <p class="smaller mb-0">{{ $email }}</p>
-                                        </td>
-                                        <td class="text-center">
-                                            <span class="me-1">A:{{ $item['adult_passenger'] }}</span>
-                                            <span class="me-1">C:{{ $item['child_passenger'] }}</span>
-                                            <span class="">I:{{ $item['infant_passenger'] }}</span>
-                                        </td>
-                                        <td class="text-center">{{ number_format($item['totalamt']) }}</td>
-                                        <td class="text-center">{{ number_format($item['extraamt']) }}</td>
-                                        <td class="text-center">
-                                            @if($item['promotion_id'] != '')
-                                                <p class="mb-0">
-                                                    {{ number_format($item['promotion']['discount']) }} @if($item['promotion']['discount'] == 'THB') THB @else % @endif
-                                                </p>
-                                                <small class="smaller ms-1">[{{ $item['promotion']['code'] }}]</small>
-                                            @else
-                                                <span>-</span>
-                                            @endif
-                                        </td>
-                                        <td class="text-center">{{ number_format($item['payments'][0]['totalamt']) }}</td>
-                                        <td class="text-center">{{ $item['trip_type'] }}</td>
-                                        <td class="text-center">{{ $item['book_channel'] }}</td>
-                                        <td class="text-center">
-                                            @if($item['payments'][0]['status'] == 'CO') {{ $item['payments'][0]['payment_method'] }}
-                                            @else -
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                        @endif
                     </div>
                 </div>
+                <div id="report-list" class="table-responsive">
+                    <table class="table-datatable table table-datatable-custom" id="report-datatable"
+                        data-lng-empty="No data available in table"
+                        data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
+                        data-lng-filtered="(filtered from _MAX_ total entries)"
+                        data-lng-loading="Loading..."
+                        data-lng-processing="Processing..."
+                        data-lng-search="Search..."
+                        data-lng-norecords="No matching records found"
+                        data-lng-sort-ascending=": activate to sort column ascending"
+                        data-lng-sort-descending=": activate to sort column descending"
+                        data-enable-col-sorting="false"
+                        data-items-per-page="15"
+                        data-enable-column-visibility="false"
+                        data-enable-export="false"
+                        data-lng-export="<i class='fi fi-squared-dots fs-5 lh-1'></i>"
+                        data-lng-pdf="PDF"
+                        data-lng-xls="XLS"
+                        data-lng-all="All"
+                        data-export-pdf-disable-mobile="true"
+                        data-export='["pdf", "xls"]'
+                        data-responsive="true">
+                        <x-report-table
+                            :reports="$reports"
+                        />
+                    </table>
+                </div>
             </div>
-        @endif
+        </div>
     </div>
 </div>
 @stop
@@ -259,4 +233,5 @@
         min-width: 0 !important;
     }
 </style>
+<script src="{{ asset('assets/js/app/report.js') }}"></script>
 @stop

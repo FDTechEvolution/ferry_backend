@@ -302,6 +302,9 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/report', 'getRoute')->name('report-get');
         Route::post('/report-pdf', 'reportPdfGenerate')->name('report-pdf');
+
+        // AJAX
+        Route::get('/ajax/report/depart-arrive-time/{from_id}/{to_id}', 'routeDepartArriveTime');
     });
 
 });

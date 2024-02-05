@@ -25,7 +25,9 @@
         <fieldset id="field-frm">
             <div class="row">
                 <div class="col-12 col-lg-7 border-end">
-                    <h4>{{ $routeSchedule->route->station_from->name }} <i class="fa-solid fa-angles-right px-2 fa-1x"></i>
+                    <h4>
+                        <img src="{{asset($routeSchedule->route->partner->image->path)}}" class="rounded-circle" width="40" />
+                        {{ $routeSchedule->route->station_from->name }} <i class="fa-solid fa-angles-right px-2 fa-1x"></i>
                         {{ $routeSchedule->route->station_to->name }}</h4>
                     <h3 class="text-main-color">
                         {{ date('H:i', strtotime($routeSchedule['route']['depart_time'])) }}-{{ date('H:i', strtotime($routeSchedule['route']['arrive_time'])) }}

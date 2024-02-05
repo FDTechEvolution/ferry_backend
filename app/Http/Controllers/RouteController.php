@@ -46,11 +46,11 @@ class RouteController extends Controller
                 'title' => 'Shuttle Bus',
                 'key' => 'shuttle_bus',
             ],
-            /*
+
             [
                 'title' => 'Private Taxi',
                 'key' => 'private_taxi',
-            ],*/
+            ],
             [
                 'title' => 'Longtail boat',
                 'key' => 'longtail_boat',
@@ -106,7 +106,7 @@ class RouteController extends Controller
         if(is_null($route) || $route->status != 'CO')
             return redirect()->route('route-index')->withFail('This route not exist.');
 
-        $route->routeAddons;
+        $route->routeAddonEdit;
 
         if(sizeof($route->routeAddons) ==0){
             $_route = Route::where('id',$id)->with('station_from','station_to')->first();

@@ -128,7 +128,7 @@
                                 <td class="text-center p-0">
                                     @if (!is_null($route->partner))
                                         <img src="{{ asset($route->partner->image->path) }}" width="25"
-                                            class="img-circle" alt="{{ $route->partner->name }}" />
+                                            class="rounded-circle" alt="{{ $route->partner->name }}" />
                                     @endif
                                 </td>
                                 <td style="display: none;">

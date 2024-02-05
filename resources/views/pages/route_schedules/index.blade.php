@@ -92,6 +92,7 @@
                                 <td>
                                     @if ($route_id != $routeSchedule->route_id)
                                         <p class="pb-0 mb-0">
+                                            <img src="{{$routeSchedule->path}}" class="rounded-circle" width="20" />
                                             {{ $routeSchedule->station_from_name }}
                                             <i class="fa-solid fa-angles-right px-2 fa-1x"></i>
                                             {{ $routeSchedule->station_to_name }}

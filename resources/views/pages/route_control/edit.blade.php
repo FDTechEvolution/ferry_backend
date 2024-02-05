@@ -299,7 +299,7 @@
                         </div>
                     </div>
                     <hr>
-                    
+
                     <div class="row">
                         <div class="col-12">
                             <div class="row mb-4">
@@ -423,7 +423,7 @@
                             </div>
 
                             <div class="row mb-4">
-                                @foreach ($route->routeAddons as $index => $item)
+                                @foreach ($route->routeAddonEdit as $index => $item)
                                     <div class="col-12 col-lg-6 px-4 mb-3">
                                         <div class="row border rounded bg-gray-100">
                                             <div class="col-12">

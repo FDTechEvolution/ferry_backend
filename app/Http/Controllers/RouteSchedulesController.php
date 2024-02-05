@@ -44,12 +44,14 @@ class RouteSchedulesController extends Controller
             */
 
             $routeSchedules = DB::table('routes')
-                ->select('sfrom.name as station_from_name', 'sto.name as station_to_name', 'routes.*', 'route_schedules.*','createdby.firstname as created_name','updatedby.firstname as updated_name',)
+                ->select('sfrom.name as station_from_name', 'sto.name as station_to_name', 'routes.*', 'route_schedules.*','createdby.firstname as created_name','updatedby.firstname as updated_name','images.path')
                 ->join('stations as sfrom', 'routes.station_from_id', '=', 'sfrom.id')
                 ->join('stations as sto', 'routes.station_to_id', '=', 'sto.id')
                 ->join('route_schedules', 'routes.id', '=', 'route_schedules.route_id')
                 ->leftJoin('users as createdby','route_schedules.created_by','createdby.id') 
                 ->leftJoin('users as updatedby','route_schedules.updated_by','updatedby.id') 
+                ->leftJoin('partners','routes.partner_id','partners.id')
+                ->leftJoin('images','partners.image_id','images.id')
                 ->whereNull('route_schedules.api_merchant_id');
 
             if (!is_null($stationFromId) && $stationFromId != 'all') {
@@ -79,12 +81,14 @@ class RouteSchedulesController extends Controller
 
 
             $routeSchedules = DB::table('routes')
-            ->select('sfrom.name as station_from_name', 'sto.name as station_to_name', 'routes.*', 'route_schedules.*','createdby.firstname as created_name','updatedby.firstname as updated_name',)
+            ->select('sfrom.name as station_from_name', 'sto.name as station_to_name', 'routes.*', 'route_schedules.*','createdby.firstname as created_name','updatedby.firstname as updated_name','images.path')
                 ->join('stations as sfrom', 'routes.station_from_id', '=', 'sfrom.id')
                 ->join('stations as sto', 'routes.station_to_id', '=', 'sto.id')
                 ->join('route_schedules', 'routes.id', '=', 'route_schedules.route_id')
                 ->leftJoin('users as createdby','route_schedules.created_by','createdby.id') 
                 ->leftJoin('users as updatedby','route_schedules.updated_by','updatedby.id') 
+                ->leftJoin('partners','routes.partner_id','partners.id')
+                ->leftJoin('images','partners.image_id','images.id')
                 ->where('route_schedules.api_merchant_id', $merchant_id)
                 ->orderBy('sfrom.name', 'ASC')
                 ->orderBy('routes.depart_time', 'ASC')
@@ -200,7 +204,7 @@ class RouteSchedulesController extends Controller
      */
     public function edit(string $id)
     {
-        $routeSchedule = RouteSchedules::where('id', $id)->with(['route'])->first();
+        $routeSchedule = RouteSchedules::where('id', $id)->with(['route','route.partner.image'])->first();
         $route_id = $routeSchedule->route_id;
 
         $apiMerchant = NULL;

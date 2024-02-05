@@ -39,8 +39,8 @@ function addSelectOption(select_id, icons, is_icon) {
         let _option = document.createElement('option')
         _option.value = icon.icon
         _option.innerText = icon.name
-        if(icon.icon === is_icon) { 
-            _option.selected = true 
+        if(icon.icon === is_icon) {
+            _option.selected = true
             document.querySelector('#icon-image-show-edit').src = icon.path + icon.icon
         }
         select_id.add(_option)
@@ -53,9 +53,9 @@ async function loadFileIcon(is_select, is_icon) {
     res = await response.json()
 
     let _select = document.querySelector(is_select)
-    _select.addEventListener('change', function() { 
-        if(is_icon) iconSelected(this, false) 
-        else iconSelected(this, true) 
+    _select.addEventListener('change', function() {
+        if(is_icon) iconSelected(this, false)
+        else iconSelected(this, true)
     }, false)
     clearSelectOption(_select)
     addSelectOption(_select, res, is_icon)
@@ -70,7 +70,7 @@ async function showIconList() {
 
     _res.forEach((icon, index) => {
         let _li = document.createElement('li')
-        _li.innerHTML = `<img src="${icon.path}${icon.icon}" width="22" height=22> ${icon.name} 
+        _li.innerHTML = `<img src="${icon.path}${icon.icon}" width="22" height=22> ${icon.name}
                             <i class="fi fi-round-close text-danger cursor-pointer meal-icon-delete" onClick="return confirmDeleteIcon(${index})" title="Delete this icon."></i>`
         showList.appendChild(_li)
     })
@@ -132,6 +132,11 @@ function setClassListAdd(element_id) {
 
 function setClassListRemove(element_id) {
     document.querySelector(`#${element_id}`).classList.remove('d-none')
+}
+
+function setUpdateIconMeal() {
+    loadFileIcon('#meal-icon-edit', is_meal.image_icon)
+    current_icon_edit = meal.image_icon
 }
 
 function updateEditData(index) {

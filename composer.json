@@ -40,7 +40,8 @@
             "app/Helpers/TransactionLogHelper.php",
             "app/Helpers/ImageHelper.php",
             "app/Helpers/PromotionHelper.php",
-            "app/Helpers/RouteHelper.php"
+            "app/Helpers/RouteHelper.php",
+            "app/Helpers/EmailHelper.php"
         ]
     },
     "autoload-dev": {

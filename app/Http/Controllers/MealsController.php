@@ -12,8 +12,8 @@ use App\Models\Image;
 class MealsController extends Controller
 {
     protected $Type = 'MEAL';
-    protected $PathImage = '/assets/images/meal';
-    protected $PathIcon = '/assets/images/meal/icon';
+    protected $PathImage = '/image/meal';
+    protected $PathIcon = '/icon/meal';
 
     public function __construct()
     {
@@ -26,16 +26,27 @@ class MealsController extends Controller
             ->where('status', 'CO')
             ->where('isactive', 'Y')
             ->with('image')->get();
-        
+
         return $meals;
     }
 
     public function index()
     {
-        $meals = Addon::where('type', $this->Type)->where('status', 'CO')->with('image')->get();
+        $meals = Addon::where('type', $this->Type)->where('status', 'CO')->with('image', 'icon')->get();
+
+        Log::debug($meals->toArray());
 
         $icons = IconController::getListIcon();
         return view('pages.meals.index', ['meals' => $meals, 'icons' => $icons]);
+    }
+
+    public function edit(string $id = null) {
+        $meal = Addon::find($id);
+        $meal->image;
+        $meal->icon;
+        $icons = IconController::getListIcon();
+
+        return view('pages.meals.edit', ['meal' => $meal, 'icons' => $icons]);
     }
 
     public function store(Request $request)
@@ -44,18 +55,20 @@ class MealsController extends Controller
             'name' => 'required|string',
             'price' => 'required|integer',
             'detail' => 'string|nullable',
+            'file_icon' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1024|nullable',
             'file_picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable',
         ]);
 
         if ($this->checkNameDupplicate($request->name)) {
             $image_id = null;
-            // $icon_id = null;
+            $icon_id = null;
+
             if ($request->hasFile('file_picture')) {
                 $image_id = $this->storeImage($request->file('file_picture'), $this->PathImage);
             }
-            // if($request->hasFile('file_icon')) {
-            //     $icon_id = $this->storeImage($request->file('file_icon'), $this->PathIcon);
-            // }
+            if($request->hasFile('file_icon')) {
+                $icon_id = $this->storeImage($request->file('file_icon'), $this->PathIcon);
+            }
 
             $addon = Addon::create([
                 'code' => Str::random(6),
@@ -65,7 +78,7 @@ class MealsController extends Controller
                 'amount' => $request->price,
                 'description' => $request->detail,
                 'image_id' => $image_id,
-                'image_icon' => $request->icon,
+                'image_icon_id' => $icon_id,
                 'is_route_station' => isset($request->route_station) ? 'Y' : 'N',
                 'is_main_menu' => isset($request->main_menu) ? 'Y' : 'N',
             ]);
@@ -122,14 +135,14 @@ class MealsController extends Controller
             if ($meal->image_id != '')
                 $this->isDeleteImage($meal->id, $meal->image_id, $image->path, $image->name, 'image');
         }
-        // if($request->hasFile('file_icon')) {
-        //     $icon_id = $this->storeImage($request->file('file_icon'), $this->PathIcon);
-        //     if($meal->image_icon_id != '') $this->isDeleteImage($meal->id, $meal->image_icon_id, $image->path, $image->name, 'icon');
-        // }
+        if($request->hasFile('file_icon')) {
+            $icon_id = $this->storeImage($request->file('file_icon'), $this->PathIcon);
+            if($meal->image_icon_id != '') $this->isDeleteImage($meal->id, $meal->image_icon_id, $image->path, $image->name, 'icon');
+        }
 
         if (!$request->_image && $image_id == null)
             $this->isDeleteImage($meal->id, $meal->image_id, $image->path, $image->name, 'image');
-        // if(!$request->_icon && $icon_id == null) $this->isDeleteImage($meal->id, $meal->image_icon_id, $icon->path, $icon->name, 'icon');
+        if(!$request->_icon && $icon_id == null) $this->isDeleteImage($meal->id, $meal->image_icon_id, $icon->path, $icon->name, 'icon');
 
         $meal->name = $request->name;
         $meal->amount = $request->price;
@@ -139,7 +152,7 @@ class MealsController extends Controller
         $meal->image_icon = $request->icon;
         $meal->is_route_station = isset($request->route_station) ? 'Y' : 'N';
         $meal->is_main_menu = isset($request->main_menu) ? 'Y' : 'N';
-        // if($icon_id != null) $meal->image_icon_id = $icon_id;
+        if($icon_id != null) $meal->image_icon_id = $icon_id;
 
         if ($meal->save())
             return redirect()->route('meals-index')->withSuccess('Meal updated...');

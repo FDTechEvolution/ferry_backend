@@ -1,5 +1,11 @@
 @extends('layouts.default')
 
+@section('head_meta')
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+@stop
+
 @section('page-title')
 <h1 class="ms-2 mb-0 text-main-color-2">Media <small class="fs-4">/ Blog / Create</small></h1>
 @stop
@@ -68,27 +74,23 @@
             <div class="col-12 col-lg-9 pe-lg-3 order-lg-1">
                 <label class="col-sm-12 col-lg-12 col-form-label-sm text-start fw-bold">Content</label>
                 <div class="col-sm-12 col-lg-12 mb-3 mb-lg-0">
-                    <div class="quill-editor"
-                        data-textarea-name="description"
-                        data-quill-config='{
-                            "modules": {
-                                "toolbar": [
-                                    [{ "header": [2, 3, 4, 5, 6, false] }],
-                                    ["bold", "italic", "underline", "strike"],
-                                    [{ "color": [] }, { "background": [] }],
-                                    [{ "script": "super" }, { "script": "sub" }],
-                                    ["blockquote"],
-                                    [{ "list": "ordered" }, { "list": "bullet"}, { "indent": "-1" }, { "indent": "+1" }],
-                                    [{ "align": [] }],
-                                    ["link", "image", "video"],
-                                    ["clean", "code-block"]
-                                ]
-                            },
-
-                            "placeholder": "Content here..."
-                        }'>
-                        <p></p>
-                    </div>
+                    <textarea name="description" class="w-100" id="is-summernote"></textarea>
+                    <script type="text/javascript">
+                        $('#is-summernote').summernote({
+                            placeholder: '',
+                            tabsize: 2,
+                            height: 400,
+                            toolbar: [
+                                ['style', ['style']],
+                                ['font', ['bold', 'underline', 'clear']],
+                                ['color', ['color']],
+                                ['para', ['ul', 'ol', 'paragraph']],
+                                ['table', ['table']],
+                                ['insert', ['link', 'picture']],
+                                ['view', ['fullscreen', 'codeview', 'help']]
+                            ]
+                        })
+                    </script>
                 </div>
             </div>
         </div>
@@ -111,6 +113,10 @@
 <style>
     .ql-container.ql-snow {
         height: 600px;
+    }
+    .note-editor .note-toolbar .note-color-all .note-dropdown-menu,
+    .note-popover .popover-content .note-color-all .note-dropdown-menu {
+        min-width: 350px;
     }
 </style>
 <script src="{{ asset('assets/js/app/slide.js') }}"></script>

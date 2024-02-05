@@ -129,6 +129,7 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(MealsController::class)->group(function () {
         Route::get('/meals', 'index')->name('meals-index');
+        Route::get('/meals/edit/{id}', 'edit')->name('meal-edit');
         Route::get('/delete-meal/{id}', 'destroy')->name('meal-delete');
 
         Route::post('/create-meal', 'store')->name('meal-create');

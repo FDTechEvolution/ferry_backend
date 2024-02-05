@@ -315,7 +315,9 @@ Route::controller(PrintController::class)->group(function () {
 
 });
 
-
+Route::get('/email/ticket', function() {
+    return view('email.ticket');
+});
 
 // Route::get('/{pathMatch}', function() {
 //     return view('app');

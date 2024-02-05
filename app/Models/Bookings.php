@@ -47,7 +47,7 @@ class Bookings extends Model
     }
 
     public function tickets() {
-        return $this->hasMany(Tickets::class,'booking_id', 'id');
+        return $this->hasMany(Tickets::class,'booking_id', 'id')->with('station_from', 'station_to');
     }
 
     public function payments() {
@@ -56,5 +56,9 @@ class Bookings extends Model
 
     public function promotion() {
         return $this->hasOne(Promotions::class, 'id', 'promotion_id');
+    }
+
+    public function route() {
+        return $this->belongsToMany(Route::class, 'booking_routes', 'booking_id', 'route_id');
     }
 }

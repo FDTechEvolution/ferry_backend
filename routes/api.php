@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\Api\BillboardController;
 use App\Http\Controllers\Api\PremiumFlexController;
+use App\Http\Controllers\Api\EmailController;
 
 // 7 Controller
 use App\Http\Controllers\Api\Seven\BookingController as SevenBooking;
@@ -49,6 +50,12 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
 Route::prefix('v1')->group(function() {
     Route::controller(PaymentController::class)->group(function() {
         Route::post('payment/get-response', 'paymentResponse');
+    });
+});
+
+Route::prefix('v2')->group(function() {
+    Route::controller(EmailController::class)->group(function() {
+        Route::get('email/send', 'sendEmail');
     });
 });
 

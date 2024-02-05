@@ -16,7 +16,7 @@ class RouteHelper
     {
         /*
         $avaliableRouteIds = [];
-        
+
 
         foreach($routes as $route){
             array_push($avaliableRouteIds,$route->id);
@@ -85,14 +85,14 @@ class RouteHelper
 
         /*
 
-        $sql = 'select r.id 
-        from 
-            routes r 
-            join stations s_from on r.station_from_id = s_from.id and s_from.isactive = "Y" 
-            join stations s_to on r.station_to_id = s_to.id and s_to.isactive = "Y" 
-        where 
-        r.isactive = "Y"  
-        and (r.station_from_id = ? and r.station_to_id = ?) 
+        $sql = 'select r.id
+        from
+            routes r
+            join stations s_from on r.station_from_id = s_from.id and s_from.isactive = "Y"
+            join stations s_to on r.station_to_id = s_to.id and s_to.isactive = "Y"
+        where
+        r.isactive = "Y"
+        and (r.station_from_id = ? and r.station_to_id = ?)
         and r.id not in (
             select route_id from route_schedules where isactive = "Y" and api_merchant_id IS NULL and type = "CLOSE" and start_datetime <= ? and end_datetime >= ? and :dayCondition
         )';
@@ -145,13 +145,13 @@ class RouteHelper
         }
 
         //end
-        
+
         */
 
         $routes = Route::with('station_from', 'station_to', 'icons', 'activity_lines', 'meal_lines', 'partner', 'station_lines', 'routeAddons')
             ->whereNotIn('id', $fillOutRouteIds)
             ->where('station_from_id', $stationFromId)
-            ->where('status','CO') 
+            ->where('status','CO')
             ->where('station_to_id', $stationToId)
             ->get();
 
@@ -192,10 +192,17 @@ class RouteHelper
     public static function getRoutes($stationFromId, $stationToId)
     {
         $routes = Route::where('isactive', 'Y')
-            ->with(['station_from', 'station_to'])
-            ->where('station_from_id', $stationFromId)
-            ->where('station_to_id', $stationToId)
-            ->orderBy('station_from_id', 'ASC')
+            ->with(['station_from', 'station_to','partner.image']);
+        if(!is_null($stationFromId) && $stationFromId !=''){
+            $routes = $routes->where('station_from_id', $stationFromId);
+        }
+
+        if(!is_null($stationToId) && $stationToId !=''){
+            $routes = $routes->where('station_to_id', $stationToId);
+        }
+
+
+        $routes  = $routes->orderBy('station_from_id', 'ASC')
             ->orderBy('depart_time', 'ASC')
             ->get();
 

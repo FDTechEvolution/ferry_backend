@@ -24,7 +24,7 @@ class PrintController extends Controller
         if ($type == 'V') {
             $booking = BookingHelper::getBookingInfoByBookingNo($bookingno);
             $term = Informations::where('position','TERM_TICKET')->first();
-
+            dd($booking);
             return view('print.ticket',['booking'=>$booking,'term'=>$term]);
         }else{
             $booking = BookingHelper::getBookingInfoByBookingNo($bookingno);

@@ -17,7 +17,7 @@ class RouteSchedulesController extends Controller
      */
     public function index()
     {
-        
+
         $merchant_id = request()->merchant_id;
         $apiMerchant = null;
         $stationFromId = request()->station_from_id;
@@ -48,8 +48,8 @@ class RouteSchedulesController extends Controller
                 ->join('stations as sfrom', 'routes.station_from_id', '=', 'sfrom.id')
                 ->join('stations as sto', 'routes.station_to_id', '=', 'sto.id')
                 ->join('route_schedules', 'routes.id', '=', 'route_schedules.route_id')
-                ->leftJoin('users as createdby','route_schedules.created_by','createdby.id') 
-                ->leftJoin('users as updatedby','route_schedules.updated_by','updatedby.id') 
+                ->leftJoin('users as createdby','route_schedules.created_by','createdby.id')
+                ->leftJoin('users as updatedby','route_schedules.updated_by','updatedby.id')
                 ->leftJoin('partners','routes.partner_id','partners.id')
                 ->leftJoin('images','partners.image_id','images.id')
                 ->whereNull('route_schedules.api_merchant_id');
@@ -85,8 +85,8 @@ class RouteSchedulesController extends Controller
                 ->join('stations as sfrom', 'routes.station_from_id', '=', 'sfrom.id')
                 ->join('stations as sto', 'routes.station_to_id', '=', 'sto.id')
                 ->join('route_schedules', 'routes.id', '=', 'route_schedules.route_id')
-                ->leftJoin('users as createdby','route_schedules.created_by','createdby.id') 
-                ->leftJoin('users as updatedby','route_schedules.updated_by','updatedby.id') 
+                ->leftJoin('users as createdby','route_schedules.created_by','createdby.id')
+                ->leftJoin('users as updatedby','route_schedules.updated_by','updatedby.id')
                 ->leftJoin('partners','routes.partner_id','partners.id')
                 ->leftJoin('images','partners.image_id','images.id')
                 ->where('route_schedules.api_merchant_id', $merchant_id)
@@ -105,7 +105,7 @@ class RouteSchedulesController extends Controller
      */
     public function create()
     {
-        
+
         $merchant_id = request()->merchant_id;
         $routes = [];
         $stationFromId = request()->station_from_id;
@@ -121,12 +121,10 @@ class RouteSchedulesController extends Controller
             $apiMerchant = ApiMerchants::where('id',$merchant_id)->first();
         }
 
-    
+
         $stationTos = RouteHelper::getStationTo($stationFromId);
 
-        if (!is_null($stationFromId) && !is_null($stationToId)) {
-            $routes = RouteHelper::getRoutes($stationFromId, $stationToId);
-        }
+        $routes = RouteHelper::getRoutes($stationFromId, $stationToId);
 
         //dd($stationFrom);
         return view('pages.route_schedules.create', [

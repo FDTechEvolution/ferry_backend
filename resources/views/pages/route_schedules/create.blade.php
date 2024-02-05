@@ -73,6 +73,7 @@
                                                         value="{{ $route->id }}" name="route_id[]"
                                                         id="{{ $route->id }}" checked>
                                                     <label class="form-check-label" for="{{ $route->id }}">
+                                                        <img src="{{asset($route->partner->image->path)}}" width="25" class="rounded-circle"/>
                                                         <strong>{{ $route->station_from->name }} -
                                                             {{ $route->station_to->name }}</strong>
                                                     </label>

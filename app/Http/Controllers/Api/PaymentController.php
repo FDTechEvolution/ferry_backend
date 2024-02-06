@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Helpers\PaymentHelper;
 use App\Helpers\BookingHelper;
+use App\Helpers\EmailHelper;
 
 use App\Models\Bookings;
 use App\Models\Payments;
@@ -23,7 +24,7 @@ class PaymentController extends Controller
     public function paymentResponse(Request $request) {
         $data = '{"payload":"' . $request['payload'] . '"}';
         $result = PaymentHelper::decodeResponse($data);
-        
+
         if($result['respCode'] == '0000') $this->updateBookingpayment($result); // payment successs
         else if($result['respCode'] == '4005') $this->paymentFail(); // payment fail
     }
@@ -33,8 +34,11 @@ class PaymentController extends Controller
         $description = json_encode($result);
         $payment_data = ['payment_method' => $cardType, 'totalamt' => $result['amount'], 'description' => $description];
 
+        // $result['userDefined1'] = $payment_id
+        // $result['userDefined2'] = $booking_id
         $payment = PaymentHelper::completePayment($result['userDefined1'], $payment_data);
         $booking = BookingHelper::completeBooking($result['userDefined2']);
+        EmailHelper::ticket($result['userDefined2']);
     }
 
     private function paymentFail() {

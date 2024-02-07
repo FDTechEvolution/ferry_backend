@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\RouteHelper;
 use App\Models\ApiMerchants;
+use App\Models\Bookings;
 use App\Models\RouteSchedules;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -30,7 +31,7 @@ class RouteSchedulesController extends Controller
 
         $stationTos = RouteHelper::getStationTo($stationFromId);
 
-
+        $countBooking = Bookings::where('status','CO')->where('isconflict','Y')->count();
 
         //check normal ruote
         if (is_null($merchant_id) || $merchant_id == '') {
@@ -97,7 +98,7 @@ class RouteSchedulesController extends Controller
 
         //
 
-        return view('pages.route_schedules.index', ['routeSchedules' => $routeSchedules, 'merchant_id' => $merchant_id, 'title' => $title, 'stationFroms' => $stationFroms, 'stationTos' => $stationTos, 'stationFromId' => $stationFromId, 'stationToId' => $stationToId,'apiMerchant'=>$apiMerchant]);
+        return view('pages.route_schedules.index', ['routeSchedules' => $routeSchedules, 'merchant_id' => $merchant_id, 'title' => $title, 'stationFroms' => $stationFroms, 'stationTos' => $stationTos, 'stationFromId' => $stationFromId, 'stationToId' => $stationToId,'apiMerchant'=>$apiMerchant,'countBooking'=>$countBooking]);
     }
 
     /**
@@ -166,7 +167,10 @@ class RouteSchedulesController extends Controller
         }
 
 
+        $routeSchedule = null;
         foreach ($route_ids as $index => $route_id) {
+            $isHasEffectBooking = $this->isHasEffectBooking($route_id,$startDateSql,$endDateSql);
+
             $routeSchedule = RouteSchedules::create([
                 'route_id' => $route_id,
                 'type' => $request->type,
@@ -186,7 +190,7 @@ class RouteSchedulesController extends Controller
             ]);
         }
 
-        return redirect()->route('routeSchedules.index', ['merchant_id' => $merchant_id])->withSuccess('');
+        return redirect()->route('routeSchedules.bookingAffected', ['routeSchedules'=>$routeSchedule,'merchant_id' => $merchant_id]);
     }
 
     /**
@@ -194,7 +198,50 @@ class RouteSchedulesController extends Controller
      */
     public function show(string $id)
     {
-        //
+
+    }
+
+    public function bookingEffect(){
+        $merchant_id = request()->merchant_id;
+
+        /*
+        $todayDateSql = Carbon::now()->format('Y-m-d');
+        $routeSchedules = RouteSchedules::where('isactive','N')->where('end_datetime','>=',$todayDateSql)->get();
+
+        $bookingIds = [];
+        $api_merchant_id = '';
+
+        foreach($routeSchedules as $index => $routeSchedule){
+            $sql = 'select b.id from booking_routes br join bookings b on br.booking_id = b.id where br.route_id = ? and (br.traveldate >= ? and br.traveldate <= ?) ';
+            $startDateSql = $routeSchedule->start_datetime;
+            $endDateSql = $routeSchedule->end_datetime;
+
+            if($startDateSql < $todayDateSql){
+                $startDateSql = $todayDateSql;
+            }
+
+            $bookings = (DB::select($sql, [$routeSchedule->route_id, $startDateSql, $endDateSql]));
+
+            foreach($bookings as $booking){
+                array_push($bookingIds,$booking->id);
+            }
+            //$bookingIds = array_merge($bookingIds,$bookings);
+        }
+
+        //dd($bookingIds);
+
+        */
+
+        $sql = 'select b.id,b.created_at,b.bookingno,b.adult_passenger,b.child_passenger,b.infant_passenger,b.trip_type,concat(sf.nickname,"-",st.nickname) as route,br.traveldate,b.ispayment,b.book_channel,u.firstname,r.depart_time,r.arrive_time,b.totalamt from bookings b join booking_routes br on b.id = br.booking_id join routes r on br.route_id = r.id join stations sf on r.station_from_id = sf.id join stations st on r.station_to_id = st.id left join users u on b.user_id = u.id where b.isconflict = "Y" and b.status = "CO" order by br.traveldate ASC,b.created_at ASC  ';
+
+        $bookings = DB::select($sql);
+        $bookings = json_decode(json_encode($bookings), true);
+
+        if(sizeof($bookings) ==0){
+            return redirect()->route('routeSchedules.index', ['merchant_id' => $merchant_id])->withSuccess('');
+        }
+
+        return view('pages.route_schedules.booking_effect',['merchant_id' => $merchant_id,'bookings'=>$bookings]);
     }
 
     /**
@@ -272,4 +319,33 @@ class RouteSchedulesController extends Controller
         $routeSchedule->delete();
         return redirect()->route('routeSchedules.index', ['merchant_id' => $merchant_id])->withSuccess('');
     }
+
+    private function isHasEffectBooking($routeId,$startDateSql,$endDateSql){
+        $todayDateSql = Carbon::now()->format('Y-m-d');
+        //$startDateSql = Carbon::createFromFormat('d/m/Y', $startDate)->format('Y-m-d');
+        //$endDateSql = Carbon::createFromFormat('d/m/Y', $endDate)->format('Y-m-d');
+
+        if($startDateSql < $todayDateSql){
+            $startDateSql = $todayDateSql;
+        }
+
+        $sql = 'select b.id from booking_routes br join bookings b on br.booking_id = b.id where br.route_id = ? and (br.traveldate >= ? and br.traveldate <= ?) ';
+
+        $datas = (DB::select($sql, [$routeId, $startDateSql, $endDateSql]));
+
+        foreach($datas as $item){
+            $booking = Bookings::find($item->id);
+            $booking->isconflict = 'Y';
+            $booking->save();
+        }
+        //dd($count);
+        if(sizeof($datas) >0){
+            return true;
+        }
+
+        return false;
+
+    }
+
+
 }

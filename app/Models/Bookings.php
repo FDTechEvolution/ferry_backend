@@ -27,7 +27,8 @@ class Bookings extends Model
         'book_channel',
         'trip_type',
         'ispremiumflex',
-        'promotion_id'
+        'promotion_id',
+        'isconflict'
     ];
 
     public function user() {

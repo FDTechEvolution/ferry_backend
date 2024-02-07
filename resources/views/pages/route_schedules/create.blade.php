@@ -21,6 +21,11 @@
             <input type="hidden" value="{{ $merchant_id }}" name="merchant_id" />
         @endif
         <div class="row">
+            <div class="col-12">
+                <div class="alert alert-info" role="alert">
+                    Please select <strong>Station From or Station To</strong> for filter route.
+                </div>
+            </div>
             <div class="col-12 col-lg-4">
                 <div class="form-floating mb-3">
                     <select class="form-select" id="station_from_id" name="station_from_id" aria-label="">

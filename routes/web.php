@@ -70,6 +70,10 @@ Route::middleware('auth')->group(function () {
         'routeSchedules' => RouteSchedulesController::class,
     ]);
 
+    Route::controller(RouteSchedulesController::class)->group(function() {
+        Route::get('/booking-affected', 'bookingEffect')->name('routeSchedules.bookingAffected');
+    });
+
     Route::controller(ApiMerchantsController::class)->group(function() {
         Route::get('/api', 'index')->name('api.index');
         Route::post('/api/update/{id}', 'update')->name('api.update');

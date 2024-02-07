@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\RouteAddons;
+use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -64,11 +65,14 @@ class RouteController extends Controller
     public function index()
     {
         $routes = Route::where('status', 'CO')
-            ->with('station_from', 'station_to', 'icons', 'routeAddons', 'activity_lines', 'meal_lines', 'partner', 'lastSchedule')
+            ->with('station_from','station_from.section', 'station_to', 'icons', 'routeAddons', 'activity_lines', 'meal_lines', 'partner', 'lastSchedule')
+            //->orderBy('station_from.section_id', 'ASC')
             ->orderBy('station_from_id', 'ASC')
             ->orderBy('depart_time', 'ASC')
             ->get();
         //dd($routes);
+
+
 
         //$stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();

@@ -20,6 +20,11 @@
 
                 <img src="{{ $apiMerchant->logo }}" width="200px" class="px-2" />
             @endif
+
+            @if ($countBooking > 0)
+                <a href="{{ route('routeSchedules.bookingAffected',['routeSchedules'=>$merchant_id ]) }}?merchant_id={{ $merchant_id }}"
+                    class="btn btn-outline-danger"><span class="animate-blink text-danger"><i class="fa-regular fa-circle-dot"></i></span> Check {{$countBooking}} Booking(s) Affected</a>
+            @endif
         </div>
     </div>
     <hr>
@@ -28,6 +33,9 @@
             <input type="hidden" value="{{ $merchant_id }}" name="merchant_id" />
         @endif
         <div class="row">
+            <div class="col-12">
+                <h5 class="text-main-color"><i class="fa-solid fa-magnifying-glass"></i> Search Route Schedule</h5>
+            </div>
             <div class="col-12 col-lg-4">
                 <div class="form-floating mb-3">
                     <select class="form-select" id="station_from_id" name="station_from_id" aria-label="">
@@ -92,7 +100,7 @@
                                 <td>
                                     @if ($route_id != $routeSchedule->route_id)
                                         <p class="pb-0 mb-0">
-                                            <img src="{{$routeSchedule->path}}" class="rounded-circle" width="20" />
+                                            <img src="{{ $routeSchedule->path }}" class="rounded-circle" width="20" />
                                             {{ $routeSchedule->station_from_name }}
                                             <i class="fa-solid fa-angles-right px-2 fa-1x"></i>
                                             {{ $routeSchedule->station_to_name }}
@@ -125,9 +133,11 @@
                                 </td>
 
                                 <td>
-                                    <small class="d-flex">Created By {{$routeSchedule->created_name}}: {{ date('D,d M Y H:i', strtotime($routeSchedule->created_at)) }}</small>
-                                    @if(!is_null($routeSchedule->updated_name) && $routeSchedule->updated_name !='')
-                                    <small>Updated By {{$routeSchedule->updated_name}}: {{ date('D,d M Y H:i', strtotime($routeSchedule->updated_at)) }}</small>
+                                    <small class="d-flex">Created By {{ $routeSchedule->created_name }}:
+                                        {{ date('D,d M Y H:i', strtotime($routeSchedule->created_at)) }}</small>
+                                    @if (!is_null($routeSchedule->updated_name) && $routeSchedule->updated_name != '')
+                                        <small>Updated By {{ $routeSchedule->updated_name }}:
+                                            {{ date('D,d M Y H:i', strtotime($routeSchedule->updated_at)) }}</small>
                                     @endif
                                 </td>
                                 <td class="text-end">

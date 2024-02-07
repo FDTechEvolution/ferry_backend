@@ -89,10 +89,11 @@
                         <tr class="small">
                             <th class="text-center" style="width: 60px;">Choose</th>
                             <th class="text-center p-0">PN</th>
+
                             <th style="display: none;">Form</th>
                             <th style="display: none;">To</th>
                             <th class="text-start">Station From/To</th>
-
+                            <th style="display: none;">Section</th>
                             <th class="text-center">Depart</th>
                             <th class="text-center">Arrive</th>
                             <th class="text-center " style="width: 100px;">Icon</th>
@@ -192,6 +193,11 @@
                                     </table>
 
                                 </td>
+
+                                <td style="display: none;">
+
+                                    {{$route->station_from->section->sort}}
+                                </td>
                                 <td>{{ date('H:i', strtotime($route['depart_time'])) }}</td>
                                 <td>{{ date('H:i', strtotime($route['arrive_time'])) }}</td>
                                 <td>
@@ -205,11 +211,11 @@
                                 </td>
                                 <td>
                                     <span class="d-flex"><span
-                                            class="badge bg-primary-soft">A:</span>{{ number_format($route['regular_price']) }}</span>
+                                            class="badge bg-primary-soft">A: {{ number_format($route['regular_price']) }}</span></span>
                                     <span class="d-flex"><span
-                                            class="badge bg-info-soft">C:</span>{{ number_format($route['child_price']) }}</span>
+                                            class="badge bg-info-soft">C: {{ number_format($route['child_price']) }}</span></span>
                                     <span class="d-flex"><span
-                                            class="badge bg-warning-soft">I:</span>{{ number_format($route['infant_price']) }}</span>
+                                            class="badge bg-warning-soft">I: {{ number_format($route['infant_price']) }}</span></span>
                                 </td>
                                 <td class="p-0">
                                     <i @class([
@@ -258,7 +264,7 @@
                                     </label>
                                 </td>
                                 <td>
-                                    
+
                                     <a class="pb-3" style="font-size: 1.3rem;"
                                         href="{{ route('route-edit', ['id' => $route['id']]) }}"><i
                                             class="fa-solid fa-pen-to-square"></i></a>
@@ -322,8 +328,12 @@
 
             let table = new DataTable('#route-datatable', {
                 searching: true,
-                ordering: false
+                ordering: true,
+
+                pageLength: 100
             });
+
+            table.order([5, 'asc']).draw();
 
             $('#search-station-from').on('keyup', function() {
                 //console.log(table.columns(2).search(this.value));
@@ -336,6 +346,8 @@
                 //console.log(this.value);
                 table.column(3).search(this.value).draw();
             });
+
+
 
             $('#route-datatable_filter').empty();
         });

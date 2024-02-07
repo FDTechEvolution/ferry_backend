@@ -72,6 +72,7 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(RouteSchedulesController::class)->group(function() {
         Route::get('/booking-affected', 'bookingEffect')->name('routeSchedules.bookingAffected');
+        Route::post('/booking-affected/void', 'sendVoidBooking')->name('routeSchedules.sendVoidBooking');
     });
 
     Route::controller(ApiMerchantsController::class)->group(function() {

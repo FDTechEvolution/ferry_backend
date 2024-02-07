@@ -26,7 +26,8 @@ class RouteSchedules extends Model
         'sun',
         'api_merchant_id',
         'created_by',
-        'updated_by'
+        'updated_by',
+        'isconflict'
     ];
 
     public function route() {

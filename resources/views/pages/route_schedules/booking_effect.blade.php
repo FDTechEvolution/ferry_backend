@@ -14,40 +14,64 @@
 @endphp
 
 @section('content')
-<div class="row">
-    <div class="col-12">
-        <a href="{{ route('routeSchedules.index') }}?merchant_id={{$merchant_id}}" class="btn btn-secondary"><i class="fi fi-arrow-left"></i> Back</a>
-
-        @if (isset($apiMerchant) && !is_null($apiMerchant))
-        <img src="{{$apiMerchant->logo}}" width="200px" class="px-2"/>
-        @endif
-    </div>
-</div>
-<hr>
     <div class="row">
         <div class="col-12">
+            <a href="{{ route('routeSchedules.index') }}?merchant_id={{ $merchant_id }}" class="btn btn-secondary"><i
+                    class="fi fi-arrow-left"></i> Back</a>
 
-            <div class="table-responsive ">
+            @if (isset($apiMerchant) && !is_null($apiMerchant))
+                <img src="{{ $apiMerchant->logo }}" width="200px" class="px-2" />
+            @endif
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-12 mb-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-light p-3">
+                    <li class="breadcrumb-item">
+                        <a href="#" id="action-send-email" class="disabled text-danger">
+                            <i class="fa-regular fa-envelope"></i> Cancel and Send Email</a>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-12">
+            <form class="bs-validate" novalidate="" id="frm" method="post"
+                action="{{ route('routeSchedules.sendVoidBooking') }}">
+                @csrf
+                <input type="hidden" id="merchant_id" name="merchant_id" value="{{$merchant_id}}">
+                <div class="row">
+                    <div class="col-12 col-lg-6">
+                        <div class="form-floating mb-3">
+                            <textarea class="form-control" placeholder="" id="message" name="message" style="height: 150px"></textarea>
+                            <label for="message">Email Message</label>
+                        </div>
+                    </div>
 
-                <table class="table-datatable table table-hover" id="" data-lng-empty="No data available in table"
-                    data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
-                    data-lng-filtered="(filtered from _MAX_ total entries)" data-lng-loading="Loading..."
-                    data-lng-processing="Processing..." data-lng-search="Search..."
-                    data-lng-norecords="No matching records found"
-                    data-lng-sort-ascending=": activate to sort column ascending"
-                    data-lng-sort-descending=": activate to sort column descending" data-main-search="true"
-                    data-column-search="false" data-row-reorder="false" data-col-reorder="false" data-responsive="false"
-                    data-header-fixed="true" data-select-onclick="false" data-enable-paging="true"
-                    data-enable-col-sorting="false" data-autofill="false" data-group="false" data-items-per-page="50"
-                    data-enable-column-visibility="false" data-lng-column-visibility="Column Visibility"
-                    data-enable-export="false" data-lng-export="<i class='fi fi-squared-dots fs-5 lh-1'></i>"
-                    data-lng-pdf="PDF" data-lng-xls="XLS" data-lng-print="Print" data-lng-all="All"
-                    data-export-pdf-disable-mobile="false" data-export='["csv", "pdf", "xls"]'
-                    data-custom-config='{"searching":false}'>
-                    <thead>
-                        <tr>
-                            <th class="align-content-between">
-
+                    <div class="col-12 col-lg-6">
+                        <a href="#" data-href="#"
+                        class="js-ajax-confirm btn btn-sm btn-facebook transition-hover-top"
+                            data-ajax-confirm-mode="ajax" data-ajax-confirm-type="warning"
+                            data-ajax-confirm-title="Please Confirm"
+                            data-ajax-confirm-body="Are you sure you want to cancel selected booking?"
+                            data-ajax-confirm-btn-yes-class="btn-sm btn-warning" data-ajax-confirm-btn-yes-text="Confirm"
+                            data-ajax-confirm-btn-yes-icon="fi fi-check" data-ajax-confirm-btn-no-class="btn-sm btn-light"
+                            data-ajax-confirm-btn-no-text="Cancel" data-ajax-confirm-btn-no-icon="fi fi-close"
+                            data-ajax-confirm-callback-function="send_email">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>Send Email</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-framed">
+                        <thead>
+                            <th class="text-gray-500" style="width:80px">
+                                <div class="form-check"><!-- check all -->
+                                    <input data-checkall-container="#item_list" class="checkall form-check-input"
+                                        type="checkbox" id="check_all">All
+                                </div>
                             </th>
                             <th class="">Issue Date</th>
                             <th>Invoice No</th>
@@ -60,64 +84,112 @@
                             <th>Admin</th>
                             <th>Sales Ch</th>
                             <th class="text-center">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="">
+                        </thead>
 
-                        @foreach ($bookings as $index => $item)
-                            <tr
-                                style="color: {{ $colors[$item['trip_type']] }};--bs-table-color:{{ $colors[$item['trip_type']] }};">
-                                <td>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input form-check-input-primary" data-action="check_all"
-                                            type="checkbox" value="{{ $item['id'] }}" id="book_{{ $item['id'] }}"
-                                            name="book_{{ $item['id'] }}">
+                        <tbody id="item_list">
+                            @foreach ($bookings as $index => $item)
+                                <tr
+                                    style="color: {{ $colors[$item['trip_type']] }};--bs-table-color:{{ $colors[$item['trip_type']] }};">
+                                    <td>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input form-check-input-primary" data-action="check_all"
+                                                type="checkbox" value="{{ $item['booking_route_id'] }}" id="book_{{ $item['booking_route_id'] }}"
+                                                name="booking_route_id[]">
 
-                                    </div>
-                                </td>
-                                <td><small>{{ date('d/m/Y H:i', strtotime($item['created_at'])) }}</small></td>
-                                <td>{{ $item['bookingno'] }}</td>
-                                <td class="text-center">
-                                    {{ $item['adult_passenger'] + $item['child_passenger'] + $item['infant_passenger'] }}</strong>
-                                </td>
-                                <td>{{ $item['trip_type'] }}</td>
-                                <td>
-                                    {{ $item['route'] }}<br>
-                                    <small><span
-                                            class="badge rounded-pill bg-secondary">{{ date('H:i', strtotime($item['depart_time'])) }}-{{ date('H:i', strtotime($item['arrive_time'])) }}</span></small>
-                                </td>
-                                <td>{{ date('d/m/Y', strtotime($item['traveldate'])) }}</td>
-                                <td class="text-end">{{ number_format($item['totalamt']) }}</td>
-                                <td class="text-center">
-                                    @if ($item['ispayment'] == 'Y')
-                                        <span class="text-success">Paid</span>
-                                    @else
-                                        <span class="text-danger">Unpay</span>
-                                    @endif
+                                        </div>
+                                    </td>
+                                    <td><small>{{ date('d/m/Y H:i', strtotime($item['created_at'])) }}</small></td>
+                                    <td>{{ $item['bookingno'] }}</td>
+                                    <td class="text-center">
+                                        {{ $item['adult_passenger'] + $item['child_passenger'] + $item['infant_passenger'] }}</strong>
+                                    </td>
+                                    <td>{{ $item['trip_type'] }}</td>
+                                    <td>
+                                        {{ $item['route'] }}<br>
+                                        <small><span
+                                                class="badge rounded-pill bg-secondary">{{ date('H:i', strtotime($item['depart_time'])) }}-{{ date('H:i', strtotime($item['arrive_time'])) }}</span></small>
+                                    </td>
+                                    <td>{{ date('d/m/Y', strtotime($item['traveldate'])) }}</td>
+                                    <td class="text-end">{{ number_format($item['totalamt']) }}</td>
+                                    <td class="text-center">
+                                        @if ($item['ispayment'] == 'Y')
+                                            <span class="text-success">Paid</span>
+                                        @else
+                                            <span class="text-danger">Unpay</span>
+                                        @endif
 
-                                </td>
-                                <td>
-                                    {{ $item['firstname'] }}
-                                </td>
-                                <td><small>{{ $item['book_channel'] }}</small></td>
-                                <td class="text-end">
-                                    <div class="d-none d-md-block">
+                                    </td>
+                                    <td>
+                                        {{ $item['firstname'] }}
+                                    </td>
+                                    <td><small>{{ $item['book_channel'] }}</small></td>
+                                    <td class="text-end">
                                         <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
-                                            class="transition-hover-top fs-5" rel="noopener" target="_blank"
+                                            class="transition-hover-top fs-5 me-2" rel="noopener" target="_blank"
                                             data-bs-toggle="tooltip" data-bs-placement="top" title="View and Edit ooking">
                                             <i class="fa-solid fa-eye"></i>
                                         </a>
-                                    </div>
+                                        <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
+                                            class="transition-hover-top fs-5 text-danger" rel="noopener" target="_blank"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Cancel this Order">
+                                            <i class="fa-solid fa-circle-xmark"></i>
+                                        </a>
 
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-
-                </table>
-            </div>
-
-
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </form>
         </div>
     </div>
+@stop
+
+
+
+@section('script')
+    <script>
+        var send_email = function(el, data) {
+            $('#frm').submit();
+        }
+
+        function settingActionLink(active) {
+            if (active) {
+                $('#action-print').removeClass('disabled');
+                $('#action-send-email').removeClass('disabled');
+            } else {
+                $('#action-print').addClass('disabled');
+                $('#action-send-email').addClass('disabled');
+            }
+        }
+        $(document).ready(function() {
+            $('#check_all').on('change', function() {
+                //let all_booking_checks = $('input[data-action="check_all"]');
+                let checked = false;
+
+                if (this.checked) {
+                    checked = true;
+                    settingActionLink(true);
+                } else {
+                    settingActionLink(false);
+                }
+
+
+            });
+
+            $('input[data-action="check_all"]').on('change', function() {
+                let all_booking_checks = $('input[data-action="check_all"]');
+
+                settingActionLink(false);
+                $.each(all_booking_checks, function(index, item) {
+                    if (item.checked) {
+                        settingActionLink(true);
+                        return true;
+                    }
+                });
+            });
+
+        });
+    </script>
 @stop

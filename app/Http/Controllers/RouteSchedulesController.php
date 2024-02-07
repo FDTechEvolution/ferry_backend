@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\EmailHelper;
 use App\Helpers\RouteHelper;
+use App\Mail\VoidBooking;
 use App\Models\ApiMerchants;
+use App\Models\BookingRoutes;
 use App\Models\Bookings;
 use App\Models\RouteSchedules;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class RouteSchedulesController extends Controller
 {
@@ -31,7 +35,7 @@ class RouteSchedulesController extends Controller
 
         $stationTos = RouteHelper::getStationTo($stationFromId);
 
-        $countBooking = Bookings::where('status','CO')->where('isconflict','Y')->count();
+        $countBooking = RouteSchedules::where('isconflict', 'Y')->count();
 
         //check normal ruote
         if (is_null($merchant_id) || $merchant_id == '') {
@@ -45,14 +49,14 @@ class RouteSchedulesController extends Controller
             */
 
             $routeSchedules = DB::table('routes')
-                ->select('sfrom.name as station_from_name', 'sto.name as station_to_name', 'routes.*', 'route_schedules.*','createdby.firstname as created_name','updatedby.firstname as updated_name','images.path')
+                ->select('sfrom.name as station_from_name', 'sto.name as station_to_name', 'routes.*', 'route_schedules.*', 'createdby.firstname as created_name', 'updatedby.firstname as updated_name', 'images.path')
                 ->join('stations as sfrom', 'routes.station_from_id', '=', 'sfrom.id')
                 ->join('stations as sto', 'routes.station_to_id', '=', 'sto.id')
                 ->join('route_schedules', 'routes.id', '=', 'route_schedules.route_id')
-                ->leftJoin('users as createdby','route_schedules.created_by','createdby.id')
-                ->leftJoin('users as updatedby','route_schedules.updated_by','updatedby.id')
-                ->leftJoin('partners','routes.partner_id','partners.id')
-                ->leftJoin('images','partners.image_id','images.id')
+                ->leftJoin('users as createdby', 'route_schedules.created_by', 'createdby.id')
+                ->leftJoin('users as updatedby', 'route_schedules.updated_by', 'updatedby.id')
+                ->leftJoin('partners', 'routes.partner_id', 'partners.id')
+                ->leftJoin('images', 'partners.image_id', 'images.id')
                 ->whereNull('route_schedules.api_merchant_id');
 
             if (!is_null($stationFromId) && $stationFromId != 'all') {
@@ -82,14 +86,14 @@ class RouteSchedulesController extends Controller
 
 
             $routeSchedules = DB::table('routes')
-            ->select('sfrom.name as station_from_name', 'sto.name as station_to_name', 'routes.*', 'route_schedules.*','createdby.firstname as created_name','updatedby.firstname as updated_name','images.path')
+                ->select('sfrom.name as station_from_name', 'sto.name as station_to_name', 'routes.*', 'route_schedules.*', 'createdby.firstname as created_name', 'updatedby.firstname as updated_name', 'images.path')
                 ->join('stations as sfrom', 'routes.station_from_id', '=', 'sfrom.id')
                 ->join('stations as sto', 'routes.station_to_id', '=', 'sto.id')
                 ->join('route_schedules', 'routes.id', '=', 'route_schedules.route_id')
-                ->leftJoin('users as createdby','route_schedules.created_by','createdby.id')
-                ->leftJoin('users as updatedby','route_schedules.updated_by','updatedby.id')
-                ->leftJoin('partners','routes.partner_id','partners.id')
-                ->leftJoin('images','partners.image_id','images.id')
+                ->leftJoin('users as createdby', 'route_schedules.created_by', 'createdby.id')
+                ->leftJoin('users as updatedby', 'route_schedules.updated_by', 'updatedby.id')
+                ->leftJoin('partners', 'routes.partner_id', 'partners.id')
+                ->leftJoin('images', 'partners.image_id', 'images.id')
                 ->where('route_schedules.api_merchant_id', $merchant_id)
                 ->orderBy('sfrom.name', 'ASC')
                 ->orderBy('routes.depart_time', 'ASC')
@@ -98,7 +102,7 @@ class RouteSchedulesController extends Controller
 
         //
 
-        return view('pages.route_schedules.index', ['routeSchedules' => $routeSchedules, 'merchant_id' => $merchant_id, 'title' => $title, 'stationFroms' => $stationFroms, 'stationTos' => $stationTos, 'stationFromId' => $stationFromId, 'stationToId' => $stationToId,'apiMerchant'=>$apiMerchant,'countBooking'=>$countBooking]);
+        return view('pages.route_schedules.index', ['routeSchedules' => $routeSchedules, 'merchant_id' => $merchant_id, 'title' => $title, 'stationFroms' => $stationFroms, 'stationTos' => $stationTos, 'stationFromId' => $stationFromId, 'stationToId' => $stationToId, 'apiMerchant' => $apiMerchant, 'countBooking' => $countBooking]);
     }
 
     /**
@@ -119,7 +123,7 @@ class RouteSchedulesController extends Controller
 
         $apiMerchant = NULL;
         if (!is_null($merchant_id) || $merchant_id != '') {
-            $apiMerchant = ApiMerchants::where('id',$merchant_id)->first();
+            $apiMerchant = ApiMerchants::where('id', $merchant_id)->first();
         }
 
 
@@ -134,7 +138,8 @@ class RouteSchedulesController extends Controller
             'stationFromId' => $stationFromId,
             'stationToId' => $stationToId,
             'routes' => $routes,
-            'merchant_id' => $merchant_id,'apiMerchant'=>$apiMerchant
+            'merchant_id' => $merchant_id,
+            'apiMerchant' => $apiMerchant,
         ]);
     }
 
@@ -166,17 +171,29 @@ class RouteSchedulesController extends Controller
             return redirect()->route('routeSchedules.index', ['merchant_id' => $merchant_id]);
         }
 
+        //Check bookingAffected
+        $isHasEffectBookingMaster = false;
+
 
         $routeSchedule = null;
         foreach ($route_ids as $index => $route_id) {
-            $isHasEffectBooking = $this->isHasEffectBooking($route_id,$startDateSql,$endDateSql);
+            $isHasEffectBooking = false;
+
+            if ($request->type == 'CLOSE') {
+                $isHasEffectBooking = $this->isHasEffectBooking($route_id, $startDateSql, $endDateSql);
+            }
+
+            if ($isHasEffectBookingMaster == false && $isHasEffectBooking == true) {
+                $isHasEffectBookingMaster = true;
+            }
 
             $routeSchedule = RouteSchedules::create([
                 'route_id' => $route_id,
                 'type' => $request->type,
                 'start_datetime' => $startDateSql,
                 'end_datetime' => $endDateSql,
-                'isactive' => 'Y',
+                'isactive' => $isHasEffectBooking ? 'N' : 'Y',
+                'isconflict' => $isHasEffectBooking ? 'Y' : 'N',
                 'description' => $request->description,
                 'mon' => isset($request->mon) ? 'Y' : 'N',
                 'tru' => isset($request->tru) ? 'Y' : 'N',
@@ -190,7 +207,11 @@ class RouteSchedulesController extends Controller
             ]);
         }
 
-        return redirect()->route('routeSchedules.bookingAffected', ['routeSchedules'=>$routeSchedule,'merchant_id' => $merchant_id]);
+        if ($isHasEffectBookingMaster) {
+            return redirect()->route('routeSchedules.bookingAffected', ['merchant_id' => $merchant_id]);
+        }
+
+        return redirect()->route('routeSchedules.index', ['merchant_id' => $merchant_id])->withSuccess('');
     }
 
     /**
@@ -201,47 +222,66 @@ class RouteSchedulesController extends Controller
 
     }
 
-    public function bookingEffect(){
+    public function bookingEffect()
+    {
         $merchant_id = request()->merchant_id;
 
-        /*
         $todayDateSql = Carbon::now()->format('Y-m-d');
-        $routeSchedules = RouteSchedules::where('isactive','N')->where('end_datetime','>=',$todayDateSql)->get();
-
         $bookingIds = [];
-        $api_merchant_id = '';
 
-        foreach($routeSchedules as $index => $routeSchedule){
-            $sql = 'select b.id from booking_routes br join bookings b on br.booking_id = b.id where br.route_id = ? and (br.traveldate >= ? and br.traveldate <= ?) ';
+        $routeSchedules = RouteSchedules::where('isconflict', 'Y')->get();
+        foreach ($routeSchedules as $index => $routeSchedule) {
             $startDateSql = $routeSchedule->start_datetime;
             $endDateSql = $routeSchedule->end_datetime;
 
-            if($startDateSql < $todayDateSql){
+            if ($startDateSql < $todayDateSql) {
                 $startDateSql = $todayDateSql;
             }
 
-            $bookings = (DB::select($sql, [$routeSchedule->route_id, $startDateSql, $endDateSql]));
+            $sql = 'select br.id from booking_routes br join bookings b on br.booking_id = b.id where br.route_id = ? and (br.traveldate >= ? and br.traveldate <= ?) ';
 
-            foreach($bookings as $booking){
-                array_push($bookingIds,$booking->id);
+            $datas = (DB::select($sql, [$routeSchedule->route_id, $startDateSql, $endDateSql]));
+
+            foreach ($datas as $item) {
+                /*
+                $booking = Bookings::find($item->id);
+                $booking->isconflict = 'Y';
+                $booking->save();
+                */
+                array_push($bookingIds,$item->id);
             }
-            //$bookingIds = array_merge($bookingIds,$bookings);
+
+            if(sizeof($datas) ==0){
+                $routeSchedule->isconflict ='N';
+                $routeSchedule->isactive = 'Y';
+                $routeSchedule->save();
+            }
         }
 
-        //dd($bookingIds);
+        $bookingIds = json_decode(json_encode($bookingIds), true);
 
-        */
-
-        $sql = 'select b.id,b.created_at,b.bookingno,b.adult_passenger,b.child_passenger,b.infant_passenger,b.trip_type,concat(sf.nickname,"-",st.nickname) as route,br.traveldate,b.ispayment,b.book_channel,u.firstname,r.depart_time,r.arrive_time,b.totalamt from bookings b join booking_routes br on b.id = br.booking_id join routes r on br.route_id = r.id join stations sf on r.station_from_id = sf.id join stations st on r.station_to_id = st.id left join users u on b.user_id = u.id where b.isconflict = "Y" and b.status = "CO" order by br.traveldate ASC,b.created_at ASC  ';
+        $sql = 'select b.id,br.id as booking_route_id,b.created_at,b.bookingno,b.adult_passenger,b.child_passenger,b.infant_passenger,b.trip_type,concat(sf.nickname,"-",st.nickname) as route,br.traveldate,b.ispayment,b.book_channel,u.firstname,r.depart_time,r.arrive_time,b.totalamt from bookings b join booking_routes br on b.id = br.booking_id join routes r on br.route_id = r.id join stations sf on r.station_from_id = sf.id join stations st on r.station_to_id = st.id left join users u on b.user_id = u.id where br.id IN ("'.implode('","',$bookingIds).'") and b.status = "CO" order by br.traveldate ASC,b.created_at ASC  ';
 
         $bookings = DB::select($sql);
         $bookings = json_decode(json_encode($bookings), true);
 
-        if(sizeof($bookings) ==0){
+        if (sizeof($bookings) == 0) {
             return redirect()->route('routeSchedules.index', ['merchant_id' => $merchant_id])->withSuccess('');
         }
 
-        return view('pages.route_schedules.booking_effect',['merchant_id' => $merchant_id,'bookings'=>$bookings]);
+        return view('pages.route_schedules.booking_effect', ['merchant_id' => $merchant_id, 'bookings' => $bookings]);
+    }
+
+    public function sendVoidBooking(Request $request){
+        $message = $request->message;
+        $booking_route_ids = $request->booking_route_id;
+        $merchant_id = $request->merchant_id;
+
+        foreach($booking_route_ids as $booking_route_id){
+            EmailHelper::voidBoking($booking_route_id,$message);
+        }
+
+        return redirect()->route('routeSchedules.bookingAffected', ['merchant_id' => $merchant_id]);
     }
 
     /**
@@ -249,22 +289,23 @@ class RouteSchedulesController extends Controller
      */
     public function edit(string $id)
     {
-        $routeSchedule = RouteSchedules::where('id', $id)->with(['route','route.partner.image'])->first();
+        $routeSchedule = RouteSchedules::where('id', $id)->with(['route', 'route.partner.image'])->first();
         $route_id = $routeSchedule->route_id;
 
         $apiMerchant = NULL;
         if (!is_null($routeSchedule->api_merchant_id) || $routeSchedule->api_merchant_id != '') {
-            $apiMerchant = ApiMerchants::where('id',$routeSchedule->api_merchant_id)->first();
+            $apiMerchant = ApiMerchants::where('id', $routeSchedule->api_merchant_id)->first();
         }
 
 
         $routeScheduleInRoutes = RouteSchedules::where('route_id', $route_id)
-        ->where('api_merchant_id',$routeSchedule->api_merchant_id)
-        ->orderBy('updated_at', 'DESC')->get();
+            ->where('api_merchant_id', $routeSchedule->api_merchant_id)
+            ->orderBy('updated_at', 'DESC')->get();
 
         return view('pages.route_schedules.edit', [
             'routeSchedule' => $routeSchedule,
-            'routeScheduleInRoutes' => $routeScheduleInRoutes,'apiMerchant'=>$apiMerchant
+            'routeScheduleInRoutes' => $routeScheduleInRoutes,
+            'apiMerchant' => $apiMerchant,
         ]);
     }
 
@@ -320,12 +361,13 @@ class RouteSchedulesController extends Controller
         return redirect()->route('routeSchedules.index', ['merchant_id' => $merchant_id])->withSuccess('');
     }
 
-    private function isHasEffectBooking($routeId,$startDateSql,$endDateSql){
+    private function isHasEffectBooking($routeId, $startDateSql, $endDateSql)
+    {
         $todayDateSql = Carbon::now()->format('Y-m-d');
         //$startDateSql = Carbon::createFromFormat('d/m/Y', $startDate)->format('Y-m-d');
         //$endDateSql = Carbon::createFromFormat('d/m/Y', $endDate)->format('Y-m-d');
 
-        if($startDateSql < $todayDateSql){
+        if ($startDateSql < $todayDateSql) {
             $startDateSql = $todayDateSql;
         }
 
@@ -333,13 +375,16 @@ class RouteSchedulesController extends Controller
 
         $datas = (DB::select($sql, [$routeId, $startDateSql, $endDateSql]));
 
-        foreach($datas as $item){
+
+        /*
+        foreach ($datas as $item) {
             $booking = Bookings::find($item->id);
             $booking->isconflict = 'Y';
             $booking->save();
         }
+        */
         //dd($count);
-        if(sizeof($datas) >0){
+        if (sizeof($datas) > 0) {
             return true;
         }
 

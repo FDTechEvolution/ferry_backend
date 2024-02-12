@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class RouteSchedulesController extends Controller
 {
@@ -238,10 +238,11 @@ class RouteSchedulesController extends Controller
                 $startDateSql = $todayDateSql;
             }
 
-            $sql = 'select br.id from booking_routes br join bookings b on br.booking_id = b.id where br.route_id = ? and (br.traveldate >= ? and br.traveldate <= ?) ';
+            $sql = 'select br.id from booking_routes br join bookings b on br.booking_id = b.id where br.route_id = ? and (br.traveldate >= ? and br.traveldate <= ?) and b.status = "CO"';
 
             $datas = (DB::select($sql, [$routeSchedule->route_id, $startDateSql, $endDateSql]));
 
+            //Log::debug($datas);
             foreach ($datas as $item) {
                 /*
                 $booking = Bookings::find($item->id);
@@ -279,6 +280,11 @@ class RouteSchedulesController extends Controller
 
         foreach($booking_route_ids as $booking_route_id){
             EmailHelper::voidBoking($booking_route_id,$message);
+            $bookingRoute = BookingRoutes::where('id',$booking_route_id)->with('booking')->first();
+            $booking = $bookingRoute->booking;
+
+            $booking->status = 'VO';
+            $booking->save();
         }
 
         return redirect()->route('routeSchedules.bookingAffected', ['merchant_id' => $merchant_id]);

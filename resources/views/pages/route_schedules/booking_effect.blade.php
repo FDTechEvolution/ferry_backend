@@ -26,17 +26,9 @@
     </div>
     <hr>
     <div class="row">
-        <div class="col-12 mb-3">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb bg-light p-3">
-                    <li class="breadcrumb-item">
-                        <a href="#" id="action-send-email" class="disabled text-danger">
-                            <i class="fa-regular fa-envelope"></i> Cancel and Send Email</a>
-                    </li>
-                </ol>
-            </nav>
-        </div>
+
         <div class="col-12">
+            <h5><i class="fa-regular fa-envelope"></i> Cancel and Send Email</a></h5>
             <form class="bs-validate" novalidate="" id="frm" method="post"
                 action="{{ route('routeSchedules.sendVoidBooking') }}">
                 @csrf

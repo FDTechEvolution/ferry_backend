@@ -70,7 +70,7 @@
             </div>
         </div>
         <div id="report-list" class="table-responsive">
-            <table class="table table-striped">
+            <table class="table table-sm">
                 <x-report-table
                     :reports="$reports"
                 />

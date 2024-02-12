@@ -36,7 +36,7 @@ class ReportsController extends Controller
         $end_date = Carbon::createFromFormat('Y-m-d', $depart_date[1])->startOfDay();
         $station_from = 'ALL';
         $station_to = 'ALL';
-        $partner = 'ALL';
+        $partner = null;
         $depart_arrive = 'ALL';
 
         $from = $request->station_from != 'all' ? $request->station_from : '';
@@ -66,11 +66,12 @@ class ReportsController extends Controller
         $station_to = 'ALL';
         $partner = 'ALL';
         $depart_arrive = 'ALL';
+        //dd($request);
 
         $from = $request->station_from != 'all' ? $request->station_from : '';
         $to = $request->station_to != 'all' ? $request->station_to : '';
         $_partner = $request->partner != 'all' ? $request->partner : '';
-        $_depart_arrive = $request->depart_time != 'all' ? $request->depart_time : '';
+        $_depart_arrive = strtolower($request->depart_time) != 'all' ? $request->depart_time : '';
 
         $routes = $this->routeGetReport($from, $to, $start_date, $end_date, $_partner, $_depart_arrive);
 

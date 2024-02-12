@@ -9,22 +9,22 @@
         <th>Lead Name</th>
         <th>Contact</th>
         <th class="text-center">Passenger</th>
-        <th>
+        <th class="p-0">
             <p class="mb-0">Shuttle Bus</p>(From)
         </th>
-        <th>
+        <th class="p-0">
             <p class="mb-0">Shuttle Bus</p>(To)
         </th>
-        <th>
+        <th class="p-0">
             <p class="mb-0">Longtail Boat</p>(From)
         </th>
-        <th>
+        <th class="p-0">
             <p class="mb-0">Longtail Boat</p>(To)
         </th>
-        <th>Meal on Board</th>
-        <th>Activity</th>
-        <th class="text-center">Status</th>
-        <th class="text-center">Other</th>
+        <th class="p-0">Meal on Board</th>
+        <th class="p-0">Activity</th>
+        <th class="text-center p-0">Status</th>
+        <th class="text-center p-0">Other</th>
     </tr>
 </thead>
 <tbody>
@@ -67,35 +67,35 @@
                 <span class="me-1">C:{{ $item['child_passenger'] }}</span>
                 <span class="">I:{{ $item['infant_passenger'] }}</span>
             </td>
-            <td>
+            <td class="p-0">
                 @if($item['shuttle_bus_from'] != '')
                     Detail : {{ $item['shuttle_bus_from'] }}
                 @else
                     <p class="mb-0">-</p>
                 @endif
             </td>
-            <td>
+            <td class="p-0">
                 @if($item['shuttle_bus_to'] != '')
                     Detail : {{ $item['shuttle_bus_to'] }}
                 @else
                     <p class="mb-0">-</p>
                 @endif
             </td>
-            <td>
+            <td class="p-0">
                 @if($item['longtail_boat_from'] != '')
                     Detail : {{ $item['longtail_boat_from'] }}
                 @else
                     <p class="mb-0">-</p>
                 @endif
             </td>
-            <td>
+            <td class="p-0">
                 @if($item['longtail_boat_to'] != '')
                     Detail : {{ $item['longtail_boat_to'] }}
                 @else
                     <p class="mb-0">-</p>
                 @endif
             </td>
-            <td>
+            <td class="p-0">
                 @if(sizeof($item['meal']) > 0)
                     @foreach ($item['meal'] as $meal)
                         - {{ $meal }}
@@ -104,7 +104,7 @@
                     <p class="mb-0">-</p>
                 @endif
             </td>
-            <td>
+            <td class="p-0">
                 @if(sizeof($item['activity']) > 0)
                     @foreach ($item['activity'] as $activity)
                         - {{ $activity }}
@@ -113,12 +113,12 @@
                     <p class="mb-0">-</p>
                 @endif
             </td>
-            <td class="text-center">
+            <td class="text-center p-0">
                 @if($item['ispayment'] == 'Y')
                     <span class="text-success">Paid</span>
                 @endif
             </td>
-            <td>
+            <td class="p-0">
                 @if($item['longtail_boat_to'] != '')
                     {{ $item['note']}}
                 @else

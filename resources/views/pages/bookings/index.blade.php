@@ -62,10 +62,10 @@
             <div class="col-12 col-md-3">
                 <div class="form-floating mb-3">
                     <input autocomplete="off" type="text" name="daterange" id="daterange"
-                        class="form-control form-control-sm rangepicker" data-bs-placement="left" data-ranges="false" 
+                        class="form-control form-control-sm rangepicker" data-bs-placement="left" data-ranges="false"
 
                         data-date-start="{{ $startDate}}"
-                        data-date-end="{{ $endDate }}" 
+                        data-date-end="{{ $endDate }}"
 
                         data-date-format="DD/MM/YYYY"
                         data-quick-locale='{
@@ -181,6 +181,10 @@
                                         <span class="text-success">Paid</span>
                                     @else
                                         <span class="text-danger">Unpay</span>
+                                    @endif
+
+                                    @if ($item['status']=='VO')
+                                        <br><span class="badge bg-danger">Cancelled</span>
                                     @endif
 
                                 </td>

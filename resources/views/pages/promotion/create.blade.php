@@ -16,8 +16,9 @@
                         <label class="col-12 col-md-2 col-form-label-sm">Title <strong
                                 class="text-danger">*</strong></label>
                         <div class="col-12 col-md-7">
-                            <input required type="text" class="form-control form-control-sm" name="title"
-                                value="">
+                            <textarea class="form-control form-control-sm" rows="4" name="title">
+
+                            </textarea>
                         </div>
                     </div>
                     <div class="mb-3 row">
@@ -54,11 +55,13 @@
                     </div>
                     <div class="row">
                         <label class="col-12 col-md-2 col-form-label-sm">Depart Date Range <strong
-                            class="text-danger">*</strong></label>
+                                class="text-danger">*</strong></label>
                         <div class="col-12 col-lg-4 mb-2">
-                            <input autocomplete="off" type="text" name="daterange" id="daterange" class="form-control form-control-sm rangepicker"
-                                data-bs-placement="left" data-ranges="false" data-date-start="{{date('d-m-Y')}}"
-                                data-date-end="{{date('d-m-Y',strtotime("+30 day", time()))}}" data-date-format="DD/MM/YYYY"
+                            <input autocomplete="off" type="text" name="daterange" id="daterange"
+                                class="form-control form-control-sm rangepicker" data-bs-placement="left"
+                                data-ranges="false" data-date-start="{{ date('d-m-Y') }}"
+                                data-date-end="{{ date('d-m-Y', strtotime('+30 day', time())) }}"
+                                data-date-format="DD/MM/YYYY"
                                 data-quick-locale='{
 		"lang_apply"	: "Apply",
 		"lang_cancel" : "Cancel",
@@ -68,14 +71,14 @@
 	}'>
                         </div>
 
-                        
+
                     </div>
                     <div class="row mb-2">
                         <label class="col-12 col-md-2 col-form-label-sm">Active</label>
                         <div class="col-12 col-md-7">
                             <div class="form-check mb-2">
-                                <input class="form-check-input form-check-input-success" type="checkbox"
-                                    value="Y" id="isactive" name="isactive" checked>
+                                <input class="form-check-input form-check-input-success" type="checkbox" value="Y"
+                                    id="isactive" name="isactive" checked>
                                 <label class="form-check-label" for="isactive">
                                     Active and Show on home page.
                                 </label>
@@ -110,9 +113,9 @@
                             </div>
 
                             <!--
-                                        clear files button
-                                        hidden by default
-                                    -->
+                                            clear files button
+                                            hidden by default
+                                        -->
                             <div class="mt-1">
                                 <a href="#" class="hide js-file-upload-clear2 btn btn-light btn-sm">
                                     Remove Image
@@ -142,9 +145,10 @@
                                 <label class="col-12 col-md-3 col-form-label-sm ">Free credit charge</label>
                                 <div class="col-12 col-md-3 mb-2">
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input form-check-input-success" type="checkbox" value="Y" id="isfreecreditcharge" name="isfreecreditcharge">
+                                        <input class="form-check-input form-check-input-success" type="checkbox"
+                                            value="Y" id="isfreecreditcharge" name="isfreecreditcharge">
                                         <label class="form-check-label" for="checkDefault">
-                                            
+
                                         </label>
                                     </div>
                                 </div>
@@ -153,9 +157,10 @@
                                 <label class="col-12 col-md-3 col-form-label-sm ">Free premium flex</label>
                                 <div class="col-12 col-md-3 mb-2">
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input form-check-input-success" type="checkbox" value="Y" id="isfreepremiumflex" name="isfreepremiumflex">
+                                        <input class="form-check-input form-check-input-success" type="checkbox"
+                                            value="Y" id="isfreepremiumflex" name="isfreepremiumflex">
                                         <label class="form-check-label" for="checkDefault">
-                                            
+
                                         </label>
                                     </div>
                                 </div>
@@ -221,4 +226,15 @@
             </form>
         </div>
     </div>
+@stop
+
+
+@section('script')
+    <script>
+        $(document).ready(function() {
+            $('textarea').each(function() {
+                $(this).val($(this).val().trim());
+            });
+        });
+    </script>
 @stop

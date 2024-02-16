@@ -15,14 +15,26 @@ class BillboardController extends Controller
         $this->middleware('auth');
     }
 
+    public function icon(){
+        return [
+            'icon/billbord/carlendar.png'=>'icon/billbord/carlendar-g.png',
+            'icon/billbord/news.png'=>'icon/billbord/news-g.png',
+            'icon/billbord/sound.png'=>'icon/billbord/sound-g.png',
+            'icon/billbord/sun.png'=>'icon/billbord/sun-g.png',
+            'icon/billbord/tigerline.png'=>'icon/billbord/tigerline-g.png',
+        ];
+    }
+
     public function index() {
         $billboard = Slide::where('status', 'CO')->where('type', 'BOARD')->orderBy('sort', 'ASC')->get();
+        $icons = $this->icon();
 
-        return view('pages.billboard.index', ['billboard' => $billboard]);
+        return view('pages.billboard.index', ['billboard' => $billboard,'icons'=>$icons]);
     }
 
     public function create() {
-        return view('pages.billboard.create');
+        $icons = $this->icon();
+        return view('pages.billboard.create',['icons'=>$icons]);
     }
 
     public function store(Request $request) {
@@ -37,7 +49,8 @@ class BillboardController extends Controller
             'sort' => 1,
             'description' => $request->description,
             'type' => 'BOARD',
-            'color' => $request->color
+            'color' => $request->color,
+            'icon'=>$request->icon
         ]);
 
         if($board->save()) {
@@ -66,10 +79,11 @@ class BillboardController extends Controller
     public function edit(string $id = null) {
         $billboard = Slide::where('id', $id)->where('status', 'CO')->first();
         $max_sort = Slide::where('type', 'BOARD')->orderBy('sort', 'DESC')->first();
+        $icons = $this->icon();
 
         // Log::debug($slide->toArray());
 
-        if(isset($billboard)) return view('pages.billboard.edit', ['billboard' => $billboard, 'max_sort' => $max_sort->sort]);
+        if(isset($billboard)) return view('pages.billboard.edit', ['billboard' => $billboard, 'max_sort' => $max_sort->sort,'icons'=>$icons]);
         return redirect()->route('billboard-index')->withFail('No billboard.');
     }
 
@@ -88,6 +102,7 @@ class BillboardController extends Controller
         $billboard->color = $request->color;
         $billboard->description = $request->description;
         $billboard->sort = $request->sort;
+        $billboard->icon = $request->icon;
 
         if($billboard->save()) {
             if ($oldSort != $request->sort) {

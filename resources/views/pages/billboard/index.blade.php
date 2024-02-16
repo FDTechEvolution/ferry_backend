@@ -57,6 +57,7 @@
                     <thead>
                         <tr>
                             <th class="text-center">#</th>
+                            <th>Icon</th>
                             <th>Title</th>
                             <th class="text-center">Status</th>
                             <th class="text-center">Action</th>
@@ -66,6 +67,9 @@
                         @foreach($billboard as $index => $item)
                             <tr class="text-center align-middle">
                                 <td>{{ $item->sort }}</td>
+                                <td>
+                                    <div class="avatar avatar-xs" style="background-image:url({{asset($icons[$item->icon])}})"></div>
+                                </td>
                                 <td class="text-start">
                                     <div class="d-flex align-items-center">
                                         <div class="avatar avatar-xs me-2" style="background-color:{{ $item->color }}"></div>

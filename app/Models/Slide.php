@@ -20,7 +20,9 @@ class Slide extends Model
         'image_id',
         'isactive',
         'status',
-        'description'
+        'description',
+        'icon',
+        'isdefault'
     ];
 
     protected $hidden = [

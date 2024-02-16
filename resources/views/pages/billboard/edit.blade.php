@@ -28,6 +28,24 @@
                         <input type="color" name="color" class="form-control form-control-color d-inline-block" id="background-color-select" value="{{ $billboard->color }}" title="Choose background color">
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-12">
+                        <h5>Icon</h5>
+                        <div class="checkgroup" data-checkgroup-checkbox-single="true"
+                            data-checkgroup-ajax-toast-position="top-center">
+                            @foreach ($icons as $index => $icon)
+                                <div class="form-check">
+                                    <input class="form-check-input form-check-input-primary" type="checkbox" name="icon"
+                                        value="{{$index}}" id="icon-{{$index}}" @checked($index==$billboard->icon)>
+                                    <label class="form-check-label" for="icon-{{$index}}">
+                                        <div class="avatar avatar-xs" style="background-image:url({{asset($icon)}})"></div>
+                                    </label>
+                                </div>
+                            @endforeach
+
+                        </div>
+                    </div>
+                </div>
                 <hr/>
                 <div class="mb-4 row">
                     <label class="col-sm-12 col-lg-12 col-form-label-sm fw-bold">Sort </label>

@@ -24,7 +24,7 @@
                         <th class="">Code</th>
                         <th>Depart Date Range</th>
                         <th class="text-end">Discount</th>
-                        
+
                         <th class="text-end">Times to use Max</th>
                         <th class="text-end">Used</th>
                         <th>Active&Show</th>
@@ -40,7 +40,7 @@
                                         style="background-image:url({{ asset('/' . $item->image->path) }})"></div>
                                 @endif
                             </td>
-                            <td>{{ $item['title'] }}</td>
+                            <td> {!! nl2br(e($item['title']))!!}</td>
                             <td>{{ $item['code'] }}</td>
                             <td>
                                 {{ date('d/m/Y', strtotime($item['depart_date_start'])) }} - {{ date('d/m/Y', strtotime($item['depart_date_end'])) }}
@@ -52,7 +52,7 @@
                                     {{ $item['discount'] }}%
                                 @endif
                             </td>
-                           
+
                             <td class="text-end">{{ $item['times_use_max'] }}</td>
                             <td class="text-end">{{ $item['times_used'] }}</td>
                             <td>

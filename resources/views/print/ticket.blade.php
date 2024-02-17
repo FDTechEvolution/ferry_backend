@@ -127,7 +127,7 @@
         $payment = sizeof($booking['payments']) > 0 ? $booking['payments'][0] : null;
     @endphp
 
-    @foreach ($tickets as $ticket)
+    @foreach ($tickets as $index => $ticket)
         <div class="">
             <div class="prow">
                 <table class="w-100 ptable">
@@ -179,6 +179,9 @@
                         <tr class="bg-blue font-w-700">
                             <td colspan="2">
                                 Contact Information
+                                @if ($index==0 && sizeof($tickets) >1)
+                                    <span class="text-main">[Lead passenger]</span>
+                                @endif
                             </td>
                             <td colspan="2">
                                 Payment Information
@@ -188,7 +191,7 @@
                         <tr>
                             <td colspan="2">
                                 Name: <span
-                                    class="font-bold-14 text-main">{{ $ticket['customer']['fullname'] }}</span><br>
+                                    class="font-bold-14 text-main">{{ $ticket['customer']['title'] }}.{{ $ticket['customer']['fullname'] }}</span><br>
                                 Passport No.: {{ $ticket['customer']['passportno'] }}<br>
                                 Tel: {{ $ticket['customer']['mobile'] }}<br>
                                 Email: {{ $ticket['customer']['email'] }}<br>
@@ -321,17 +324,21 @@
                         <thead>
                             <tr>
                                 <th>#</th>
+                                <th>Type</th>
                                 <th>Fullname</th>
                                 <th>Birth Day</th>
-                                <th>Mobile</th>
+                                <th>Passport No.</th>
+                                <th>Ticket No.</th>
                             </tr>
                         </thead>
-                        @foreach ($customers as $index=> $customer)
+                        @foreach ($customers as $i=> $customer)
                             <tr>
-                                <td>{{$index+1}}.</td>
+                                <td>{{$i+1}}.</td>
+                                <td>{{$customer['type']}}</td>
                                 <td>{{$customer['fullname']}}</td>
                                 <td>{{$customer['birth_day']}}</td>
-                                <td>{{$customer['mobile_th']}}</td>
+                                <td>{{$customer['passportno']}}</td>
+                                <td>{{$tickets[$i]['ticketno']}}</td>
                             </tr>
                         @endforeach
                     </table>

@@ -444,6 +444,10 @@
                                                 </label>
                                                 <input type="hidden" name="route_addons[{{ $index }}][id]"
                                                     value="{{ $item->id }}">
+                                                    <input type="hidden" name="route_addons[{{ $index }}][type]"
+                                                    value="{{ $item->type }}">
+                                                    <input type="hidden" name="route_addons[{{ $index }}][subtype]"
+                                                    value="{{ $item->subtype }}">
                                             </div>
                                             <div class="col-6">
                                                 <label class="d-flex align-items-center mb-3">

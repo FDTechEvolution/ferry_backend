@@ -128,7 +128,7 @@ class RouteController extends Controller
 
         $route->routeAddonEdit;
 
-        if (sizeof($route->routeAddons) == 0) {
+        if (sizeof($route->routeAddonEdit) == 0) {
             $_route = Route::where('id', $id)->with('station_from', 'station_to')->first();
 
 
@@ -175,7 +175,7 @@ class RouteController extends Controller
                 ]);
             }
             $route = Route::find($id);
-            $route->routeAddons;
+            //$route->routeAddons;
         }
 
         $route->station_lines;
@@ -378,7 +378,7 @@ class RouteController extends Controller
             $routeAddons = $this->getRouteAddons();
             foreach ($routeAddons as $index => $routeAddonType) {
                 $routeAddon = RouteAddons::create([
-                    'name' => $routeAddonType['title'],
+                    'name' => $routeAddonType['title']. ' from',
                     'type' => $routeAddonType['key'],
                     'subtype' => 'from',
                     'message' => $request[$routeAddonType['key'] . '_text_from'],
@@ -392,7 +392,7 @@ class RouteController extends Controller
 
             foreach ($routeAddons as $index => $routeAddonType) {
                 $routeAddon = RouteAddons::create([
-                    'name' => $routeAddonType['title'],
+                    'name' => $routeAddonType['title'].' to',
                     'type' => $routeAddonType['key'],
                     'subtype' => 'to',
                     'message' => $request[$routeAddonType['key'] . '_text_to'],
@@ -614,6 +614,7 @@ class RouteController extends Controller
             //update route addons
             foreach ($request->route_addons as $item) {
                 $routeAddon = RouteAddons::find($item['id']);
+                $routeAddon->name = ucfirst(str_replace('_',' ',($item['type'].' '.$item['subtype'])));
                 $routeAddon->isactive = isset($item['isactive']) ? 'Y' : 'N';
                 $routeAddon->isservice_charge = isset($item['isservice_charge']) ? 'Y' : 'N';
                 $routeAddon->price = $item['price'];

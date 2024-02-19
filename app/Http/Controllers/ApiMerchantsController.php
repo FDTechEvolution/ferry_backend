@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Models\ApiMerchants;
 use App\Models\ApiRoutes;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class ApiMerchantsController extends Controller
 {
@@ -14,8 +16,10 @@ class ApiMerchantsController extends Controller
      */
     public function index()
     {
-        $api_merchant = ApiMerchants::get();
-        return view('pages.api_merchants.index', ['merchant' => $api_merchant]);
+
+        $api_merchant = ApiMerchants::where('name','SEVEN')->first();
+        $apiMerchants = ApiMerchants::where('name','!=','SEVEN')->get();
+        return view('pages.api_merchants.index', ['merchant' => $api_merchant,'apiMerchants'=>$apiMerchants]);
     }
 
     /**
@@ -23,7 +27,8 @@ class ApiMerchantsController extends Controller
      */
     public function create()
     {
-        //
+        $api_key = Str::random(30);
+         return view('pages.api_merchants.modal.create',['api_key'=>$api_key]);
     }
 
     /**
@@ -31,7 +36,14 @@ class ApiMerchantsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string',
+            'key' => 'required|string',
+            'code'=>'required|string|unique:api_merchants,code'
+        ]);
+
+        $apiMerchant = ApiMerchants::create($request->all());
+        return redirect()->route('api.edit',['id'=>$apiMerchant->id])->withSuccess('saved.');
     }
 
     /**
@@ -47,7 +59,48 @@ class ApiMerchantsController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $apiMerchant = ApiMerchants::with(['apiRoutes','apiRoutes.partner','apiRoutes.partner.image','apiRoutes.station_from','apiRoutes.station_to'])->where('id',$id)->first();
+
+        return view('pages.api_merchants.edit',['apiMerchant'=>$apiMerchant]);
+    }
+
+    public function addRoute(String $id){
+
+        $sql = 'select
+        r.id as route_id,p.name,img.path,concat(sf.name," [",sf.nickname,"] - ",st.name," [",st.nickname,"]") as route_name,
+        r.depart_time,r.arrive_time,apir.isactive
+        from
+            routes r
+            left join partners p on r.partner_id = p.id
+            left join images img on p.image_id = img.id
+            join stations sf on (r.station_from_id = sf.id and sf.isactive="Y")
+            join stations st on (r.station_to_id = st.id and st.isactive="Y")
+            left join api_routes apir on (apir.route_id = r.id and apir.api_merchant_id = ?)
+        where r.status="CO" and r.isactive="Y" order by apir.isactive desc,sf.name ASC,st.name ASC,r.depart_time ASC';
+
+        $routes = DB::select($sql, [$id]);
+
+        return view('pages.api_merchants.modal.add_route',['id'=>$id,'routes'=>$routes]);
+    }
+
+    public function storeRoute(Request $request){
+        $apiMerchantId = $request->api_merchant_id;
+        $routes = $request->routes;
+
+        ApiRoutes::where('api_merchant_id',$apiMerchantId)->where('isactive','Y')->update(['isactive'=>'N']);
+
+        foreach($routes as $routeId){
+            $apiRoute = ApiRoutes::updateOrCreate(
+                ['api_merchant_id'=>$apiMerchantId,'route_id'=>$routeId],
+                [
+                    'route_id'=>$routeId,
+                    'isactive'=>'Y',
+                    'api_merchant_id'=>$apiMerchantId
+                ]
+            );
+        }
+
+        return redirect()->route('api.edit',['id'=>$apiMerchantId])->withSuccess('saved.');
     }
 
     /**
@@ -87,6 +140,9 @@ class ApiMerchantsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        ApiRoutes::where('api_merchant_id',$id)->delete();
+        ApiMerchants::where('id',$id)->delete();
+
+        return redirect()->route('api.index')->withSuccess('deleted.');
     }
 }

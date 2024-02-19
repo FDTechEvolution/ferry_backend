@@ -77,7 +77,15 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(ApiMerchantsController::class)->group(function() {
         Route::get('/api', 'index')->name('api.index');
+        Route::get('/api/create', 'create')->name('api.create');
+        Route::get('/api/edit/{id}', 'edit')->name('api.edit');
+        Route::get('/api/addroute/{id}', 'addRoute')->name('api.addRoute');
+
+        Route::post('/api/storeroute/{id}', 'storeRoute')->name('api.storeroute');
+        Route::post('/api/store', 'store')->name('api.store');
         Route::post('/api/update/{id}', 'update')->name('api.update');
+
+        Route::get('/api/delete/{id}', 'destroy')->name('api.destroy');
     });
 
     Route::controller(ApiRoutesController::class)->group(function () {
@@ -259,6 +267,12 @@ Route::middleware('auth')->group(function () {
     Route::controller(PromotionController::class)->group(function () {
         Route::get('/promotion', 'index')->name('promotion-index');
         Route::get('/promotion/create', 'create')->name('promotion-create');
+
+        Route::get('/promotion/addstation/{id}', 'addStation')->name('promotion.addStation');
+        Route::get('/promotion/addRoute/{id}', 'addRoute')->name('promotion.addRoute');
+        Route::post('/promotion/storestation', 'storeStation')->name('promotion.storestation');
+        Route::post('/promotion/storeroute', 'storeRoute')->name('promotion.storeroute');
+
         Route::post('/promotion/store', 'store')->name('promotion-store');
         Route::post('/promotion/update', 'update')->name('promotion-update');
         Route::get('/promotion/edit/{id}', 'edit')->name('promotion-edit');

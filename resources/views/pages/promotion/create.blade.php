@@ -13,7 +13,7 @@
                 @csrf
                 <fieldset id="promotion-create">
                     <div class="row mb-2">
-                        <label class="col-12 col-md-2 col-form-label-sm">Title <strong
+                        <label class="col-12 col-md-3 col-form-label-sm">Title <strong
                                 class="text-danger">*</strong></label>
                         <div class="col-12 col-md-7">
                             <textarea class="form-control form-control-sm" rows="4" name="title">
@@ -22,7 +22,7 @@
                         </div>
                     </div>
                     <div class="mb-3 row">
-                        <label class="col-sm-12 col-lg-2 col-form-label-sm fw-bold">Code <strong
+                        <label class="col-sm-12 col-lg-3 col-form-label-sm fw-bold">Code <strong
                                 class="text-danger">*</strong></label>
                         <div class="col-sm-12 col-lg-4">
                             <input required type="text" class="form-control form-control-sm" name="code"
@@ -30,7 +30,7 @@
                         </div>
                     </div>
                     <div class="mb-3 row">
-                        <label class="col-sm-12 col-lg-2 col-form-label-sm fw-bold">Discount <strong
+                        <label class="col-sm-12 col-lg-3 col-form-label-sm fw-bold">Discount <strong
                                 class="text-danger">*</strong></label>
                         <div class="col-sm-6 col-lg-4">
                             <input required type="number" class="form-control form-control-sm text-center" name="discount"
@@ -39,14 +39,13 @@
                         <div class="col-sm-4 col-lg-3">
                             <select required class="form-select form-select-sm text-center" name="discount_type"
                                 id="discount_type">
-                                <option value="" selected>-- Select --</option>
                                 <option value="PERCENT" selected>%</option>
                                 <option value="THB">THB</option>
                             </select>
                         </div>
                     </div>
                     <div class="mb-3 row">
-                        <label class="col-sm-12 col-lg-2 col-form-label-sm fw-bold">Usage <strong
+                        <label class="col-sm-12 col-lg-3 col-form-label-sm fw-bold">Usage <strong
                                 class="text-danger">*</strong></label>
                         <div class="col-sm-12 col-lg-4">
                             <input required type="number" class="form-control form-control-sm" name="times_use_max"
@@ -54,10 +53,10 @@
                         </div>
                     </div>
                     <div class="row">
-                        <label class="col-12 col-md-2 col-form-label-sm">Depart Date Range <strong
+                        <label class="col-12 col-md-3 col-form-label-sm">Depart Date Range <strong
                                 class="text-danger">*</strong></label>
                         <div class="col-12 col-lg-4 mb-2">
-                            <input autocomplete="off" type="text" name="daterange" id="daterange"
+                            <input autocomplete="off" type="text" name="daterange" id="daterange" required
                                 class="form-control form-control-sm rangepicker" data-bs-placement="left"
                                 data-ranges="false" data-date-start="{{ date('d-m-Y') }}"
                                 data-date-end="{{ date('d-m-Y', strtotime('+30 day', time())) }}"
@@ -73,8 +72,30 @@
 
 
                     </div>
+
+                    <div class="row">
+                        <label class="col-12 col-md-3 col-form-label-sm">Booking Date Range <strong
+                                class="text-danger">*</strong></label>
+                        <div class="col-12 col-lg-4 mb-2">
+                            <input autocomplete="off" type="text" name="booking_daterange" id="booking_daterange" required
+                                class="form-control form-control-sm rangepicker" data-bs-placement="left"
+                                data-ranges="false" data-date-start="{{ date('d-m-Y') }}"
+                                data-date-end="{{ date('d-m-Y', strtotime('+30 day', time())) }}"
+                                data-date-format="DD/MM/YYYY"
+                                data-quick-locale='{
+		"lang_apply"	: "Apply",
+		"lang_cancel" : "Cancel",
+		"lang_crange" : "Custom Range",
+		"lang_months"	 : ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+		"lang_weekdays" : ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+	}'>
+                        </div>
+
+
+                    </div>
+
                     <div class="row mb-2">
-                        <label class="col-12 col-md-2 col-form-label-sm">Active</label>
+                        <label class="col-12 col-md-3 col-form-label-sm">Active</label>
                         <div class="col-12 col-md-7">
                             <div class="form-check mb-2">
                                 <input class="form-check-input form-check-input-success" type="checkbox" value="Y"
@@ -86,13 +107,13 @@
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <label class="col-12 col-md-2 col-form-label-sm">Description</label>
+                        <label class="col-12 col-md-3 col-form-label-sm">Description</label>
                         <div class="col-12 col-md-7">
                             <textarea name="description" id="description" rows="4" class="form-control"></textarea>
                         </div>
                     </div>
-                    <div class="row mb-2">
-                        <label class="col-12 col-md-2 col-form-label-sm">Image</label>
+                    <div class="row mb-2" style="display: none;">
+                        <label class="col-12 col-md-3 col-form-label-sm">Image</label>
                         <div class="col-12 col-md-7">
                             <div class="mb-3">
 
@@ -113,9 +134,9 @@
                             </div>
 
                             <!--
-                                            clear files button
-                                            hidden by default
-                                        -->
+                                                        clear files button
+                                                        hidden by default
+                                                    -->
                             <div class="mt-1">
                                 <a href="#" class="hide js-file-upload-clear2 btn btn-light btn-sm">
                                     Remove Image
@@ -127,101 +148,54 @@
                     <hr>
 
                     <div class="mb-4 row">
-                        <div class="col-sm-12 col-lg-8">
-                            <h5>Promotion code Conditions</h5>
-                            <div class="row">
-                                <label class="col-12 col-md-3 col-form-label-sm ">Trip Type</label>
-                                <div class="col-12 col-md-3 mb-2">
-                                    <select name="trip_type" id="trip_type" class="form-select">
-                                        <option value="all">All</option>
-                                        <option value="one-way">One Way</option>
-                                        <option value="round-trip">Round Trip</option>
-                                        <option value="multi-trip">Multi Island</option>
-                                    </select>
-                                </div>
-                            </div>
+                        <div class="col-12">
+                            <h5 class="text-main-color"><i class="fa-solid fa-route"></i> Promotion code Conditions</h5>
+                        </div>
+                        <div class="col-sm-12 col-lg-12">
 
                             <div class="row">
-                                <label class="col-12 col-md-3 col-form-label-sm ">Free credit charge</label>
-                                <div class="col-12 col-md-3 mb-2">
+                                <div class="col-12 col-lg-3">
+                                    <div class="form-floating mb-3">
+                                        <select class="form-select" id="trip_type" name="trip_type" aria-label="">
+                                            <option value="all">None</option>
+                                            <option value="one-way">One Way</option>
+                                            <option value="round-trip">Round Trip</option>
+                                            <option value="multi-trip">Multi Island</option>
+                                        </select>
+                                        <label for="trip_type">Trip Type</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-lg-3">
                                     <div class="form-check mb-2">
                                         <input class="form-check-input form-check-input-success" type="checkbox"
                                             value="Y" id="isfreecreditcharge" name="isfreecreditcharge">
-                                        <label class="form-check-label" for="checkDefault">
-
+                                        <label class="form-check-label" for="isfreecreditcharge">
+                                            Free credit charge
                                         </label>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <label class="col-12 col-md-3 col-form-label-sm ">Free premium flex</label>
-                                <div class="col-12 col-md-3 mb-2">
+
+                                <div class="col-12 col-lg-3">
                                     <div class="form-check mb-2">
                                         <input class="form-check-input form-check-input-success" type="checkbox"
                                             value="Y" id="isfreepremiumflex" name="isfreepremiumflex">
-                                        <label class="form-check-label" for="checkDefault">
-
+                                        <label class="form-check-label" for="isfreepremiumflex">
+                                            Free premium flex
                                         </label>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="row mb-2">
-                                <label class="col-12 col-md-3 col-form-label-sm">Station From</label>
-                                <div class="col-sm-12 col-lg-9">
-                                    <select class="form-select form-select-sm" name="station_from_id">
-                                        <option value="">-- Use for All Station --</option>
-                                        @foreach ($stations as $station)
-                                            <option value="{{ $station->id }}">{{ $station->name }}
-                                                @if ($station->piername != null)
-                                                    ({{ $station->piername }})
-                                                @endif
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
                             </div>
-                            <div class="row mb-2">
-                                <label class="col-12 col-md-3 col-form-label-sm">Station To</label>
-                                <div class="col-sm-12 col-lg-9">
-                                    <select class="form-select form-select-sm" name="station_to_id">
-                                        <option value="">-- Use for All Station --</option>
-                                        @foreach ($stations as $station)
-                                            <option value="{{ $station->id }}">{{ $station->name }}
-                                                @if ($station->piername != null)
-                                                    ({{ $station->piername }})
-                                                @endif
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row mb-2">
-                                <label class="col-12 col-md-3 col-form-label-sm">Route</label>
-                                <div class="col-sm-12 col-lg-9">
-                                    <select class="form-select form-select-sm" name="route_id">
-                                        <option value="">-- Use for all Route --</option>
-                                        @foreach ($routes as $route)
-                                            <option value="{{ $route->id }}">
-                                                {{ $route->station_from->name }} ->
-                                                {{ $route->station_to->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-
                         </div>
-                    </div>
-                    <hr>
-                    <div class="row mb-3">
-                        <div class="col-12 text-center">
-                            <x-button-submit-loading class="btn-lg w--10 me-5" :form_id="_('promotion-create-form')" :fieldset_id="_('promotion-create')"
-                                :text="_('Add')" />
-                            <a href="{{ route('promotion-index') }}" class="btn btn-secondary btn-lg w--10">Cancel</a>
-                            <small id="user-create-error-notice" class="text-danger mt-3"></small>
+                        <hr>
+                        <div class="row mb-3">
+                            <div class="col-12 text-center">
+                                <button class="btn btn-success btn-lg" type="submit">Next <i class="fa-solid fa-forward"></i></button>
+                                <a href="{{ route('promotion-index') }}" class="btn btn-secondary btn-lg w--10">Cancel</a>
+                                <small id="user-create-error-notice" class="text-danger mt-3"></small>
+                            </div>
                         </div>
-                    </div>
                 </fieldset>
             </form>
         </div>

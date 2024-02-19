@@ -49,4 +49,18 @@ class Promotions extends Model
         return $this->hasOne(Station::class, 'id', 'station_to_id')->with('section');
     }
 
+    public function promotionRoutes() {
+        return $this->belongsToMany(Route::class, 'promotion_lines', 'promotion_id', 'route_id')
+        ->withPivot('isactive')
+        ->wherePivot('isactive', 'Y');
+    }
+
+    public function promotionStationFroms() {
+        return $this->belongsToMany(Station::class, 'promotion_lines', 'promotion_id', 'station_id')->withPivot('isactive')->wherePivot('isactive', 'Y')->where('type', 'STATION_FROM');
+    }
+
+    public function promotionStationTos() {
+        return $this->belongsToMany(Station::class, 'promotion_lines', 'promotion_id', 'station_id')->withPivot('isactive')->wherePivot('isactive', 'Y')->where('type', 'STATION_TO');
+    }
+
 }

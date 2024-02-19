@@ -18,7 +18,10 @@ class ApiRoutes extends Model
         'commission',
         'vat',
         'totalamt',
-        'api_merchant_id'
+        'api_merchant_id',
+        'child_price',
+        'infant_price',
+        'seat',
     ];
 
     public function route() {

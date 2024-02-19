@@ -9,7 +9,7 @@
             @include('includes.flash-message')
             @yield('content')
         </div>
-        @include('includes.script')
 
+        @yield('script')
     </body>
 </html>

@@ -23,7 +23,7 @@ class ApiMerchants extends Model
 
     public function apiRoutes() {
         return $this->belongsToMany(Route::class, 'api_routes', 'api_merchant_id', 'route_id')
-        ->withPivot('isactive','seat','discount')
+        ->withPivot('isactive','seat','discount','id')
         ->wherePivot('isactive', 'Y');
     }
 }

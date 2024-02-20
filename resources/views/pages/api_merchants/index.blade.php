@@ -45,7 +45,7 @@
     <hr>
     <div class="row">
         <div class="col-8">
-            <h4>Other API Services</h4>
+            <h4><i class="fa-solid fa-store"></i> Agent API Services</h4>
         </div>
         <div class="col-4 text-end">
             <a href="#" data-href="{{ route('api.create') }}" data-ajax-modal-size="modal-md"

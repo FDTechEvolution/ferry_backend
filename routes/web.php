@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AjaxApiRouteController;
 use App\Http\Controllers\ApiMerchants;
 use App\Http\Controllers\ApiMerchantsController;
 use App\Http\Controllers\ApiRoutes;
@@ -86,6 +87,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/api/update/{id}', 'update')->name('api.update');
 
         Route::get('/api/delete/{id}', 'destroy')->name('api.destroy');
+    });
+
+    Route::controller(AjaxApiRouteController::class)->group(function() {
+        Route::get('/apiagent/edit/{id}', 'edit')->name('apiagent.edit');
+
+        Route::post('/apiagent/update/{id}', 'update')->name('apiagent.update');
     });
 
     Route::controller(ApiRoutesController::class)->group(function () {

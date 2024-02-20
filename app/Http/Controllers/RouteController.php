@@ -649,6 +649,10 @@ class RouteController extends Controller
         if (isset($route_used)) {
             $route->isactive = 'N';
             $route->status = 'VO';
+
+            //Clear data
+            ApiRoutes::where('route_id',$id)->delete();
+
             if ($route->save())
                 return redirect()->route('route-index')->withSuccess('Route deleted...');
             else
@@ -658,6 +662,7 @@ class RouteController extends Controller
             RouteMeal::where('route_id', $id)->delete();
             RouteIcon::where('route_id', $id)->delete();
             RouteStationInfoLine::where('route_id', $id)->delete();
+            ApiRoutes::where('route_id',$id)->delete();
 
             $shuttle_bus = RouteShuttlebus::where('route_id', $id)->get();
             if (sizeof($shuttle_bus) > 0) {

@@ -248,6 +248,11 @@ class BookingController extends Controller
 
                 return $promotion;
             }
+            else {
+                if($promotion->isfreecredircard == 'Y' || $promotion->isfreepremiumflex == 'Y') {
+                    return $promotion;
+                }
+            }
         }
         return NULL;
     }

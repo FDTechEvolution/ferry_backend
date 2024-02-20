@@ -265,6 +265,8 @@ class PromotionController extends Controller
                     'isactive'=>'Y'
                 ]
             );
+
+            Route::where('id',$routeId)->update(['ispromocode','Y']);
         }
 
         return redirect()->route('promotion-edit',['id'=>$promotion_id])->withSuccess('Stations saved.');

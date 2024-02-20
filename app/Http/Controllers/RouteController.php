@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PromotionLines;
 use App\Models\RouteAddons;
+use App\Models\RouteSchedules;
 use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -65,7 +67,7 @@ class RouteController extends Controller
     public function index()
     {
         $routes = Route::where('status', 'CO')
-            ->with('station_from','station_from.section', 'station_to', 'icons', 'routeAddons', 'activity_lines', 'meal_lines', 'partner', 'lastSchedule')
+            ->with('station_from', 'station_from.section', 'station_to', 'icons', 'routeAddons', 'activity_lines', 'meal_lines', 'partner', 'lastSchedule')
             //->orderBy('station_from.section_id', 'ASC')
             ->orderBy('station_from_id', 'ASC')
             ->orderBy('depart_time', 'ASC')
@@ -217,7 +219,7 @@ class RouteController extends Controller
     {
         //private_taxi
         $type = 'private_taxi';
-        $routes = Route::where('isactive', 'Y')->with('routeAddonEdit','station_from','station_to')->get();
+        $routes = Route::where('isactive', 'Y')->with('routeAddonEdit', 'station_from', 'station_to')->get();
 
         foreach ($routes as $route) {
             //dd($route);
@@ -235,7 +237,7 @@ class RouteController extends Controller
                     'type' => $type,
                     'subtype' => 'from',
                     'message' => $route['station_from'][$type . '_text'],
-                    'mouseover' => $route['station_from'][$type. '_mouseover'],
+                    'mouseover' => $route['station_from'][$type . '_mouseover'],
                     'price' => $route['station_from'][$type . '_price'],
                     'isactive' => 'N',
                     'isservice_charge' => 'N',
@@ -247,7 +249,7 @@ class RouteController extends Controller
                     'type' => $type,
                     'subtype' => 'to',
                     'message' => $route['station_to'][$type . '_text'],
-                    'mouseover' => $route['station_to'][$type. '_mouseover'],
+                    'mouseover' => $route['station_to'][$type . '_mouseover'],
                     'price' => $route['station_to'][$type . '_price'],
                     'isactive' => 'N',
                     'isservice_charge' => 'N',
@@ -378,7 +380,7 @@ class RouteController extends Controller
             $routeAddons = $this->getRouteAddons();
             foreach ($routeAddons as $index => $routeAddonType) {
                 $routeAddon = RouteAddons::create([
-                    'name' => $routeAddonType['title']. ' from',
+                    'name' => $routeAddonType['title'] . ' from',
                     'type' => $routeAddonType['key'],
                     'subtype' => 'from',
                     'message' => $request[$routeAddonType['key'] . '_text_from'],
@@ -392,7 +394,7 @@ class RouteController extends Controller
 
             foreach ($routeAddons as $index => $routeAddonType) {
                 $routeAddon = RouteAddons::create([
-                    'name' => $routeAddonType['title'].' to',
+                    'name' => $routeAddonType['title'] . ' to',
                     'type' => $routeAddonType['key'],
                     'subtype' => 'to',
                     'message' => $request[$routeAddonType['key'] . '_text_to'],
@@ -417,7 +419,7 @@ class RouteController extends Controller
 
     private function createApiRoute($route_id, $route_price)
     {
-        $api_merchant = ApiMerchants::get();
+        $api_merchant = ApiMerchants::where('code', 'SEVEN')->get();
         foreach ($api_merchant as $merchant) {
             ApiRoutes::create([
                 'route_id' => $route_id,
@@ -614,7 +616,7 @@ class RouteController extends Controller
             //update route addons
             foreach ($request->route_addons as $item) {
                 $routeAddon = RouteAddons::find($item['id']);
-                $routeAddon->name = ucfirst(str_replace('_',' ',($item['type'].' '.$item['subtype'])));
+                $routeAddon->name = ucfirst(str_replace('_', ' ', ($item['type'] . ' ' . $item['subtype'])));
                 $routeAddon->isactive = isset($item['isactive']) ? 'Y' : 'N';
                 $routeAddon->isservice_charge = isset($item['isservice_charge']) ? 'Y' : 'N';
                 $routeAddon->price = $item['price'];
@@ -649,20 +651,14 @@ class RouteController extends Controller
         if (isset($route_used)) {
             $route->isactive = 'N';
             $route->status = 'VO';
+            $route->save();
 
-            //Clear data
-            ApiRoutes::where('route_id',$id)->delete();
-
-            if ($route->save())
-                return redirect()->route('route-index')->withSuccess('Route deleted...');
-            else
-                return redirect()->route('route-index')->withFail('Something is wrong. Please try again.');
         } else {
             RouteActivity::where('route_id', $id)->delete();
             RouteMeal::where('route_id', $id)->delete();
             RouteIcon::where('route_id', $id)->delete();
             RouteStationInfoLine::where('route_id', $id)->delete();
-            ApiRoutes::where('route_id',$id)->delete();
+
 
             $shuttle_bus = RouteShuttlebus::where('route_id', $id)->get();
             if (sizeof($shuttle_bus) > 0) {
@@ -682,8 +678,14 @@ class RouteController extends Controller
             RouteLongtailboat::where('route_id', $id)->delete();
             $route->delete();
 
-            return redirect()->route('route-index')->withSuccess('Route deleted...');
+
         }
+
+        ApiRoutes::where('route_id', $id)->forceDelete();
+        RouteSchedules::where('route_id', $id)->forceDelete();
+        PromotionLines::where('route_id', $id)->forceDelete();
+
+        return redirect()->route('route-index')->withSuccess('Route deleted...');
     }
 
     public function getRouteInfo(string $route_id = null, string $station_id = null, string $type = null)
@@ -706,6 +708,10 @@ class RouteController extends Controller
             $_route->isactive = 'N';
             $_route->status = 'VO';
             $_route->save();
+
+            ApiRoutes::where('route_id', $route)->forceDelete();
+            RouteSchedules::where('route_id', $route)->forceDelete();
+            PromotionLines::where('route_id', $route)->forceDelete();
         }
 
         return redirect()->route('route-index')->withSuccess('Route updated...');

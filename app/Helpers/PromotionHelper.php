@@ -4,6 +4,7 @@ namespace App\Helpers;
 use Illuminate\Support\Facades\Log;
 
 use App\Models\Promotions;
+use App\Models\PromotionLines;
 
 class PromotionHelper
 {
@@ -64,13 +65,28 @@ class PromotionHelper
         $_from = true;
         $_to = true;
 
-        if($promo->station_from_id != NULL && $promo->station_to_id != NULL) return true;
-        else {
-            if($promo->station_from_id != NULL) $_from = $promo->station_from_id == $station_from ? true : false;
-            if($promo->station_to_id != NULL) $_to = $promo->station_to_id == $station_to ? true : false;
+        $promo_lines = PromotionLines::where('promotion_id', $promo->id)->where('isactive', 'Y')->get();
+        // Log::debug($promo_lines->toArray());
+
+        $inCondition = [
+            'route' => [],
+            'from' => [],
+            'to' => []
+        ];
+        foreach($promo_lines as $line) {
+            if($line->type == 'ROUTE') array_push($inCondition['route'], $line->route_id);
+            if($line->type == 'STATION_FROM') array_push($inCondition['from'], $line->station_id);
+            if($line->type == 'STATION_TO') array_push($inCondition['to'], $line->station_id);
+
+            // if($promo->station_from_id != NULL && $promo->station_to_id != NULL) return true;
+            // else {
+            //     if($promo->station_from_id != NULL) $_from = $promo->station_from_id == $station_from ? true : false;
+            //     if($promo->station_to_id != NULL) $_to = $promo->station_to_id == $station_to ? true : false;
+            // }
         }
 
-        return ($_from && $_to) ? true : false;
+        // return ($_from && $_to) ? true : false;
+        return $inCondition;
     }
 
     public static function promoDiscount($amount, $promo) {

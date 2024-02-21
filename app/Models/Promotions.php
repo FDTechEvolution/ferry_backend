@@ -63,4 +63,8 @@ class Promotions extends Model
         return $this->belongsToMany(Station::class, 'promotion_lines', 'promotion_id', 'station_id')->withPivot('isactive')->wherePivot('isactive', 'Y')->where('type', 'STATION_TO');
     }
 
+    public function promotion_lines() {
+        return $this->hasMany(PromotionLines::class, 'promotion_id', 'id')->where('isactive', 'Y');
+    }
+
 }

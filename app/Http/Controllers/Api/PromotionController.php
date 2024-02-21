@@ -47,8 +47,8 @@ class PromotionController extends Controller
             $_booking_date = PromotionHelper::promoBookingDate($promo);
             $_station = PromotionHelper::promoStation($promo, $request->station_from_id, $request->station_to_id);
 
-            if($_trip_type && $_depart_date && $_booking_date && $_station) {
-                return response()->json(['result' => true, 'data' => $promo]);
+            if($_trip_type && $_depart_date && $_booking_date) {
+                return response()->json(['result' => true, 'data' => $promo, 'promo_line' => $_station]);
             }
         }
 

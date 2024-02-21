@@ -16,6 +16,7 @@ use App\Helpers\BookingHelper;
 use App\Helpers\PaymentHelper;
 use App\Helpers\PromotionHelper;
 use App\Http\Resources\BookingResource;
+use App\Models\PromotionLines;
 
 class BookingController extends Controller
 {
@@ -63,7 +64,7 @@ class BookingController extends Controller
                 'routes' => $_route
             ];
 
-            $payment_channel = $this->PaymentMethod[$request->payment_method];
+            // $payment_channel = $this->PaymentMethod[$request->payment_method];
             $isfreepremiumflex = isset($_promo) ? $_promo->isfreepremiumflex : 'N';
             $isfreecreditcharge = isset($_promo) ? $_promo->isfreecreditcharge : 'N';
 
@@ -74,11 +75,18 @@ class BookingController extends Controller
             // update promoCode
             if(isset($_promo)) {
                 $_discount_amount = 0;
+                $p_line = $this->getPromotionLines($_promotion->id);
                 foreach($request->route_id as $_route) {
                     $amount = 0;
                     $discount_amount = 0;
                     $_r = $this->getRoute($_route);
-                    if($_r->ispromocode == 'Y') {
+                    $pr = array_search($_route, $p_line['route']);
+                    $fr = array_search($_r->station_from_id, $p_line['from']);
+                    $tr = array_search($_r->station_to_id, $p_line['to']);
+                    if($_r->ispromocode == 'Y' && $_r->id == $p_line['route'][$pr] ||
+                        $_r->ispromocode == 'Y' && $_r->station_from_id == $p_line['from'][$fr] ||
+                        $_r->ispromocode == 'Y' && $_r->station_to_id == $p_line['to'][$tr]
+                    ){
                         $amount += $_r->regular_price*$request->passenger;
                         $amount += $_r->child_price*$request->child_passenger;
                         $amount += $_r->infant_price*$request->infant_passenger;
@@ -101,18 +109,18 @@ class BookingController extends Controller
             $payment_amt = $payment->totalamt;
 
             // update CreditCard Free
-            if($payment_channel == 'CC')
-                $payment = PaymentHelper::updatePayWithCreditCard($payment_id);
-            if($payment_channel == 'CC' && $isfreecreditcharge == 'Y')
-                $payment = PaymentHelper::updatePayWithCreditCardFree($payment_id, $payment_amt);
+            // if($payment_channel == 'CC')
+            //     $payment = PaymentHelper::updatePayWithCreditCard($payment_id);
+            // if($payment_channel == 'CC' && $isfreecreditcharge == 'Y')
+            //     $payment = PaymentHelper::updatePayWithCreditCardFree($payment_id, $payment_amt);
 
             $payment->totalamt = number_format($payment->totalamt, 2, '.', '');
 
-            $payload = PaymentHelper::encodeRequest($payment, $payment_channel);
-            $response = PaymentHelper::postTo_2c2p($payload);
-            $result = PaymentHelper::decodeResponse($response);
+            // $payload = PaymentHelper::encodeRequest($payment, $payment_channel);
+            // $response = PaymentHelper::postTo_2c2p($payload);
+            // $result = PaymentHelper::decodeResponse($response);
 
-            return response()->json(['result' => true, 'data' => $result, 'booking' => $booking->bookingno, 'email' => $request->email], 200);
+            return response()->json(['result' => true, 'booking' => $booking->bookingno, 'email' => $request->email], 200);
         }
 
         return response()->json(['result' => false, 'data' => 'No Route.'], 200);
@@ -196,11 +204,18 @@ class BookingController extends Controller
                 // update promoCode
                 if(!empty($_promo)) {
                     $_discount_amount = 0;
+                    $p_line = $this->getPromotionLines($_promo_id);
                     foreach($request->route_id as $index => $_route) {
                         $amount = 0;
                         $discount_amount = 0;
                         $_r = $this->getRoute($_route);
-                        if($_r->ispromocode == 'Y') {
+                        $pr = array_search($_route, $p_line['route']);
+                        $fr = array_search($_r->station_from_id, $p_line['from']);
+                        $tr = array_search($_r->station_to_id, $p_line['to']);
+                        if($_r->ispromocode == 'Y' && $_r->id == $p_line['route'][$pr] ||
+                            $_r->ispromocode == 'Y' && $_r->station_from_id == $p_line['from'][$fr] ||
+                            $_r->ispromocode == 'Y' && $_r->station_to_id == $p_line['to'][$tr]
+                        ){
                             $amount += $_r->regular_price*$request->passenger;
                             $amount += $_r->child_price*$request->child_passenger;
                             $amount += $_r->infant_price*$request->infant_passenger;
@@ -241,20 +256,48 @@ class BookingController extends Controller
     private function promoCode($promocode, $route_id) {
         $promotion = Promotions::where('code', $promocode)->where('isactive', 'Y')->whereColumn('times_used', '<', 'times_use_max')->first();
         if(isset($promocode)) {
-            $route = Route::find($route_id[0]);
-            if(isset($route) && $route->ispromocode == 'Y') {
-                $promotion->station_from_id = $route->station_from_id;
-                $promotion->station_to_id = $route->station_to_id;
+            $p_lines = $this->getPromotionLines($promotion->id);
+            foreach($route_id as $r_id) {
+                $route = Route::find($r_id);
+                if(isset($route) && $route->ispromocode == 'Y') {
+                    // $promotion->station_from_id = $route->station_from_id;
+                    // $promotion->station_to_id = $route->station_to_id;
+                    // return $promotion;
 
-                return $promotion;
-            }
-            else {
-                if($promotion->isfreecredircard == 'Y' || $promotion->isfreepremiumflex == 'Y') {
-                    return $promotion;
+                    $r = array_search($route->id, $p_lines['route']);
+                    if($r != '' && $route['ispromocode'] == 'Y') return $promotion;
+
+                    $f = array_search($route->station_from_id, $p_lines['from']);
+                    if($f != '' && $route['ispromocode'] == 'Y') return $promotion;
+
+                    $t = array_search($route->station_to_id, $p_lines['to']);
+                    if($t != '' && $route['ispromocode'] == 'Y') return $promotion;
                 }
+            }
+
+            if($promotion->isfreecredircard == 'Y' || $promotion->isfreepremiumflex == 'Y') {
+                return $promotion;
             }
         }
         return NULL;
+    }
+
+    private function getPromotionLines($promotion_id) {
+        $promo_lines = PromotionLines::where('promotion_id', $promotion_id)->where('isactive', 'Y')->get();
+
+        $inCondition = [
+            'route' => [],
+            'from' => [],
+            'to' => []
+        ];
+
+        foreach($promo_lines as $line) {
+            if($line->type == 'ROUTE') array_push($inCondition['route'], $line->route_id);
+            if($line->type == 'STATION_FROM') array_push($inCondition['from'], $line->station_id);
+            if($line->type == 'STATION_TO') array_push($inCondition['to'], $line->station_id);
+        }
+
+        return $inCondition;
     }
 
     private function setPromotionCode($promo, $trip_type, $depart_date) {
@@ -269,9 +312,9 @@ class BookingController extends Controller
         $_trip_type = PromotionHelper::promoTripType($promo->trip_type, $trip_type);
         $_depart_date = PromotionHelper::promoDepartDate($promo, $_departdate);
         $_booking_date = PromotionHelper::promoBookingDate($promo);
-        $_station = PromotionHelper::promoStation($promo, $promo->station_from_id, $promo->station_to_id);
+        // $_station = PromotionHelper::promoStation($promo, $promo->station_from_id, $promo->station_to_id);
 
-        if($_trip_type && $_depart_date && $_booking_date && $_station) {
+        if($_trip_type && $_depart_date && $_booking_date) {
             return $promo;
         }
         return NULL;

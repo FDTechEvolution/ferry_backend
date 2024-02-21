@@ -136,9 +136,10 @@
             $firstCustomer = $customers[0];
             $payment = sizeof($booking['payments']) > 0 ? $booking['payments'][0] : null;
 
-            $approveCode = json_decode($payment['description']);
+            $paymentDetails = json_decode($payment['description']);
+            $referenceNo = $paymentDetails->referenceNo;
             //dd($approveCode);
-            $approveCode = isset($approveCode->approvalCode)?$approveCode->approvalCode:'';
+            $approveCode = isset($paymentDetails->approvalCode)?$paymentDetails->approvalCode:'';
 
         @endphp
 

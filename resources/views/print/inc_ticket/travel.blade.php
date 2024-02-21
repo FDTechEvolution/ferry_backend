@@ -60,7 +60,7 @@
             @if (sizeof($bookingRoutesX[$indexRoute]->bookingRouteAddons) > 0 || sizeof($bookingRoutesX[$indexRoute]->bookingExtraAddons) > 0)
 
                     <tr>
-                        <td class="text-end">Extra service</td>
+                        <td class="">Extra service</td>
                         <td colspan="4">
                             @foreach ($bookingRoutesX[$indexRoute]->bookingRouteAddons as $extra)
                             <p style="padding: 0;margin: 0;">- {{$extra->name}}: {{$extra->pivot->description}}</p>

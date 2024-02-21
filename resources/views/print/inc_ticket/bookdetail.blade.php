@@ -59,9 +59,9 @@
                 <td colspan="2">
                     Payment Status: @if($booking['ispayment']=='Y') <span class="text-success">Paid</span> @else <span class="text-danger">Unpay</span>  @endif <br>
                     Method: {{ $payment['payment_method'] }}<br>
-                    Transaction No. <br>
-                    Approved by: <br>
-                    Approved Date:
+                    Transaction No. {{$referenceNo}}<br>
+                    Approved by: @if(isset($user->firstname)) {{$user->firstname}} @else System  @endif<br>
+                    Approved Date:  {{ date('d M Y', strtotime($payment['created_at'])) }}
 
 
                 </td>

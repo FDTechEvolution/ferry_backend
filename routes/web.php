@@ -6,6 +6,7 @@ use App\Http\Controllers\ApiMerchantsController;
 use App\Http\Controllers\ApiRoutes;
 use App\Http\Controllers\ApiRoutesController;
 use App\Http\Controllers\BookingsController;
+use App\Http\Controllers\DevTestController;
 use App\Http\Controllers\InformationsController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\RouteSchedulesController;
@@ -51,6 +52,10 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('/dashboard', 'dashboard')->name('dashboard');
 
     Route::post('/login', 'authenticate')->name('authenticate');
+});
+
+Route::controller(DevTestController::class)->group(function () {
+    Route::get('/test', 'index')->name('test.index');
 });
 
 Route::controller(ForgotPasswordController::class)->group(function () {

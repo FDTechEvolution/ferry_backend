@@ -42,7 +42,7 @@ class BookingHelper
     public static function getBookingInfoByBookingNo($bookingno)
     {
         $booking = Bookings::where(['bookingno' => $bookingno])
-            ->with('bookingCustomers', 'tickets.customer', 'user', 'bookingRoutes', 'bookingRoutesX.bookingExtraAddons', 'bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingRoutes.station_lines', 'payments')
+            ->with('bookingCustomers', 'tickets', 'user', 'bookingRoutes', 'bookingRoutesX.bookingExtraAddons', 'bookingRoutes.station_from', 'bookingRoutes.station_to', 'payments')
             ->first();
 
         //dd($booking);
@@ -243,6 +243,7 @@ class BookingHelper
         $customers = $booking->bookingCustomers;
         $routes = $booking->bookingRoutes;
 
+        /*
         foreach ($routes as $key => $route) {
             foreach ($customers as $index => $customer) {
                 $ticket = Tickets::create(
@@ -260,6 +261,18 @@ class BookingHelper
 
 
         }
+        */
+        $ticket = Tickets::create(
+            [
+                'ticketno' => newSequenceNumber('TICKET'),
+                //'station_from_id' => $route['station_from']['id'],
+                //'station_to_id' => $route['station_to']['id'],
+                'status' => 'CO',
+                //'customer_id' => $customer['id'],
+                'booking_id' => $booking['id'],
+                'isdefault' =>'Y',
+            ],
+        );
 
 
         $booking = Bookings::with('bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingCustomers', 'tickets')->where('id', $bookingId)->first();

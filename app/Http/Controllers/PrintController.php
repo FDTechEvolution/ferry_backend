@@ -24,21 +24,16 @@ class PrintController extends Controller
         if ($type == 'V') {
             $booking = BookingHelper::getBookingInfoByBookingNo($bookingno);
             $term = Informations::where('position','TERM_TICKET')->first();
-            dd($booking);
-            return view('print.ticket',['booking'=>$booking,'term'=>$term]);
+            $bookings[0] = $booking;
+            dd($booking->bookingCustomers);
+            return view('print.ticket',['bookings'=>$bookings,'term'=>$term]);
         }else{
             $booking = BookingHelper::getBookingInfoByBookingNo($bookingno);
             $term = Informations::where('position','TERM_TICKET')->first();
-            //$booking = Bookings::where(['bookingno'=>$bookingno])->with('tickets')->first();
+            $bookings[0] = $booking;
             Pdf::setOption(['dpi' => 150, 'defaultMediaType' => 'a4','debugCss'=>true]);
-            $pdf = Pdf::loadView('print.ticket', ['booking'=>$booking,'term'=>$term]);
-            //return $pdf->download('invoice.pdf');
-            //$html = view('print.ticket')->render();
-            //$pdf->loadHtml($html);
-            //$pdf->loadHtml($content2);
-            //$pdf->render();
+            $pdf = Pdf::loadView('print.ticket', ['bookings'=>$bookings,'term'=>$term]);
 
-            //return $pdf->download();
             return $pdf->stream();
         }
 

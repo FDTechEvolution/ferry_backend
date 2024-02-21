@@ -95,6 +95,10 @@
             border-top: 1px solid #17adec;
         }
 
+        .border-gray-top {
+            border-top: 1px solid #d9d9d9;
+        }
+
         .ptable {}
 
         .ptable td {

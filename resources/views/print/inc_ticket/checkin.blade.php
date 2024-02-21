@@ -1,9 +1,9 @@
 <div class="prow mt-3">
     <h3>CHECK-IN</h3>
     @foreach ($bookingRoutes as $route)
-        <table class="w-100 ptable border-blue" style="margin-bottom: 5px;">
+        <table class="w-100 ptable border-gray" style="margin-bottom: 5px;">
 
-            <tr class="bg-blue font-w-700">
+            <tr class="bg-gray font-w-700">
                 <td colspan="2">
                     {{ date('l d/m/Y', strtotime($route['pivot']['traveldate'])) }} From:
                     {{ $route['station_from']['name'] }} @if ($route['station_from']['piername'] != '')
@@ -31,7 +31,7 @@
                 </td>
             </tr>
 
-            <tr class="border-blue-top">
+            <tr class="border-gray-top">
                 <td class="w-25">
                     {{ $route['station_to']['name'] }}
                 </td>

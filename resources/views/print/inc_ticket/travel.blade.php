@@ -3,36 +3,36 @@
 
 
 
-    <table class="w-100 ptable border-blue" style="padding-bottom: 10px;">
+    <table class="w-100 ptable border-gray" style="padding-bottom: 10px;">
 
-        <tr class="bg-blue font-w-700">
-            <td class="w-25 text-white" rowspan="2" style="">
+        <tr class="bg-gray font-w-700">
+            <td class="w-25" rowspan="2" style="">
                 DATE OF TRAVELING
             </td>
-            <td class="w-50 text-white text-center" colspan="2" style="padding: 0;">
+            <td class="w-50 text-center" colspan="2" style="padding: 0;">
                 DESTINATION
             </td>
-            <td class="w-25 text-white text-center" colspan="2" style="padding: 0;">
+            <td class="w-25 text-center" colspan="2" style="padding: 0;">
                 TIME
             </td>
         </tr>
-        <tr class="bg-blue font-w-700">
+        <tr class="bg-gray font-w-700">
 
-            <td class=" text-white" style="padding: 0;">
+            <td class="" style="padding: 0;">
                 From:
             </td>
-            <td class="text-white" style="padding: 0;">
+            <td class="" style="padding: 0;">
                 TO:
             </td>
-            <td class="text-white text-center" style="padding: 0;">
+            <td class="text-center" style="padding: 0;">
                 DEP.
             </td>
-            <td class="text-white text-center" style="padding: 0;">
+            <td class="text-center" style="padding: 0;">
                 ARR.
             </td>
         </tr>
         @foreach ($bookingRoutes as $indexRoute => $route)
-            <tr class="border-blue-top">
+            <tr class="border-gray-top">
                 <td class="">
                     {{ date('l d M Y', strtotime($route['pivot']['traveldate'])) }}
                 </td>

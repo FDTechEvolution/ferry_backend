@@ -1,7 +1,7 @@
 @if (sizeof($customers) > 1)
     <div class="prow mt-3">
         <h3>Passenger List</h3>
-        <table class="ptable w-100">
+        <table class="ptable w-100 border">
             <thead>
                 <tr>
                     <th>#</th>

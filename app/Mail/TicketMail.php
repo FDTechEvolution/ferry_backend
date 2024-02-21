@@ -30,8 +30,8 @@ class TicketMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('no-replay@andamanexpress.com', 'Ferryline Tiger'),
-            subject: 'Ticket Mail',
+            from: new Address('no-replay@andamanexpress.com', 'Tigerline Ferry'),
+            subject: 'reservation has been confirmed.',
         );
     }
 

@@ -43,7 +43,21 @@ class BookingsController extends Controller
         $bookingno = request()->bookingno;
         $daterange = request()->daterange;
 
-        $sql = 'select b.id,b.created_at,b.bookingno,b.adult_passenger,b.child_passenger,b.infant_passenger,b.trip_type,concat(sf.nickname,"-",st.nickname) as route,br.traveldate,b.ispayment,b.book_channel,u.firstname,r.depart_time,r.arrive_time,b.totalamt,b.status from bookings b join booking_routes br on b.id = br.booking_id join routes r on br.route_id = r.id join stations sf on r.station_from_id = sf.id join stations st on r.station_to_id = st.id left join users u on b.user_id = u.id where :conditions order by br.traveldate ASC,b.created_at ASC  ';
+        $sql = 'select
+        b.id,b.created_at,b.bookingno,t.ticketno,b.adult_passenger,b.child_passenger,b.infant_passenger,
+        b.trip_type,concat(sf.nickname,"-",st.nickname) as route,br.traveldate,b.ispayment,
+        b.book_channel,u.firstname,c.fullname as customer_name,c.email,r.depart_time,r.arrive_time,b.totalamt,b.status
+    from
+        bookings b
+        join booking_routes br on b.id = br.booking_id
+        join routes r on br.route_id = r.id
+        left join tickets t on b.id = t.booking_id
+        join stations sf on r.station_from_id = sf.id
+        join stations st on r.station_to_id = st.id
+        left join users u on b.user_id = u.id
+        join booking_customers bc on b.id = bc.booking_id and bc.isdefault = "Y"
+        join customers c on bc.customer_id = c.id
+    where :conditions order by br.traveldate ASC,b.created_at ASC ';
 
         $startDate = date('d/m/Y');
         $endDate = date('d/m/Y', strtotime('+30 day', time()));

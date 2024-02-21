@@ -13,7 +13,7 @@
         }
 
         .ticket {
-            max-width: 400px;
+            max-width: 600px;
             margin: 0 auto;
             background-color: #fff;
             border-radius: 8px;
@@ -22,8 +22,8 @@
         }
 
         .ticket-header {
-            background-color: #3498db;
-            color: #fff;
+            background-color: #dfdfdf;
+            color: #000000;
             padding: 20px;
         }
 
@@ -42,8 +42,8 @@
         }
 
         .ticket-footer {
-            background-color: #3498db;
-            color: #fff;
+            background-color: #dfdfdf;
+            color: #000000;
             padding: 10px;
         }
     </style>
@@ -51,21 +51,24 @@
 <body>
     <div class="ticket">
         <div class="ticket-header">
-            <h2>Ticket</h2>
+            <h2>Your reservation has been confirmed.</h2>
         </div>
         <div class="ticket-content">
-            <p><strong>Ticket Number :</strong> {{ $mailData['ticketno'] }}</p>
-            <p><strong>Station From :</strong> {{ $mailData['station_from'] }}</p>
-            <p><strong>Station From :</strong> {{ $mailData['station_to'] }}</p>
-            <p><strong>Depart Date :</strong> {{ $mailData['depart_date'] }}</p>
-            <p><strong>Depart Time :</strong> {{ $mailData['depart_time'] }}</p>
-            <p><strong>Arrive Time :</strong> {{ $mailData['arrive_time'] }}</p>
-            <p><strong>Passenger :</strong> {{ $mailData['passenger'] }}</p>
+            <strong>Dear: {{$mailData['customer_name']}}</strong><br>
+            <strong>Your Ticket Number: {{ $mailData['ticketno'] }}</strong><br><br>
 
-            <span>Download full invoice </span><a href="{{ $mailData['link'] }}/print/ticket/{{ $mailData['bookingno'] }}" target="_blank">Here!</a>
+            <p>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thank you for choosing 168 Ferry.com! Your reservation has been confirmed.
+Please find the details of your travel arrangements, as attached "itinerary.pdf".
+When checking-in with the Tigerline Stations / Staff, please refer to Your Ticket Number. Also, have a valid photo ID ready for verification by our check-in staff.
+If you would like to change your reservation, please call our call center at +6681 358 8989 (09:00-21:00) or Email 168ferry@gmail.com and refer to this number. Please note that change fees may apply.
+            </p><br><br>
+
+            <strong>Download your ticket </strong><a href="{{ $mailData['link'] }}/print/ticket/{{ $mailData['bookingno'] }}" target="_blank">Here!</a>
         </div>
         <div class="ticket-footer">
-            <p>Thank you for choosing Tigerline Ferry</p>
+            <p>Kind regards,<br>
+                Your Tigerline Ferry Team</p>
         </div>
     </div>
 </body>

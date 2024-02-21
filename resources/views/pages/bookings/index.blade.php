@@ -63,10 +63,7 @@
                 <div class="form-floating mb-3">
                     <input autocomplete="off" type="text" name="daterange" id="daterange"
                         class="form-control form-control-sm rangepicker" data-bs-placement="left" data-ranges="false"
-
-                        data-date-start="{{ $startDate}}"
-                        data-date-end="{{ $endDate }}"
-
+                        data-date-start="{{ $startDate }}" data-date-end="{{ $endDate }}"
                         data-date-format="DD/MM/YYYY"
                         data-quick-locale='{
 		"lang_apply"	: "Apply",
@@ -74,7 +71,7 @@
 		"lang_crange" : "Custom Range",
 		"lang_months"	 : ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
 		"lang_weekdays" : ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
-	}' >
+	}'>
                     <label for="departdate">Depart Date</label>
                 </div>
             </div>
@@ -91,8 +88,10 @@
                 </div>
             </div>
             <div class="col-12 text-center">
-                <a class="btn btn-sm btn-secondary" href="{{route('booking-index')}}"><i class="fa-solid fa-arrows-rotate"></i> Clear</a>
-                <button type="submit" class="btn btn-sm btn-ferry"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+                <a class="btn btn-sm btn-secondary" href="{{ route('booking-index') }}"><i
+                        class="fa-solid fa-arrows-rotate"></i> Clear</a>
+                <button type="submit" class="btn btn-sm btn-ferry"><i class="fa-solid fa-magnifying-glass"></i>
+                    Search</button>
             </div>
         </div>
     </form>
@@ -118,7 +117,8 @@
 
             <div class="table-responsive ">
 
-                <table class="table-datatable table table-hover" id="" data-lng-empty="No data available in table"
+                <table class="table-datatable table table-hover" id=""
+                    data-lng-empty="No data available in table"
                     data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
                     data-lng-filtered="(filtered from _MAX_ total entries)" data-lng-loading="Loading..."
                     data-lng-processing="Processing..." data-lng-search="Search..."
@@ -138,24 +138,26 @@
                             <th class="align-content-between">
 
                             </th>
-                            <th class="">Issue Date</th>
+                            <th class="">Booking Date</th>
                             <th>Invoice No</th>
-                            <th class="text-center">Passengers</th>
-                            <th>Type</th>
+                            <th>Ticket No</th>
+                            <th>Ticket Type</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Price</th>
                             <th>Route</th>
-                            <th>Depart Date</th>
-                            <th class="text-end">Price</th>
-                            <th class="text-center">Status</th>
-                            <th>Admin</th>
-                            <th>Sales Ch</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Bank Ref.</th>
+                            <th>Amend</th>
+
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody id="">
 
                         @foreach ($bookings as $index => $item)
-                            <tr
-                                style="color: {{ $colors[$item['trip_type']] }};--bs-table-color:{{ $colors[$item['trip_type']] }};">
+                            <tr>
                                 <td>
                                     <div class="form-check mb-2">
                                         <input class="form-check-input form-check-input-primary" data-action="check_all"
@@ -166,52 +168,58 @@
                                 </td>
                                 <td><small>{{ date('d/m/Y H:i', strtotime($item['created_at'])) }}</small></td>
                                 <td>{{ $item['bookingno'] }}</td>
-                                <td class="text-center">{{ $item['adult_passenger'] + $item['child_passenger'] + $item['infant_passenger'] }}</strong>
-                                </td>
+                                <td>{{ $item['ticketno'] }}</td>
                                 <td>{{ $item['trip_type'] }}</td>
-                                <td>
-                                    {{ $item['route'] }}<br>
-                                    <small><span
-                                            class="badge rounded-pill bg-secondary">{{ date('H:i', strtotime($item['depart_time'])) }}-{{ date('H:i', strtotime($item['arrive_time'])) }}</span></small>
-                                </td>
-                                <td>{{ date('d/m/Y', strtotime($item['traveldate'])) }}</td>
+                                <td>{{ $item['customer_name'] }}</td>
+                                <td>{{ $item['email'] }}</td>
                                 <td class="text-end">{{ number_format($item['totalamt']) }}</td>
-                                <td class="text-center">
+                                <td> {{ $item['route'] }}</td>
+                                <td>
+                                    <small>
+                                        <span class="badge rounded-pill bg-secondary">
+                                            {{ date('H:i', strtotime($item['depart_time'])) }}-{{ date('H:i', strtotime($item['arrive_time'])) }}
+                                        </span>
+                                    </small>
+                                </td>
+                                <td>
                                     @if ($item['ispayment'] == 'Y')
                                         <span class="text-success">Paid</span>
                                     @else
-                                        <span class="text-danger">Unpay</span>
+                                        @if ($item['status'] == 'VO')
+                                            <br><span class="badge bg-danger">CANX</span>
+                                        @else
+                                            <small class="text-muted">Pending</small>
+                                        @endif
                                     @endif
 
-                                    @if ($item['status']=='VO')
-                                        <br><span class="badge bg-danger">Cancelled</span>
-                                    @endif
+
 
                                 </td>
-                                <td>
-                                    {{ $item['firstname'] }}
-                                </td>
-                                <td><small>{{ $item['book_channel'] }}</small></td>
+                                <td></td>
+                                <td></td>
                                 <td class="text-end">
                                     <div class="d-none d-md-block">
-                                        @if ($item['ispayment'] == 'Y')
-                                            <a href="{{ route('print-ticket', ['bookingno' => $item['bookingno']]) }}"
+                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                            @if ($item['ispayment'] == 'Y')
+                                                <a href="{{ route('print-ticket', ['bookingno' => $item['bookingno']]) }}"
+                                                    class="transition-hover-top me-2 fs-5" rel="noopener" target="_blank"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    title="Print Ticket">
+                                                    <i class="fi fi-print m-0"></i>
+                                                </a>
+                                            @endif
+                                            <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
                                                 class="transition-hover-top me-2 fs-5" rel="noopener" target="_blank"
-                                                data-bs-toggle="tooltip" data-bs-placement="top" title="Print Ticket">
-                                                <i class="fi fi-print m-0"></i>
+                                                style="display: none;">
+                                                <i class="fi fi-pencil m-0"></i>
                                             </a>
-                                        @endif
-                                        <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
-                                            class="transition-hover-top me-2 fs-5" rel="noopener" target="_blank"
-                                            style="display: none;">
-                                            <i class="fi fi-pencil m-0"></i>
-                                        </a>
-                                        <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
-                                            class="transition-hover-top fs-5" rel="noopener" target="_blank"
-                                            data-bs-toggle="tooltip" data-bs-placement="top"
-                                            title="View and Edit ooking">
-                                            <i class="fa-solid fa-eye"></i>
-                                        </a>
+                                            <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
+                                                class="transition-hover-top fs-5" rel="noopener" target="_blank"
+                                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                                title="View and Edit ooking">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </a>
+                                        </div>
                                     </div>
                                     <div class="d-md-none">
                                         <div class="dropstart">

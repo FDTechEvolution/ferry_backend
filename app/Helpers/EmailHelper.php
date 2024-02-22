@@ -19,6 +19,9 @@ class EmailHelper
         $route = $booking->route;
         $customer = $booking->bookingCustomers[0];
 
+        if(is_null($customer->email) || $customer->email ==''){
+            return false;
+        }
 
         $mailData = [
             'bookingno' => $booking->bookingno,

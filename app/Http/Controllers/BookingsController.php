@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use App\Helpers\ImageHelper;
 use Illuminate\Support\Carbon;
 use App\Helpers\RouteHelper;
+use App\Helpers\EmailHelper;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
@@ -359,5 +360,15 @@ class BookingsController extends Controller
         }
         return redirect()->back()->withFail('Something is wrong. Please try again.');
 
+    }
+
+    public function sendConfirmEmail(Request $request){
+        $bookingNos = $request->booking_nos;
+
+        foreach($bookingNos as $bookingno){
+            $booking = Bookings::where('bookingno',$bookingno)->first();
+            EmailHelper::ticket($booking->id);
+        }
+        return redirect()->route('booking-index')->withSuccess('sent email.');
     }
 }

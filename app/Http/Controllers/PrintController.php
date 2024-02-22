@@ -23,19 +23,39 @@ class PrintController extends Controller
         $type = request()->type;
         if ($type == 'V') {
             $booking = BookingHelper::getBookingInfoByBookingNo($bookingno);
-            $term = Informations::where('position','TERM_TICKET')->first();
+            $term = Informations::where('position', 'TERM_TICKET')->first();
             $bookings[0] = $booking;
             dd($booking->bookingCustomers);
-            return view('print.ticket',['bookings'=>$bookings,'term'=>$term]);
-        }else{
+            return view('print.ticket', ['bookings' => $bookings, 'term' => $term]);
+        } else {
             $booking = BookingHelper::getBookingInfoByBookingNo($bookingno);
-            $term = Informations::where('position','TERM_TICKET')->first();
+            $term = Informations::where('position', 'TERM_TICKET')->first();
             $bookings[0] = $booking;
-            Pdf::setOption(['dpi' => 150, 'defaultMediaType' => 'a4','debugCss'=>true]);
-            $pdf = Pdf::loadView('print.ticket', ['bookings'=>$bookings,'term'=>$term]);
+            Pdf::setOption(['dpi' => 150, 'defaultMediaType' => 'a4', 'debugCss' => true]);
+            $pdf = Pdf::loadView('print.ticket', ['bookings' => $bookings, 'term' => $term]);
 
             return $pdf->stream();
         }
+
+    }
+
+    public function multipleTicket(Request $request)
+    {
+        $bookingNos = $request->booking_nos;
+        $bookings = [];
+
+        foreach($bookingNos as $bookingno){
+            $booking = BookingHelper::getBookingInfoByBookingNo($bookingno);
+            array_push($bookings,$booking);
+        }
+
+
+        $term = Informations::where('position', 'TERM_TICKET')->first();
+
+        Pdf::setOption(['dpi' => 150, 'defaultMediaType' => 'a4', 'debugCss' => true]);
+        $pdf = Pdf::loadView('print.ticket', ['bookings' => $bookings, 'term' => $term]);
+
+        return $pdf->stream();
 
     }
 }

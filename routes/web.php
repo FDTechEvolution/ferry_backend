@@ -307,6 +307,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/booking/store', 'store')->name('booking-store');
 
         Route::post('/booking/update/customer', 'updateCustomer')->name('booking-update-customer');
+        Route::post('/booking/send-confirm-email', 'sendConfirmEmail')->name('booking.sendConfirmEmail');
     });
 
 
@@ -343,6 +344,8 @@ Route::middleware('auth')->group(function () {
 
 Route::controller(PrintController::class)->group(function () {
     Route::get('/print/ticket/{bookingno}', 'ticket')->name('print-ticket');
+
+    Route::post('/print/multiple-ticket', 'multipleTicket')->name('print.multipleticket');
 
 });
 

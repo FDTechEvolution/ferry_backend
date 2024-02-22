@@ -87,6 +87,20 @@
                     <label for="bookingno">Invoice Number</label>
                 </div>
             </div>
+            <div class="col-12 col-md-3">
+                <div class="form-floating mb-3">
+                    <select class="form-select" id="station_to" aria-label="" name="station_to">
+                        <option value="" selected>-- All --</option>
+                        <option value="DR">Pending</option>
+                        <option value="DR">Unpaid</option>
+                        <option value="DR">Paid</option>
+                        <option value="DR">CANX</option>
+                        <option value="DR">Amended</option>
+                        <option value="DR">Deleted</option>
+                    </select>
+                    <label for="station_to">Status</label>
+                </div>
+            </div>
             <div class="col-12 text-center">
                 <a class="btn btn-sm btn-secondary" href="{{ route('booking-index') }}"><i
                         class="fa-solid fa-arrows-rotate"></i> Clear</a>
@@ -106,155 +120,167 @@
                             <label for="check_all">Select All ({{ sizeof($bookings) }} bookings)
                         </div>
                     </li>
-                    <li class="breadcrumb-item"><a href="#" id="action-print" class="disabled"><i
-                                class="fi fi-print m-0"></i> Print Ticket</a></li>
-                    <li class="breadcrumb-item"><a href="#" id="action-send-email" class="disabled"><i
-                                class="fa-regular fa-envelope"></i> Send Email</a></li>
+                    <li class="breadcrumb-item">
+                        <a href="#" id="action-print" data-action="selectbook"
+                            data-url="{{ route('print.multipleticket') }}" class="disabled"><i class="fi fi-print m-0"></i>
+                            Print Ticket</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#" id="action-send-email" class="disabled" data-action="selectbook"
+                            data-url="{{ route('booking.sendConfirmEmail') }}"><i class="fa-regular fa-envelope"></i>
+                            Send Email</a>
+                    </li>
                 </ol>
             </nav>
         </div>
         <div class="col-12">
 
             <div class="table-responsive ">
-
-                <table class="table-datatable table table-hover" id=""
-                    data-lng-empty="No data available in table"
-                    data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
-                    data-lng-filtered="(filtered from _MAX_ total entries)" data-lng-loading="Loading..."
-                    data-lng-processing="Processing..." data-lng-search="Search..."
-                    data-lng-norecords="No matching records found"
-                    data-lng-sort-ascending=": activate to sort column ascending"
-                    data-lng-sort-descending=": activate to sort column descending" data-main-search="true"
-                    data-column-search="false" data-row-reorder="false" data-col-reorder="false" data-responsive="false"
-                    data-header-fixed="true" data-select-onclick="false" data-enable-paging="true"
-                    data-enable-col-sorting="false" data-autofill="false" data-group="false" data-items-per-page="50"
-                    data-enable-column-visibility="false" data-lng-column-visibility="Column Visibility"
-                    data-enable-export="false" data-lng-export="<i class='fi fi-squared-dots fs-5 lh-1'></i>"
-                    data-lng-pdf="PDF" data-lng-xls="XLS" data-lng-print="Print" data-lng-all="All"
-                    data-export-pdf-disable-mobile="false" data-export='["csv", "pdf", "xls"]'
-                    data-custom-config='{"searching":false}'>
-                    <thead>
-                        <tr>
-                            <th class="align-content-between">
-
-                            </th>
-                            <th class="">Booking Date</th>
-                            <th>Invoice No</th>
-                            <th>Ticket No</th>
-                            <th>Ticket Type</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Price</th>
-                            <th>Route</th>
-                            <th>Time</th>
-                            <th>Status</th>
-                            <th>Bank Ref.</th>
-                            <th>Amend</th>
-
-                            <th class="text-center">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="">
-
-                        @foreach ($bookings as $index => $item)
+                <form novalidate class="bs-validate" id="frm_action" method="POST" target="_blank" action="">
+                    @csrf
+                    @method('POST')
+                    <input type="hidden" name="action" id="action" value="TICKET">
+                    <table class="table-datatable table table-hover" id=""
+                        data-lng-empty="No data available in table"
+                        data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
+                        data-lng-filtered="(filtered from _MAX_ total entries)" data-lng-loading="Loading..."
+                        data-lng-processing="Processing..." data-lng-search="Search..."
+                        data-lng-norecords="No matching records found"
+                        data-lng-sort-ascending=": activate to sort column ascending"
+                        data-lng-sort-descending=": activate to sort column descending" data-main-search="true"
+                        data-column-search="false" data-row-reorder="false" data-col-reorder="false"
+                        data-responsive="false" data-header-fixed="true" data-select-onclick="false"
+                        data-enable-paging="true" data-enable-col-sorting="false" data-autofill="false"
+                        data-group="false" data-items-per-page="50" data-enable-column-visibility="false"
+                        data-lng-column-visibility="Column Visibility" data-enable-export="false"
+                        data-lng-export="<i class='fi fi-squared-dots fs-5 lh-1'></i>" data-lng-pdf="PDF"
+                        data-lng-xls="XLS" data-lng-print="Print" data-lng-all="All"
+                        data-export-pdf-disable-mobile="false" data-export='["csv", "pdf", "xls"]'
+                        data-custom-config='{"searching":false}'>
+                        <thead>
                             <tr>
-                                <td>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input form-check-input-primary" data-action="check_all"
-                                            type="checkbox" value="{{ $item['id'] }}" id="book_{{ $item['id'] }}"
-                                            name="book_{{ $item['id'] }}">
+                                <th class="align-content-between">
 
-                                    </div>
-                                </td>
-                                <td><small>{{ date('d/m/Y H:i', strtotime($item['created_at'])) }}</small></td>
-                                <td>{{ $item['bookingno'] }}</td>
-                                <td>{{ $item['ticketno'] }}</td>
-                                <td>{{ $item['trip_type'] }}</td>
-                                <td>{{ $item['customer_name'] }}</td>
-                                <td>{{ $item['email'] }}</td>
-                                <td class="text-end">{{ number_format($item['totalamt']) }}</td>
-                                <td> {{ $item['route'] }}</td>
-                                <td>
-                                    <small>
-                                        <span class="badge rounded-pill bg-secondary">
-                                            {{ date('H:i', strtotime($item['depart_time'])) }}-{{ date('H:i', strtotime($item['arrive_time'])) }}
-                                        </span>
-                                    </small>
-                                </td>
-                                <td>
-                                    @if ($item['ispayment'] == 'Y')
-                                        <span class="text-success">Paid</span>
-                                    @else
-                                        @if ($item['status'] == 'VO')
-                                            <br><span class="badge bg-danger">CANX</span>
-                                        @else
-                                            <small class="text-muted">Pending</small>
-                                        @endif
-                                    @endif
+                                </th>
+                                <th class="">Booking Date</th>
+                                <th>Invoice No</th>
+                                <th>Ticket No</th>
+                                <th>Ticket Type</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Price</th>
+                                <th>Route</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Bank Ref.</th>
+                                <th>Amend</th>
 
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="">
 
+                            @foreach ($bookings as $index => $item)
+                                <tr>
+                                    <td>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input form-check-input-primary"
+                                                data-action="check_all" type="checkbox" value="{{ $item['bookingno'] }}"
+                                                id="book_{{ $item['id'] }}" name="booking_nos[]">
 
-                                </td>
-                                <td></td>
-                                <td></td>
-                                <td class="text-end">
-                                    <div class="d-none d-md-block">
-                                        <div class="btn-group" role="group" aria-label="Basic example">
-                                            @if ($item['ispayment'] == 'Y')
-                                                <a href="{{ route('print-ticket', ['bookingno' => $item['bookingno']]) }}"
-                                                    class="transition-hover-top me-2 fs-5" rel="noopener" target="_blank"
-                                                    data-bs-toggle="tooltip" data-bs-placement="top"
-                                                    title="Print Ticket">
-                                                    <i class="fi fi-print m-0"></i>
-                                                </a>
-                                            @endif
-                                            <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
-                                                class="transition-hover-top me-2 fs-5" rel="noopener" target="_blank"
-                                                style="display: none;">
-                                                <i class="fi fi-pencil m-0"></i>
-                                            </a>
-                                            <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
-                                                class="transition-hover-top fs-5" rel="noopener" target="_blank"
-                                                data-bs-toggle="tooltip" data-bs-placement="top"
-                                                title="View and Edit ooking">
-                                                <i class="fa-solid fa-eye"></i>
-                                            </a>
                                         </div>
-                                    </div>
-                                    <div class="d-md-none">
-                                        <div class="dropstart">
-                                            <a href="#" class="btn btn-sm btn-light rounded-circle"
-                                                data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-                                                <span class="group-icon">
-                                                    <i class="fi fi-dots-vertical-full"></i>
-                                                    <i class="fi fi-close"></i>
-                                                </span>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-clean dropdown-click-ignore max-w-220">
-                                                <div class="scrollable-vertical max-vh-50">
-                                                    @if ($item['ispayment'] == 'Y')
-                                                        <a href="{{ route('print-ticket', ['bookingno' => $item['bookingno']]) }}"
+                                    </td>
+                                    <td><small>{{ date('d/m/Y H:i', strtotime($item['created_at'])) }}</small></td>
+                                    <td>{{ $item['bookingno'] }}</td>
+                                    <td>{{ $item['ticketno'] }}</td>
+                                    <td>{{ $item['trip_type'] }}</td>
+                                    <td>{{ $item['customer_name'] }}</td>
+                                    <td>{{ $item['email'] }}</td>
+                                    <td class="text-end">{{ number_format($item['totalamt']) }}</td>
+                                    <td> {{ $item['route'] }}</td>
+                                    <td>
+                                        <small>
+                                            <span class="badge rounded-pill bg-secondary">
+                                                {{ date('H:i', strtotime($item['depart_time'])) }}-{{ date('H:i', strtotime($item['arrive_time'])) }}
+                                            </span>
+                                        </small>
+                                    </td>
+                                    <td>
+                                        @if ($item['ispayment'] == 'Y')
+                                            <span class="text-success">Paid</span>
+                                        @else
+                                            @if ($item['status'] == 'VO')
+                                                <br><span class="badge bg-danger">CANX</span>
+                                            @else
+                                                <small class="text-muted">Pending</small>
+                                            @endif
+                                        @endif
+
+
+
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-end">
+                                        <div class="d-none d-md-block">
+                                            <div class="btn-group" role="group" aria-label="Basic example">
+                                                @if ($item['ispayment'] == 'Y')
+                                                    <a href="{{ route('print-ticket', ['bookingno' => $item['bookingno']]) }}"
+                                                        class="transition-hover-top me-2 fs-5" rel="noopener"
+                                                        target="_blank" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                        title="Print Ticket">
+                                                        <i class="fi fi-print m-0"></i>
+                                                    </a>
+                                                @endif
+                                                <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
+                                                    class="transition-hover-top me-2 fs-5" rel="noopener" target="_blank"
+                                                    style="display: none;">
+                                                    <i class="fi fi-pencil m-0"></i>
+                                                </a>
+                                                <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
+                                                    class="transition-hover-top fs-5" rel="noopener" target="_blank"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    title="View and Edit ooking">
+                                                    <i class="fa-solid fa-eye"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="d-md-none">
+                                            <div class="dropstart">
+                                                <a href="#" class="btn btn-sm btn-light rounded-circle"
+                                                    data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                                                    <span class="group-icon">
+                                                        <i class="fi fi-dots-vertical-full"></i>
+                                                        <i class="fi fi-close"></i>
+                                                    </span>
+                                                </a>
+                                                <div
+                                                    class="dropdown-menu dropdown-menu-clean dropdown-click-ignore max-w-220">
+                                                    <div class="scrollable-vertical max-vh-50">
+                                                        @if ($item['ispayment'] == 'Y')
+                                                            <a href="{{ route('print-ticket', ['bookingno' => $item['bookingno']]) }}"
+                                                                class="dropdown-item text-truncate" rel="noopener"
+                                                                target="_blank">
+                                                                <i class="fi fi-print m-0"></i> Print Ticket
+                                                            </a>
+                                                        @endif
+
+                                                        <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
                                                             class="dropdown-item text-truncate" rel="noopener"
                                                             target="_blank">
-                                                            <i class="fi fi-print m-0"></i> Print Ticket
+                                                            <i class="fi fi-pencil m-0"></i> View Detail
                                                         </a>
-                                                    @endif
-
-                                                    <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
-                                                        class="dropdown-item text-truncate" rel="noopener"
-                                                        target="_blank">
-                                                        <i class="fi fi-pencil m-0"></i> View Detail
-                                                    </a>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
 
-                </table>
+                    </table>
+                </form>
             </div>
 
 
@@ -300,6 +326,15 @@
                         return true;
                     }
                 });
+            });
+
+            $('a[data-action="selectbook"]').on('click', function(e) {
+                let url = $(this).data('url');
+                console.log(url);
+                e.preventDefault();
+                //$("#frm_action").attr("method", "POST");
+                $('#frm_action').attr('action', url).submit();
+                //$('#frm')
             });
         });
     </script>

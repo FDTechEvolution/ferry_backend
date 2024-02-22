@@ -137,7 +137,7 @@
             $payment = sizeof($booking['payments']) > 0 ? $booking['payments'][0] : null;
 
             $paymentDetails = json_decode($payment['description']);
-            $referenceNo = $paymentDetails->referenceNo;
+            $referenceNo = isset($paymentDetails->referenceNo)?$paymentDetails->referenceNo:'';
             //dd($approveCode);
             $approveCode = isset($paymentDetails->approvalCode)?$paymentDetails->approvalCode:'';
 

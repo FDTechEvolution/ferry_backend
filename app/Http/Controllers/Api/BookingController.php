@@ -127,7 +127,7 @@ class BookingController extends Controller
     }
 
     public function storeMultiTrip(Request $request) {
-        // Log::debug($request);
+        Log::debug($request);
         if(isset($request->route_id)) {
 
             $route = $this->getRoute($request->route_id[0]);
@@ -194,7 +194,7 @@ class BookingController extends Controller
                     'routes' => $_route
                 ];
 
-                $payment_channel = $this->PaymentMethod[$request->payment_method];
+                // $payment_channel = $this->PaymentMethod[$request->payment_method];
                 $isfreepremiumflex = !empty($_promo) ? $_promo_isfreepremiumflex : 'N';
                 $isfreecreditcharge = !empty($_promo) ? $_promo_isfreecreditcharge : 'N';
 
@@ -234,19 +234,19 @@ class BookingController extends Controller
                 if($request->ispremiumflex == 'Y' && $isfreepremiumflex == 'Y')
                     $payment = PaymentHelper::updatePremiumFlexFree($payment->id, $payment_amt);
 
-                $payment_amt = $payment->totalamt;
-                if($payment_channel == 'CC')
-                    $payment = PaymentHelper::updatePayWithCreditCard($payment->id);
-                if($payment_channel == 'CC' && $isfreecreditcharge == 'Y')
-                    $payment = PaymentHelper::updatePayWithCreditCardFree($payment->id, $payment_amt);
+                // $payment_amt = $payment->totalamt;
+                // if($payment_channel == 'CC')
+                //     $payment = PaymentHelper::updatePayWithCreditCard($payment->id);
+                // if($payment_channel == 'CC' && $isfreecreditcharge == 'Y')
+                //     $payment = PaymentHelper::updatePayWithCreditCardFree($payment->id, $payment_amt);
 
                 $payment->totalamt = number_format($payment->totalamt, 2, '.', '');
 
-                $payload = PaymentHelper::encodeRequest($payment, $payment_channel);
-                $response = PaymentHelper::postTo_2c2p($payload);
-                $result = PaymentHelper::decodeResponse($response);
+                // $payload = PaymentHelper::encodeRequest($payment, $payment_channel);
+                // $response = PaymentHelper::postTo_2c2p($payload);
+                // $result = PaymentHelper::decodeResponse($response);
 
-                return response()->json(['result' => true, 'data' => $result, 'booking' => $booking->bookingno, 'email' => $request->email], 200);
+                return response()->json(['result' => true, 'booking' => $booking->bookingno, 'email' => $request->email], 200);
             }
             return response()->json(['result' => false, 'data' => 'No Route.'], 200);
         }

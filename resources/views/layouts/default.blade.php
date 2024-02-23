@@ -3,7 +3,7 @@
 
 <head>
     @include('includes.head')
-    
+
     @yield('head_meta')
 </head>
 
@@ -18,7 +18,7 @@
         @include('includes.header')
 
         <!-- content -->
-        <div id="wrapper_content" class="d-flex flex-fill">
+        <div id="wrapper_content" class="flex-fill">
             @include('includes.sidebar')
 
             <!-- main -->

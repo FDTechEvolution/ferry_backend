@@ -309,14 +309,14 @@
                                             <strong>Master From</strong>
                                         </div>
                                         <div class="col-6">
-                                            <label class="d-flex align-items-center mb-3">
+                                            <label class="align-items-center mb-3">
                                                 <input class="d-none-cloaked" type="checkbox" name="master_from_info"
                                                     id="master_from_info" value="Y" data-action="boxswitch"
                                                     data-id="master_from_info"
                                                     @if ($route->master_from_info == 'Y') @checked(true) @endif>
                                                 <i class="switch-icon switch-icon-primary switch-icon-sm"></i>
-                                                <span class="px-3 user-select-none">On/Off</span>
-                                            </label>
+
+                                            </label><span class="px-3 user-select-none">On/Off</span>
                                         </div>
 
                                         <div class="col-12" @if ($route->master_from_info == 'N') style="display: none;" @endif
@@ -337,14 +337,14 @@
                                             <strong>Master To</strong>
                                         </div>
                                         <div class="col-6">
-                                            <label class="d-flex align-items-center mb-3">
+                                            <label class="align-items-center mb-3">
                                                 <input class="d-none-cloaked" type="checkbox" name="master_to_info"
                                                     id="master_to_info" value="Y" data-action="boxswitch"
                                                     data-id="master_to_info"
                                                     @if ($route->master_to_info == 'Y') @checked(true) @endif>
                                                 <i class="switch-icon switch-icon-primary switch-icon-sm"></i>
-                                                <span class="px-3 user-select-none">On/Off</span>
-                                            </label>
+
+                                            </label> <span class="px-3 user-select-none">On/Off</span>
                                         </div>
 
                                         <div class="col-12" @if ($route->master_to_info == 'N') style="display: none;" @endif
@@ -367,15 +367,15 @@
                                             <strong>Info From</strong>
                                         </div>
                                         <div class="col-6">
-                                            <label class="d-flex align-items-center mb-3">
+                                            <label class=" align-items-center mb-3">
                                                 <input class="d-none-cloaked" type="checkbox"
                                                     name="isinformation_from_active" id="isinformation_from_active"
                                                     value="Y" data-action="boxswitch"
                                                     data-id="isinformation_from_active"
                                                     @if ($route->isinformation_from_active == 'Y') @checked(true) @endif>
                                                 <i class="switch-icon switch-icon-primary switch-icon-sm"></i>
-                                                <span class="px-3 user-select-none">On/Off</span>
-                                            </label>
+
+                                            </label> <span class="px-3 user-select-none">On/Off</span>
                                         </div>
 
                                         <div class="col-12"
@@ -397,15 +397,15 @@
                                             <strong>Info To</strong>
                                         </div>
                                         <div class="col-6">
-                                            <label class="d-flex align-items-center mb-3">
+                                            <label class="align-items-center mb-3">
                                                 <input class="d-none-cloaked" type="checkbox"
                                                     name="isinformation_to_active" id="isinformation_to_active"
                                                     value="Y" data-action="boxswitch"
                                                     data-id="isinformation_to_active"
                                                     @if ($route->isinformation_to_active == 'Y') @checked(true) @endif>
                                                 <i class="switch-icon switch-icon-primary switch-icon-sm"></i>
-                                                <span class="px-3 user-select-none">On/Off</span>
-                                            </label>
+
+                                            </label> <span class="px-3 user-select-none">On/Off</span>
                                         </div>
 
                                         <div class="col-12"
@@ -431,7 +431,7 @@
 
                                             </div>
                                             <div class="col-6">
-                                                <label class="d-flex align-items-center mb-3">
+                                                <label class="align-items-center mb-3">
                                                     <input class="d-none-cloaked" type="checkbox"
                                                         name="route_addons[{{ $index }}][isactive]"
                                                         id="{{ $item->type }}_isactive_{{ $item->subtype }}"
@@ -440,8 +440,8 @@
                                                         data-action="boxswitch"
                                                         @if ($item->isactive == 'Y') @checked(true) @endif>
                                                     <i class="switch-icon switch-icon-primary switch-icon-sm"></i>
-                                                    <span class="px-3 user-select-none">On/Off</span>
-                                                </label>
+
+                                                </label><span class="px-3 user-select-none">On/Off</span>
                                                 <input type="hidden" name="route_addons[{{ $index }}][id]"
                                                     value="{{ $item->id }}">
                                                     <input type="hidden" name="route_addons[{{ $index }}][type]"
@@ -450,14 +450,14 @@
                                                     value="{{ $item->subtype }}">
                                             </div>
                                             <div class="col-6">
-                                                <label class="d-flex align-items-center mb-3">
+                                                <label class="align-items-center mb-3">
                                                     <input class="d-none-cloaked" type="checkbox"
                                                         name="route_addons[{{ $index }}][isservice_charge]"
                                                         id="" value="Y"
                                                         @if ($item->isservice_charge == 'Y') @checked(true) @endif>
                                                     <i class="switch-icon switch-icon-primary switch-icon-sm"></i>
-                                                    <span class="px-3 user-select-none">Service charge</span>
-                                                </label>
+
+                                                </label><span class="px-3 user-select-none">Service charge</span>
                                             </div>
                                             <div class="col-12"
                                                 @if ($item->isactive == 'N') style="display: none;" @endif

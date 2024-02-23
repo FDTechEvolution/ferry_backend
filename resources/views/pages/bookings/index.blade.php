@@ -45,7 +45,9 @@
                 <div class="form-floating mb-3">
                     <select class="form-select" id="station_to" aria-label="" name="station_to">
                         <option value="" selected>-- All --</option>
-
+                        @foreach ($tripTypes as $key => $title)
+                            <option value="{{$key}}">{{$title}}</option>
+                        @endforeach
                     </select>
                     <label for="station_to">Trip Type</label>
                 </div>
@@ -54,7 +56,9 @@
                 <div class="form-floating mb-3">
                     <select class="form-select" id="station_to" aria-label="" name="station_to">
                         <option value="" selected>-- All --</option>
-
+                        @foreach ($bookChannels as $key => $title)
+                            <option value="{{$key}}">{{$title}}</option>
+                        @endforeach
                     </select>
                     <label for="station_to">Salse Channel</label>
                 </div>
@@ -89,16 +93,13 @@
             </div>
             <div class="col-12 col-md-3">
                 <div class="form-floating mb-3">
-                    <select class="form-select" id="station_to" aria-label="" name="station_to">
+                    <select class="form-select" id="status" aria-label="" name="status">
                         <option value="" selected>-- All --</option>
-                        <option value="DR">Pending</option>
-                        <option value="DR">Unpaid</option>
-                        <option value="DR">Paid</option>
-                        <option value="DR">CANX</option>
-                        <option value="DR">Amended</option>
-                        <option value="DR">Deleted</option>
+                        @foreach ($bookingStatus as $key => $status)
+                            <option value="{{$key}}">{{$status['title']}}</option>
+                        @endforeach
                     </select>
-                    <label for="station_to">Status</label>
+                    <label for="status">Status</label>
                 </div>
             </div>
             <div class="col-12 text-center">
@@ -147,7 +148,7 @@
                         data-lng-processing="Processing..." data-lng-search="Search..."
                         data-lng-norecords="No matching records found"
                         data-lng-sort-ascending=": activate to sort column ascending"
-                        data-lng-sort-descending=": activate to sort column descending" data-main-search="true"
+                        data-lng-sort-descending=": activate to sort column descending" data-main-search="false"
                         data-column-search="false" data-row-reorder="false" data-col-reorder="false"
                         data-responsive="false" data-header-fixed="true" data-select-onclick="false"
                         data-enable-paging="true" data-enable-col-sorting="false" data-autofill="false"
@@ -166,6 +167,7 @@
                                 <th>Invoice No</th>
                                 <th>Ticket No</th>
                                 <th>Ticket Type</th>
+                                <th>Travel Date</th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Price</th>
@@ -193,7 +195,8 @@
                                     <td><small>{{ date('d/m/Y H:i', strtotime($item['created_at'])) }}</small></td>
                                     <td>{{ $item['bookingno'] }}</td>
                                     <td>{{ $item['ticketno'] }}</td>
-                                    <td>{{ $item['trip_type'] }}</td>
+                                    <td>{{ $item['type'] }}</td>
+                                    <td>{{ $item['traveldate'] }}</td>
                                     <td>{{ $item['customer_name'] }}</td>
                                     <td>{{ $item['email'] }}</td>
                                     <td class="text-end">{{ number_format($item['totalamt']) }}</td>
@@ -205,24 +208,13 @@
                                             </span>
                                         </small>
                                     </td>
-                                    <td>
-                                        @if ($item['ispayment'] == 'Y')
-                                            <span class="text-success">Paid</span>
-                                        @else
-                                            @if ($item['status'] == 'VO')
-                                                <br><span class="badge bg-danger">CANX</span>
-                                            @else
-                                                <small class="text-muted">Pending</small>
-                                            @endif
-                                        @endif
-
-
-
+                                    <td class="text-center">
+                                        <small class="{{$bookingStatus[$item['status']]['class']}}">{{$bookingStatus[$item['status']]['title']}}</small>
                                     </td>
                                     <td></td>
-                                    <td></td>
+                                    <td class="text-center">{{$item['amend']}}</td>
                                     <td class="text-end">
-                                        <div class="d-none d-md-block">
+                                        <div class="d-none">
                                             <div class="btn-group" role="group" aria-label="Basic example">
                                                 @if ($item['ispayment'] == 'Y')
                                                     <a href="{{ route('print-ticket', ['bookingno' => $item['bookingno']]) }}"
@@ -245,7 +237,7 @@
                                                 </a>
                                             </div>
                                         </div>
-                                        <div class="d-md-none">
+                                        <div class="">
                                             <div class="dropstart">
                                                 <a href="#" class="btn btn-sm btn-light rounded-circle"
                                                     data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
@@ -261,14 +253,24 @@
                                                             <a href="{{ route('print-ticket', ['bookingno' => $item['bookingno']]) }}"
                                                                 class="dropdown-item text-truncate" rel="noopener"
                                                                 target="_blank">
-                                                                <i class="fi fi-print m-0"></i> Print Ticket
+                                                                <i class="fi fi-print m-1"></i> Print Ticket
                                                             </a>
                                                         @endif
 
                                                         <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
                                                             class="dropdown-item text-truncate" rel="noopener"
                                                             target="_blank">
-                                                            <i class="fi fi-pencil m-0"></i> View Detail
+                                                            <i class="fi fi-pencil m-1"></i> View/Edit
+                                                        </a>
+                                                        <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
+                                                            class="dropdown-item text-warning" rel="noopener"
+                                                            target="_blank">
+                                                            <i class="fi fi-close m-1"></i> Cancel
+                                                        </a>
+                                                        <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
+                                                            class="dropdown-item text-danger" rel="noopener"
+                                                            target="_blank">
+                                                            <i class="fi fi-thrash m-1"></i> Delete
                                                         </a>
                                                     </div>
                                                 </div>

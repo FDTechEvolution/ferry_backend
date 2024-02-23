@@ -16,6 +16,7 @@ use App\Models\BookingRouteAddon;
 use Ramsey\Uuid\Uuid;
 use App\Helpers\SequentNumber;
 use App\Models\Promotions;
+use Illuminate\Support\Facades\DB;
 
 
 class BookingHelper
@@ -24,10 +25,15 @@ class BookingHelper
     public static function status()
     {
         $status = [
-            'DR' => 'Draft',
-            'CO' => 'Completed',
-            'VO' => 'Canceled',
+            'DR' => ['title' => 'Pending', 'icon' => '', 'class' => 'text-mute'],
+            'UNP' => ['title' => 'Unpaid', 'icon' => '', 'class' => 'text-warning'],
+            'CO' => ['title' => 'Paid', 'icon' => '', 'class' => 'text-success'],
+            'void' => ['title' => 'CANX', 'icon' => '', 'class' => 'text-mute'],
+            'delete' => ['title' => 'Deleted', 'icon' => '', 'class' => 'text-danger'],
+            'amended' => ['title' => 'Amended', 'icon' => '', 'class' => ''],
         ];
+
+        return $status;
     }
 
     public static function tripType()
@@ -37,6 +43,20 @@ class BookingHelper
             'round-trip' => 'Round Trip',
             'multi-trip' => 'Multi Island',
         ];
+    }
+
+    public static function bookChannels()
+    {
+        $bookChannels = DB::table('bookings')
+            ->select('book_channel','book_channel as title')
+            ->groupBy('book_channel')
+            ->get();
+        $channels = [];
+        foreach ($bookChannels as $item) {
+            $channels[$item->book_channel] = $item->title;
+        }
+
+        return $channels;
     }
 
     public static function getBookingInfoByBookingNo($bookingno)
@@ -62,7 +82,7 @@ class BookingHelper
                 'bookingRoutes.station_from',
                 'bookingRoutes.station_to',
                 'bookingRoutes.station_lines',
-                'payments'
+                'payments',
             )
             ->first();
 
@@ -142,7 +162,7 @@ class BookingHelper
             'bookingno' => newSequenceNumber('BOOKING'),
             'book_channel' => isset($_b['book_channel']) ? $_b['book_channel'] : 'ONLINE',
             'ispremiumflex' => isset($_b['ispremiumflex']) ? $_b['ispremiumflex'] : 'N',
-            'promotion_id' => isset($_b['promotion_id'])?$_b['promotion_id']:NULL,
+            'promotion_id' => isset($_b['promotion_id']) ? $_b['promotion_id'] : NULL,
         ]);
 
         $amount += $_b['amount'];
@@ -176,12 +196,17 @@ class BookingHelper
 
         //Routes
         $_routes = $data['routes'];
+        $routeType = [
+            'one-way' => ['O', 'O'],
+            'round-trip' => ['R1', 'R2'],
+            'multiple' => ['M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9'],
+        ];
         foreach ($_routes as $key => $routeData) {
             $bookingRoute = BookingRoutes::create([
                 'route_id' => $routeData['route_id'],
                 'traveldate' => $routeData['traveldate'],
                 'amount' => $routeData['amount'],
-                'type' => $routeData['type'],
+                'type' => isset($routeType[$_b['trip_type']][$key]) ? $routeType[$_b['trip_type']][$key] : '',
                 'booking_id' => $booking->id,
             ]);
 
@@ -232,9 +257,9 @@ class BookingHelper
         $booking->ispayment = 'Y';
         $booking->save();
 
-        if($booking->promotion_id != NULL) {
+        if ($booking->promotion_id != NULL) {
             $promotion = Promotions::find($booking->promotion_id);
-            $promotion->times_used = $promotion->times_used+1;
+            $promotion->times_used = $promotion->times_used + 1;
             $promotion->save();
         }
 
@@ -270,7 +295,7 @@ class BookingHelper
                 'status' => 'CO',
                 //'customer_id' => $customer['id'],
                 'booking_id' => $booking['id'],
-                'isdefault' =>'Y',
+                'isdefault' => 'Y',
             ],
         );
 

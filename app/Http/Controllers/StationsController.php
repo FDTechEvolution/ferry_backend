@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Route;
+use App\Models\RouteAddons;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -138,6 +139,7 @@ class StationsController extends Controller
         ]);
 
         $station = Station::find($request->id);
+        $oldStation = clone $station;
 
         if (isset($station)) {
             $oldSort = $station->sort;
@@ -164,13 +166,73 @@ class StationsController extends Controller
 
                 }
 
-                /*
-                $this->clearAllInfoLine($station->id);
-                if ($request->station_info_from_list != '')
-                    $this->storeInfoLine($station->id, $request->station_info_from_list, 'from');
-                if ($request->station_info_to_list != '')
-                    $this->storeInfoLine($station->id, $request->station_info_to_list, 'to');
-                */
+                //update route info
+                $routeFroms = DB::table('routes')->select('id')->where('station_from_id',$station->id);
+                $routeTos = DB::table('routes')->select('id')->where('station_to_id',$station->id);
+
+                //Log::debug($oldStation);
+                //Log::debug($station);
+                if($oldStation->master_from != $station->master_from){
+                    Route::where('station_from_id',$station->id)->update(['master_from'=>$station->master_from]);
+                }
+                if($oldStation->master_to != $station->master_to){
+                    Route::where('station_to_id',$station->id)->update(['master_to'=>$station->master_to]);
+                }
+
+                $shuttle_bus = [];
+                if($oldStation->shuttle_bus_price != $station->shuttle_bus_price){
+                    $shuttle_bus['price'] = $station->shuttle_bus_price;
+                }
+                if($oldStation->shuttle_bus_mouseover != $station->shuttle_bus_mouseover){
+                    $shuttle_bus['mouseover'] = $station->shuttle_bus_mouseover;
+                }
+                if($oldStation->shuttle_bus_text != $station->shuttle_bus_text){
+                    $shuttle_bus['message'] = $station->shuttle_bus_text;
+                }
+
+                if(sizeof($shuttle_bus)>0){
+                    RouteAddons::whereIn('route_id',$routeFroms)->where('type','shuttle_bus')->where('subtype','from')->update($shuttle_bus);
+
+                    RouteAddons::whereIn('route_id',$routeTos)->where('type','shuttle_bus')->where('subtype','to')->update($shuttle_bus);
+                }
+
+
+                $private_taxi = [];
+                if($oldStation->private_taxi_price != $station->private_taxi_price){
+                    $private_taxi['price'] = $station->private_taxi_price;
+                }
+                if($oldStation->private_taxi_mouseover != $station->private_taxi_mouseover){
+                    $private_taxi['mouseover'] = $station->private_taxi_mouseover;
+                }
+                if($oldStation->private_taxi_text != $station->private_taxi_text){
+                    $private_taxi['message'] = $station->private_taxi_text;
+                }
+
+                if(sizeof($private_taxi)>0){
+                    RouteAddons::whereIn('route_id',$routeFroms)->where('type','private_taxi')->where('subtype','from')->update($private_taxi);
+
+                    RouteAddons::whereIn('route_id',$routeTos)->where('type','private_taxi')->where('subtype','to')->update($private_taxi);
+                }
+
+
+                $longtail  = [];
+                if($oldStation->longtail_boat_price != $station->longtail_boat_price){
+                    $longtail['price'] = $station->longtail_boat_price;
+                }
+                if($oldStation->longtail_boat_mouseover != $station->longtail_boat_mouseover){
+                    $longtail['mouseover'] = $station->longtail_boat_mouseover;
+                }
+                if($oldStation->longtail_boat_text != $station->longtail_boat_text){
+                    $longtail['message'] = $station->longtail_boat_text;
+                }
+
+                if(sizeof($longtail)>0){
+                    RouteAddons::whereIn('route_id',$routeFroms)->where('type','longtail_boat')->where('subtype','from')->update($longtail);
+
+                    RouteAddons::whereIn('route_id',$routeTos)->where('type','longtail_boat')->where('subtype','to')->update($longtail);
+                }
+
+
                 return redirect()->route('stations-index')->withSuccess('Station updated...');
             } else
                 return redirect()->route('stations-index')->withFail('Something is wrong. Please try again.');

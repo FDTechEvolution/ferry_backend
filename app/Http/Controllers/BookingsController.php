@@ -46,7 +46,7 @@ class BookingsController extends Controller
 
         $sql = 'select
         b.id,b.created_at,b.bookingno,t.ticketno,b.adult_passenger,b.child_passenger,b.infant_passenger,
-        b.trip_type,concat(sf.nickname,"-",st.nickname) as route,br.traveldate,b.ispayment,
+        b.trip_type,br.type,b.amend,concat(sf.nickname,"-",st.nickname) as route,br.traveldate,b.ispayment,
         b.book_channel,u.firstname,c.fullname as customer_name,c.email,r.depart_time,r.arrive_time,b.totalamt,b.status
     from
         bookings b
@@ -58,7 +58,7 @@ class BookingsController extends Controller
         left join users u on b.user_id = u.id
         join booking_customers bc on b.id = bc.booking_id and bc.isdefault = "Y"
         join customers c on bc.customer_id = c.id
-    where :conditions order by br.traveldate ASC,b.created_at ASC ';
+    where :conditions order by b.bookingno ASC,br.traveldate ASC';
 
         $startDate = date('d/m/Y');
         $endDate = date('d/m/Y', strtotime('+30 day', time()));
@@ -105,6 +105,9 @@ class BookingsController extends Controller
         */
 
         $station = StationsController::avaliableStation();
+        $bookingStatus = BookingHelper::status();
+        $tripTypes = BookingHelper::tripType();
+        $bookChannels = BookingHelper::bookChannels();
 
         //dd($bookings);
         return view('pages.bookings.index', [
@@ -116,6 +119,9 @@ class BookingsController extends Controller
             'ticketno' => $ticketno,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'bookingStatus'=>$bookingStatus,
+            'tripTypes'=>$tripTypes,
+            'bookChannels'=>$bookChannels
         ]);
     }
 

@@ -5,7 +5,9 @@ use App\Http\Controllers\ApiMerchants;
 use App\Http\Controllers\ApiMerchantsController;
 use App\Http\Controllers\ApiRoutes;
 use App\Http\Controllers\ApiRoutesController;
+use App\Http\Controllers\BookingRouteController;
 use App\Http\Controllers\BookingsController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DevTestController;
 use App\Http\Controllers\InformationsController;
 use App\Http\Controllers\PartnerController;
@@ -74,6 +76,8 @@ Route::middleware('auth')->group(function () {
     Route::resources([
         'section' => SectionsController::class,
         'routeSchedules' => RouteSchedulesController::class,
+        'customer'=>CustomerController::class,
+        'bookingRoute'=>BookingRouteController::class
     ]);
 
     Route::controller(RouteSchedulesController::class)->group(function() {
@@ -305,6 +309,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/booking/view/{id}', 'view')->name('booking-view');
         Route::get('/booking/create', 'create')->name('booking-create');
         Route::post('/booking/store', 'store')->name('booking-store');
+
+        Route::get('/booking/change-status/{id}', 'changeStatus')->name('booking.changeStatus');
+        Route::post('/booking/update-status/{booking}', 'updateStatus')->name('booking.updateStatus');
 
         Route::post('/booking/update/customer', 'updateCustomer')->name('booking-update-customer');
         Route::post('/booking/send-confirm-email', 'sendConfirmEmail')->name('booking.sendConfirmEmail');

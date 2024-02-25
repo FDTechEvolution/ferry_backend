@@ -11115,7 +11115,7 @@ return jQuery;
 
 /**
 
-  This file should be removed 
+  This file should be removed
   on Bootstrap 5+
 
 **/
@@ -11157,7 +11157,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         $.SOW.globals.elHeader                          header element
         $.SOW.globals.elAside                           main sidebar element
 
-    @functions  
+    @functions
         $.SOW.reinit('#container')                      reinit plugins for a specific ajax container; see also:
 
  *
@@ -11188,9 +11188,9 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
       // <script async> NOT working. Keep jQuery!
       // document.addEventListener('DOMContentLoaded', function() {
 
-      $(document).ready(function() { 
+      $(document).ready(function() {
 
-        /* 
+        /*
 
             Check if debug is enabled
             Should be disabled on production!
@@ -11212,9 +11212,9 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
         /*
-        
+
             1.  Check for bootstrap
-                ::  Part of bundle file! 
+                ::  Part of bundle file!
                     vendor_bundle.min.js
 
         */
@@ -11227,7 +11227,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
         /*
-        
+
             1.  Bundle not loaded
                 ::  Load it! And init!
                     vendor_bundle.min.js
@@ -11274,9 +11274,9 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
           'xl': 1200
       },
 
-      /* 
+      /*
           Most used only!
-          Cache once : Use everywhere 
+          Cache once : Use everywhere
       */
       elBody          : $('body'),
       elHeader        : ($('#header').length > 0)     ? $('#header')      : null,
@@ -11375,11 +11375,11 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
       $.SOW.globals.ajax_container = $.SOW.helper.check_var(ajax_container) || 'body';
 
 
-      /** Bootstrap Toasts **/ 
+      /** Bootstrap Toasts **/
       $($.SOW.globals.ajax_container + ' .toast').toast('show');
 
 
-      /** Bootstrap Tooltip **/ 
+      /** Bootstrap Tooltip **/
       $($.SOW.globals.ajax_container + " [data-bs-toggle=tooltip]," + $.SOW.globals.ajax_container + " [data-tooltip]").tooltip('dispose').tooltip({
         container: ($.SOW.globals.ajax_container == 'body') ? 'html' : $.SOW.globals.ajax_container /* fixing wired positioning! */
       }).on('focus', function () {  $(this).blur() });
@@ -11423,16 +11423,16 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
         $.SOW.helper.executeFunctionByName(
             $.SOW.config.autoinit[index][0],    // script
-            window, 
+            window,
             $.SOW.config.autoinit[index][1],    // selector
             $.SOW.config.autoinit[index][2]     // config
-        );   
+        );
 
       }
 
 
       /*
-          
+
           Reserved for emergencies!
           Called for each ajax container!
 
@@ -11488,7 +11488,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
   $.SOW.config = {
 
     /*
-        
+
         +++++++++++++++++++++++++++++++++
         OVERWRITEN BY GULP : LEAVE IT FALSE!
         Browser console global debuger!
@@ -11499,7 +11499,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
 
-    /* 
+    /*
 
         SOW : VARIOUS
         -----------------------------------------------------
@@ -11575,13 +11575,13 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
      *
         @time_from_ms
         $.SOW.helper.time_from_ms(miliseconds, 's|m|h|d|empty for all');
-     *  
+     *
         @get_browser (unfinished, need improvement, do not use)
         $.SOW.helper.get_browser();
      *
         @params_parse
         var params = $.SOW.helper.params_parse('['param','value']['param2','value2']); // return: array
-            
+
             var ajax_params_arr = $.SOW.helper.params_parse(ajax_params);
             for (var i = 0; i < ajax_params_arr.length; ++i) {
                 formDataDel.append(ajax_params_arr[i][0], ajax_params_arr[i][1]);
@@ -11597,7 +11597,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
             // 2, ' ', ',' // fr
         ]);
      *
-        @strhash    
+        @strhash
         $.SOW.helper.strhash('string here'); // create a hash, md5 alternative
      *
         @jsonParse
@@ -11606,7 +11606,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         @serializeArray
         $.SOW.helper.serializeArray(form);
      *
-        @compareArray 
+        @compareArray
         Return: true|false
         $.SOW.helper.compareArray(array1, array2);
         $.SOW.helper.compareArray([2,3,1,4], [1,2,3,4]);
@@ -11740,7 +11740,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
       if(_var === '') return false;
 
       // something like '1.'
-      else if(_var.slice(-1) === '.') return false;  
+      else if(_var.slice(-1) === '.') return false;
 
       // -- --
 
@@ -11758,7 +11758,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
      *
      *  @loadScript
      *
-        
+
         async false:
             loads scripts one-by-one using recursion (ordered)
             returns jQuery.Deferred
@@ -11770,8 +11770,8 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
             var script_arr = [
-                'myscript1.js', 
-                'myscript2.js', 
+                'myscript1.js',
+                'myscript2.js',
                 'myscript3.js'
             ];
 
@@ -11871,7 +11871,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
      *
      *  @loadCSS
      *
-        $.SOW.helper.loadCSS("/path/to/file.css", "append|prepend|remove");  
+        $.SOW.helper.loadCSS("/path/to/file.css", "append|prepend|remove");
         "append" is default, if no option passed
      *
      **/
@@ -11918,7 +11918,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         [ Overlay + Icon color ]
         $.SOW.helper.loadingSpinner('show', "#mycontainer", 'overlay', 'light:text-danger');
         $.SOW.helper.loadingSpinner('show', "#mycontainer", 'overlay', 'dark:text-danger');
-        
+
         [ Icon color ]
         $.SOW.helper.loadingSpinner('show', "#mycontainer", 'icon', 'text-danger');
 
@@ -11964,7 +11964,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         }
 
         // 1. overlay, absolute positioning inside container
-        var tplOverlay = '<div id="js_loading_icon" class="position-absolute absolute-full ' + _colorOverlay + ' z-index-9999 text-center">' 
+        var tplOverlay = '<div id="js_loading_icon" class="position-absolute absolute-full ' + _colorOverlay + ' z-index-9999 text-center">'
                             + '<i class="' + $.SOW.config.sow__icon_loading + ' fs-3 '+_colorIcon+' valign-middle"></i>'
                        + '</div>';
 
@@ -12026,7 +12026,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
                 // Use the window (from browser) as context if none providen.
                 context = context || window;
-            
+
             } else {
 
                 // If using Node.js, the context will be an empty object
@@ -12073,7 +12073,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
             jQuery('#overlay-default').unbind().remove();
             jQuery('body').removeClass('overflow-hidden');
-    
+
         }
 
         else {
@@ -12114,7 +12114,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                 var characters   = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
                 break;
 
-            case 'N': 
+            case 'N':
                 var characters   = '0123456789';
                 break;
 
@@ -12147,7 +12147,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
       var precision   = typeof precision  !== 'undefined' ? precision : 2;
       var int_only    = typeof int_only   !== 'undefined' ? int_only  : false;
 
-      if(bytes < 1) 
+      if(bytes < 1)
               return 0 + (int_only === false) ? 'B' : '';
 
 
@@ -12296,7 +12296,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @time_from_ms
-     *  
+     *
         $.SOW.helper.time_from_ms(miliseconds, 's|m|h|d|empty for all');
      *
      **/
@@ -12332,7 +12332,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
      **/
     get_browser: function() {
 
-      var ua = navigator.userAgent.toLowerCase(); 
+      var ua = navigator.userAgent.toLowerCase();
 
            if (ua.indexOf('chrome') > -1)   return 'chrome';
       else if (ua.indexOf('safari') > -1)   return 'safari';
@@ -12362,7 +12362,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         var string = string.replace(/ /g, '');          // remove spaces
         var string = string.replace(/]\[/g, '],[');     // replace: '][' with '],['
 
-        // parse 
+        // parse
         var string = JSON.parse(string);
 
       }
@@ -12409,10 +12409,10 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
 
-    /** 
+    /**
 
       Get JS/CSS Location
-      
+
       $.SOW.helper.scriptLocation( 'css' );
       $.SOW.helper.scriptLocation( 'js' );
 
@@ -12465,7 +12465,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
      *
      *  @vendorLogic
      *
-        $.SOW.helper.vendorLogicPaths('fullcalendar'); // output:array 
+        $.SOW.helper.vendorLogicPaths('fullcalendar'); // output:array
 
         Get vendor logics: js & css paths
         FOR EXTERNAL SCRIPTS LOAD!
@@ -12492,15 +12492,15 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
           for(var v = 0; v < $.SOW.config["vendor:external_css"][module].length; v++) {
 
             if($.SOW.config["vendor:external_css"][module].includes(vendor) === true) {
-                
+
               arr['path_css']     = css_location+module+'.'+vendor+'.min.css';
-              
+
               // apply here, else swiper and other plugins has issues : is css loaded after js
               $.SOW.helper.loadCSS(arr['path_css']);
               break;
 
             }
-          
+
           }
 
         }
@@ -12520,7 +12520,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
               arr['path_js']  = js_location+module+'.'+vendor+'.min.js';
               break;
             }
-          
+
           }
 
         }
@@ -12606,21 +12606,21 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
      **/
     strhash: function( str ) {
       if (str.length % 32 > 0) str += Array(33 - str.length % 32).join("z");
-      
+
       var hash = '', bytes = [];
       var i, j, k, a; i = j = k = a = 0;
       var dict = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','1','2','3','4','5','6','7','8','9'];
-      
+
       for (i = 0; i < str.length; i++ ) {
         var ch = str.charCodeAt(i);
         bytes[j++] = (ch < 127) ? ch & 0xFF : 127;
       }
 
-      var chunk_len = Math.ceil(bytes.length / 32);   
-     
+      var chunk_len = Math.ceil(bytes.length / 32);
+
       for (i=0; i<bytes.length; i++) {
         j += bytes[i]; k++;
-       
+
         if ((k == chunk_len) || (i == bytes.length-1)) {
           var a = Math.floor( j / k );
 
@@ -12694,16 +12694,16 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
       Array.prototype.slice.call(form.elements).forEach(function (field) {
 
-        if (!field.name || field.disabled || ['file', 'reset', 'submit', 'button'].indexOf(field.type) > -1) 
+        if (!field.name || field.disabled || ['file', 'reset', 'submit', 'button'].indexOf(field.type) > -1)
           return;
 
         if (field.type === 'select-multiple') {
 
           Array.prototype.slice.call(field.options).forEach(function (option) {
-              
-            if (!option.selected) 
+
+            if (!option.selected)
               return;
-            
+
             arr.push({
               name: field.name,
               value: option.value
@@ -12714,7 +12714,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
           return;
         }
 
-        if (['checkbox', 'radio'].indexOf(field.type) >-1 && !field.checked) 
+        if (['checkbox', 'radio'].indexOf(field.type) >-1 && !field.checked)
             return;
 
         arr.push({
@@ -12813,7 +12813,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *
  *  @Dependency     -
  *  @Usage          $.SOW.core.header.init();
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -12859,7 +12859,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 		/**
 		 *
 		 *  @init
-		 *  
+		 *
 		 *
 		 **/
 		init: function (selector, config) {
@@ -12869,31 +12869,31 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 				return;
 
 
-			/** 
+			/**
 				1. HEADER : STICKY/FIXED
 			**/
 			if($.SOW.globals.elBody.hasClass('header-sticky'))
 				$.SOW.core.header.header_sticky();
 
 
-			/** 
-				2. HEADER : REVEAL ON SCROLL 
+			/**
+				2. HEADER : REVEAL ON SCROLL
 			**/
 			else if($.SOW.globals.elBody.hasClass('header-scroll-reveal'))
 				$.SOW.core.header.header_scroll_reveal();
 
 
-			/** 
+			/**
 				3. HEADER & ASIDE : HORIZONTAL NAVIGATION
 			**/ $.SOW.core.header.horizontal_nav();
 
 
-			/** 
+			/**
 				4. HEADER TOGGLE
 			**/ $.SOW.core.header.header_toggle();
 
 
-			/** 
+			/**
 				5. HEADER SCROLLTO : NAVBAR CLOSE
 			**/ $.SOW.core.header.header_onepagenav();
 
@@ -12911,7 +12911,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 		/**
 		 *
 		 *  1. HEADER : STICKY/FIXED
-		 *  
+		 *
 		 *
 		 **/
 		header_sticky: function() {
@@ -12935,16 +12935,16 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 				_diff           = 0;
 
 
-			if($.SOW.globals.elBody.hasClass('layout-boxed')) 
+			if($.SOW.globals.elBody.hasClass('layout-boxed'))
 				_diff = _headerEl_H / 2 || 0;
 
-			/* 
+			/*
 
 				1. add header spacing
 				2. add header-fixed class
 
 			*/  $.SOW.globals.elBody.addClass('header-fixed');
-			
+
 
 			// admin : padding top instead of spacer
 			if($.SOW.globals.elBody.hasClass('layout-admin aside-sticky')) {
@@ -12966,7 +12966,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
 
-			/* 
+			/*
 
 				.header-sticky + .header-over
 				all what we do here is to apply body.user-scrolled-down if user scolled down
@@ -12988,12 +12988,12 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
 			/*
-				
+
 				1. on scroll down - hide #top_bar to make little more space (and show on scroll up)
 				2. add|remove .user-scrolled-down - used together with .header-over
-		
+
 			*/
-			var 
+			var
 				top_bar_present     = jQuery('#top_bar').length,
 				top_bar_height      = (top_bar_present > 0) ? jQuery('#top_bar').outerHeight() : 0,
 				top_bar_js_ignore   = false,
@@ -13057,7 +13057,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 						}
 
 					}
-		
+
 					window.lastScrollTop = st;
 
 				}
@@ -13070,8 +13070,8 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 		/**
 		 *
-		 *  2. HEADER : REVEAL ON SCROLL 
-		 *  
+		 *  2. HEADER : REVEAL ON SCROLL
+		 *
 		 *
 		 **/
 		header_scroll_reveal: function() {
@@ -13090,10 +13090,10 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 					didScroll;
 
 
-				if($.SOW.globals.elBody.hasClass('layout-boxed')) 
+				if($.SOW.globals.elBody.hasClass('layout-boxed'))
 					_diff = _headerEl_H / 2 || 0;
 
-				/* 
+				/*
 
 					1. add header spacing
 					2. add header-fixed class
@@ -13170,7 +13170,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 		/**
 		 *
 		 *  3. HEADER & ASIDE : HORIZONTAL NAVIGATION
-		 *  
+		 *
 		 *
 		 **/
 		horizontal_nav: function() {
@@ -13195,17 +13195,17 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 					var ddW     = 0;
 					let navThis = el.querySelector('.navbar-toggler-horizontal');
 					let navEvt  = navThis.classList.contains('nav-horizontal-open-click') ? 'click' : 'mouseover';
-					
+
 					// fix : hover issue (endless loop)
-					if( !navThis.classList.contains('position-absolute') && 
-							!navThis.classList.contains('position-fixed') 
+					if( !navThis.classList.contains('position-absolute') &&
+							!navThis.classList.contains('position-fixed')
 					) navThis.classList.add('position-relative');
 					// -- --
 
 					navThis.addEventListener(navEvt, function(e) {
 
 						if( $.SOW.globals.is_mobile === false ) {
-						
+
 							// search suggest - zindex - under horizontal, while visible
 							if( formSearchSuggest ) formSearchSuggest.classList.add('z-index-1');
 							el.querySelector('.navbar-toggler-horizontal').classList.add('z-index-9999');
@@ -13274,7 +13274,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 					// ++ ++ ++ ++ ++ ++ ++ ++ ++ ++ ++ ++ ++ ++ ++ ++ ++ ++ ++ ++ ++ ++ ++
 					window.addEventListener('resize', function() {
 						if( $.SOW.globals.is_mobile === false ) {
-							
+
 							if( elNavResize ) clearTimeout(elNavResize);
 							elNavResize = setTimeout(function() {
 
@@ -13286,7 +13286,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 							document.body.classList.remove('overflow-hidden');
 						}
 					});
-					
+
 					function elNavReadjust() {
 						if( $.SOW.globals.is_mobile === false ) {
 
@@ -13315,7 +13315,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 		/**
 		 *
 		 *  4. HEADER TOGGLE
-		 *  
+		 *
 		 *
 		 **/
 		header_toggle: function() {
@@ -13352,8 +13352,8 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 					jQuery('#header'+_addEl).animate({ 'margin-top': -_headerEl_H+"px" }, 50, function(e) {
 						$.SOW.globals.elBody.addClass('header-hide');
 
-						/*  
-							show toggle button with a delay to avoid spacing 
+						/*
+							show toggle button with a delay to avoid spacing
 							issues (because of fixed position) + nice effect with css
 						*/
 						setTimeout(function() {
@@ -13391,7 +13391,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 		/**
 		 *
 		 *  5. HEADER SCROLLTO : NAVBAR CLOSE
-		 *  
+		 *
 		 *
 		 **/
 		header_onepagenav: function() {
@@ -13402,7 +13402,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 				jQuery('.scroll-to, .js-ajax', _t).on('click',function() {
 
-					if($.SOW.globals.is_mobile === true) 
+					if($.SOW.globals.is_mobile === true)
 						_t.collapse('hide');
 
 				});
@@ -13412,14 +13412,14 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 		},
 
 
-		
+
 
 
 
 		/**
 		 *
 		 *  DESTROY / RESET (sticky/reveal)
-		 *  
+		 *
 		 *
 		 **/
 		header_destroy: function() {
@@ -13446,7 +13446,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *
  *  @Dependency     -
  *  @Usage          $.SOW.core.search_suggest.init('form.js-ajax-search');
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -13508,7 +13508,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @init
-     *  
+     *
      *
      **/
     init: function (selector, config) {
@@ -13542,7 +13542,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
       // 2. Has selector
       return this.collection.each(function() {
-          
+
           $.SOW.core.search_suggest.process($(this));
 
       });
@@ -13555,7 +13555,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
      *
      *  @process
      *
-     *  
+     *
      *
      **/
     process: function(_this) {
@@ -13653,7 +13653,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
           // Close/hide autosuggest for `esc` key
           jQuery(document).keyup(function(e) {
-              
+
               if(e.keyCode === 27) { // 27 = ESC key
                   $.SOW.core.search_suggest.__suggest_hide(_t, _container);
               }
@@ -13709,13 +13709,13 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                               if(typeof $.SOW.core.toast === 'object') {
 
                                   $.SOW.core.toast.show('danger', 'Error', 'Unexpected Internal error!', 'bottom-center', 0, true);
-                                  
+
                               } else {
 
                                   alert("[404] Unexpected internal error!");
 
                               }
-                              
+
                               jQuery('.sow-search-loader').addClass('hide');
 
                           },
@@ -13725,7 +13725,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                               if(search_mode === 'json')
                                   var data = $.SOW.core.search_suggest.process_json(data, related_kw, json_max_results, json_title_realted, json_noresult_txt, json_highlight_term, json_icon_related, json_min_score, themeClass);
 
-                              // Push data 
+                              // Push data
                               jQuery(_container + ' .sow-search-content').html(data);
 
                               // keep as a 'cache'
@@ -13760,7 +13760,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
               $.SOW.core.search_suggest.__suggest_show(_t, _container);
 
               if(_keyInput.length >= Number(min_length) && window._lastSearch != _keyInput) {
-                  
+
 
                   // START AJAX SEARCH
                   jQuery('.sow-search-loader').removeClass('hide');
@@ -13795,13 +13795,13 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                           dataType:       _dataType       || null,
                           headers:        '',
                           crossDomain:    '',
-                          
+
                           error:  function(XMLHttpRequest, textStatus, errorThrown) {
 
                               if(typeof $.SOW.core.toast === 'object') {
 
                                   $.SOW.core.toast.show('danger', 'Error', 'Unexpected Internal error!', 'bottom-center', 0, true);
-                                  
+
                               } else {
 
                                   alert("[404] Unexpected internal error!");
@@ -13852,7 +13852,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
          *
          *  @__suggest_show
          *  :: Helper
-         *  
+         *
          *
          **/
         __suggest_show: function(_t, _container) {
@@ -13873,7 +13873,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
          *
          *  @__suggest_hide
          *  :: Helper
-         *  
+         *
          *
          **/
         __suggest_hide: function(_t, _container) {
@@ -13902,7 +13902,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
      *
      *  @sow_suggest_toggler
      *
-     *  
+     *
      *
      **/
     sow_suggest_toggler: function() {
@@ -13928,7 +13928,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
               jQuery(_target+' input.form-control-sow-search').blur();
               $.SOW.globals.elBody.removeClass('overflow-hidden');
               jQuery(_target+'.sow-search-over').addClass('hide').removeClass('sow-search-mobile');
-              
+
           }
 
       });
@@ -13940,7 +13940,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
      *
      *  @process_json
      *
-     *  
+     *
      *
      **/
     process_json: function(data, keyword, json_max_results, json_title, json_noresult_txt, highlight_term, icon, json_min_score, themeClass) {
@@ -14099,7 +14099,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *
  *  @Dependency     -
  *  @Usage          $.SOW.core.lazyload.init('.lazy');
- * 
+ *
  *  Based on Lozad Plugin
  *  https://github.com/ApoorvSaxena/lozad.js
  *
@@ -14130,13 +14130,13 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         config: {
 
             rootMargin:     '0px',      // syntax similar to that of CSS Margin
-            threshold:      0.1,        // 0 - 1; 1 = when 100% of the target is visible 
-            
+            threshold:      0.1,        // 0 - 1; 1 = when 100% of the target is visible
+
             load: function load(element) {
 
                 // <video>
                 if (element.nodeName.toLowerCase() === 'video' && !element.getAttribute('data-src')) {
-                
+
                     if (element.children) {
 
                         var childs      = element.children;
@@ -14201,7 +14201,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @init
-         *  
+         *
          *
          **/
         init: function (selector, config) {
@@ -14243,7 +14243,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
          *
          *  @process
          *
-         *  
+         *
          *
          **/
         process: function(selector) {
@@ -14310,7 +14310,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
          *
          *  @markLoaded
          *
-         *  
+         *
          *
          **/
         markLoaded: function(element) {
@@ -14324,7 +14324,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
          *
          *  @isLoaded
          *
-         *  
+         *
          *
          **/
         isLoaded: function(element) {
@@ -14338,7 +14338,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
          *
          *  @onIntersection
          *
-         *  
+         *
          *
          **/
         onIntersection: function(load) {
@@ -14372,7 +14372,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
          *
          *  @getElements
          *
-         *  
+         *
          *
          **/
         getElements: function(selector) {
@@ -14401,7 +14401,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *  @Usage          $.SOW.core.ajax_navigation.init('a.js-ajax');
  *                  -- + --
  *                  From another plugin, for a specific container only:
- *                  Only this plugin is reinitialised, -WITHOUT- $.SOW.reinit() call 
+ *                  Only this plugin is reinitialised, -WITHOUT- $.SOW.reinit() call
  *                  $.SOW.core.ajax_navigation.__initFor('#container');
  *                  -- + --
  *                  $.SOW.core.ajax_navigation.__selector();
@@ -14435,7 +14435,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
      **/
     config: {
 
-      /* 
+      /*
 
           You can overwrite by adding the needed param to the link.
 
@@ -14466,7 +14466,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
       update_url                      : true,
       show_loading_icon               : true,
 
-      /* 
+      /*
           callback_example = function(el, data, target_container) {
               // el               = link clicked              $(this)
               // data             = server response           (html|string)
@@ -14504,7 +14504,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
           Different than callback, cannot be overwrited by params
           Will call a custom function after each page load
           Condition: callback_before_push: false (else, call the function from your callback).
-          
+
           Can be used to reinit custom scripts/plugins and/or process special data
 
           custom_function_example = function(el, target_container) {
@@ -14521,7 +14521,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
       // .note-popover = summernote (bootstrap4 bug)
       AjaxGarbage                     : '', // reserved to GULP config
       AjaxOtherGarbage                : '.datepicker, .popover, .daterangepicker, .modal, .modal-backdrop, .note-popover, #dropdown_toggle_overlay, .tooltip',
-  
+
     },
 
 
@@ -14539,13 +14539,13 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @init
-     *  
+     *
      *
      **/
     init: function (selector, config) {
 
       /* weberver required */
-      if( window.location.origin == 'file://' ) 
+      if( window.location.origin == 'file://' )
         return;
 
       /* disabled by config */
@@ -14589,7 +14589,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
       // 2. Has selector
       return this.collection.each(function() {
-          
+
         $.SOW.core.ajax_navigation.ajax_navigation($(this));
 
       });
@@ -14630,7 +14630,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                 data-ajax-container2-class="animate-bouncein"
 
             &ajax=true - added but NOT to .html files
-     *  
+     *
      *
      **/
     ajax_navigation: function(_this, ajax_navigation_reinit_skip) { // ajax_navigation_reinit_skip: used by calling from other plugins via __initFor(). DO NOT REMOVE!
@@ -14648,7 +14648,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
       _this.on('click', function(e) {
 
 
-        /* 
+        /*
             Because we want to be sure that we bind only once
             and avoid multiple times! We can't use unbind() because
             some other plugins might bind that link for some reason!
@@ -14713,7 +14713,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         if(!_t.hasClass('nav-link') && typeof $.SOW.core.nav_deep === 'object') {
 
           /**
-              
+
               We remove #hash and rewrite the _href
               Actually, the back button on pushState will not contain the #hash anymore
               But when the user click "Back Button", page position is ok
@@ -14734,7 +14734,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
           // clear/reset
           var __navHasThisLink    = null;
 
-        } 
+        }
         // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
 
@@ -14772,8 +14772,8 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
           var _contentResponseExtract = $.SOW.core.ajax_navigation.config.parser_extract_element;
 
         /*
-            
-            In case there is another ajax request, 
+
+            In case there is another ajax request,
             but for a different specified #destination_container
 
         */
@@ -14806,7 +14806,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
         /*
-            
+
             Block "flooding"
 
         */
@@ -14821,7 +14821,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         // Remove any unwanted stuff - like: if click was from modal
         // jQuery('.modal-backdrop.show').remove();
         // $.SOW.globals.elBody.removeClass('modal-open overflow-hidden');
-                    
+
         // Ajax remainings of other plugins that are not self removed
         $.SOW.core.ajax_navigation.__cleanAjaxGarbage();
         // ----------------------------------------------------------
@@ -14863,7 +14863,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
                 1. __ajaxLinkProcess() send an ajax request. If _callbackBeforePush is not set tot true, the page will update.
                 2. the object above is packed into a JSON string and passed it to __ajaxLinkProcess() as to keep it in history pushState ;)
-                3. user is happy, drinking 10 beers but suddently navigate back using "back button" so the page is the same but the link is changing! 
+                3. user is happy, drinking 10 beers but suddently navigate back using "back button" so the page is the same but the link is changing!
                 4. the history will return the sting from cache (our jsonified object) we just created on step 2
                 5. history function will call __ajaxLinkProcess() passing the object but disabling things like _updateURL (because is already on that page)
                 6. __ajaxLinkProcess() will try to find the link to get the element because jQuery(this) is needed (I mean: _t)
@@ -14933,7 +14933,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
                 if(_showLoadingIcon == 'true')
                   $.SOW.helper.loadingSpinner('show', _target);
-                
+
                 // disable link
                 _t.addClass('disabled');
 
@@ -14997,9 +14997,9 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
                         /*
-                            
-                            [Deprecation] Synchronous XMLHttpRequest on the main thread is deprecated 
-                            because of its detrimental effects to the end user's experience. 
+
+                            [Deprecation] Synchronous XMLHttpRequest on the main thread is deprecated
+                            because of its detrimental effects to the end user's experience.
                             For more help, check https://xhr.spec.whatwg.org/
 
                             Remove any <script> and append them using async:
@@ -15022,12 +15022,12 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                         });
                         jQuery('script', jQ_source).remove();
                         // --------------------------------------------------------------------------------
-                        
+
 
 
 
                         /* ++ SEO ++
-                            
+
                             Dedicated Tags
                             <meta-title>...</meta-title>
                             <meta-description>...</meta-description>
@@ -15102,7 +15102,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                         // force push content, as it is because nothing parsed
                         if(!__dataHtml && $.SOW.core.ajax_navigation.config.parser_force_push2target === true)
                             __dataHtml = data;
-                        
+
 
                         // Push Content
                         jQuery(_target).empty().append(__dataHtml);
@@ -15119,7 +15119,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                     if(_updateURL == 'true' && window.sow_ajax_links_curr_href != _href) {
 
                         /*
-                            
+
                             We create a new object here, can't use the one passed to the function!
                             Regular js function is working. This is not!
                         */
@@ -15136,7 +15136,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                         _obj._html                      = (__dataHtml != '') ? __dataHtml : '';
                         var _json                       = JSON.stringify(_obj);
 
-                        $.SOW.core.ajax_navigation.__historyPushState(_href, _href_title, _json); 
+                        $.SOW.core.ajax_navigation.__historyPushState(_href, _href_title, _json);
                     }
 
 
@@ -15156,7 +15156,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                         var _container2Delay = (_scrollToContent == true) ? 200 : 60;
 
 
-                        // Remove first 
+                        // Remove first
                         jQuery(_container2El).removeClass(_container2Class);
 
                         setTimeout(function() {
@@ -15224,11 +15224,11 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
                 // clear/reset
-                var data            = null, 
+                var data            = null,
                     _obj            = null,
                     _json           = null,
-                    __dataHtml      = null, 
-                    __source        = null, 
+                    __dataHtml      = null,
+                    __source        = null,
                     __dataParsed    = null;
                 window.sow_ajax_links_last_href     = null;
 
@@ -15289,9 +15289,9 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
       data_parsed.each(function() {
 
         /*
-            
-            [Deprecation] Synchronous XMLHttpRequest on the main thread is deprecated 
-            because of its detrimental effects to the end user's experience. 
+
+            [Deprecation] Synchronous XMLHttpRequest on the main thread is deprecated
+            because of its detrimental effects to the end user's experience.
             For more help, check https://xhr.spec.whatwg.org/
 
             Remove any <script> and append them using async:
@@ -15354,8 +15354,8 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
           Reason this function exists:
 
-              [Deprecation] Synchronous XMLHttpRequest on the main thread is deprecated 
-              because of its detrimental effects to the end user's experience. 
+              [Deprecation] Synchronous XMLHttpRequest on the main thread is deprecated
+              because of its detrimental effects to the end user's experience.
               For more help, check https://xhr.spec.whatwg.org/
 
               So we can't just append(html_content) including scripts.
@@ -15556,7 +15556,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
       // clean user garbage
       if($.SOW.core.ajax_navigation.config.AjaxGarbage != '')
         jQuery($.SOW.core.ajax_navigation.config.AjaxGarbage).remove();
-  
+
     },
 
 
@@ -15618,7 +15618,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
       var _selector       = this.selector;
       var _selector_orig  = this.selector_orig; // without ajax container
 
-      if(typeof(window.onpopstate) !== "function") { 
+      if(typeof(window.onpopstate) !== "function") {
 
         window.onpopstate = function(e) {
 
@@ -15666,7 +15666,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
             /* --------------------------------------------------------------------------- */
             if($.SOW.core.ajax_navigation.config.onpopstate_reload === true) {
-                
+
               /*
                   Reload the content!
                   Display the page from the history, which is already doing few lines above!
@@ -15675,7 +15675,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
               _obj._t                 = _t;           // most important (is actually the link clicked - dom element)
               _obj._updateURL         = false;        // do not update, we already are on it
               _obj._scrollToContent   = false;        // annoyng on each back to have a scrolling page
-              
+
               $.SOW.core.ajax_navigation.__ajaxLinkProcess(_obj);                 // ajax call, refresh page|content
               $.SOW.helper.consoleLog("SOW Ajax : onpopstate : Content request sent to the server!");
 
@@ -15697,7 +15697,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
           } else {
 
             /*
-                
+
                 onpopstate is handling hashed as "regular" links, refreshing the page
                 So we have to stop this behavior!
 
@@ -15730,7 +15730,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *
  *  @Dependency     -
  *  @Usage          $.SOW.core.ajax_content.init('div.js-ajax');
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -15764,7 +15764,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
       crossDomain                     : '',
       data_params                     : {ajax:'true'},
 
-      /* 
+      /*
           callback_example = function(el, data, target_container) {
               // el               = link clicked              $(this)
               // data             = server response           (html|string)
@@ -15793,7 +15793,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @init
-     *  
+     *
      *
      **/
     init: function (selector, config) {
@@ -15811,15 +15811,15 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         return;
 
 
-      /* 
-          
+      /*
+
           Because this script is needed on body only and not inside itself,
           we block this script loading by another plugins reinit
           Easier and better than creating another rule in Controller for all plugins!
 
 
           Note: we use .last() instead of .first() because we might have
-          one content in a static area (main navigation as an eample) 
+          one content in a static area (main navigation as an eample)
           and another one inside ajax (loaded by ajax navigation)
 
       */
@@ -15869,7 +15869,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
             </section>
 
             &ajax=true - added but NOT to .html files
-     *  
+     *
      *
      **/
     ajax_content: function(_this) {
@@ -15889,8 +15889,8 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
           _target                     = _this.data('ajax-target-container')       || '';
 
 
-      /* 
-          
+      /*
+
           Container has no ID
           We generate one
 
@@ -15916,7 +15916,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
 
-      /* 
+      /*
 
           No target specified
           We use self container
@@ -15956,7 +15956,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
      *
      *  @btn_reload_bind
      *
-     *  
+     *
      *
      **/
     btn_reload_bind: function() {
@@ -15993,7 +15993,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
 
-    /* 
+    /*
 
         Function also called on reload ajax content!
 
@@ -16124,7 +16124,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *
  *  @Dependency     -
  *  @Usage          $.SOW.core.ajax_form.init('form.js-ajax');
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -16176,7 +16176,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @init
-     *  
+     *
      *
      **/
     init: function (selector, config) {
@@ -16207,7 +16207,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
         // 2. Has selector
         return this.collection.each(function() {
-            
+
             $.SOW.core.ajax_form.process($(this));
 
         });
@@ -16230,23 +16230,23 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                     <input required type="text" name="first_name" value="" placeholder="first name" class="form-control mb-4">
                     <input type="text" name="birthdate" value="" placeholder="birthdate" class="form-control mb-4">
 
-                    <!-- 
+                    <!--
                         Error Notice - more visible
 
                         Instead of this alert, you can use a toast alert instead by adding to form:
-                            data-error-toast-text="<i class='fi fi-circle-spin fi-spin float-start'></i> Please, complete all required fields!" 
-                            data-error-toast-delay="3000" 
+                            data-error-toast-text="<i class='fi fi-circle-spin fi-spin float-start'></i> Please, complete all required fields!"
+                            data-error-toast-delay="3000"
                             data-error-toast-position="top-right"
 
                     -->
                     <div class="bs-validate-info hide alert alert-danger" data-error-alert-delay="4000">
-                        <i class="fi fi-circle-spin fi-spin float-start"></i> 
+                        <i class="fi fi-circle-spin fi-spin float-start"></i>
                         Please, complete all required fields!
                     </div>
 
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
-                
+
 
                 <!-- position relative|fixed|absolute is required for loading icon -->
                 <div id="ajax_container" class="position-relative w--500 pl--30 pr--30 pt--80 pb--80">
@@ -16255,7 +16255,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
             ajax-callback-function=""   - used to handle the response, instead of appending the response to a container
-     *  
+     *
      *
      **/
     process: function(_this) {
@@ -16283,12 +16283,12 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                 _toast_delay        = _t.data('error-toast-delay')              || 0,           // toast alert for .bs-validate
                 _toast_pos          = _t.data('error-toast-position')           || "top-right", // toast alert for .bs-validate
                 _toast_success      = _t.data('success-toast-text')             || "",
-                
+
                 _controlAlerts      = _t.attr('data-ajax-control-alerts')               || "false",
                 _controlSuccess     = _t.attr('data-ajax-control-alert-succes')         || "",
                 _controlUnexpected  = _t.attr('data-ajax-control-alert-unexpected')     || "",
                 _controlMandatory   = _t.attr('data-ajax-control-alert-mandaroty')      || "",
-                
+
                 // show|hide container for error|success
                 _onSucessShow       = _t.data('ajax-inline-alert-succes')       || '',
                 _onErrorShow        = _t.data('ajax-inline-alert-error')        || '',
@@ -16337,7 +16337,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                     if(_toast_text != '') {
 
                         if(typeof $.SOW.core.toast === 'object') {
-                            
+
                             if(Number(_toast_delay) < 1)
                                 var _toast_delay = 4000;
 
@@ -16353,13 +16353,13 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
                         // show error info
                         jQuery('.bs-validate-info', _t).removeClass('hide hide-force'); // show error info
-                        
+
                         // error info delay timeout
                         var _delay = jQuery('.bs-validate-info', _t).data('error-alert-delay') || 3000;
 
                         // hide error info in X seconds
                         setTimeout(function() {
-                            jQuery('.bs-validate-info', _t).addClass('hide hide-force'); 
+                            jQuery('.bs-validate-info', _t).addClass('hide hide-force');
                         }, Number(_delay));
 
                     }
@@ -16370,7 +16370,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                         jQuery(_onSucessShow).addClass('hide hide-force');
                         jQuery(_onErrorShow).removeClass('hide hide-force');
                     }
-                    
+
                     // Focus invalid element and scroll
                     jQuery('.form-control:invalid', _t).first().focus();
 
@@ -16384,7 +16384,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                     e.preventDefault();
                     e.stopPropagation();
                     window.ajax_form_stop = true;
-                } 
+                }
 
 
                 _t.addClass('was-validated');
@@ -16401,7 +16401,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                     e.preventDefault();
                     e.stopPropagation();
                     window.ajax_form_stop = true;
-                } 
+                }
 
             }
 
@@ -16526,18 +16526,18 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
                         if(hasErrors === true) {
-                            
+
                             // this is a server message - debug only!
-                            if($.SOW.config.sow__debug_enable === true) 
+                            if($.SOW.config.sow__debug_enable === true)
                                 jQuery(_target).empty().html(data);
                             else
                                 jQuery(_target).empty().html('Server Error!');
-                                
+
 
                             _t.removeClass('was-validated');
                             return;
                         }
-                        
+
                     }
 
 
@@ -16590,7 +16590,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                         setTimeout(function() {
                             jQuery('#sow_ajax_modal').modal('hide');
                         }, Number(_modalCloseOnSuccessDelay));
-                        
+
                     }
 
 
@@ -16601,7 +16601,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
                     // Reload Container via Ajax
                     if(appendData != '') {
-                        
+
                         setTimeout(function() {
 
                             jQuery(appendData).empty().append(data);
@@ -16639,7 +16639,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *
  *  @Dependency     -
  *  @Usage          $.SOW.core.ajax_select.init('select.js-ajax');
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -16675,7 +16675,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
       crossDomain                     : '',
       data_params                     : {ajax:'true'},
 
-      /* 
+      /*
           callback_example = function(el, data, modal_container) {
               // el               = element               $(this)
               // data             = server response           (html|string)
@@ -16701,7 +16701,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @init
-     *  
+     *
      *
      **/
     init: function (selector, config) {
@@ -16732,7 +16732,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
       // 2. Has selector
       return this.collection.each(function() {
-          
+
         $.SOW.core.ajax_select.process($(this));
 
       });
@@ -16750,7 +16750,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     process: function(_this) {
 
 
-      /** 
+      /**
 
           Form Populate
 
@@ -16843,7 +16843,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                   for(var i = 0; i < data.length; i++) {
 
                       for(var key in data[i]) {
-                          
+
                           var _el = $(populate_form + ' #' + key);
                           if(_el.length < 1)
                               var _el = $(populate_form + ' .' + key);
@@ -16899,7 +16899,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
 
-      /** 
+      /**
 
           Self Populate
 
@@ -16935,7 +16935,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
 
-    /** 
+    /**
 
         Populate on change
 
@@ -16980,7 +16980,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
 
-            
+
 
 
 
@@ -17143,7 +17143,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
 
-                  /** 
+                  /**
 
                       Callback on change
 
@@ -17169,7 +17169,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
                   /**
-                  
+
                       Recursive
                       Used by select on load
                       data-ajax-url-self-populate
@@ -17224,7 +17224,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
      **/
     ajax_callback: function(_callback, _t, value, label) {
 
-      if(_callback != '' && typeof $.SOW.helper.executeFunctionByName === 'function') 
+      if(_callback != '' && typeof $.SOW.helper.executeFunctionByName === 'function')
         $.SOW.helper.executeFunctionByName(_callback, window, _t, value, label);
 
     }
@@ -17241,7 +17241,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *
  *  @Dependency     -
  *  @Usage          $.SOW.core.ajax_modal.init('.js-ajax-modal');
- * 
+ *
     // Programtically Create Modal  :             url , 'modal-md', 'true' (centered), 'backdrop' (optional), callback (optional)
     $.SOW.core.ajax_modal.createFromThinAir(modalUrl, 'modal-lg', 'true', 'static', callback);
 
@@ -17285,7 +17285,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
       modal_size                      : 'modal-md',
       modal_centered                  : 'false',
 
-      /* 
+      /*
           callback_example = function(el, data, modal_container) {
               // el               = element               $(this)
               // data             = server response           (html|string)
@@ -17310,7 +17310,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @init
-     *  
+     *
      *
      **/
     init: function (selector, config) {
@@ -17346,7 +17346,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
       // 2. Has selector
       return this.collection.each(function() {
-          
+
         $.SOW.core.ajax_modal.ajax_modal($(this));
 
       });
@@ -17359,7 +17359,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
      *
      *  @ajax_modal
      *
-     *  
+     *
      *
      **/
     ajax_modal: function(_this) {
@@ -17399,9 +17399,9 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
           if(_t.hasClass('js-ignore')) return; // Ignore by request!
 
 
-          /* 
+          /*
               Empty ajax modal on close
-              else, plugins like selectpicker will not refresh 
+              else, plugins like selectpicker will not refresh
           */  jQuery(_target + ' .modal-content').empty();
 
 
@@ -17411,7 +17411,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
           // Call the trigger
           $.SOW.core.ajax_modal.modalAjaxShow(_href, _target, _modal_size, _modal_centered, _modal_backgdrop, _modal_callback, _method, _modalType);
 
-      }); 
+      });
 
 
       // Modals on load
@@ -17456,10 +17456,10 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
         // static, do not close on click
         if(_modal_backgdrop != '') {
-          var _backdrop = 'static';   
+          var _backdrop = 'static';
           var _keyboard = false;
         } else {
-          var _backdrop = 'dynamic';  
+          var _backdrop = 'dynamic';
           var _keyboard = true;
         }
 
@@ -17491,7 +17491,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
           // load modal
           var _loader = '<div class="text-center p-6 fs-1 text-muted '+$.SOW.config.sow__icon_loading+'"></div>';
-          
+
 
           // BS4
           // -- -- --
@@ -17505,7 +17505,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
               ajxModal.querySelector('.modal-content').innerHTML = _loader; // reset & show loading spinner
 
           var myModal = new bootstrap.Modal(ajxModal, {
-            backdrop: _backdrop, 
+            backdrop: _backdrop,
             keyboard:_keyboard
           }); myModal.show();
           // -- -- --
@@ -17576,7 +17576,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                 ajxModal.querySelector('.modal-content').innerHTML = _loader; // reset & show loading spinner
 
             var myModal = new bootstrap.Modal(ajxModal, {
-              backdrop: _backdrop, 
+              backdrop: _backdrop,
               keyboard:_keyboard
             }); myModal.show();
             // -- -- --
@@ -17610,7 +17610,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
               // reinit inside ajax container
               $.SOW.reinit(_target);
               // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-                  
+
               // focus first input element
               jQuery('input:visible:enabled:first', _target).focus();
 
@@ -17788,7 +17788,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *
  *  @Dependency     -
  *  @Usage          $.SOW.core.ajax_confirm.init('.js-ajax-confirm');
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -17839,7 +17839,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
       btn_icon_yes                    : 'fi fi-check',
       btn_icon_no                     : 'fi fi-close',
 
-      /* 
+      /*
           callback_example = function(el, data) {
               // el               = link clicked              $(this)
               // data             = server response           (html|string)
@@ -17864,7 +17864,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @init
-     *  
+     *
      *
      **/
     init: function (selector, config) {
@@ -17899,7 +17899,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
       // 2. Has selector
       return this.collection.each(function() {
-          
+
         $.SOW.core.ajax_confirm.ajax_confirm($(this));
 
       });
@@ -17913,42 +17913,42 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
      *  @ajax_confirm
      *
 
-    <a href="URL-HERE" 
+    <a href="URL-HERE"
         class="js-ajax-confirm"
 
-        data-ajax-confirm-size="modal-md" 
-        data-ajax-confirm-centered="false" 
+        data-ajax-confirm-size="modal-md"
+        data-ajax-confirm-centered="false"
 
         data-ajax-confirm-callback-function=""
-        data-ajax-confirm-type="ajax" 
-        data-ajax-confirm-method="GET" 
+        data-ajax-confirm-type="ajax"
+        data-ajax-confirm-method="GET"
 
-        data-ajax-confirm-title="Please Confirm" 
-        data-ajax-confirm-body="Are you sure? Delete this item?" 
+        data-ajax-confirm-title="Please Confirm"
+        data-ajax-confirm-body="Are you sure? Delete this item?"
 
-        data-ajax-confirm-btn-yes-text="Confirm" 
-        data-ajax-confirm-btn-yes-class="btn-sm btn-primary" 
-        data-ajax-confirm-btn-yes-icon="fi fi-check" 
+        data-ajax-confirm-btn-yes-text="Confirm"
+        data-ajax-confirm-btn-yes-class="btn-sm btn-primary"
+        data-ajax-confirm-btn-yes-icon="fi fi-check"
 
-        data-ajax-confirm-btn-no-text="Cancel" 
-        data-ajax-confirm-btn-no-class="btn-sm btn-light" 
+        data-ajax-confirm-btn-no-text="Cancel"
+        data-ajax-confirm-btn-no-class="btn-sm btn-light"
         data-ajax-confirm-btn-no-icon="fi fi-close"
 
         rel="nofollow">
         Confirm
     </a>
-        
+
         data-ajax-confirm-size="modal-sm|modal-md|modal-lg|modal-full"
 
         data-ajax-confirm-callback-function="_myCustomFunc"     (optional - your custom function called on load)
-        Example: 
+        Example:
             var _myCustomFunc = function(el, data) {
                 el = button element
                 data = ajax result from server
                 alert('My Function Called! Do something like... reinit some plugins');
             }
 
-     *  
+     *
      *
      **/
     ajax_confirm: function(_this) {
@@ -17996,14 +17996,14 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
               _confirmType        = _t.data('ajax-confirm-type')              || confirm_type,        // confirmation type: danger|warning|etc. empty for normal/clean
               _confirmMode        = _t.data('ajax-confirm-mode')              || confirm_mode,        // confirmation type: regular|ajax
               _confirmMethod      = _t.data('ajax-confirm-method')            || confirm_method,      // confirmation method: GET|POST
-              
+
               _confirmSuccessEl       = _t.data('ajax-confirm-success-target')        || '',                  // element
               _confirmSuccessElAction = _t.data('ajax-confirm-success-target-action') || '',                  // action: remove|addClass|removeClass|toggleClass
               _confirmSuccessElClass  = _t.data('ajax-confirm-success-target-class')  || '',                  // class to remove or add
 
               _confirmTitle       = _t.data('ajax-confirm-title')             || confirm_title,       // modal title
               _confirmBody        = _t.data('ajax-confirm-body')              || confirm_body,        // message | question
-              
+
               _confirmBtnYesTxt   = _t.data('ajax-confirm-btn-yes-text')      || btn_text_yes,        // button text
               _confirmBtnYesClass = _t.data('ajax-confirm-btn-yes-class')     || btn_class_yes,       // button class
               _confirmBtnYesIcon  = _t.data('ajax-confirm-btn-yes-icon')      || btn_icon_yes,        // button icon. eg: fi fi-check
@@ -18011,7 +18011,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
               _confirmBtnNoTxt    = _t.data('ajax-confirm-btn-no-text')       || btn_text_no,         // button text
               _confirmBtnNoClass  = _t.data('ajax-confirm-btn-no-class')      || btn_class_no,        // button class
               _confirmBtnNoIcon   = _t.data('ajax-confirm-btn-no-icon')       || btn_icon_no;         // button icon. eg: fi fi-check
-              
+
 
 
           // Ignore by request!
@@ -18114,7 +18114,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                               jQuery(_target).modal('hide');
 
                           },500);
-                          
+
 
                           if(_confirmCallback != '' && typeof $.SOW.helper.executeFunctionByName === 'function')
                               $.SOW.helper.executeFunctionByName(_confirmCallback, window, _t, data);
@@ -18149,7 +18149,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
               if(_confirmCallback != '' && typeof $.SOW.helper.executeFunctionByName === 'function') {
                   jQuery('.btn-confirm-yes', _target).unbind('click').on('click', function(e) {
                       e.preventDefault();
-                      $.SOW.helper.executeFunctionByName(_confirmCallback, window, _t); 
+                      $.SOW.helper.executeFunctionByName(_confirmCallback, window, _t);
                   });
               }
 
@@ -18190,7 +18190,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                       + '<div class="modal-content">'
 
                           + '<div class="modal-header border-0">'
-                              
+
                               + '<h5 id="modal-title-confirm" class="modal-title" style="font-size:18px">'
                                   + this.config.confirm_title
                               + '</h5>'
@@ -18200,7 +18200,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                           + '</div>'
 
                           + '<div class="modal-body p-3">'
-                              
+
                               + this.config.confirm_body
 
                           + '</div>'
@@ -19805,7 +19805,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *
  *  @Dependency     -
  *  @Usage          $.SOW.core.toast.init('.toast-on-load');
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -19834,7 +19834,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     config: {
 
       animation: 'fade'
-    
+
     },
 
 
@@ -19852,7 +19852,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @init
-     *  
+     *
      *
      **/
     init: function (selector, config) {
@@ -19884,7 +19884,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
       // 2. Has selector
       return this.collection.each(function() {
-          
+
         $.SOW.core.toast.toast_on_load($(this));
 
       });
@@ -19941,7 +19941,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
       Clear all toasts
           $.SOW.core.toast.destroy();
 
-     *  
+     *
      *
      **/
     show: function(t_type, t_title, t_body, t_pos, t_delay, t_bg_fill) {
@@ -20077,10 +20077,10 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
       // Add close button to body, because we have no title
       var _closeBtnBody = (t_title == '') ? t_close : '';
-      
+
       // Add Color to body text if no title available
       if(t_title == '') {
-          
+
         if(t_bg_fill === true && (t_type == 'success-soft' || t_type == 'danger-soft' || t_type == 'info-soft' || t_type == 'warning-soft' || t_type == 'primary-soft' || t_type == 'pink-soft' || t_type == 'indigo-soft')) {
             var t_txt_color = '';
         } else  {
@@ -20092,10 +20092,10 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
       } else {
 
         var t_body = (t_bg_fill === true && t_type != '') ? '<div class="text-white" style="padding-top:5px; padding-bottom:10px;">' + t_body + '</div>' : t_body;
-      
+
       }
 
-      var _toastBody = _toastBody + t_progress 
+      var _toastBody = _toastBody + t_progress
           + '<div class="toast-body p-3">' + _closeBtnBody + t_body + '</div>'
       + '</div>';
 
@@ -20138,7 +20138,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
       Toast on page load, by HTML code
 
       <!--
-          
+
           Toast On Load
           Add anywhere on your HTML page to show toas on load
 
@@ -20151,12 +20151,12 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
       -->
       <div class="hide toast-on-load"
-          data-type="danger" 
-          data-title="" 
-          data-body="Welcome to Smarty" 
-          data-pos="top-right" 
-          data-delay="4000" 
-          data-fill="true" 
+          data-type="danger"
+          data-title=""
+          data-body="Welcome to Smarty"
+          data-pos="top-right"
+          data-delay="4000"
+          data-fill="true"
       ></div>
 
      *
@@ -20212,7 +20212,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *
  *  @Dependency     -
  *  @Usage          $.SOW.core.dropdown_click_ignore.init('.dropdown-menu.dropdown-click-ignore');
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -20254,7 +20254,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @init
-     *  
+     *
      *
      **/
     init: function (selector, config) {
@@ -20295,7 +20295,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
       // 2. Has selector
       return this.collection.each(function() {
-          
+
         $.SOW.core.dropdown_click_ignore.process($(this));
 
       });
@@ -20317,7 +20317,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
       /*
           If any form is present inside dropdown,
-          the dropdown will not close. 
+          the dropdown will not close.
           So we skip dropdowns with forms!
 
           Still is an issue on outside form click!!!
@@ -20395,7 +20395,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
           return false;
 
 
-        // stop bootstrap to act!   
+        // stop bootstrap to act!
         if( _t.next().closest('.dropdown-menu').hasClass('dropdown-menu-hover') ) {
           e.preventDefault();
           e.stopPropagation();
@@ -20419,7 +20419,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *
  *  @Dependency     $.SOW.core.dropdown_click_ignore
  *  @Usage          $.SOW.core.dropdown.init('.dropdown-menu.dropdown-menu-hover');
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -20461,7 +20461,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @init
-     *  
+     *
      *
      **/
     init: function (selector, config) {
@@ -20526,7 +20526,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
      *  @process
 
         @Fix|Hack
-        MULTILEVEL DROPDOWN ON MOBILE 
+        MULTILEVEL DROPDOWN ON MOBILE
 
         Issue: nested|multi level dropdowns are not supported in Bootstrap v3+
 
@@ -20549,12 +20549,12 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         var _t              = jQuery(this);
             this.collection = _t;
 
-        /* 
+        /*
 
-            Mobile devices only! 
+            Mobile devices only!
 
         */
-        if($.SOW.globals.is_mobile === true) { 
+        if($.SOW.globals.is_mobile === true) {
 
           if(!_t.parent('.dropdown').hasClass('show')) {
 
@@ -20664,7 +20664,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
       });
 
       return true;
-      
+
     },
 
 
@@ -20678,25 +20678,25 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
      *
      *  @forceCloseDropdown
      *  Callable from other plugins
-     *  
+     *
      *  Object.element required of a link DOM
      *  Example: from sow.ajax_navigation.js
-     *  
-     *  
+     *
+     *
      *  jQuery('a.js-ajax').on('click', function() {
-     *      
+     *
      *      var _t = jQuery(this);
      *
      *      if(typeof $.SOW.core.dropdown === 'object')
      *          $.SOW.core.dropdown.forceCloseDropdown(_t);
-     *  
+     *
      *  });
-     *  
+     *
      *  - OR -
      *  Pass directly the jQuery('.dropdown-menu') container (also as object)
      *  <div class="dropdown-menu"> ... items ... </div>
-     *  
-     *  
+     *
+     *
      **/
     forceCloseDropdown: function(_t) {
 
@@ -20738,7 +20738,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
       // 2. Dropdown is visible on hover
       // ++ Hide it to be out of mouse area
       __dropdownContainer.addClass('hide-force');
-      
+
       // 3. Remove .hide-force now, was hidden!
       setTimeout(function() {
 
@@ -20749,7 +20749,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
     }
 
-      
+
   };
 
 
@@ -20764,7 +20764,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *  @Dependency     $.SOW.core.dropdown_click_ignore
  *                  $.SOW.core.dropdown
  *  @Usage          $.SOW.core.dropdown_ajax.init('a[data-bs-toggle="dropdown"]');
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -20826,7 +20826,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @init
-     *  
+     *
      *
      **/
     init: function (selector, config) {
@@ -21048,7 +21048,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
      *
      *  @process_json
      *
-     *  
+     *
      *
      **/
     process_json: function(data) {
@@ -21064,7 +21064,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         }
 
         /* --------------------------------- */
-        var _tpl  = ''; 
+        var _tpl  = '';
             _tpl += $.SOW.core.dropdown_ajax.config.tpl_start;
             _tpl += $.SOW.core.dropdown_ajax.process_json_build_tree(_data);
             _tpl += $.SOW.core.dropdown_ajax.config.tpl_end;
@@ -21082,14 +21082,14 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
      *
      *  @process_json_build_tree
      *  Recursive
-     *  
+     *
      *
      **/
     process_json_build_tree: function(data) {
-        
+
         var _tpl = '';
 
-        if(typeof data === 'undefined') 
+        if(typeof data === 'undefined')
             return _tpl;
 
         for (var i = 0; i < data.length; i++) {
@@ -21162,8 +21162,8 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @process_clearCacheInterval
-     *  
-     *  
+     *
+     *
      *
      **/
     process_clearCacheInterval: function(_t, _containerID, _clearCacheInterval) {
@@ -21314,16 +21314,16 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                 /* Bind once! Ajax Click! */
                 if(_t.classList.contains('js-ddimg'))
                     return;
-                
+
                 _t.classList.add('js-ddimg');
                 // --
 
                 var _imageContainer         = _t.querySelector('.dropdown-image-container')                 || '',
 
                     /* dropdown container */
-                    ddContainer             = _t.nextElementSibling                                         || '', 
-                    ddAjaxContainer         = ddContainer.querySelector('.dropdown-ajax-container')         || '', 
-                    
+                    ddContainer             = _t.nextElementSibling                                         || '',
+                    ddAjaxContainer         = ddContainer.querySelector('.dropdown-ajax-container')         || '',
+
                     /* ajax : populate : get images */
                     _ajaxPopulateUrl        = ddContainer.getAttribute('data-ddimg-ajax-populate-url')      || '',
                     _ajaxPopulateParams     = ddContainer.getAttribute('data-ddimg-ajax-populate-params')   || '',
@@ -21338,7 +21338,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                     /* toast message */
                     toastMsg                = ddContainer.getAttribute('data-ddimg-toast-success')          || 'Successfully Updated!',
                     toastPosition           = ddContainer.getAttribute('data-ddimg-toast-position')         || 'top-center',
-                    
+
                     useCache                = ddContainer.getAttribute('data-ddimg-cache')                  || 'true',
                     noImgText               = ddContainer.getAttribute('data-ddimg-noimg-text')             || 'No Images!',
 
@@ -21384,7 +21384,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                         data:           populateParams,
                         // dataType:        'application/json',
 
-                        beforeSend: function() { 
+                        beforeSend: function() {
 
                             // loading : add
                             clsContainer.forEach(function(c) {
@@ -21395,7 +21395,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
                         },
                         error:      function(XMLHttpRequest, textStatus, errorThrown) {},
-                        success:    function(data) { 
+                        success:    function(data) {
 
                             var data = $.SOW.helper.jsonParse(data);
 
@@ -21491,9 +21491,9 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                 // Ajax : Update
                 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
                 function __itemUpdate(img_src, img_id) {
-                    
 
-                    // Update Inputs 
+
+                    // Update Inputs
                     // if exist!
                     if(_t.querySelector('.dropdown-ddimg-img-id'))
                         _t.querySelector('.dropdown-ddimg-img-id').setAttribute('value', img_id)
@@ -21527,7 +21527,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                         type:           _ajaxUpdateMethod,
                         data:           updateParams,
 
-                        beforeSend: function() { 
+                        beforeSend: function() {
 
                             // loading : add
                             clsItem.forEach(function(c) {
@@ -21537,8 +21537,8 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                         },
 
                         error:      function(XMLHttpRequest, textStatus, errorThrown) { },
-                        
-                        success:    function(data) { 
+
+                        success:    function(data) {
 
                             // loading : remove
                             clsItem.forEach(function(c) {
@@ -21573,7 +21573,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *  @Dependency     -
  *  @Usage          $.SOW.core.count_animate.init()
  *  @Ajax Support   YES
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -21622,7 +21622,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @init
-         *  
+         *
          *
          **/
         init: function (selector, config) {
@@ -21690,7 +21690,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @process
-         *  
+         *
          *
          **/
         process: function(_this) {
@@ -21709,7 +21709,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
                 /**
-                    
+
                     Known issue: refresh when scroll is on middle
 
                     // on scroll up (from refresh)
@@ -21728,7 +21728,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                     $.SOW.core.count_animate.animate(_t);
 
             });
-           
+
         },
 
 
@@ -21737,7 +21737,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @animate
-         *  
+         *
          *
          **/
         animate: function(_t) {
@@ -21818,7 +21818,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @btn_process
-         *  
+         *
          *
          **/
         btn_process: function(el_selector, btn_selector) {
@@ -21878,7 +21878,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @btn_process_math
-         *  
+         *
          *
          **/
         btn_process_math: function(_t) {
@@ -21901,7 +21901,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
             // Checkbox, Radio, etc
             } else {
 
-                // if(_math < 1) 
+                // if(_math < 1)
                 //  return;
 
                 var _lastCalc   = _tMth.attr('data-count-last-math')    || 0,
@@ -21919,7 +21919,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                 if(el_type == 'radio')
                     var _calculate = (_t.hasClass('active') || _t.is(':checked')) ? Number(_baseVal) + _math : Number(_lastCalc) - _math;
 
-                
+
                 else // invert the math because 'active' class is toggled before
                     var _calculate = (_t.hasClass('active') || _t.is(':checked')) ? Number(_lastCalc) + _math : Number(_lastCalc) - _math;
 
@@ -21940,7 +21940,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @btn_process_toggle
-         *  
+         *
          *
          **/
         btn_process_toggle: function(_target) {
@@ -21997,7 +21997,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @custom_easing
-         *  
+         *
          *
          **/
         custom_easing: function() {
@@ -22028,7 +22028,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *
  *  @Dependency     -
  *  @Usage          $.SOW.core.btn_toggle.init('.btn-toggle');
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -22077,7 +22077,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @init
-     *  
+     *
      *
      **/
     init: function (selector, config) {
@@ -22107,7 +22107,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
       // 2. Has selector
       return this.collection.each(function() {
-          
+
         $.SOW.core.btn_toggle.process($(this));
 
       });
@@ -22119,7 +22119,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @process
-     *  
+     *
 
         <!-- toggle -->
         <button class="btn btn-secondary btn-toggle btn-icon btn-circle" data-toggle="popover" data-placement="left" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?">
@@ -22166,7 +22166,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
           if(_t.hasClass('disabled'))
               return;
 
-          // example: Like button - stop if off is not set but on is set! 
+          // example: Like button - stop if off is not set but on is set!
           // Means only `LIKE` allowed!
           if(_requestOff == '' && _requestOn != '' && _t.hasClass('active'))
               return null;
@@ -22212,7 +22212,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
               if(_bodyToggleClass != '')
                   $.SOW.globals.elBody.removeClass(_bodyToggleClass);
-              
+
               _t.removeClass('active disabled');
 
             }, Number(_temporized));
@@ -22305,7 +22305,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *
  *  @Dependency     -
  *  @Usage          $.SOW.core.nav_deep.init('.nav-deep', {speed:200});
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -22349,7 +22349,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @init
-         *  
+         *
          *
          **/
         init: function (selector, config) {
@@ -22381,7 +22381,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                 window.firstLoad = false;
                 $.SOW.core.nav_deep.asideScrollToActiveLink(this.selector);
             }
-            
+
 
             // 1. Has no selector
             if(!this.selector) {
@@ -22430,8 +22430,8 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
                         // 1. Open
                         $.SOW.core.nav_deep.nav_deep_open(_t);
-                    
-                    } else { 
+
+                    } else {
 
                         // 2. Close
                         $.SOW.core.nav_deep.nav_deep_close(_t);
@@ -22447,7 +22447,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
                     // --
-                    if(_href == '#' || _href == '#!') 
+                    if(_href == '#' || _href == '#!')
                         e.preventDefault();
 
                 });
@@ -22482,7 +22482,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
             :: Single Item
             Navigation Links : Close
-            
+
 
         **/
         nav_deep_close: function(_t) {
@@ -22500,8 +22500,8 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
 
             :: Multiple Items
-            Navigation Links : Close Active 
-            
+            Navigation Links : Close Active
+
 
         **/
         nav_deep_close_all: function(_t) {
@@ -22513,7 +22513,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
             });
 
-        
+
             // Single link (no childs) - add .active. Ajax Purpose!
             if(_t.next().find('ul.nav').length < 1)
                 _t.parent('.nav-item').addClass('active');
@@ -22533,7 +22533,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @asideScrollToActiveLink
-         *  
+         *
             on page refresh, scroll sidebar to active link/item
             needed when there are many links!
 
@@ -22602,7 +22602,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *
  *  @Dependency     -
  *  @Usage          $.SOW.core.form_validate.init('form.bs-validate');
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -22646,7 +22646,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @init
-     *  
+     *
      *
      **/
     init: function (selector, config) {
@@ -22676,7 +22676,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
       // 2. Has selector
       return this.collection.each(function() {
-          
+
         $.SOW.core.form_validate.form_validate($(this));
 
       });
@@ -22689,7 +22689,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
      *
      *  @form_validate
      *
-     *  
+     *
      *
      **/
     form_validate: function(_this) {
@@ -22738,7 +22738,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
           if(_toast_text != '') {
 
             if(typeof $.SOW.core.toast === 'object') {
-                
+
               if(Number(_toast_delay) < 1) var _toast_delay = 4000;
               $.SOW.core.toast.show('danger', '', _toast_text, _toast_pos, Number(_toast_delay), true);
 
@@ -22752,13 +22752,13 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
             // show error info
             jQuery('.bs-validate-info', _t).removeClass('hide hide-force'); // show error info
-            
+
             // error info delay timeout
             var _delay = jQuery('.bs-validate-info', _t).data('error-alert-delay') || 3000;
 
             // hide error info in X seconds
             setTimeout(function() {
-              jQuery('.bs-validate-info', _t).addClass('hide hide-force'); 
+              jQuery('.bs-validate-info', _t).addClass('hide hide-force');
             }, Number(_delay));
 
           }
@@ -22807,7 +22807,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *
  *  @Dependency     -
  *  @Usage          $.SOW.core.form_advanced.init();
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -22834,7 +22834,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
      **/
     config: {
 
-      /* 
+      /*
 
           1. Bulk
           @form_advanced_bulk
@@ -22850,7 +22850,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
 
-      /* 
+      /*
 
           2. Form input numeric limit
           @form_advanced_numeric_limit
@@ -22861,7 +22861,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
 
-      /* 
+      /*
 
           3. Form char count
           @form_advanced_char_count_down
@@ -22888,7 +22888,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @init
-     *  
+     *
      *
      **/
     init: function (selector, config) {
@@ -22903,7 +22903,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
       // 1. Bulk
       $.SOW.core.form_advanced.form_advanced_bulk(this.config.selector_advanced_bulk);
-      
+
       // 2. Form input numeric limit
       $.SOW.core.form_advanced.form_advanced_numeric_limit(this.config.selector_advanced_numeric_limit);
 
@@ -22912,7 +22912,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
       // 4. Form char count up
       $.SOW.core.form_advanced.form_advanced_char_count_up(this.config.selector_advanced_char_count_up);
-      
+
       // 5. Form password toggle
       $.SOW.core.form_advanced.form_advanced_type_toggle(this.config.selector_advanced_type_toggle);
 
@@ -22936,7 +22936,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
      *  @form_advanced_bulk
         Form actions[submit] using a regular link
      *
-     *  
+     *
      *
      **/
     form_advanced_bulk: function(_this) {
@@ -22950,7 +22950,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         e.preventDefault();
 
         var _t                          = jQuery(this),
-            
+
             _citems                     = _t.data('js-form-advanced-bulk-container-items')                      || 'table tbody',       // from what container to count checked items?
             _reqSelectedItems           = _t.data('js-form-advanced-bulk-required-selected')                    || $.SOW.core.form_advanced.config.advanced_bulk_selected_require,
             _requiredMsg                = _t.data('js-form-advanced-bulk-required-txt-error')                   || $.SOW.core.form_advanced.config.toast_msg_noitems,
@@ -22967,7 +22967,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
             _reqModalTxtSubtitle        = _t.data('js-form-advanced-bulk-required-modal-txt-subtitle')          || '-',
             _reqModalTxtBodyTxt         = _t.data('js-form-advanced-bulk-required-modal-txt-body-txt')          || 'Are you sure?',
             _reqModalTxtBodyInfo        = _t.data('js-form-advanced-bulk-required-modal-txt-body-info')         || '',
-            _reqModalBtnTxtYes          = _t.data('js-form-advanced-bulk-required-modal-btn-text-yes')          || 'Submit', 
+            _reqModalBtnTxtYes          = _t.data('js-form-advanced-bulk-required-modal-btn-text-yes')          || 'Submit',
             _reqModalBtnTxtNo           = _t.data('js-form-advanced-bulk-required-modal-btn-text-no')           || 'Cancel',
             _reqModalBtnIcoYes          = _t.data('js-form-advanced-bulk-required-modal-btn-icon-yes')          || $.SOW.config.sow__icon_check,        // button icon
             _reqModalBtnIcoNo           = _t.data('js-form-advanced-bulk-required-modal-btn-icon-no')           || $.SOW.config.sow__icon_close,        // button icon
@@ -23057,7 +23057,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
           // LOAD FROM AJAX
           if(_reqModalCustomAjaxUrl != '') {
-            
+
             jQuery(_reqModalCustom).find('.modal-content').load(_reqModalCustomAjaxUrl, function() {
 
               // Update selected items counter
@@ -23069,12 +23069,12 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
           // stop here
           return;
-        
-        } 
+
+        }
 
 
 
-                                
+
 
         // 2. Generated modal (regular type)
         var _tpl = '<div class="modal fade" id="js_advanced_form_bulk_modal_confirm" role="dialog" tabindex="-1" aria-labelledby="modal-title-confirm" aria-hidden="true" data-backdrop="'+_reqModalBackdrop+'">'
@@ -23083,7 +23083,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                 + '<div class="modal-content">'
 
                     + '<div class="modal-header border-0 bg-'+_reqModalType+'-soft">'
-                        
+
                         + '<h5 id="modal-title-confirm" class="modal-title font-light line-height-1">'
                             + _reqModalTitle
                             + '<small class="d-block mt-1" style="font-size:13px">'+_reqModalTxtSubtitle+'</small>'
@@ -23131,7 +23131,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
           var _tpl        = _tplCustom,
               _modalBody  = '#js_advanced_form_bulk_modal_confirm .modal-content';
-      
+
         }
 
 
@@ -23164,7 +23164,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
         // Custom Ajax Content
         if(_reqModalCustomAjaxUrl != '') {
-            
+
           jQuery(_modalBody).empty().append('<div class="py-4 text-center animate-bouncein"><i class="'+$.SOW.config.sow__icon_loading+' fs-1 text-muted"></i></div>');
 
           jQuery(_modalBody).load(_reqModalCustomAjaxUrl, function() {
@@ -23203,7 +23203,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
      *
      *  @form_advanced_bulk_counter_update
      *  :: Helper
-     *  
+     *
      *
      **/
     form_advanced_bulk_counter_update: function(total_selected_items) {
@@ -23231,7 +23231,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
             <!-- /input limit + hidden message -->
 
      *
-     *  
+     *
      *
      **/
     form_advanced_numeric_limit: function(_this) {
@@ -23289,30 +23289,30 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
         <!-- input -->
         <div class="position-relative">
-            
+
             <span class="js-form-advanced-limit-info badge bg-warning hide animate-bouncein position-absolute absolute-top m--2">
                 100 chars limit
             </span>
 
             <input type="text" name="-" class="form-control js-form-advanced-char-count-down" data-output-target=".js-form-advanced-char-left" value="" maxlength="100">
-            
+
             <div class="small text-muted text-align--end mt--3">
                 characters left: <span class="js-form-advanced-char-left">100</span>
             </div>
-        
+
         </div>
-        
+
         <br>
 
         <!-- textarea -->
         <div class="position-relative">
-            
+
             <span class="js-form-advanced-limit-info badge bg-warning hide animate-bouncein position-absolute absolute-top m--2">
                 100 chars limit
             </span>
 
             <textarea class="js-form-advanced-char-count-down form-control" data-output-target=".js-form-advanced-char-left2" maxlength="100"></textarea>
-            
+
             <div class="small text-muted text-align--end mt--3">
                 characters left: <span class="js-form-advanced-char-left2">100</span>
             </div>
@@ -23320,7 +23320,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         </div>
 
      *
-     *  
+     *
      *
      **/
     form_advanced_char_count_down: function(_this) {
@@ -23341,7 +23341,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
           return;
 
         if(_length >= _max) {
-         
+
           _t.val(_val.substring(0, _max - 1)); // limit - remove anything over maximum allowed
           jQuery(_output).html('0');
 
@@ -23374,13 +23374,13 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
         <!-- input -->
         <div class="position-relative">
-            
+
             <span class="js-form-advanced-limit-info badge bg-warning hide animate-bouncein position-absolute absolute-top m--2">
                 100 chars limit
             </span>
 
             <input type="text" name="-" class="form-control js-form-advanced-char-count-up" data-output-target=".js-form-advanced-char-total" value="" maxlength="100">
-            
+
             <div class="small text-muted text-align--end mt--3">
                 characters: <span class="js-form-advanced-char-total">0</span> / 100
             </div>
@@ -23391,13 +23391,13 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
         <!-- textarea -->
         <div class="position-relative">
-            
+
             <span class="js-form-advanced-limit-info badge bg-warning hide animate-bouncein position-absolute absolute-top m--2">
                 100 chars limit
             </span>
 
             <textarea class="js-form-advanced-char-count-up form-control" data-output-target=".js-form-advanced-char-total2" maxlength="100"></textarea>
-            
+
             <div class="small text-muted text-align--end mt--3">
                 characters: <span class="js-form-advanced-char-total2">0</span> / 100
             </div>
@@ -23405,7 +23405,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         </div>
 
      *
-     *  
+     *
      *
      **/
     form_advanced_char_count_up: function(_this) {
@@ -23442,7 +23442,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
      *
      *  @form_advanced_simple_alert
      *  Optional form alert
-     *  
+     *
      *
      **/
     form_advanced_simple_alert: function(_this) {
@@ -23463,7 +23463,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @form_advanced_type_toggle
-     *  
+     *
      *
      **/
     form_advanced_type_toggle: function(_this) {
@@ -23611,7 +23611,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
                       }).addClass('js-ajaxified');
 
-                  } 
+                  }
                   // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
               }
@@ -23627,7 +23627,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
               // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
               // if(__target != '' && _disableRequired == 'true' && _isFormValidate > 0) {
               if(__target != '' && _disableRequired == 'true') {
-                  
+
                   // Disable hidden elements
                   if(_disableHidden+'' == 'true') {
                       jQuery('.form-advanced-list-reveal-item:hidden [disabled]', _t).not('.js-form-advanced-list-ignore').prop('disabled', false);
@@ -23705,7 +23705,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                   }
 
               });
-              
+
               jQuery(_target+' textarea').not(_exclude).val('');
               jQuery(_target+' input[type=checkbox]').not(_exclude).prop('checked', false);
               jQuery(_target+' input[type=radio]').not(_exclude).prop('checked', false);
@@ -23736,7 +23736,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
         var _t    = jQuery(this),
             _elID = _t.attr('id') || '';
-        
+
         if(_elID == '') return null;
 
         // 1. add identifier class for each required element
@@ -23749,7 +23749,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
           jQuery('.js-required-hidden', _t).prop('required', false);
         }
 
-        // 3. add|remove required attribute 
+        // 3. add|remove required attribute
         jQuery('input[data-target="#'+_elID+'"], a[href="#'+_elID+'"], .js-form-advanced-required-toggler').on('click', function(e) {
           $.SOW.core.form_advanced.__switchFormAdvancedRequired();
         });
@@ -23775,7 +23775,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
               }
 
             });
-          
+
           }, 450);
 
         },
@@ -23814,7 +23814,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
             // remove first TR, if is hidden (acting as a template)
             if(jQuery('table>tbody>tr:first-child', _t).hasClass('hide'))
               jQuery('table>tbody>tr:first-child', _t).remove();
-                
+
 
             // resets
             jQuery('input, textarea', _clone).val('').removeClass('js-tangepickified js-rangepickified js-bselectified js-datepickified js-advancified');
@@ -23892,10 +23892,10 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
                 var _tc         = jQuery(this),
                     _el         = _tc.parents('.js-form-advanced-table-column-add'),
-                    
+
                     _columnName = jQuery('input', _el).val()                || '',
                     _columnName = _columnName.trim(),
-                    
+
                     _optionName = jQuery('input', _el).attr('name')         || '',
                     _optionName = _optionName.trim();
 
@@ -23913,7 +23913,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                 var _optionName = (_optionName == '') ? _columnName : _optionName+'['+_columnName+']',
                     _optionName = _optionName.toLowerCase();
                 var _colID = 'js_' + $.SOW.helper.randomStr(6);
-                var _columnNameUcFirst = _columnName.replace(/^./, _columnName[0].toUpperCase()); 
+                var _columnNameUcFirst = _columnName.replace(/^./, _columnName[0].toUpperCase());
 
 
                 // check if already exist
@@ -24070,7 +24070,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @formatCreditCard
-     *  
+     *
      *
      **/
     formatCreditCard: function() {
@@ -24151,7 +24151,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         var matches = v.match(/\d{4,16}/g);
         var match   = matches && matches[0] || '';
         var parts   = [];
-        
+
         for (var i=0, len=match.length; i<len; i+=4) {
             parts.push(match.substring(i, i+4));
         }
@@ -24245,7 +24245,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         var  _ref = options.accept;
         for (var _i = 0, _len = _ref.length; _i < _len; _i++) {
             card_type = _ref[_i];
-            
+
             if (__indexOf.call((function() {
                 var _j, _len1, _results = [];
 
@@ -24265,7 +24265,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
         _ref1 = (function() {
             var _k, _len1, _ref1, _results = [];
-            
+
             for (_k = 0, _len1 = card_types.length; _k < _len1; _k++) {
                 card = card_types[_k];
                 if (_ref1 = card.name, __indexOf.call(options.accept, _ref1) >= 0) {
@@ -24325,7 +24325,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *
  *  @Dependency     -
  *  @Usage          $.SOW.core.checkall.init('input[data-checkall-container]');
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -24357,7 +24357,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @init
-     *  
+     *
      *
      **/
     init: function (selector, config) {
@@ -24385,7 +24385,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @process
-     *  
+     *
      *
      **/
     process: function(selector) {
@@ -24409,7 +24409,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
       for( let i in checkList ) {
 
-        /** 
+        /**
           Variables
         **/
         let checkallList = document.querySelector( checkList[i] );
@@ -24418,7 +24418,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         let items = checkallList.querySelectorAll('[type="checkbox"]:not(.js-ignore):not(:disabled)');
 
 
-        /** 
+        /**
           Item click
         **/
         items.forEach(function( item ) {
@@ -24428,20 +24428,20 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         });
 
 
-        /** 
-          Checkall click 
+        /**
+          Checkall click
         **/
         sAll.forEach( function( sItem ) {
 
           sItem.addEventListener('click', function(c) {
 
             /* select all */
-            if( c.target.checked ) { 
-              items.forEach(function( item ) { 
+            if( c.target.checked ) {
+              items.forEach(function( item ) {
                 if( !item.disabled ) item.checked = true;
               });
             } else { /* deselect all */
-              items.forEach(function( item ) { 
+              items.forEach(function( item ) {
                 if( !item.disabled ) item.checked = false;
               });
             }
@@ -24454,8 +24454,8 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
 
-        /** 
-          Checkall states 
+        /**
+          Checkall states
         **/
         function checkallStates() {
 
@@ -24463,12 +24463,12 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
           sAll.forEach( function( t ) {
 
             if( checkedItems < 1 ) {
-             
+
               /* none checked */
               t.indeterminate = false;
               t.checked = false;
               // console.log('checked : none', checkedItems+'/'+items.length);
-            
+
             } else {
 
               /* partially checked */
@@ -24479,7 +24479,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
               }
 
               /* all checked */
-              else  { 
+              else  {
                 t.checked = true;
                 t.indeterminate = false;
                 // console.log('checked : all', checkedItems+'/'+items.length);
@@ -24516,7 +24516,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *
  *  @Dependency     -
  *  @Usage          $.SOW.core.checkgroup.init('div.checkgroup');
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -24548,7 +24548,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @init
-     *  
+     *
      *
      **/
     init: function (selector, config) {
@@ -24576,7 +24576,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @process
-     *  
+     *
      *
      **/
     process: function(_this) {
@@ -24653,7 +24653,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
               // Ajax Request
               $.SOW.core.checkgroup.ajaxRequest(ajaxURL, ajaxMethod, ajaxParamObj, toastMsg, toastPosition);
-          
+
             }
 
           });
@@ -24670,24 +24670,24 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @ajaxRequest
-     *  
+     *
      *
      **/
     ajaxRequest: function(ajaxURL, ajaxMethod, ajaxParamObj, toastMsg, toastPosition) {
 
       // Ajax
-      // JQUERY USED because is able to send data as multidimmensional 
+      // JQUERY USED because is able to send data as multidimmensional
       jQuery.ajax({
         url:            ajaxURL,
         type:           ajaxMethod || 'GET',
         data:           ajaxParamObj,
         debug:          false,
-        success:    function(data) { 
+        success:    function(data) {
 
           // Debug
           if($.SOW.config.sow__debug_enable === true)
             console.log(data);
-                  
+
           if( toastMsg && typeof $.SOW.core.toast === 'object' ) {
             $.SOW.core.toast.destroy();
             $.SOW.core.toast.show('success', '', toastMsg, toastPosition, 1500, true);
@@ -24711,7 +24711,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *
  *  @Dependency     -
  *  @Usage          $.SOW.core.gdpr.init('#gdpr');
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -24740,8 +24740,8 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
             cookie_name:    '__gdpr',
             cookie_expire:  365,
-            cookie_path:    '/', /* Safari Issues */ // $.SOW.globals.cookie_secure, // 'SameSite=None; secure' (Google) 
-        
+            cookie_path:    '/', /* Safari Issues */ // $.SOW.globals.cookie_secure, // 'SameSite=None; secure' (Google)
+
         },
 
 
@@ -24759,7 +24759,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @init
-         *  
+         *
          *
          **/
         init: function (selector, config) {
@@ -24798,10 +24798,10 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @process
-         *  
+         *
 
-            <!-- 
-                GDPR POPUP 
+            <!--
+                GDPR POPUP
 
                 Reset GDPR:
                     $.SOW.core.gdpr.destroy();
@@ -24826,9 +24826,9 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
             -->
             <div id="gdpr" class="hide bg-white rounded-lg shadow-lg w-100 max-w-350 p--30 m--15 position-fixed fixed-bottom right-0 z-index-9999">
-                
+
                 <h3 class="fs--18 mb-4">
-                    
+
                     <a href="#" class="close mt--n3">
                         <span class="fi fi-close fs--18" aria-hidden="true"></span>
                     </a>
@@ -24846,17 +24846,17 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                 <a href="#" class="btn btn-primary btn-cookie-accept btn-lg btn-block">
                     Accept &amp; Continue
                 </a>
-                
+
                 <hr class="mt-4 mb-4">
-                
+
                 <p class="m--0">
 
                     <span class="d-block">Need to learn more?</span>
 
-                    <a href="#" class="link-muted">Privacy Policy</a> 
-                    
-                    &ndash; and &ndash; 
-                    
+                    <a href="#" class="link-muted">Privacy Policy</a>
+
+                    &ndash; and &ndash;
+
                     <a href="../page/cookie.html" class="link-muted">Cookie Policy</a>
 
                 </p>
@@ -24896,7 +24896,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
             jQuery(' a.btn-cookie-accept:not(.js-gdprified)').addClass('js-gdprified').on('click', function(e) {
                 e.preventDefault();
 
-                /* 
+                /*
                     values:
                         0 = accept all cookies!
                         1 = website only
@@ -24987,7 +24987,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *
  *  @Dependency     -
  *  @Usage          $.SOW.core.sidebar.init();
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -25029,7 +25029,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @init
-         *  
+         *
          *
          **/
         init: function (selector, config) {
@@ -25045,7 +25045,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
             $.SOW.core.sidebar.sidebar_toggle();
             $.SOW.core.sidebar.sidebar_minify();
             $.SOW.core.sidebar.sidebar_extended();
-            
+
             return this.collection;
 
         },
@@ -25084,7 +25084,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
             });
 
 
-            /** 
+            /**
 
                 CLOSE SIDEBAR ON ITEM CLICK
                 Add to nav: .nav-link-click-close
@@ -25137,7 +25137,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @sidebar_extended
-         *  
+         *
          *
          **/
         sidebar_extended: function() {
@@ -25157,7 +25157,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @sidebar_dispose
-         *  
+         *
          *
          **/
         sidebar_dispose: function() {
@@ -25182,7 +25182,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *
  *  @Dependency     -
  *  @Usage          $.SOW.core.scroll_to.init('a.scroll-to', {speed:400});
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -25237,7 +25237,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @init
-         *  
+         *
          *
          **/
         init: function (selector, config) {
@@ -25274,7 +25274,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
             // 2. Has selector
             return this.collection.each(function() {
-                
+
                 $.SOW.core.scroll_to.process($(this));
 
             });
@@ -25286,7 +25286,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @process
-         *  
+         *
 
             <a href="#top" class="scroll-animate">Go to top</a>
             <a href="#div_id" class="scroll-animate">Go to a section</a>
@@ -25313,7 +25313,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
                 // add a delay if this has also a collapse option
                 if(_toggle == 'collapse')
-                    _delay = (_delay > 0) ? _delay : 300; // bootstrap default is 400 
+                    _delay = (_delay > 0) ? _delay : 300; // bootstrap default is 400
 
                 // Scroll (helper.js)
                 if(typeof $.SOW.helper.scrollAnimate === "function") {
@@ -25340,7 +25340,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @scroll to top
-         *  
+         *
          *
          **/
         scrollToTop: function() {
@@ -25425,7 +25425,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
 
                     if (currScrollPos > appearAtMin) {
-                    
+
                         if(window.isVisibleBtnScrollTo === false) {
                             window.isVisibleBtnScrollTo = true;
                             jQuery('#btnScrollTo').fadeIn(400);
@@ -25476,7 +25476,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *
  *  @Dependency     -
  *  @Usage          $.SOW.core.search_inline.init('input.iqs-input');
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -25518,7 +25518,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @init
-     * 
+     *
      *
      **/
     init: function (selector, config) {
@@ -25557,7 +25557,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
         // 2. Has selector
         return this.collection.each(function() {
-            
+
           $.SOW.core.search_inline.process($(this));
 
         });
@@ -25582,7 +25582,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
           <div class="iqs-item">
             <span>Another Here</span>
           </div>
-          
+
           ...
 
         </div>
@@ -25595,7 +25595,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
       // --
       if(_this.hasClass('iqs-init'))
         return;
-      
+
       _this.addClass('iqs-init');
       // --
 
@@ -25609,10 +25609,10 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         if (keywords == "") {
 
           jQuery(_container+" .iqs-item").removeClass('hide hide-force');
-        
+
         } else {
 
-          jQuery(_container+" .iqs-item").addClass('hide hide-force'); 
+          jQuery(_container+" .iqs-item").addClass('hide hide-force');
           jQuery(_container+' .iqs-item :containsIN('+keywords+')').closest(".iqs-item").removeClass('hide hide-force');
 
         }
@@ -25634,7 +25634,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *
  *  @Dependency     $.SOW.core.search_inline (for inline search)
  *  @Usage          $.SOW.core.input_suggest.init('input.input-suggest');
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -25676,7 +25676,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @init
-     * 
+     *
      *
      **/
     init: function (selector, config) {
@@ -25706,7 +25706,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
       // 2. Has selector
       return this.collection.each(function() {
-          
+
         $.SOW.core.input_suggest.process($(this));
 
       });
@@ -25727,7 +25727,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
       // --
       if(_this.hasClass('is-init'))
         return;
-      
+
       _this.addClass('is-init');
       // --
 
@@ -25869,14 +25869,14 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
               // reset
               jQuery('#dd_'+_elID+'>div').empty();
-              if(_data.length < 1)  
+              if(_data.length < 1)
                   return;
 
               // Append Data
               for (var i = 0; i < _data.length; i++) {
 
                   if(_type == 'append' || _type == 'self') {
-                      
+
                       if(_type == 'self') {
                           _data[i].url = '#!';
                           _data[i].id  = '';
@@ -25898,7 +25898,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                   _this.dropdown('show');
               }
 
-              // SOW inline search 
+              // SOW inline search
               if(_type == 'text' && typeof $.SOW.core.search_inline === 'object') {
                   _this.attr('data-container', '#dd_'+_elID+'>div');
                   _this.addClass('iqs-input');
@@ -26010,11 +26010,11 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
           _this.parents('.input-group').addClass('dropdown');
           __el = _this;
         }
-        
+
         else if(_this.parents('.form-label-group').length > 0) {
           _this.parents('.form-label-group').addClass('dropdown');
           __el = _this.next('label');
-        
+
         } else {
           _this.wrap('<div class="dropdown"></div>');
         }
@@ -26041,10 +26041,10 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
       var _tpl = '<div class="p-1 clearfix">'
                       + '<a href="#!" class="item-suggest-append-remove fi fi-close float-start text-decoration-none" style="font-size:16px"></a>';
-                      
+
                       if(item_url != '' && item_url != '#' && item_url != '#!')
                           _tpl += '<a href="'+item_url+'" target="_blank" class="text-decoration-none">'+item_label+'</a>';
-                      else 
+                      else
                           _tpl += '<span>'+item_label+'</span>';
 
                       _tpl += '<input type="hidden" name="'+__name+'" value="'+item_id+'">'
@@ -26102,7 +26102,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
     <div class="timer-autohide" data-timer-autohide="4000">...</div>
 
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -26144,7 +26144,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @init
-         *  
+         *
          *
          **/
         init: function (selector, config) {
@@ -26174,7 +26174,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
             // 2. Has selector
             return this.collection.each(function() {
-                
+
                 $.SOW.core.timer_autohide.process($(this));
 
             });
@@ -26186,7 +26186,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @process
-         *  
+         *
 
             <div data-autohide="3000">
                 ....
@@ -26226,7 +26226,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *
  *  @Dependency     -
  *  @Usage          $.SOW.core.timer_countdown.init('.timer-countdown');
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -26270,7 +26270,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @init
-         *  
+         *
          *
          **/
         init: function (selector, config) {
@@ -26299,7 +26299,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
             // 2. Has selector
             return this.collection.each(function() {
-                
+
                 $.SOW.core.timer_countdown.process($(this));
 
             });
@@ -26311,7 +26311,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @process
-         *  
+         *
          *
          **/
         process: function(_this) {
@@ -26367,7 +26367,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                 return;
 
 
-            // Show time before starting 
+            // Show time before starting
             $.SOW.core.timer_countdown.timer_compute(_this, _elID, _inline, false);
 
             // Start loop, each second
@@ -26386,7 +26386,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @timer_compute
-         *  
+         *
          *
          **/
         timer_compute: function(_this, _elID, _inline, _calledByInterval) {
@@ -26417,7 +26417,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                 // Self hide
                 if(_endSelfHide == true)
                     _this.addClass('hide hide-force');
-                
+
                 // Another container (or more separated by space) hide
                 if(_endTargetHide != '')
                     jQuery(_endTargetHide).addClass('hide hide-force');
@@ -26430,7 +26430,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                     // get element id or assign a random one
                     var _elID = _this.attr('id') || '';
                     $.SOW.helper.executeFunctionByName(_callback, window, _elID);
-                                
+
                 }
 
                 return false;
@@ -26475,7 +26475,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @timer_compute_stop
-         *  
+         *
          *
          **/
         timer_compute_stop: function(_elID) {
@@ -26493,7 +26493,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         /**
          *
          *  @timer2html
-         *  
+         *
          *
          **/
         timer2html: function(_this, timeString) {
@@ -26514,7 +26514,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                 _days   = Math.floor(_timeSplit[0] / 24);   // round always down
                 _hours  = Math.floor(_timeSplit[0] % 24);   // round always down
             } else {
-                _hours  = Math.floor(_timeSplit[0] % 24);   // round always down            
+                _hours  = Math.floor(_timeSplit[0] % 24);   // round always down
             }
 
             // calc no of years
@@ -26597,10 +26597,10 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         process: function( nodeList ) {
 
 
-            /* 
+            /*
                 Check
             */
-            if( typeof nodeList !== 'object' ) 
+            if( typeof nodeList !== 'object' )
                 return;
 
             nodeList.forEach(function(el) {
@@ -26611,7 +26611,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
 
-                /* 
+                /*
                     Attributes
                 */
                 let _font     = el.getAttribute('data-gfont');
@@ -26622,7 +26622,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
 
-                /* 
+                /*
                     Parse Data
                 */
                 let _gfont    = _font.replace(/ /g, '+');
@@ -26632,7 +26632,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                 let _fEl      = document.getElementById( _cssID );
 
 
-                /* 
+                /*
                     Font Already Exists
                 */
                 if( _fEl ) {
@@ -26642,7 +26642,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                 }
 
 
-                /* 
+                /*
                     Push font
                 */
                 let tagHead = document.getElementsByTagName('head')[0];
@@ -26666,7 +26666,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
  *
  *  @Dependency     -
  *  @Usage          $.SOW.core.utils.init();
- * 
+ *
  *
  **/
 ;(function ($) {
@@ -26736,7 +26736,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @init
-     *  
+     *
      *
      **/
     init: function (selector, config) {
@@ -26746,7 +26746,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
         // Initials from a string [name]
         $.SOW.core.utils.initialsFromString(this.selector+' '+$.SOW.core.utils.config.selector__initialFromString);
-        
+
         // Time Ago
         $.SOW.core.utils.timeAgo(this.selector+' '+$.SOW.core.utils.config.selector__timeAgo);
 
@@ -26767,7 +26767,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
         // Form Live Monitor
         $.SOW.core.utils.UtilFormLiveMonitor(this.selector+' '+$.SOW.core.utils.config.selector__formLiveMonitor);
-        
+
         // Live Reload
         $.SOW.core.utils.UtilLiveReload(this.selector+' '+$.SOW.core.utils.config.selector__liveReload);
 
@@ -26780,7 +26780,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     /**
      *
      *  @initialsFromString
-     *  
+     *
      *
      **/
     initialsFromString: function(selector) {
@@ -26797,7 +26797,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
             var _t          = jQuery(this),
                 fullName    = _t.data('initials')                       || '',
                 assignColor = jQuery(this).attr('data-assign-color')    || 'false';
-            
+
             if(fullName == '')
                 return false;
 
@@ -26853,7 +26853,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
         var el      = jQuery(selector),
             loaded  = false;
-        
+
         if(el.length < 1)
             return;
 
@@ -26880,8 +26880,8 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                 live    = _t.attr('data-live')  || 'false',
                 lang    = _t.data('lang')       || '',
                 ID      = _t.attr('id')         || '';
-            
-            if(!time) 
+
+            if(!time)
                 return
 
             if(typeof lang === 'object')
@@ -26962,7 +26962,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     cookieUtil: function(selector) {
 
         var el = jQuery(selector);
-        
+
         if(el.length < 1)
             return;
 
@@ -27043,7 +27043,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
         var el      = jQuery(selector),
             loaded  = false;
-        
+
         if(el.length < 1)
             return;
 
@@ -27070,7 +27070,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
 
             // create a container, just to izolate stuff!
             _t.prepend('<div id="'+slideRand+'" class="sow-slideshow absolute-full z-index-0"></div>');
-            
+
             // Split by comma
             var arrImgs = dataBgs.split(',');
 
@@ -27168,7 +27168,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     cloner: function(selector) {
 
         var el      = jQuery(selector);
-        
+
         if(el.length < 1)
             return;
 
@@ -27207,10 +27207,10 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
             jQuery('.js-cloned-fresh input[type=text], .js-cloned-fresh input[type=email], .js-cloned-fresh input[type=number], .js-cloned-fresh textarea', _destination).not('.js-ignore').not('.js-clean-ignore').val(''); // empty
 
 
-            /* 
+            /*
                 replace classes, where is required
-                    
-                    class="form-control" 
+
+                    class="form-control"
                     data-cloned-replace-class="form-control input-suggest"
             */
             jQuery('.js-cloned-fresh [data-cloned-replace-class]', _destination).each(function() {
@@ -27219,9 +27219,9 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                         .removeAttr('data-cloned-replace-class');
             });
 
-            /* 
+            /*
                 replace name, where is required (clonned inputs)
-                    
+
                     name="item[]"
                     data-cloned-replace-name="item[$]"
             */
@@ -27233,12 +27233,12 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                         .removeAttr('data-cloned-replace-name');
             });
 
-            /* 
+            /*
                 replace attribute, where is required (clonned inputs)
 
-                    data-name="configurator_id[]" 
-                    data-cloned-replace-attribute-name="data-name" 
-                    data-cloned-replace-attribute-value="configurator_id[$][]" 
+                    data-name="configurator_id[]"
+                    data-cloned-replace-attribute-name="data-name"
+                    data-cloned-replace-attribute-value="configurator_id[$][]"
 
             */
             jQuery('.js-cloned-fresh [data-cloned-replace-attribute-name]', _destination).each(function() {
@@ -27345,7 +27345,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     UtilAction: function(selector) {
 
         var el      = jQuery(selector);
-        
+
         if(el.length < 1)
             return;
 
@@ -27356,7 +27356,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
         el.not('.js-sowutilified').addClass('js-sowutilified').on('click', function(e) {
 
             var _t                      = jQuery(this),
-                
+
                 _showLoadingIcon        = _t.attr('data-ajax-show-loading-icon')        || 'true',
 
                 // 'true' = do not toggle 'active'class
@@ -27383,13 +27383,13 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                 _targetReadonlyOn       = _t.data('util-target-readonly-on')            || '',
                 _targetReadonlyOff      = _t.data('util-target-readonly-off')           || '',
                 _targetReadonlyToggle   = _t.data('util-target-readonly-toggle')        || '',
-                
+
                 _targetDisableOn        = _t.data('util-target-disable-on')             || '',
                 _targetDisableOff       = _t.data('util-target-disable-off')            || '',
                 _targetDisableToggle    = _t.data('util-target-disable-toggle')         || '',
 
                 _targetRemove           = _t.data('util-target-remove')                 || '',
-                
+
                 _groupActive            = _t.data('util-group-active')                  || '',
                 _groupActiveClass       = _t.data('util-group-active-class')            || 'active',
 
@@ -27527,7 +27527,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                 setTimeout(function() {
 
                     jQuery(_targetFocus).focus();
-                    
+
                 }, 400);
 
             }
@@ -27625,7 +27625,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     UtilForm: function(selector) {
 
         var el      = jQuery(selector);
-        
+
         if(el.length < 1)
             return;
 
@@ -27787,7 +27787,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
     UtilFormLiveMonitor: function(selector) {
 
         var el      = jQuery(selector);
-        
+
         if(el.length < 1)
             return;
 
@@ -27806,7 +27806,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                 _formLiveMonitorEl          = _t.attr('data-util-live-monitor-elements')        || '*',
                 _formLiveMonitorAppendData  = _t.attr('data-util-live-monitor-append-response') || '',
                 _formLiveMonitorDelay       = _t.attr('data-util-live-monitor-user-delay')      || 1000,
-                
+
                 _ajaxURL                    = _t.attr('data-util-live-ajax-url')                || '',
                 _ajaxMethod                 = _t.attr('data-util-live-ajax-method')             || 'POST',
                 _ajaxParams                 = _t.attr('data-util-live-ajax-params')             || '',
@@ -27927,7 +27927,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                 }, Number(_formLiveMonitorDelay));
 
             });
-            
+
 
         });
 
@@ -28024,18 +28024,18 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                 type:           ajaxMethod,
                 data:           data_params,
 
-                beforeSend: function() { 
+                beforeSend: function() {
 
                   if(_showLoadingIcon == 'true')
                     $.SOW.helper.loadingSpinner('show');
 
                 },
 
-                error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
                   $.SOW.helper.loadingSpinner('hide');
                 },
 
-                success: function(data) { 
+                success: function(data) {
 
                   $.SOW.helper.loadingSpinner('hide');
                   jQuery(_target).empty().append(data);
@@ -28043,7 +28043,7 @@ if ( window.NodeList && !NodeList.prototype.forEach ) {
                   // form live monitor
                   jQuery('.sow-util-form-live-monitor').removeClass('js-sowlfutilified');
                   $.SOW.core.utils.UtilFormLiveMonitor('.sow-util-form-live-monitor');
-                  
+
                   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
                   // console log
                   $.SOW.helper.consoleLogReinit(scriptInfo, _target);

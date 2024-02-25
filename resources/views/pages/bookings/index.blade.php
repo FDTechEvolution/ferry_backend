@@ -46,7 +46,7 @@
                     <select class="form-select" id="station_to" aria-label="" name="station_to">
                         <option value="" selected>-- All --</option>
                         @foreach ($tripTypes as $key => $title)
-                            <option value="{{$key}}">{{$title}}</option>
+                            <option value="{{ $key }}">{{ $title }}</option>
                         @endforeach
                     </select>
                     <label for="station_to">Trip Type</label>
@@ -57,7 +57,7 @@
                     <select class="form-select" id="station_to" aria-label="" name="station_to">
                         <option value="" selected>-- All --</option>
                         @foreach ($bookChannels as $key => $title)
-                            <option value="{{$key}}">{{$title}}</option>
+                            <option value="{{ $key }}">{{ $title }}</option>
                         @endforeach
                     </select>
                     <label for="station_to">Salse Channel</label>
@@ -96,7 +96,7 @@
                     <select class="form-select" id="status" aria-label="" name="status">
                         <option value="" selected>-- All --</option>
                         @foreach ($bookingStatus as $key => $status)
-                            <option value="{{$key}}">{{$status['title']}}</option>
+                            <option value="{{ $key }}">{{ $status['title'] }}</option>
                         @endforeach
                     </select>
                     <label for="status">Status</label>
@@ -123,7 +123,8 @@
                     </li>
                     <li class="breadcrumb-item">
                         <a href="#" id="action-print" data-action="selectbook"
-                            data-url="{{ route('print.multipleticket') }}" class="disabled"><i class="fi fi-print m-0"></i>
+                            data-url="{{ route('print.multipleticket') }}" class="disabled"><i
+                                class="fi fi-print m-0"></i>
                             Print Ticket</a>
                     </li>
                     <li class="breadcrumb-item">
@@ -209,10 +210,11 @@
                                         </small>
                                     </td>
                                     <td class="text-center">
-                                        <small class="{{$bookingStatus[$item['status']]['class']}}">{{$bookingStatus[$item['status']]['title']}}</small>
+                                        <small
+                                            class="{{ $bookingStatus[$item['status']]['class'] }}">{{ $bookingStatus[$item['status']]['title'] }}</small>
                                     </td>
                                     <td></td>
-                                    <td class="text-center">{{$item['amend']}}</td>
+                                    <td class="text-center">{{ $item['amend'] }}</td>
                                     <td class="text-end">
                                         <div class="d-none">
                                             <div class="btn-group" role="group" aria-label="Basic example">
@@ -259,17 +261,31 @@
 
                                                         <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
                                                             class="dropdown-item text-truncate" rel="noopener"
-                                                            target="_blank">
+                                                            target="">
                                                             <i class="fi fi-pencil m-1"></i> View/Edit
                                                         </a>
-                                                        <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
-                                                            class="dropdown-item text-warning" rel="noopener"
-                                                            target="_blank">
-                                                            <i class="fi fi-close m-1"></i> Cancel
+
+                                                        <a href="#"
+                                                            data-href="{{ route('booking.changeStatus', ['id' => $item['id'], 'status' => 'void']) }}"
+                                                            data-ajax-modal-size="modal-md"
+                                                            data-ajax-modal-centered="true"
+                                                            data-ajax-modal-callback-function=""
+                                                            data-ajax-modal-backdrop="static"
+                                                            class="dropdown-item text-warning js-ajax-modal">
+                                                            <svg width="18px" height="18px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"></path>
+                                                              </svg>
+                                                               Cancel
                                                         </a>
-                                                        <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
-                                                            class="dropdown-item text-danger" rel="noopener"
-                                                            target="_blank">
+
+
+                                                        <a href="#"
+                                                            data-href="{{ route('booking.changeStatus', ['id' => $item['id'], 'status' => 'delete']) }}"
+                                                            data-ajax-modal-size="modal-md"
+                                                            data-ajax-modal-centered="true"
+                                                            data-ajax-modal-callback-function=""
+                                                            data-ajax-modal-backdrop="static"
+                                                            class="dropdown-item text-danger js-ajax-modal">
                                                             <i class="fi fi-thrash m-1"></i> Delete
                                                         </a>
                                                     </div>

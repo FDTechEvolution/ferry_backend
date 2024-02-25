@@ -28,7 +28,8 @@ class Bookings extends Model
         'trip_type',
         'ispremiumflex',
         'promotion_id',
-        'isconflict'
+        'isconflict',
+        'amend'
     ];
 
     public function user() {
@@ -40,7 +41,7 @@ class Bookings extends Model
     }
 
     public function bookingRoutes() {
-        return $this->belongsToMany(Route::class, 'booking_routes', 'booking_id', 'route_id')->withPivot('type', 'traveldate','amount')->with('station_from', 'station_to', 'routeAddons');
+        return $this->belongsToMany(Route::class, 'booking_routes', 'booking_id', 'route_id')->withPivot('type', 'traveldate','amount','id','ischange')->with('station_from', 'station_to', 'routeAddons');
     }
 
     public function bookingRoutesX(){
@@ -53,6 +54,10 @@ class Bookings extends Model
 
     public function payments() {
         return $this->hasMany(Payments::class,'booking_id', 'id')->with('paymentLines');
+    }
+
+    public function transactionLogs() {
+        return $this->hasMany(TransactionLogs::class,'booking_id', 'id')->with('user')->orderBy('created_at','DESC');
     }
 
     public function promotion() {

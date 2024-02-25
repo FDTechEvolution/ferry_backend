@@ -25,12 +25,12 @@ class BookingHelper
     public static function status()
     {
         $status = [
-            'DR' => ['title' => 'Pending', 'icon' => '', 'class' => 'text-mute'],
-            'UNP' => ['title' => 'Unpaid', 'icon' => '', 'class' => 'text-warning'],
-            'CO' => ['title' => 'Paid', 'icon' => '', 'class' => 'text-success'],
-            'void' => ['title' => 'CANX', 'icon' => '', 'class' => 'text-mute'],
-            'delete' => ['title' => 'Deleted', 'icon' => '', 'class' => 'text-danger'],
-            'amended' => ['title' => 'Amended', 'icon' => '', 'class' => ''],
+            'DR' => ['title' => 'Pending', 'icon' => '', 'class' => 'text-mute','action'=>''],
+            'UNP' => ['title' => 'Unpaid', 'icon' => '', 'class' => 'text-warning','action'=>'Unpaid'],
+            'CO' => ['title' => 'Paid', 'icon' => '', 'class' => 'text-success','action'=>'Paid'],
+            'void' => ['title' => 'CANX', 'icon' => '', 'class' => 'text-mute','action'=>'Cancel'],
+            'delete' => ['title' => 'Deleted', 'icon' => '', 'class' => 'text-danger','action'=>'Delete'],
+            'amended' => ['title' => 'Amended', 'icon' => '', 'class' => '','action'=>''],
         ];
 
         return $status;
@@ -237,7 +237,7 @@ class BookingHelper
         }
 
 
-        tranLog(['type' => 'booking', 'title' => 'Create booking', 'description' => '', 'booking_id' => $booking->id]);
+        TransactionLogHelper::tranLog(['type' => 'booking', 'title' => 'Create booking', 'description' => '', 'booking_id' => $booking->id]);
 
         return $booking;
     }
@@ -302,7 +302,7 @@ class BookingHelper
 
         $booking = Bookings::with('bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingCustomers', 'tickets')->where('id', $bookingId)->first();
 
-        tranLog(['type' => 'booking', 'title' => 'Complate payment', 'description' => '', 'booking_id' => $booking->id]);
+        TransactionLogHelper::tranLog(['type' => 'booking', 'title' => 'Complate payment', 'description' => '', 'booking_id' => $booking->id]);
 
         return $booking;
     }
@@ -321,7 +321,7 @@ class BookingHelper
         $booking->status = 'VO';
         $booking->save();
 
-        tranLog(['type' => 'booking', 'title' => 'Void booking', 'description' => '', 'booking_id' => $booking->id]);
+        TransactionLogHelper::tranLog(['type' => 'booking', 'title' => 'Void booking', 'description' => '', 'booking_id' => $booking->id]);
 
         //Create ticket
         return $booking;

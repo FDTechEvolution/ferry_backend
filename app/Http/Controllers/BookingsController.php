@@ -16,6 +16,7 @@ use App\Helpers\ImageHelper;
 use Illuminate\Support\Carbon;
 use App\Helpers\RouteHelper;
 use App\Helpers\EmailHelper;
+use App\Helpers\TransactionLogHelper;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
@@ -190,10 +191,15 @@ class BookingsController extends Controller
                 'bookingRoutes.station_lines',
                 'payments',
                 'payments.paymentLines',
+                'transactionLogs'
             )
             ->first();
-        // Log::debug($booking->toArray());
-        return view('pages.bookings.view', ['booking' => $booking, 'country_list' => $this->CountryList, 'code_country' => $this->CodeCountry]);
+        return view('pages.bookings.view', [
+            'booking' => $booking,
+            'status'=>BookingHelper::status(),
+            'tripType' => BookingHelper::tripType(),
+
+        ]);
     }
 
     public function store(Request $request)
@@ -376,5 +382,29 @@ class BookingsController extends Controller
             EmailHelper::ticket($booking->id);
         }
         return redirect()->route('booking-index')->withSuccess('sent email.');
+    }
+
+    public function changeStatus($id){
+        $status = request()->status;
+        $statusLabel = BookingHelper::status();
+        return view('pages.bookings.modal.change_status',['booking_id'=>$id,'status'=>$status,'statusLabel'=>$statusLabel]);
+    }
+
+    public function updateStatus(Request $request){
+        $booking_id = $request->booking_id;
+        $status = $request->status;
+        $description = $request->description;
+        $statusLabel = BookingHelper::status();
+
+        if(isset($statusLabel[$status])){
+            Bookings::where('id',$booking_id)->update(['status'=>$status]);
+
+            //Log
+            TransactionLogHelper::tranLog(['type' => 'booking', 'title' => 'Change booking status to '.$statusLabel[$status]['title'], 'description' => $description, 'booking_id' => $booking_id]);
+
+            return redirect()->route('booking-index')->withSuccess('Saved.');
+        }
+
+        return redirect()->route('booking-index')->withFail('Something is wrong. Please try again.');
     }
 }

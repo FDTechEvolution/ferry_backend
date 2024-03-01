@@ -18,7 +18,10 @@ class ApiMerchants extends Model
         'discount',
         'description',
         'isactive',
-        'code'
+        'code',
+        'isopenregular',
+        'isopenchild',
+        'isopenInfant'
     ];
 
     public function apiRoutes() {

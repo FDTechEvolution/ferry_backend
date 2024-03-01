@@ -142,7 +142,7 @@
                     @csrf
                     @method('POST')
                     <input type="hidden" name="action" id="action" value="TICKET">
-                    <table class="table-datatable table table-hover" id=""
+                    <table class="table-datatable table table-hover table-bordered" id=""
                         data-lng-empty="No data available in table"
                         data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
                         data-lng-filtered="(filtered from _MAX_ total entries)" data-lng-loading="Loading..."

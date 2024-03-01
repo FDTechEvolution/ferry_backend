@@ -12,7 +12,7 @@
         <div class="col-12 mx-auto">
             <div id="to-station-info-list">
                 <div class="card-body">
-                    <table class="table-datatable table table-datatable-custom" id="station-info-datatable"
+                    <table class="table-datatable table table-datatable-custom table-bordered" id="station-info-datatable"
                         data-lng-empty="No data available in table"
                         data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
                         data-lng-filtered="(filtered from _MAX_ total entries)" data-lng-loading="Loading..."

@@ -66,7 +66,7 @@
     <div class="row">
         <div class="col-12">
             <div class="table-responsive">
-                <table class="table table-datatable  table-align-middle table-hover"
+                <table class="table table-datatable  table-align-middle table-hover table-bordered"
                     data-lng-empty="No data available in table"
                     data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
                     data-lng-filtered="(filtered from _MAX_ total entries)" data-lng-loading="Loading..."

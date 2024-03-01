@@ -53,7 +53,7 @@
                 class="btn btn-ferry js-ajax-modal"><i class="fa-solid fa-plug-circle-plus"></i> Create</a>
         </div>
         <div class="col-12">
-            <table class="table table-hover table-align-middle">
+            <table class="table table-hover table-align-middle table-bordered">
                 <thead>
                     <tr>
                         <th>#</th>

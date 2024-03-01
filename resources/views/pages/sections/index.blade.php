@@ -15,7 +15,7 @@
             <div class="col-12">
                 <div id="to-section-list" class="table-responsive">
                     <div class="card-body">
-                        <table class="table-datatable table table-datatable-custom" id="section-datatable"
+                        <table class="table-datatable table table-datatable-custom table-bordered" id="section-datatable"
                             data-lng-empty="No data available in table"
                             data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
                             data-lng-filtered="(filtered from _MAX_ total entries)"

@@ -17,7 +17,24 @@
             </div>
         </div>
     </div>
-
+    <hr>
+    <div class="row">
+        <div class="col-12">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input form-check-input-primary" type="checkbox" id="inlineCheckbox1" value="option1">
+                <label class="form-check-label" for="inlineCheckbox1">inline 1</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input form-check-input-primary" type="checkbox" id="inlineCheckbox2" value="option2">
+                <label class="form-check-label" for="inlineCheckbox2">inline 2</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input form-check-input-primary" type="checkbox" id="inlineCheckbox3" value="option3" disabled>
+                <label class="form-check-label" for="inlineCheckbox3">inline 3 (disabled)</label>
+            </div>
+        </div>
+    </div>
+    <hr>
     <div class="row">
         <div class="col-12">
             <table class="table table-sm table-datatable table-align-middle table-hover"
@@ -33,9 +50,10 @@
                 data-enable-export="false">
                 <thead>
                     <tr>
+                        <th></th>
                         <th class="text-center">#</th>
                         <th>Partner</th>
-                        <th class="text-center">Route</th>
+                        <th class="">Route</th>
                         <th class="text-center">Regular</th>
                         <th class="text-center">Child</th>
                         <th class="text-center ">Infant</th>
@@ -46,6 +64,7 @@
                 <tbody>
                     @foreach ($apiMerchant->apiRoutes as $index => $route)
                         <tr data-id="#{{ $route->route_id }}" data-action="click">
+                            <td></td>
                             <td class="text-center">
                                 <label>{{ $index + 1 }}</label>
                             </td>
@@ -59,7 +78,7 @@
                                     {{ $route->name }}
                                 </span>
                             </td>
-                            <td class="text-center">
+                            <td class="">
                                 {{ $route->station_from->name }}
                                 <i class="fa-solid fa-angles-right text-info"></i>
                                 {{ $route->station_to->name }} <br>

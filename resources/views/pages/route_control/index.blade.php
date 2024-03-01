@@ -70,7 +70,7 @@
         <div class="col-12">
             <div id="to-route-list" class="table-responsive">
 
-                <table class="table table-datatable-custom table-hover table table-align-middle" id="route-datatable"
+                <table class="table table-datatable-custom table-hover table table-align-middle table-bordered" id="route-datatable"
                     data-lng-empty="No data available in table"
                     data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
                     data-lng-filtered="(filtered from _MAX_ total entries)" data-lng-loading="Loading..."

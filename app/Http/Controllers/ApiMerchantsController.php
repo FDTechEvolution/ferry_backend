@@ -76,7 +76,7 @@ class ApiMerchantsController extends Controller
             join stations sf on (r.station_from_id = sf.id and sf.isactive="Y")
             join stations st on (r.station_to_id = st.id and st.isactive="Y")
             left join api_routes apir on (apir.route_id = r.id and apir.api_merchant_id = ?)
-        where r.status="CO" and r.isactive="Y" order by apir.isactive desc,sf.name ASC,st.name ASC,r.depart_time ASC';
+        where r.status="CO" and r.isactive="Y" and (apir.isactive is null or apir.isactive = "N") order by apir.isactive desc,sf.name ASC,st.name ASC,r.depart_time ASC';
 
         $routes = DB::select($sql, [$id]);
 
@@ -87,7 +87,7 @@ class ApiMerchantsController extends Controller
         $apiMerchantId = $request->api_merchant_id;
         $routes = $request->routes;
 
-        ApiRoutes::where('api_merchant_id',$apiMerchantId)->where('isactive','Y')->update(['isactive'=>'N']);
+        //ApiRoutes::where('api_merchant_id',$apiMerchantId)->where('isactive','Y')->update(['isactive'=>'N']);
 
         foreach($routes as $routeId){
             $apiRoute = ApiRoutes::updateOrCreate(

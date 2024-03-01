@@ -11,7 +11,7 @@
         <div class="col-12">
             <div id="to-user-list" class="table-responsive">
                 <div class="card-body">
-                    <table class="table-datatable table table-datatable-custom" id="users-datatable"
+                    <table class="table-datatable table table-datatable-custom table-bordered" id="users-datatable"
                         data-lng-empty="No data available in table"
                         data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
                         data-lng-filtered="(filtered from _MAX_ total entries)" data-lng-loading="Loading..."
@@ -45,8 +45,8 @@
                                     <td class="user-data-{{ $index }}">{{ $user['email'] }}</td>
                                     <td class="role-{{ $index }}">
                                         <span
-                                            class="@if ($user['role']['name'] === 'Admin') text-success 
-                                                @elseif($user['role']['name'] === 'Agent') text-info 
+                                            class="@if ($user['role']['name'] === 'Admin') text-success
+                                                @elseif($user['role']['name'] === 'Agent') text-info
                                                 @else text-secondary @endif">{{ $user['role']['name'] }}</span>
                                     </td>
                                     <td class=" text-danger"></td>

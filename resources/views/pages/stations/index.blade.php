@@ -17,7 +17,7 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            <table class="table table-hover">
+            <table class="table table-hover table-bordered">
 
                 <tbody>
                     @foreach ($sections as $i=> $section)

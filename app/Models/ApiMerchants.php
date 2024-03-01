@@ -21,12 +21,12 @@ class ApiMerchants extends Model
         'code',
         'isopenregular',
         'isopenchild',
-        'isopenInfant'
+        'isopeninfant'
     ];
 
     public function apiRoutes() {
         return $this->belongsToMany(Route::class, 'api_routes', 'api_merchant_id', 'route_id')
-        ->withPivot('isactive','seat','discount','id')
+        ->withPivot('isactive','seat','discount','id','ontop')
         ->wherePivot('isactive', 'Y');
     }
 }

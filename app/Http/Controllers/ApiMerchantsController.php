@@ -145,4 +145,30 @@ class ApiMerchantsController extends Controller
 
         return redirect()->route('api.index')->withSuccess('deleted.');
     }
+
+    public function editMerchant(string $id){
+
+        $apiMerchant = ApiMerchants::where('id',$id)->first();
+
+        return view('pages.api_merchants.modal.edit_merchant',[
+            'apiMerchant'=>$apiMerchant
+        ]);
+    }
+
+    public function updateMerchant(Request $request){
+        $request->validate([
+            'name' => 'required|string',
+        ]);
+
+        $apiMerchant = ApiMerchants::where('id',$request->id)->first();
+
+        $apiMerchant->name = $request->name;
+        $apiMerchant->isopenregular = isset($request->isopenregular)?'Y':'N';
+        $apiMerchant->isopenchild = isset($request->isopenchild)?'Y':'N';
+        $apiMerchant->isopeninfant = isset($request->isopeninfant)?'Y':'N';
+
+        $apiMerchant->save();
+
+        return redirect()->route('api.index')->withSuccess('deleted.');
+    }
 }

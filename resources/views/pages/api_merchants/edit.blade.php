@@ -9,33 +9,18 @@
         <div class="col-2">
             <a href="{{ route('api.index') }}" class="btn btn-secondary"><i class="fa-solid fa-circle-left"></i> Back</a>
         </div>
-        <div class="col-10 text-end">
+
+    </div>
+
+    <hr>
+    <div class="row">
+        <div class="col-12 text-end">
             <div class="btn-group" role="group">
                 <a href="" href="#" data-href="{{ route('api.addRoute', ['id' => $apiMerchant->id]) }}"
                     data-ajax-modal-size="modal-lg" data-ajax-modal-centered="true" data-ajax-modal-callback-function=""
                     data-ajax-modal-backdrop="static" class="btn btn-primary js-ajax-modal">Add/Delete Route</a>
             </div>
         </div>
-    </div>
-    <hr>
-    <div class="row">
-        <div class="col-12">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input form-check-input-primary" type="checkbox" id="inlineCheckbox1" value="option1">
-                <label class="form-check-label" for="inlineCheckbox1">inline 1</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input form-check-input-primary" type="checkbox" id="inlineCheckbox2" value="option2">
-                <label class="form-check-label" for="inlineCheckbox2">inline 2</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input form-check-input-primary" type="checkbox" id="inlineCheckbox3" value="option3" disabled>
-                <label class="form-check-label" for="inlineCheckbox3">inline 3 (disabled)</label>
-            </div>
-        </div>
-    </div>
-    <hr>
-    <div class="row">
         <div class="col-12">
             <table class="table table-sm table-datatable table-align-middle table-hover"
                 data-lng-empty="No data available in table" data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
@@ -59,6 +44,7 @@
                         <th class="text-center ">Infant</th>
                         <th class="text-end">Seat</th>
                         <th class="text-end">Discount%</th>
+                        <th class="text-end">On Top%</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -134,6 +120,25 @@
 
                                 <a href="#"
                                     data-href="{{ route('apiagent.edit', ['id' => $route->pivot->id, 'type' => 'discount']) }}"
+                                    data-ajax-modal-size="modal-md" data-ajax-modal-centered="true"
+                                    data-ajax-modal-callback-function="" data-ajax-modal-backdrop="static"
+                                    class="js-ajax-modal">
+                                    <svg width="18px" height="18px" xmlns="http://www.w3.org/2000/svg"
+                                        fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                        <path
+                                            d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z">
+                                        </path>
+                                        <path fill-rule="evenodd"
+                                            d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z">
+                                        </path>
+                                    </svg>
+                                </a>
+                            </td>
+                            <td class="text-end">
+                                {{ $route->pivot->ontop }}%
+
+                                <a href="#"
+                                    data-href="{{ route('apiagent.edit', ['id' => $route->pivot->id, 'type' => 'ontop']) }}"
                                     data-ajax-modal-size="modal-md" data-ajax-modal-centered="true"
                                     data-ajax-modal-callback-function="" data-ajax-modal-backdrop="static"
                                     class="js-ajax-modal">

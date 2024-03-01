@@ -36,6 +36,16 @@
 
                     </div>
                 @endif
+
+                @if ($type == 'ontop')
+                    <div class="col-12 mb-2">
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="ontop" name="ontop" required value="{{ $apiRoute->ontop }}">
+                            <label for="discount">On Top *</label>
+                        </div>
+
+                    </div>
+                @endif
                 <div class="col-12 mb-2">
                     <div class="form-check mb-2">
                         <input class="form-check-input form-check-input-success" type="checkbox" value="Y" id="isapply" name="isapply">

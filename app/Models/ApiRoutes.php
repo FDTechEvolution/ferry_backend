@@ -22,6 +22,7 @@ class ApiRoutes extends Model
         'child_price',
         'infant_price',
         'seat',
+        'ontop'
     ];
 
     public function route() {

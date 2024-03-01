@@ -42,6 +42,15 @@ class AjaxApiRouteController extends Controller
             }
         }
 
+        if ($type == 'ontop') {
+            if ($isApplyToAll == 'Y') {
+                ApiRoutes::where('api_merchant_id',$apiRoute->api_merchant_id)->update(['ontop'=>$request->ontop]);
+            }else{
+                $apiRoute->ontop = $request->ontop;
+                $apiRoute->save();
+            }
+        }
+
 
         return redirect()->route('api.edit',['id'=>$apiRoute->api_merchant_id])->withSuccess('saved.');
     }

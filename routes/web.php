@@ -89,8 +89,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/api', 'index')->name('api.index');
         Route::get('/api/create', 'create')->name('api.create');
         Route::get('/api/edit/{id}', 'edit')->name('api.edit');
+        Route::get('/api/edit-merchant/{id}', 'editMerchant')->name('api.editMerchant');
         Route::get('/api/addroute/{id}', 'addRoute')->name('api.addRoute');
 
+        Route::post('/api/update-merchant', 'updateMerchant')->name('api.updateMerchant');
         Route::post('/api/storeroute/{id}', 'storeRoute')->name('api.storeroute');
         Route::post('/api/store', 'store')->name('api.store');
         Route::post('/api/update/{id}', 'update')->name('api.update');

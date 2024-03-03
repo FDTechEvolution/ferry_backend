@@ -13,11 +13,12 @@
 
     <form novalidate class="bs-validate" id="frm" method="POST" action="{{ route('api.storeroute', ['id' => $id]) }}">
         @csrf
-        <input type="hidden" name="api_merchant_id" value="{{$id}}">
+        <input type="hidden" name="api_merchant_id" value="{{ $id }}">
         <div class="modal-body p-2">
             <div class="row">
                 <div class="col-12">
-                    <table class="table table-sm table-datatable table-align-middle table-hover" data-lng-empty="No data available in table"
+                    <table class="table table-sm table-datatable table-align-middle table-hover"
+                        data-lng-empty="No data available in table"
                         data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
                         data-lng-filtered="(filtered from _MAX_ total entries)" data-lng-loading="Loading..."
                         data-lng-processing="Processing..." data-lng-search="Search..."
@@ -35,12 +36,13 @@
                                 <th>Partner</th>
                                 <th>Route</th>
                                 <th class="text-center">Arrive/Depart Time</th>
-
+                                <th>Discount%</th>
+                                <th>On Top%</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($routes as $index => $route)
-                                <tr data-id="#{{ $route->route_id }}" data-action="click">
+                                <tr class="cursor-pointer">
                                     <td class="text-center">
                                         <div class="form-check mb-2">
                                             <input class="form-check-input form-check-input-success" type="checkbox"
@@ -50,20 +52,34 @@
                                         </div>
 
                                     </td>
-                                    <td>
+                                    <td data-id="{{ $route->route_id }}" data-action="click" >
                                         <span>
-                                            @if (!is_null($route->path) && $route->path !='')
+                                            @if (!is_null($route->path) && $route->path != '')
                                                 <div class="avatar avatar-xs"
-                                                    style="background-image:url({{asset($route->path)}})">
+                                                    style="background-image:url({{ asset($route->path) }})">
                                                 </div>
                                             @endif
                                             {{ $route->name }}
                                         </span>
                                     </td>
-                                    <td>{{ $route->route_name }}</td>
-                                    <td class="text-center">
+                                    <td data-id="{{ $route->route_id }}" data-action="click">{{ $route->route_name }}</td>
+                                    <td class="text-center" data-id="{{ $route->route_id }}" data-action="click">
                                         {{ date('H:i', strtotime($route->depart_time)) }}/{{ date('H:i', strtotime($route->arrive_time)) }}
-
+                                    </td>
+                                    <td>
+                                        <div class="col-auto">
+                                            <label class="sr-only" for="discount_{{$route->route_id}}">Discount</label>
+                                            <input type="text" class="form-control form-control-sm" id="discount_{{$route->route_id}}"
+                                                placeholder="" name="" value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto">
+                                            <label class="sr-only" for="ontop_{{$route->route_id}}">On Top</label>
+                                            <input type="text" class="form-control form-control-sm" id="ontop_{{$route->route_id}}"
+                                                placeholder="" name="" value="">
+                                        </div>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -84,12 +100,16 @@
 @section('script')
     <script>
         $(document).ready(function() {
-            $('tr[data-action="click"]').on('click', function() {
+            $('td[data-action="click"]').on('click', function() {
                 let id = $(this).data('id');
-                if ($(id).is(":checked")) {
-                    $(id).prop('checked', false);
+                if ($('#'+id).is(":checked")) {
+                    $('#'+id).prop('checked', false);
+                    $('#discount_'+id).attr('name','');
+                    $('#ontop_'+id).attr('name','');
                 } else {
-                    $(id).prop('checked', true);
+                    $('#'+id).prop('checked', true);
+                    $('#discount_'+id).attr('name','discount_'+id);
+                    $('#ontop_'+id).attr('name','ontop_'+id);
                 }
 
             });

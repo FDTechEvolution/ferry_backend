@@ -39,6 +39,9 @@
                         <th class="text-center">#</th>
                         <th>Partner</th>
                         <th class="">Route</th>
+                        @if ($apiMerchant->)
+                            
+                        @endif
                         <th class="text-center">Regular</th>
                         <th class="text-center">Child</th>
                         <th class="text-center ">Infant</th>

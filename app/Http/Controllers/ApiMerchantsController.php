@@ -86,7 +86,7 @@ class ApiMerchantsController extends Controller
     public function storeRoute(Request $request){
         $apiMerchantId = $request->api_merchant_id;
         $routes = $request->routes;
-
+        //dd($request);
         //ApiRoutes::where('api_merchant_id',$apiMerchantId)->where('isactive','Y')->update(['isactive'=>'N']);
 
         foreach($routes as $routeId){
@@ -95,7 +95,9 @@ class ApiMerchantsController extends Controller
                 [
                     'route_id'=>$routeId,
                     'isactive'=>'Y',
-                    'api_merchant_id'=>$apiMerchantId
+                    'api_merchant_id'=>$apiMerchantId,
+                    'discount'=> isset($request['discount_'.$routeId])?$request['discount_'.$routeId]:0,
+                    'ontop'=> isset($request['ontop_'.$routeId])?$request['ontop_'.$routeId]:0,
                 ]
             );
         }

@@ -73,6 +73,7 @@ class BookingController extends Controller
             $payment_id = $payment->id;
 
             // update promoCode
+            // Log::debug($_promo);
             if(isset($_promo)) {
                 $_discount_amount = 0;
                 $p_line = $this->getPromotionLines($_promotion->id);
@@ -83,16 +84,28 @@ class BookingController extends Controller
                     $pr = array_search($_route, $p_line['route']);
                     $fr = array_search($_r->station_from_id, $p_line['from']);
                     $tr = array_search($_r->station_to_id, $p_line['to']);
-                    if($_r->ispromocode == 'Y' && $_r->id == $p_line['route'][$pr] ||
-                        $_r->ispromocode == 'Y' && $_r->station_from_id == $p_line['from'][$fr] ||
-                        $_r->ispromocode == 'Y' && $_r->station_to_id == $p_line['to'][$tr]
-                    ){
-                        $amount += $_r->regular_price*$request->passenger;
-                        $amount += $_r->child_price*$request->child_passenger;
-                        $amount += $_r->infant_price*$request->infant_passenger;
-                        $discount_amount = PromotionHelper::promoDiscount($amount, $_promo);
+                    if($pr == '' && $fr == '' && $tr == '') {
+                        if($_r->ispromocode == 'Y') {
+                            $amount += $_r->regular_price*$request->passenger;
+                            $amount += $_r->child_price*$request->child_passenger;
+                            $amount += $_r->infant_price*$request->infant_passenger;
+                            $discount_amount = PromotionHelper::promoDiscount($amount, $_promo);
 
-                        $_discount_amount += $discount_amount - $amount;
+                            $_discount_amount += $discount_amount - $amount;
+                        }
+                    }
+                    else {
+                        if($_r->ispromocode == 'Y' && $_r->id == $p_line['route'][$pr] ||
+                            $_r->ispromocode == 'Y' && $_r->station_from_id == $p_line['from'][$fr] ||
+                            $_r->ispromocode == 'Y' && $_r->station_to_id == $p_line['to'][$tr]
+                        ){
+                            $amount += $_r->regular_price*$request->passenger;
+                            $amount += $_r->child_price*$request->child_passenger;
+                            $amount += $_r->infant_price*$request->infant_passenger;
+                            $discount_amount = PromotionHelper::promoDiscount($amount, $_promo);
+
+                            $_discount_amount += $discount_amount - $amount;
+                        }
                     }
                 }
 
@@ -127,7 +140,6 @@ class BookingController extends Controller
     }
 
     public function storeMultiTrip(Request $request) {
-        Log::debug($request);
         if(isset($request->route_id)) {
 
             $route = $this->getRoute($request->route_id[0]);
@@ -212,16 +224,28 @@ class BookingController extends Controller
                         $pr = array_search($_route, $p_line['route']);
                         $fr = array_search($_r->station_from_id, $p_line['from']);
                         $tr = array_search($_r->station_to_id, $p_line['to']);
-                        if($_r->ispromocode == 'Y' && $_r->id == $p_line['route'][$pr] ||
-                            $_r->ispromocode == 'Y' && $_r->station_from_id == $p_line['from'][$fr] ||
-                            $_r->ispromocode == 'Y' && $_r->station_to_id == $p_line['to'][$tr]
-                        ){
-                            $amount += $_r->regular_price*$request->passenger;
-                            $amount += $_r->child_price*$request->child_passenger;
-                            $amount += $_r->infant_price*$request->infant_passenger;
-                            $discount_amount = PromotionHelper::promoDiscount($amount, $_promo[$index]);
+                        if($pr == '' && $fr == '' && $tr == '') {
+                            if($_r->ispromocode == 'Y') {
+                                $amount += $_r->regular_price*$request->passenger;
+                                $amount += $_r->child_price*$request->child_passenger;
+                                $amount += $_r->infant_price*$request->infant_passenger;
+                                $discount_amount = PromotionHelper::promoDiscount($amount, $_promo[$index]);
 
-                            $_discount_amount += $discount_amount - $amount;
+                                $_discount_amount += $discount_amount - $amount;
+                            }
+                        }
+                        else {
+                            if($_r->ispromocode == 'Y' && $_r->id == $p_line['route'][$pr] ||
+                                $_r->ispromocode == 'Y' && $_r->station_from_id == $p_line['from'][$fr] ||
+                                $_r->ispromocode == 'Y' && $_r->station_to_id == $p_line['to'][$tr]
+                            ){
+                                $amount += $_r->regular_price*$request->passenger;
+                                $amount += $_r->child_price*$request->child_passenger;
+                                $amount += $_r->infant_price*$request->infant_passenger;
+                                $discount_amount = PromotionHelper::promoDiscount($amount, $_promo[$index]);
+
+                                $_discount_amount += $discount_amount - $amount;
+                            }
                         }
                     }
 
@@ -260,18 +284,22 @@ class BookingController extends Controller
             foreach($route_id as $r_id) {
                 $route = Route::find($r_id);
                 if(isset($route) && $route->ispromocode == 'Y') {
-                    // $promotion->station_from_id = $route->station_from_id;
-                    // $promotion->station_to_id = $route->station_to_id;
-                    // return $promotion;
-
                     $r = array_search($route->id, $p_lines['route']);
-                    if($r != '' && $route['ispromocode'] == 'Y') return $promotion;
-
                     $f = array_search($route->station_from_id, $p_lines['from']);
-                    if($f != '' && $route['ispromocode'] == 'Y') return $promotion;
-
                     $t = array_search($route->station_to_id, $p_lines['to']);
-                    if($t != '' && $route['ispromocode'] == 'Y') return $promotion;
+
+                    if($r == '' && $f == '' && $t == '') {
+                        if($route['ispromocode'] == 'Y') {
+                            return $promotion;
+                        }
+                    }
+                    else {
+                        if($r != '' && $route['ispromocode'] == 'Y' ||
+                            $f != '' && $route['ispromocode'] == 'Y' ||
+                            $t != '' && $route['ispromocode'] == 'Y'
+                        )
+                        return $promotion;
+                    }
                 }
             }
 

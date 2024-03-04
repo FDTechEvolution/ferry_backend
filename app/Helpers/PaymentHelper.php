@@ -138,6 +138,7 @@ class PaymentHelper
                         'title' => sprintf('%s', $addon->name),
                         'amount' => $amount,
                         'booking_route_id' => $bookingRoute->id,
+                        'description' => $addon->pivot->description
                     ]);
                 }
             }

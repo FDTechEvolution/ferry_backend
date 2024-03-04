@@ -84,7 +84,8 @@ class BookingResource extends JsonResource
                         return [
                             'type' => $line->type,
                             'title' => $line->title,
-                            'amount' => $line->amount
+                            'amount' => $line->amount,
+                            'description' => $line->description
                         ];
                     })
                 ];

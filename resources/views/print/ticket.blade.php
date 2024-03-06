@@ -156,6 +156,9 @@
 
             @include('print.inc_ticket.footer')
         </div>
+        @if (sizeof($bookings) != ($index+1))
+            <div style="page-break-before:always;"> </div>
+        @endif
     @endforeach
 </body>
 

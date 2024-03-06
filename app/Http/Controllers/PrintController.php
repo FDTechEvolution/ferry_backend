@@ -46,7 +46,10 @@ class PrintController extends Controller
 
         foreach($bookingNos as $bookingno){
             $booking = BookingHelper::getBookingInfoByBookingNo($bookingno);
-            array_push($bookings,$booking);
+            if($booking->ispayment =='Y'){
+                array_push($bookings,$booking);
+            }
+
         }
 
 

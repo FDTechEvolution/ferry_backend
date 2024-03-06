@@ -18,11 +18,11 @@
             <div class="btn-group" role="group">
                 <a href="" href="#" data-href="{{ route('api.addRoute', ['id' => $apiMerchant->id]) }}"
                     data-ajax-modal-size="modal-lg" data-ajax-modal-centered="true" data-ajax-modal-callback-function=""
-                    data-ajax-modal-backdrop="static" class="btn btn-primary js-ajax-modal">Add/Delete Route</a>
+                    data-ajax-modal-backdrop="static" class="btn btn-primary js-ajax-modal">Add Route</a>
             </div>
         </div>
         <div class="col-12">
-            <table class="table table-sm table-datatable table-align-middle table-hover"
+            <table class="table table-sm table-datatable table-align-middle table-hover table-bordered"
                 data-lng-empty="No data available in table" data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
                 data-lng-filtered="(filtered from _MAX_ total entries)" data-lng-loading="Loading..."
                 data-lng-processing="Processing..." data-lng-search="Search..."
@@ -39,15 +39,19 @@
                         <th class="text-center">#</th>
                         <th>Partner</th>
                         <th class="">Route</th>
-                        @if ($apiMerchant->)
-                            
+                        @if ($apiMerchant->isopenregular == 'Y')
+                            <th class="text-center">Regular</th>
                         @endif
-                        <th class="text-center">Regular</th>
-                        <th class="text-center">Child</th>
-                        <th class="text-center ">Infant</th>
+                        @if ($apiMerchant->isopenchild == 'Y')
+                            <th class="text-center">Child</th>
+                        @endif
+                        @if ($apiMerchant->isopeninfant == 'Y')
+                            <th class="text-center">Infant</th>
+                        @endif
                         <th class="text-end">Seat</th>
                         <th class="text-end">Discount%</th>
                         <th class="text-end">On Top%</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,33 +77,27 @@
                                 {{ $route->station_to->name }} <br>
                                 {{ date('H:i', strtotime($route->depart_time)) }}/{{ date('H:i', strtotime($route->arrive_time)) }}
                             </td>
-                            <td class="text-center">
-                                @if ($route->pivot->discount > 0)
-                                    <del>{{ number_format($route->regular_price) }}</del>
-                                    <strong>{{ number_format($route->regular_price - ($route->regular_price * $route->pivot->discount) / 100) }}</strong>
-                                @else
-                                    {{ number_format($route->regular_price) }}
-                                @endif
 
-                            </td>
-                            <td class="text-center">
+                            @if ($apiMerchant->isopenregular == 'Y')
+                                <td class="text-center">
+                                    <x-agent-discount-column :price="$route->regular_price" :discount="$route->pivot->discount" :ontop="$route->pivot->ontop" />
+                                </td>
+                            @endif
 
-                                @if ($route->pivot->discount > 0)
-                                    <del>{{ number_format($route->child_price) }}</del>
-                                    <strong>{{ number_format($route->child_price - ($route->child_price * $route->pivot->discount) / 100) }}</strong>
-                                @else
-                                    {{ number_format($route->child_price) }}
-                                @endif
+                            @if ($apiMerchant->isopenchild == 'Y')
+                                <td class="text-center">
+                                    <x-agent-discount-column :price="$route->child_price" :discount="$route->pivot->discount" :ontop="$route->pivot->ontop" />
 
-                            </td>
-                            <td class="text-center">
-                                @if ($route->pivot->discount > 0 && $route->infant_price >0)
-                                    <del>{{ number_format($route->infant_price) }}</del>
-                                    <strong>{{ number_format($route->infant_price - ($route->infant_price * $route->pivot->discount) / 100) }}</strong>
-                                @else
-                                    {{ number_format($route->infant_price) }}
-                                @endif
-                            </td>
+                                </td>
+                            @endif
+
+                            @if ($apiMerchant->isopeninfant == 'Y')
+                                <td class="text-center">
+                                    <x-agent-discount-column :price="$route->infant_price" :discount="$route->pivot->discount" :ontop="$route->pivot->ontop" />
+
+                                </td>
+                            @endif
+
                             <td class="text-end">
                                 {{ $route->pivot->seat }}
                                 <a href="#"
@@ -155,6 +153,16 @@
                                         </path>
                                     </svg>
                                 </a>
+                            </td>
+                            <td class="text-end">
+
+                                <a href="" class="me-2 text-primary">
+                                    <svg width="18px" height="18px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-calendar-week" viewBox="0 0 16 16">
+                                        <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"></path>
+                                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"></path>
+                                      </svg>
+                                </a>
+                                <x-action-delete />
                             </td>
                         </tr>
                     @endforeach

@@ -7,6 +7,7 @@ use App\Models\Addon;
 use App\Models\BookingCustomers;
 use App\Models\Bookings;
 use App\Models\Customers;
+use App\Models\Payments;
 use App\Models\Station;
 use App\Models\Route;
 use Ramsey\Uuid\Uuid;
@@ -392,12 +393,30 @@ class BookingsController extends Controller
 
     public function updateStatus(Request $request){
         $booking_id = $request->booking_id;
+        $booking = Bookings::where('id',$booking_id)->first();
         $status = $request->status;
         $description = $request->description;
         $statusLabel = BookingHelper::status();
 
         if(isset($statusLabel[$status])){
-            Bookings::where('id',$booking_id)->update(['status'=>$status]);
+
+
+            if($status =='CO'){
+                BookingHelper::completeBooking($booking_id,[]);
+
+                $payments = Payments::where('booking_id',$booking_id)->get();
+                if(sizeof($payments) ==0){
+                    $payment = PaymentHelper::createPaymentFromBooking($booking_id);
+                    PaymentHelper::completePayment($payment->id);
+                }
+
+               $booking->ispayment = 'Y';
+
+            }
+
+            $booking->status = $status;
+            $booking->amend = $booking->amend+1;
+            $booking->save();
 
             //Log
             TransactionLogHelper::tranLog(['type' => 'booking', 'title' => 'Change booking status to '.$statusLabel[$status]['title'], 'description' => $description, 'booking_id' => $booking_id]);

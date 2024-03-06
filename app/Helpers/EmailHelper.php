@@ -22,6 +22,9 @@ class EmailHelper
         if(is_null($customer->email) || $customer->email ==''){
             return false;
         }
+        if(is_null($tickets) || sizeof($tickets) ==0){
+            return false;
+        }
 
         $mailData = [
             'bookingno' => $booking->bookingno,

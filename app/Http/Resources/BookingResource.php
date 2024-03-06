@@ -72,6 +72,18 @@ class BookingResource extends JsonResource
                     ];
                 }
             }),
+            'extra_addons' => $this->bookingRoutesX->map(function($extra) {
+                return [
+                    'addons' => $extra->bookingRouteAddons->map(function($ex_addon) {
+                        return[
+                            'name' => $ex_addon->name,
+                            'type' => $ex_addon->type,
+                            'subtype' => $ex_addon->subtype,
+                            'description' => $ex_addon->pivot->description
+                        ];
+                    })
+                ];
+            }),
             'payment' => $this->payments->map(function($payment) {
                 return [
                     'payment_id' => $payment->id,

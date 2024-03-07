@@ -131,4 +131,10 @@ class ApiRoutesController extends Controller
         if($api_route->save()) return response()->json(['result' => true, 'data' => $api_route], 200);
         return response()->json(['result' => false], 200);
     }
+
+
+    public function calendar(string $apiRouteId){
+
+        return view('pages.api_routes.calendar');
+    }
 }

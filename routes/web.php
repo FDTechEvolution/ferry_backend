@@ -108,6 +108,7 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(ApiRoutesController::class)->group(function () {
         Route::get('/apiroute/get/{merchant_id}', 'index')->name('api-route-index');
+        Route::get('/apiroute/calendar/{id}', 'calendar')->name('apiroute.calendar');
         Route::get('/apiroute/updateroute/{merchant_id}', 'updateroute')->name('api-route-updateroute');
         Route::get('/apiroute/update-commission', 'updateCommission')->name('api-route-updatecommission');
 

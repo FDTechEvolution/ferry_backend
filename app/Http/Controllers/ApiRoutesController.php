@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\CalendarHelper;
 use App\Models\ApiMerchants;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -135,6 +136,10 @@ class ApiRoutesController extends Controller
 
     public function calendar(string $apiRouteId){
 
-        return view('pages.api_routes.calendar');
+        $monthCalendar =  CalendarHelper::getMonthCalendar();
+
+        return view('pages.api_routes.calendar',[
+            'monthCalendar'=>$monthCalendar
+        ]);
     }
 }

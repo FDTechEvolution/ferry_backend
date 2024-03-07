@@ -92,7 +92,7 @@ class PaymentHelper
         //Make draft payment
         $payment = Payments::create([
             'payment_method' => 'NO',
-            'totalamt' => $booking->totalamt,
+            'totalamt' => 0,
             'docdate' => date('Y-m-d H:i:s'),
             'paymentno' => newSequenceNumber('PAYMENT'),
             'booking_id' => $booking->id,

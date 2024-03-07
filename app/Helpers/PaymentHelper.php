@@ -10,9 +10,17 @@ use App\Models\Promotions;
 
 class PaymentHelper
 {
-    public static function encodeRequest($payment, $payment_channel)
+    public static function encodeRequest($payment, $payment_method)
     {
-        $merchantID = $payment_channel == 'CC' ? config('services.payment.merchant_id_credit') : config('services.payment.merchant_id_etc');
+        $payment_channel = [
+            'CC' => 'CC',
+            'GCARD' => 'CC',
+            'DPAY' => 'EWALLET',
+            'THQR' => 'PPQR',
+            'GQR' => 'CSQR'
+        ];
+
+        $merchantID = $payment_method == 'CC' ? config('services.payment.merchant_id_credit') : config('services.payment.merchant_id_etc');
         $SECRETKEY = config('services.payment.secret_key');
         $backend_response = config('services.payment.backend_return');
         $fontend_return = config(('services.payment.frontend_return'));
@@ -23,11 +31,11 @@ class PaymentHelper
             //MANDATORY PARAMS
             "merchantID" => $merchantID,
             "invoiceNo" => $payment->paymentno,
-            "description" => $payment_channel,
+            "description" => $payment_channel[$payment_method],
             "amount" => $payment->totalamt,
             "currencyCode" => $currencyCode,
 
-            "paymentChannel" => [$payment_channel],
+            "paymentChannel" => [$payment_channel[$payment_method]],
             "userDefined1" => $payment->id,
             "userDefined2" => $payment->booking_id,
             "backendReturnUrl" => $backend_response,

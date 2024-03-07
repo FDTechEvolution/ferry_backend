@@ -102,36 +102,19 @@ class PaymentHelper
         if (!is_null($booking->bookingCustomers)) {
             $bookingCustomer = $booking->bookingCustomers[0];
             $payment->customer_id = $bookingCustomer->id;
+            $payment->save();
         }
 
         foreach ($booking->bookingRoutes as $index => $bookingRoute) {
-            $paymentLine = PaymentLines::create([
-                'payment_id' => $payment->id,
-                'type' => 'ROUTE',
-                'booking_id' => $booking->id,
-                'title' => sprintf('Booking No.%s, From %s to %s', $booking->bookingno, $bookingRoute->station_from->name, $bookingRoute->station_to->name),
-                'amount' => $bookingRoute->pivot->amount,
-                'booking_route_id' => $bookingRoute->id,
-            ]);
+            $title = sprintf('Booking No.%s, From %s to %s', $booking->bookingno, $bookingRoute->station_from->name, $bookingRoute->station_to->name);
 
-            $totalAmount += $bookingRoute->pivot->amount;
+            PaymentHelper::createPaymentLine($payment->id,'ROUTE',$booking->id,$title,$bookingRoute->pivot->amount,$bookingRoute->id);
 
             //Addons
             $bRoute = $booking->bookingRoutesX[$index];
-
             if (!is_null($bRoute->bookingExtraAddons)) {
                 foreach ($bRoute->bookingExtraAddons as $key => $addon) {
-                    //$_addon = Addon::where('id'=>$addon->)->first();
-
-                    $paymentLine = PaymentLines::create([
-                        'payment_id' => $payment->id,
-                        'type' => 'ADDON',
-                        'booking_id' => $booking->id,
-                        'title' => sprintf('%s', $addon->name),
-                        'amount' => $addon->amount,
-                        'booking_route_id' => $bookingRoute->id,
-                    ]);
-                    $totalAmount += $addon->amount;
+                    PaymentHelper::createPaymentLine($payment->id,'ADDON',$booking->id,sprintf('%s', $addon->name),$addon->amount,$bookingRoute->id);
                 }
             }
 
@@ -139,23 +122,41 @@ class PaymentHelper
             if(!is_null($bRoute->bookingRouteAddons)) {
                 foreach($bRoute->bookingRouteAddons as $key => $addon) {
                     $amount = $addon->isservice_charge == 'Y' ? $addon->price : 0;
-                    PaymentLines::create([
-                        'payment_id' => $payment->id,
-                        'type' => 'ADDON',
-                        'booking_id' => $booking->id,
-                        'title' => sprintf('%s', $addon->name),
-                        'amount' => $amount,
-                        'booking_route_id' => $bookingRoute->id,
-                        'description' => $addon->pivot->description
-                    ]);
+                    PaymentHelper::createPaymentLine($payment->id,'ADDON',$booking->id,sprintf('%s', $addon->name),$amount,$bookingRoute->id,$addon->pivot->description);
                 }
             }
 
         }
-        $payment->totalamt = $totalAmount;
-        $payment->save();
+        $payment = Payments::where('id',$payment->id)->first();
+
+        $title = sprintf('Create payment document no. %s',$payment->paymentno);
+        TransactionLogHelper::tranLog(['type' => 'PAYMENT', 'title' => $title, 'description' => '', 'booking_id' => $booking_id]);
 
         return $payment;
+    }
+
+    private static function createPaymentLine($paymentId,$type,$bookingId,$title,$amount,$bookingRouteId,$description=''){
+        $payment = Payments::where('id', $paymentId)->first();
+
+        $paymentLine = PaymentLines::create([
+            'payment_id' => $paymentId,
+            'type' => $type,
+            'booking_id' => $bookingId,
+            'title' => $title,
+            'amount' => $amount,
+            'booking_route_id' => $bookingRouteId,
+            'description' => $description
+        ]);
+
+        if ($paymentLine) {
+            //TransactionLogHelper::tranLog(['type' => 'booking', 'title' => $title, 'description' => $description, 'booking_id' => $bookingId]);
+
+            $payment->totalamt = $payment->totalamt + $amount;
+            $payment->save();
+        }
+
+        return $paymentLine;
+
     }
 
     public static function completePayment($payment_id, $paymentData = [])
@@ -173,6 +174,9 @@ class PaymentHelper
             $payment->user_id = isset($paymentData['user_id']) ? $paymentData['user_id'] : null;
 
             $payment->save();
+
+            $title = sprintf('Payment successfully with %s amount %s',$payment->payment_method,$payment->totalamt);
+            TransactionLogHelper::tranLog(['type' => 'PAYMENT', 'title' => $title, 'description' => '', 'booking_id' => $payment->booking_id]);
         }
 
         return $payment;
@@ -185,18 +189,10 @@ class PaymentHelper
         if (!is_null($payment)) {
             $feeeAmount = $payment->totalamt * 0.035;
 
-            //Make payment line
-            $paymentLine = PaymentLines::create([
-                'payment_id' => $payment->id,
-                'type' => 'FEE',
-                'title' => 'Credit card fee 3.5%',
-                'amount' => $feeeAmount,
-            ]);
+            $paymentLine = PaymentHelper::createPaymentLine($payment_id,'FEE',NULL,'Credit card fee 3.5%',$feeeAmount,NULL,'');
 
             if ($paymentLine) {
                 $payment->payment_method = 'CREDIT';
-                $payment->totalamt = $payment->totalamt + $feeeAmount;
-
                 $payment->save();
             }
         }
@@ -211,18 +207,10 @@ class PaymentHelper
         if (!is_null($payment)) {
             $creditAmount = -$payment_amount * 0.035;
 
-            //Make payment line
-            $paymentLine = PaymentLines::create([
-                'payment_id' => $payment->id,
-                'type' => 'FEE',
-                'title' => 'Free Credit card fee',
-                'amount' => $creditAmount,
-            ]);
+            $paymentLine = PaymentHelper::createPaymentLine($payment_id,'FEE',NULL,'Free Credit card fee',$creditAmount,NULL,'');
 
             if ($paymentLine) {
                 $payment->payment_method = 'CREDIT';
-                $payment->totalamt = $payment->totalamt + $creditAmount;
-
                 $payment->save();
             }
         }
@@ -236,20 +224,7 @@ class PaymentHelper
 
         if (!is_null($payment)) {
             $premiumAmount = $payment->totalamt * 0.1;
-
-            //Make payment line
-            $paymentLine = PaymentLines::create([
-                'payment_id' => $payment->id,
-                'type' => 'PREMIUM',
-                'title' => 'Premium Flex 10%',
-                'amount' => $premiumAmount,
-            ]);
-
-            if ($paymentLine) {
-                $payment->totalamt = $payment->totalamt + $premiumAmount;
-
-                $payment->save();
-            }
+            $paymentLine = PaymentHelper::createPaymentLine($payment_id,'PREMIUM',NULL,'Premium Flex 10%',$premiumAmount,NULL,'');
         }
 
         return $payment;
@@ -270,11 +245,8 @@ class PaymentHelper
                 'amount' => $premiumAmount,
             ]);
 
-            if ($paymentLine) {
-                $payment->totalamt = $payment->totalamt + $premiumAmount;
+            $paymentLine = PaymentHelper::createPaymentLine($payment_id,'PREMIUM',NULL,'Free Premium Flex',$premiumAmount,NULL,'');
 
-                $payment->save();
-            }
         }
 
         return $payment;
@@ -289,19 +261,7 @@ class PaymentHelper
             $premiumDiscountAmount = $discountamt * 0.1;
             $premiumDiscount = $premiumDiscountAmount - $premiumAmount;
 
-            //Make payment line
-            $paymentLine = PaymentLines::create([
-                'payment_id' => $payment->id,
-                'type' => 'PREMIUM',
-                'title' => 'Premium Flex Discount',
-                'amount' => $premiumDiscount,
-            ]);
-
-            if ($paymentLine) {
-                $payment->totalamt = $payment->totalamt + $premiumDiscount;
-
-                $payment->save();
-            }
+            $paymentLine = PaymentHelper::createPaymentLine($payment_id,'PREMIUM',NULL,'Premium Flex Discount',$premiumDiscount,NULL,'');
         }
 
         return $payment;
@@ -316,19 +276,8 @@ class PaymentHelper
             $discount = number_format($promotion->discount);
             $discount_type = $promotion->discount_type == 'PERCENT' ? '%' : 'THB';
 
-            //Make payment line
-            $paymentLine = PaymentLines::create([
-                'payment_id' => $payment->id,
-                'type' => 'ROUTE',
-                'title' => sprintf('PromoCode Discount %s %s [%s]', $discount, $discount_type, $promotion->code),
-                'amount' => $discountamt,
-            ]);
-
-            if ($paymentLine) {
-                $payment->totalamt = $payment->totalamt + $discountamt;
-
-                $payment->save();
-            }
+            $title = sprintf('PromoCode Discount %s %s [%s]', $discount, $discount_type, $promotion->code);
+            $paymentLine = PaymentHelper::createPaymentLine($payment_id,'ROUTE',NULL,$title,$discountamt,NULL,'');
         }
 
         return $payment;

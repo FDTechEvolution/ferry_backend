@@ -24,7 +24,8 @@ class CalendarHelper
                 'day_name' => $startOfCalendar->format('l'),
                 'day_of_week' => $startOfCalendar->format('N'),
                 'current_month'=>$startOfCalendar->format('n') == $month?'Y':'N',
-                'date' => $startOfCalendar,
+                'date'=>$startOfCalendar->format('Y-m-d'),
+                'fulldate' => $startOfCalendar,
             ]);
 
             $startOfCalendar->addDay();

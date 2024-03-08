@@ -135,8 +135,17 @@ class ApiRoutesController extends Controller
 
 
     public function calendar(string $apiRouteId){
+        $apiRouteId = request()->api_route_id;
+
+        $apiRoute = ApiRoutes::where('id',$apiRouteId)->first();
 
         $monthCalendar =  CalendarHelper::getMonthCalendar();
+
+        foreach($monthCalendar as $index=> $row){
+            foreach($row as $i=> $col){
+                $monthCalendar[$index][$i]['seat'] = $apiRoute->seat;
+            }
+        }
 
         return view('pages.api_routes.calendar',[
             'monthCalendar'=>$monthCalendar

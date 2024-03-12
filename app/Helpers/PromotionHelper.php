@@ -66,7 +66,6 @@ class PromotionHelper
         $_to = true;
 
         $promo_lines = PromotionLines::where('promotion_id', $promo->id)->where('isactive', 'Y')->get();
-        // Log::debug($promo_lines->toArray());
 
         $inCondition = [
             'route' => [],

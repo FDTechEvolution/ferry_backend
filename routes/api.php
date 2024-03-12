@@ -105,6 +105,8 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
         Route::get('promotion/get', 'getPromotion');
         Route::get('promotion/view/{promocode}', 'getPromotionByCode');
         Route::post('promotion/check', 'promotionCode');
+
+        Route::get('promotion/check-v2/{promo_code}/{departdate}/{route}/{trip_type}', 'promotionCodeV2');
     });
 
     Route::controller(InfomationController::class)->group(function() {

@@ -58,10 +58,10 @@ class PromotionController extends Controller
         return response()->json(['result' => false, 'data' => 'No promotion code or promotion code ran out.'], 200);
     }
 
-    public function promotionCodeV2($promo_code, $departdate, $route, $trip_type) {
+    public function promotionCodeV2($promo_code, $departdate, $trip_type) {
         $promo = Promotions::where('code', $promo_code)->where('isactive', 'Y')->whereColumn('times_used', '<', 'times_use_max')->first();
         if($promo) {
-            $route = Route::find($route);
+            // $route = Route::find($route);
             $_depart_date = false;
             $_booking_date = false;
             $_station = false;
@@ -80,7 +80,7 @@ class PromotionController extends Controller
             $_trip_type = PromotionHelper::promoTripType($promo->trip_type, $trip_type);
             $_depart_date = PromotionHelper::promoDepartDate($promo, $depart_date);
             $_booking_date = PromotionHelper::promoBookingDate($promo);
-            $_station = PromotionHelper::promoStation($promo, $route->station_from_id, $route->station_to_id);
+            $_station = PromotionHelper::promoStation($promo, null, null);
 
             if($_trip_type && $_depart_date && $_booking_date) {
                 return response()->json(['result' => true, 'data' => $promo, 'promo_line' => $_station]);

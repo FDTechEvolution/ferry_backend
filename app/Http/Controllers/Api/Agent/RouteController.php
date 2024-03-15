@@ -69,7 +69,7 @@ class RouteController extends Controller
         $result = [];
         foreach($route as $item) {
             $_route = [
-                'id' => $item->id,
+                'id' => $item->route->id,
                 'station_from' => [
                     'id' => $item->route->station_from_id,
                     'name' => $item->route->station_from->name,

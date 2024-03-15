@@ -17,49 +17,51 @@ class BookingController extends Controller
         $merchant = $request->attributes->get('merchant');
         $_merchant = ApiMerchants::find($merchant);
 
-        $route = $this->getRoute($request->route_id);
-        if($route) {
-            $data = [
-                'booking' => [
-                    'departdate' => $request->departdate,
-                    'adult_passenger' => $request->passenger,
-                    'child_passenger' => 0,
-                    'infant_passenger' => 0,
-                    'totalamt' => ($request->totalamount*$request->passenger),
-                    'extraamt' => 0,
-                    'amount' => $request->totalamount,
-                    'ispayment' => 'N',
-                    'user_id' => NULL,
-                    'trip_type' => 'one-way',
-                    'status' => 'DR',
-                    'book_channel' => $_merchant->name
-                ],
-                'customers' => [
-                    [
-                        'fullname' => $request->fullname,
-                        'type' => 'ADULT',
-                        'passportno' => NULL,
-                        'email' => NULL,
-                        'mobile' => $request->mobile,
-                        'fulladdress' => NULL
-                    ]
-                ],
-                'routes' => [
-                    [
-                        'route_id' => $request->route_id,
-                        'traveldate' => $request->departdate,
+        if(isset($_merchant)) {
+            $route = $this->getRoute($request->route_id);
+            if($route) {
+                $data = [
+                    'booking' => [
+                        'departdate' => $request->departdate,
+                        'adult_passenger' => $request->passenger,
+                        'child_passenger' => 0,
+                        'infant_passenger' => 0,
+                        'totalamt' => ($request->totalamount*$request->passenger),
+                        'extraamt' => 0,
                         'amount' => $request->totalamount,
-                        'type' => NULL
+                        'ispayment' => 'N',
+                        'user_id' => NULL,
+                        'trip_type' => 'one-way',
+                        'status' => 'DR',
+                        'book_channel' => $_merchant->name
+                    ],
+                    'customers' => [
+                        [
+                            'fullname' => $request->fullname,
+                            'type' => 'ADULT',
+                            'passportno' => NULL,
+                            'email' => NULL,
+                            'mobile' => $request->mobile,
+                            'fulladdress' => NULL
+                        ]
+                    ],
+                    'routes' => [
+                        [
+                            'route_id' => $request->route_id,
+                            'traveldate' => $request->departdate,
+                            'amount' => $request->totalamount,
+                            'type' => NULL
+                        ]
                     ]
-                ]
-            ];
+                ];
 
-            $booking = BookingHelper::createBooking($data);
+                $booking = BookingHelper::createBooking($data);
 
-            return response()->json(['result' => true, 'data' => $booking], 200);
+                return response()->json(['result' => true, 'data' => $booking], 200);
+            }
+
+            return response()->json(['result' => false, 'data' => 'No Route.'], 200);
         }
-
-        return response()->json(['result' => false, 'data' => 'No Route.'], 200);
     }
 
     private function getRoute($route_id) {
@@ -68,15 +70,18 @@ class BookingController extends Controller
     }
 
     private function checkBooking($booking_id) {
-        $booking = Bookings::where('id', $booking_id)->where('status', 'DR')->first();
+        $booking = Bookings::where('id', $booking_id)->first();
         return isset($booking) ?: false;
     }
 
     public function complete(Request $request) {
         if($this->checkBooking($request->booking_id)) {
-            $c = new BookingHelper;
-            $complete = $c->completeBooking($request->booking_id);
-            return response()->json(['result' => true, 'data' => $complete]);
+            $booking = Bookings::find($request->booking_id);
+            if($booking->status == 'DR') {
+                $c = new BookingHelper;
+                $complete = $c->completeBooking($request->booking_id);
+                return response()->json(['result' => true, 'data' => $complete]);
+            }
         }
 
         return response()->json(['result' => false, 'data' => 'No Booking.']);

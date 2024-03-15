@@ -134,6 +134,13 @@ return [
             'days' => 14,
         ],
 
+        'api-agent' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/api_agent.log'),
+            'level' => 'info',
+            'days' => 14,
+        ],
+
         'api-cors' => [
             'driver' => 'daily',
             'path' => storage_path('logs/api_cors.log'),

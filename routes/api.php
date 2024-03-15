@@ -26,6 +26,9 @@ use App\Http\Controllers\Api\Seven\BookingController as SevenBooking;
 use App\Http\Controllers\Api\Seven\StationController as SevenStation;
 use App\Http\Controllers\Api\Seven\RouteController as SevenRoute;
 
+// Agent Controller
+use App\Http\Controllers\Api\Agent\RouteController as AgentRoute;
+use App\Http\Controllers\Api\Agent\StationController as AgentStation;
 
 /*
 |--------------------------------------------------------------------------
@@ -159,5 +162,23 @@ Route::middleware(['seven'])->prefix('v1')->group(function() {
 
             Route::get('get/{id}', 'getBookingById');
         });
+    });
+});
+
+
+// Route Api for agent
+Route::middleware(['agent'])->prefix('v1')->group(function() {
+
+    // Route
+    Route::controller(AgentRoute::class)->group(function() {
+        Route::get('routes', 'getRoutes');
+        Route::get('route/get/{from}/{to}', 'getRouteByStation');
+    });
+
+    // Station
+    Route::controller(AgentStation::class)->group(function() {
+        Route::get('stations', 'getStationFromRoute');
+        Route::get('stations/depart', 'stationDepart');
+        Route::get('stations/arrive/{from_id}', 'stationArrive');
     });
 });

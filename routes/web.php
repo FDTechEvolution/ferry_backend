@@ -11,6 +11,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DevTestController;
 use App\Http\Controllers\InformationsController;
 use App\Http\Controllers\PartnerController;
+use App\Http\Controllers\RouteCalendarController;
 use App\Http\Controllers\RouteSchedulesController;
 use App\Http\Controllers\SectionsController;
 use Illuminate\Support\Facades\Route;
@@ -77,7 +78,8 @@ Route::middleware('auth')->group(function () {
         'section' => SectionsController::class,
         'routeSchedules' => RouteSchedulesController::class,
         'customer'=>CustomerController::class,
-        'bookingRoute'=>BookingRouteController::class
+        'bookingRoute'=>BookingRouteController::class,
+        'routeCalendar'=>RouteCalendarController::class
     ]);
 
     Route::controller(RouteSchedulesController::class)->group(function() {
@@ -109,6 +111,9 @@ Route::middleware('auth')->group(function () {
     Route::controller(ApiRoutesController::class)->group(function () {
         Route::get('/apiroute/get/{merchant_id}', 'index')->name('api-route-index');
         Route::get('/apiroute/calendar/{id}', 'calendar')->name('apiroute.calendar');
+        Route::get('/apiroute/edit-seat/{id}', 'editSeat')->name('apiroute.edit-seat');
+        Route::post('/apiroute/multiple-delete', 'multipleDelete')->name('apiroute.multiple_delete');
+
         Route::get('/apiroute/updateroute/{merchant_id}', 'updateroute')->name('api-route-updateroute');
         Route::get('/apiroute/update-commission', 'updateCommission')->name('api-route-updatecommission');
 

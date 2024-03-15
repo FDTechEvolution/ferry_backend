@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Helpers\CalendarHelper;
 use App\Models\ApiMerchants;
+use App\Models\RouteCalendars;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 use App\Models\ApiRoutes;
 use App\Models\Route;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ApiRoutesController extends Controller
 {
@@ -135,20 +138,96 @@ class ApiRoutesController extends Controller
 
 
     public function calendar(string $apiRouteId){
-        $apiRouteId = request()->api_route_id;
+        $apiRouteId = request()->query('api_route_id');
+        $month = request()->query('month');
+        $year = request()->query('year');
 
+        //dd($apiRouteId);
         $apiRoute = ApiRoutes::where('id',$apiRouteId)->first();
+        //dd($apiRoute);
+        $apiMerchant = ApiMerchants::where('id',$apiRoute->api_merchant_id)->with('apiRoutes')->first();
 
-        $monthCalendar =  CalendarHelper::getMonthCalendar();
+        $date = Carbon::now();
+        if(!is_null($month) && !is_null($year)){
+            $date = Carbon::createFromFormat('Y-m-d',  sprintf('%s-%s-01',$year,$month));
+        }
+        $month = $date->format('m');
+        $year = $date->format('Y');
+
+        $monthCalendar =  CalendarHelper::getMonthCalendar($date);
+        //dd($monthCalendar);
+        $routeCalendars = RouteCalendars::where('api_route_id',$apiRouteId)
+            ->whereMonth('date', '=', $month)
+            ->whereYear('date','=',$year)
+            ->orderBy('date','ASC')->get();
+
+
+        $dateDatas = [];
+        foreach($routeCalendars as $routeCalendar){
+            $dateDatas[$routeCalendar->date] = [
+                'id'=>$routeCalendar->id,
+                'seat'=>$routeCalendar->seat
+            ];
+        }
+        //dd($dateDatas);
 
         foreach($monthCalendar as $index=> $row){
             foreach($row as $i=> $col){
-                $monthCalendar[$index][$i]['seat'] = $apiRoute->seat;
+
+                if(isset($dateDatas[$col['date']])){
+                    $monthCalendar[$index][$i]['seat'] =$dateDatas[$col['date']]['seat'];
+                    $monthCalendar[$index][$i]['id'] = $dateDatas[$col['date']]['id'];
+                }else{
+                    $monthCalendar[$index][$i]['seat'] = $apiRoute->seat;
+                    $monthCalendar[$index][$i]['id'] = null;
+                }
+
             }
         }
 
+
+        $monthOptions = [
+            '01'=>'Janaury',
+            '02'=>'February',
+            '03'=>'March',
+            '04'=>'April',
+            '05'=>'May',
+            '06'=>'June',
+            '07'=>'July',
+            '08'=>'August',
+            '09'=>'September',
+            '10'=>'October',
+            '11'=>'November',
+            '12'=>'December',
+
+        ];
+
+        $years = [
+            '2024'=>'2024',
+            '2025'=>'2025',
+            '2026'=>'2026',
+            '2027'=>'2027'
+        ];
+
         return view('pages.api_routes.calendar',[
-            'monthCalendar'=>$monthCalendar
+            'monthCalendar'=>$monthCalendar,
+            'apiRouteId'=>$apiRouteId,
+            'apiMerchant'=>$apiMerchant,
+            'date'=>$date,
+            'month'=>$month,
+            'year'=>$year,
+            'monthOptions'=>$monthOptions,
+            'years'=>$years
         ]);
+    }
+
+
+    public function multipleDelete(Request $request){
+        $apiRouteIds = $request->api_route_id;
+        $api_merchant_id = $request->api_merchant_id;
+
+        DB::table('api_routes')->whereIn('id', $apiRouteIds)->update(['isactive'=>'N']);
+
+        return redirect()->route('api.edit',['id'=>$api_merchant_id])->withSuccess('deleted.');
     }
 }

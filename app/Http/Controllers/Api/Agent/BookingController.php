@@ -79,9 +79,11 @@ class BookingController extends Controller
             $booking = Bookings::find($request->booking_id);
             if($booking->status == 'DR') {
                 $c = new BookingHelper;
-                $complete = $c->completeBooking($request->booking_id);
-                return response()->json(['result' => true, 'data' => $complete]);
+                $booking = $c->completeBooking($request->booking_id);
             }
+
+            return response()->json(['result' => true, 'data' => $booking]);
+
         }
 
         return response()->json(['result' => false, 'data' => 'No Booking.']);

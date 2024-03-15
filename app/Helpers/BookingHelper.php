@@ -29,6 +29,7 @@ class BookingHelper
             'UNP' => ['title' => 'Unpaid', 'icon' => '', 'class' => 'text-warning','action'=>'Unpaid'],
             'CO' => ['title' => 'Paid', 'icon' => '', 'class' => 'text-success','action'=>'Paid'],
             'void' => ['title' => 'CANX', 'icon' => '', 'class' => 'text-mute','action'=>'Cancel'],
+            'VO' => ['title' => 'CANX', 'icon' => '', 'class' => 'text-mute','action'=>'Cancel'],
             'delete' => ['title' => 'Deleted', 'icon' => '', 'class' => 'text-danger','action'=>'Delete'],
             'amended' => ['title' => 'Amended', 'icon' => '', 'class' => '','action'=>''],
         ];

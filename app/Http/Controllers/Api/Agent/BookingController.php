@@ -92,14 +92,11 @@ class BookingController extends Controller
     public function destroy(Request $request) {
         if($this->checkBooking($request->booking_id)) {
             $booking = Bookings::find($request->booking_id);
-            if($booking->status != 'CO') {
-                $booking->status = 'VO';
-                if($booking->save())
-                    return response()->json(['result' => true, 'data' => 'Booking canceled.']);
-                else
-                    return response()->json(['result' => false, 'data' => 'error.']);
-            }
-            else return response()->json(['result' => false, 'data' => 'Booking is complete. Can not cancle.']);
+            $booking->status = 'VO';
+            if($booking->save())
+                return response()->json(['result' => true, 'data' => 'Booking canceled.']);
+            else
+                return response()->json(['result' => false, 'data' => 'error.']);
         }
 
         return response()->json(['result' => false, 'data' => 'No Booking.']);

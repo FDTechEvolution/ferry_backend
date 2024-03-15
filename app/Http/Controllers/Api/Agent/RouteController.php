@@ -24,10 +24,25 @@ class RouteController extends Controller
         return response()->json(['data' => $data], 200);
     }
 
+    public function getRouteByStation(Request $request, string $from_id = null, string $to_id = null) {
+        $merchant = $request->attributes->get('merchant');
+        $_merchant = ApiMerchants::find($merchant);
+        $routes = ApiRoutes::where('api_merchant_id', $merchant)->with('route')->get();
+
+        $_routes = $this->routeFromAndToCondition($routes, $from_id, $to_id);
+
+        if(sizeof($_routes) > 0) {
+            $data = $this->setupRoute($_routes, $_merchant);
+            return response()->json(['data' => $data], 200);
+        }
+        else
+            return response()->json(['data' => NULL], 200);
+    }
+
     private function setupRoute($route, $merchant) {
         $route = $this->discount($route);
         $route = $this->onTop($route);
-        return $this->isOpen($route, $merchant);
+        return $this->routeCollection($route, $merchant);
     }
 
     private function discount($route) {
@@ -50,19 +65,23 @@ class RouteController extends Controller
         return $route;
     }
 
-    private function isOpen($route, $merchant) {
+    private function routeCollection($route, $merchant) {
         $result = [];
         foreach($route as $item) {
             $_route = [
                 'id' => $item->id,
-                'station_from_id' => $item->route->station_from_id,
-                'station_to_id' => $item->route->station_to_id,
-                'station_from_name' => $item->route->station_from->name,
-                'station_from_piername' => $item->route->station_from->piername,
-                'station_from_nickname' => $item->route->station_from->nickname,
-                'station_to_name' => $item->route->station_to->name,
-                'station_to_piername' => $item->route->station_to->piername,
-                'station_to_nickname' => $item->route->station_to->nickname,
+                'station_from' => [
+                    'id' => $item->route->station_from_id,
+                    'name' => $item->route->station_from->name,
+                    'piername' => $item->route->station_from->piername,
+                    'nickname' => $item->route->station_from->nickname,
+                ],
+                'station_to' => [
+                    'id' => $item->route->station_to_id,
+                    'name' => $item->route->station_to->name,
+                    'piername' => $item->route->station_to->piername,
+                    'nickname' => $item->route->station_to->nickname,
+                ],
                 'depart_time' => $item->route->depart_time,
                 'arrive_time' => $item->route->arrive_time,
                 'seat' => $item->seat
@@ -78,61 +97,14 @@ class RouteController extends Controller
         return $result;
     }
 
-    public function getRouteByStationFrom(Request $request, string $from_id = null) {
-        $merchant = $request->attributes->get('merchant');
-        $data = [];
-        $_merchant = ApiMerchants::find($merchant);
-        $routes = ApiRoutes::where('api_merchant_id', $merchant)->with(['route'])->get();
-
-        $routes = Route::where('station_from_id', $from_id)->where('isactive', 'Y')->where('status', 'CO')
-                        ->with('station_to')
-                        ->orderBy('regular_price', 'ASC')
-                        ->get();
-
-        if($routes)
-            return response()->json(['data' => RouteResource::collection($routes)], 200);
-        else
-            return response()->json(['data' => NULL], 200);
-    }
-
-    public function getRouteByStationTo(string $to_id = null) {
-        $routes = Route::where('station_to_id', $to_id)->where('isactive', 'Y')->where('status', 'CO')
-                        ->with('station_to')
-                        ->orderBy('regular_price', 'ASC')
-                        ->get();
-
-        if($routes)
-            return response()->json(['data' => RouteResource::collection($routes)], 200);
-        else
-            return response()->json(['data' => NULL], 200);
-    }
-
-    public function getRouteByStation(string $from_id = null, string $to_id = null) {
-        $routes = Route::where('station_from_id', $from_id)->where('station_to_id', $to_id)
-                        ->where('isactive', 'Y')->where('status', 'CO')
-                        ->with('station_from', 'station_to', 'api_route')
-                        ->orderBy('regular_price', 'ASC')
-                        ->get();
-
-        $routes = $this->whereApiActive($routes);
-
-        if(isset($routes))
-            return response()->json(['data' => RouteResource::collection($routes)], 200);
-        else
-            return response()->json(['data' => NULL], 200);
-    }
-
-    private function whereApiActive($routes) {
-        $result = [];
-
-        if(!empty($routes)) {
-            foreach($routes as $route) {
-                if($route->api_route->isactive == 'Y') {
-                    array_push($result, $route);
-                }
+    private function routeFromAndToCondition($routes, $from_id, $to_id) {
+        $route = [];
+        foreach($routes as $item) {
+            if($item->route->station_from_id == $from_id && $item->route->station_to_id == $to_id) {
+                array_push($route, $item);
             }
         }
 
-        return $result;
+        return $route;
     }
 }

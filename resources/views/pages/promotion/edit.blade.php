@@ -168,25 +168,64 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-lg-3">
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input form-check-input-success" type="checkbox"
-                                            value="Y" id="isfreecreditcharge" name="isfreecreditcharge"
-                                            @checked($promotion['isfreecreditcharge'] == 'Y')>
-                                        <label class="form-check-label" for="isfreecreditcharge">
-                                            Free credit charge
-                                        </label>
-                                    </div>
-                                </div>
+                                <div class="col-12 col-lg-9">
+                                    <div class="row mb-lg-2">
+                                        <div class="col-12 col-lg-3">
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input form-check-input-success" type="checkbox"
+                                                    value="Y" id="isfreecreditcharge" name="isfreecreditcharge"
+                                                    @checked($promotion['isfreecreditcharge'] == 'Y')>
+                                                <label class="form-check-label" for="isfreecreditcharge">
+                                                    Free credit charge
+                                                </label>
+                                            </div>
+                                        </div>
 
-                                <div class="col-12 col-lg-3">
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input form-check-input-success" type="checkbox"
-                                            value="Y" id="isfreepremiumflex" name="isfreepremiumflex"
-                                            @checked($promotion['isfreepremiumflex'] == 'Y')>
-                                        <label class="form-check-label" for="isfreepremiumflex">
-                                            Free premium flex
-                                        </label>
+                                        <div class="col-12 col-lg-3">
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input form-check-input-success" type="checkbox"
+                                                    value="Y" id="isfreepremiumflex" name="isfreepremiumflex"
+                                                    @checked($promotion['isfreepremiumflex'] == 'Y')>
+                                                <label class="form-check-label" for="isfreepremiumflex">
+                                                    Free premium flex
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-12 col-lg-3">
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input form-check-input-success" type="checkbox"
+                                                    value="Y" id="isfreelongtailboat" name="isfreelongtailboat"
+                                                    @checked($promotion['isfreelongtailboat'] == 'Y')>
+                                                <label class="form-check-label" for="isfreelongtailboat">
+                                                    Free Longtail Boat
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 col-lg-3">
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input form-check-input-success" type="checkbox"
+                                                    value="Y" id="isfreeshuttlebus" name="isfreeshuttlebus"
+                                                    @checked($promotion['isfreeshuttlebus'] == 'Y')>
+                                                <label class="form-check-label" for="isfreeshuttlebus">
+                                                    Free Shuttle Bus
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 col-lg-3">
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input form-check-input-success" type="checkbox"
+                                                    value="Y" id="isfreeprivatetaxi" name="isfreeprivatetaxi"
+                                                    @checked($promotion['isfreeprivatetaxi'] == 'Y')>
+                                                <label class="form-check-label" for="isfreeprivatetaxi">
+                                                    Free Private Taxi
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 

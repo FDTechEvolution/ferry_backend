@@ -98,7 +98,10 @@ class PromotionController extends Controller
             'booking_end_date' => $endDate,
             'description' => $request->description,
             'isfreecreditcharge' => isset($request->isfreecreditcharge) ? 'Y' : 'N',
-            'isfreepremiumflex' => isset($request->isfreepremiumflex) ? 'Y' : 'N'
+            'isfreepremiumflex' => isset($request->isfreepremiumflex) ? 'Y' : 'N',
+            'isfreelongtailboat' => isset($request->isfreelongtailboat) ? 'Y' : 'N',
+            'isfreeshuttlebus' => isset($request->isfreeshuttlebus) ? 'Y' : 'N',
+            'isfreeprivatetaxi' => isset($request->isfreeprivatetaxi) ? 'Y' : 'N'
         ]);
 
 
@@ -174,6 +177,9 @@ class PromotionController extends Controller
         $promotion->trip_type = $request->trip_type;
         $promotion->isfreecreditcharge = isset($request->isfreecreditcharge) ? 'Y' : 'N';
         $promotion->isfreepremiumflex = isset($request->isfreepremiumflex) ? 'Y' : 'N';
+        $promotion->isfreelongtailboat = isset($request->isfreelongtailboat) ? 'Y' : 'N';
+        $promotion->isfreeshuttlebus = isset($request->isfreeshuttlebus) ? 'Y' : 'N';
+        $promotion->isfreeprivatetaxi = isset($request->isfreeprivatetaxi) ? 'Y' : 'N';
 
 
 

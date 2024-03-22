@@ -30,6 +30,9 @@ class Promotions extends Model
         'created_at',
         'isfreecreditcharge',
         'isfreepremiumflex',
+        'isfreelongtailboat',
+        'isfreeshuttlebus',
+        'isfreeprivatetaxi',
         'description'
     ];
 

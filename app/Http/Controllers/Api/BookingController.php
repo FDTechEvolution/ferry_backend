@@ -67,6 +67,9 @@ class BookingController extends Controller
             // $payment_channel = $this->PaymentMethod[$request->payment_method];
             $isfreepremiumflex = isset($_promo) ? $_promo->isfreepremiumflex : 'N';
             $isfreecreditcharge = isset($_promo) ? $_promo->isfreecreditcharge : 'N';
+            $isfreelongtailboat = isset($_promo) ? $_promo->isfreelongtailboat : 'N';
+            $isfreeshuttlebus = isset($_promo) ? $_promo->isfreeshuttlebus : 'N';
+            $isfreeprivatetaxi = isset($_promo) ? $_promo->isfreeprivatetaxi : 'N';
 
             $booking = BookingHelper::createBooking($data);
             $payment = PaymentHelper::createPaymentFromBooking($booking->id);
@@ -111,15 +114,30 @@ class BookingController extends Controller
 
                 $payment = PaymentHelper::updatePromoCodeDiscount($payment_id, $_promo->id, $_discount_amount);
             }
-            $payment_amt = $payment->totalamt;
+            $payment_amt = $_amount;
 
             // update PremiumFlex
             if($request->ispremiumflex == 'Y')
-                $payment = PaymentHelper::updatePremiumFlex($payment_id);
+                $payment = PaymentHelper::updatePremiumFlex($payment_id, $payment_amt);
             if($request->ispremiumflex == 'Y' && $isfreepremiumflex == 'Y')
                 $payment = PaymentHelper::updatePremiumFlexFree($payment_id, $payment_amt);
 
-            $payment_amt = $payment->totalamt;
+            // update Route Addon Promocode
+            if(isset($request->route_addon)) {
+                foreach($request->route_addon as $route_addon) {
+                    foreach($route_addon as $item) {
+                        $r_addon = RouteAddons::find($item);
+                        if($r_addon->type == 'longtail_boat' && $isfreelongtailboat == 'Y')
+                            $payment = PaymentHelper::updateRouteAddonFree($payment_id, $r_addon->name, $r_addon->price);
+                        if($r_addon->type == 'shuttle_bus' && $isfreeshuttlebus == 'Y')
+                            $payment = PaymentHelper::updateRouteAddonFree($payment_id, $r_addon->name, $r_addon->price);
+                        if($r_addon->type == 'private_taxi' && $isfreeprivatetaxi == 'Y')
+                            $payment = PaymentHelper::updateRouteAddonFree($payment_id, $r_addon->name, $r_addon->price);
+                    }
+                }
+            }
+
+            // $payment_amt = $_amount;
 
             // update CreditCard Free
             // if($payment_channel == 'CC')
@@ -127,7 +145,7 @@ class BookingController extends Controller
             // if($payment_channel == 'CC' && $isfreecreditcharge == 'Y')
             //     $payment = PaymentHelper::updatePayWithCreditCardFree($payment_id, $payment_amt);
 
-            $payment->totalamt = number_format($payment->totalamt, 2, '.', '');
+            // $payment->totalamt = number_format($payment->totalamt, 2, '.', '');
 
             // $payload = PaymentHelper::encodeRequest($payment, $payment_channel);
             // $response = PaymentHelper::postTo_2c2p($payload);
@@ -150,6 +168,9 @@ class BookingController extends Controller
                 $_promo_id = '';
                 $_promo_isfreepremiumflex = 'N';
                 $_promo_isfreecreditcharge = 'N';
+                $_promo_isfreelongtailboat = 'N';
+                $_promo_isfreeshuttlebus = 'N';
+                $_promo_isfreeprivatetaxi = 'N';
                 $_amount = $this->routeAmount($request->route_id, $request->passenger, $request->child_passenger, $request->infant_passenger);
                 $_extra_meal = isset($request->meal_id) ? $this->extraAddon($request->meal_id, $request->meal_qty) : [0, []];
                 $_extra_activity = isset($request->activity_id) ? $this->extraAddon($request->activity_id, $request->activity_qty) : [0, []];
@@ -175,6 +196,9 @@ class BookingController extends Controller
                             $_promo_id = $is_promo->id;
                             if($is_promo->isfreepremiumflex == 'Y') $_promo_isfreepremiumflex = 'Y';
                             if($is_promo->isfreecreditcharge == 'Y') $_promo_isfreecreditcharge = 'Y';
+                            if($is_promo->isfreelongtailboat == 'Y') $_promo_isfreelongtailboat = 'Y';
+                            if($is_promo->isfreeshuttlebus == 'Y') $_promo_isfreeshuttlebus = 'Y';
+                            if($is_promo->isfreeprivatetaxi == 'Y') $_promo_isfreeprivatetaxi = 'Y';
                             array_push($_promo, $is_promo);
                         }
                         else array_push($_promo, []);
@@ -209,6 +233,9 @@ class BookingController extends Controller
                 // $payment_channel = $this->PaymentMethod[$request->payment_method];
                 $isfreepremiumflex = !empty($_promo) ? $_promo_isfreepremiumflex : 'N';
                 $isfreecreditcharge = !empty($_promo) ? $_promo_isfreecreditcharge : 'N';
+                $isfreelongtailboat = !empty($_promo) ? $_promo_isfreelongtailboat : 'N';
+                $isfreeshuttlebus = !empty($_promo) ? $_promo_isfreeshuttlebus : 'N';
+                $isfreeprivatetaxi = !empty($_promo) ? $_promo_isfreeprivatetaxi : 'N';
 
                 $booking = BookingHelper::createBooking($data);
                 $payment = PaymentHelper::createPaymentFromBooking($booking->id);
@@ -253,10 +280,26 @@ class BookingController extends Controller
                 }
 
                 $payment_amt = $payment->totalamt;
+                $payment_id = $payment->id;
                 if($request->ispremiumflex == 'Y')
-                    $payment = PaymentHelper::updatePremiumFlex($payment->id);
+                    $payment = PaymentHelper::updatePremiumFlex($payment->id, $payment_amt);
                 if($request->ispremiumflex == 'Y' && $isfreepremiumflex == 'Y')
                     $payment = PaymentHelper::updatePremiumFlexFree($payment->id, $payment_amt);
+
+                // update Route Addon Promocode
+                if(isset($request->route_addon)) {
+                    foreach($request->route_addon as $route_addon) {
+                        foreach($route_addon as $item) {
+                            $r_addon = RouteAddons::find($item);
+                            if($r_addon->type == 'longtail_boat' && $isfreelongtailboat == 'Y')
+                                $payment = PaymentHelper::updateRouteAddonFree($payment_id, $r_addon->name, $r_addon->price);
+                            if($r_addon->type == 'shuttle_bus' && $isfreeshuttlebus == 'Y')
+                                $payment = PaymentHelper::updateRouteAddonFree($payment_id, $r_addon->name, $r_addon->price);
+                            if($r_addon->type == 'private_taxi' && $isfreeprivatetaxi == 'Y')
+                                $payment = PaymentHelper::updateRouteAddonFree($payment_id, $r_addon->name, $r_addon->price);
+                        }
+                    }
+                }
 
                 // $payment_amt = $payment->totalamt;
                 // if($payment_channel == 'CC')
@@ -264,7 +307,7 @@ class BookingController extends Controller
                 // if($payment_channel == 'CC' && $isfreecreditcharge == 'Y')
                 //     $payment = PaymentHelper::updatePayWithCreditCardFree($payment->id, $payment_amt);
 
-                $payment->totalamt = number_format($payment->totalamt, 2, '.', '');
+                // $payment->totalamt = number_format($payment->totalamt, 2, '.', '');
 
                 // $payload = PaymentHelper::encodeRequest($payment, $payment_channel);
                 // $response = PaymentHelper::postTo_2c2p($payload);

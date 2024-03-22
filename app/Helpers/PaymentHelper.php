@@ -218,12 +218,12 @@ class PaymentHelper
         return $payment;
     }
 
-    public static function updatePremiumFlex($payment_id)
+    public static function updatePremiumFlex($payment_id, $payment_amount)
     {
         $payment = Payments::where('id', $payment_id)->first();
 
         if (!is_null($payment)) {
-            $premiumAmount = $payment->totalamt * 0.1;
+            $premiumAmount = $payment_amount * 0.1;
             $paymentLine = PaymentHelper::createPaymentLine($payment_id,'PREMIUM',NULL,'Premium Flex 10%',$premiumAmount,NULL,'');
         }
 
@@ -238,18 +238,24 @@ class PaymentHelper
             $premiumAmount = -$payment_amount * 0.1;
 
             //Make payment line
-            $paymentLine = PaymentLines::create([
-                'payment_id' => $payment->id,
-                'type' => 'PREMIUM',
-                'title' => 'Free Premium Flex',
-                'amount' => $premiumAmount,
-            ]);
+            // $paymentLine = PaymentLines::create([
+            //     'payment_id' => $payment->id,
+            //     'type' => 'PREMIUM',
+            //     'title' => 'Free Premium Flex',
+            //     'amount' => $premiumAmount,
+            // ]);
 
             $paymentLine = PaymentHelper::createPaymentLine($payment_id,'PREMIUM',NULL,'Free Premium Flex',$premiumAmount,NULL,'');
 
         }
 
         return $payment;
+    }
+
+    public static function updateRouteAddonFree($payment_id, $addon_name, $addon_price) {
+        $title = 'Free '.$addon_name;
+        $price = -$addon_price;
+        $paymentLine = PaymentHelper::createPaymentLine($payment_id,'ADDON',NULL,$title,$price,NULL,'');
     }
 
     public static function updatePremiumFlexDiscount($payment_id, $discountamt)

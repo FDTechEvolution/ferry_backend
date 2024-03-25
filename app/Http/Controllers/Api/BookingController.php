@@ -30,6 +30,7 @@ class BookingController extends Controller
         $route = $this->getRoute($request->route_id[0]);
         if($route) {
             $_promo = NULL;
+            $_passenger = $request->passenger + $request->child_passenger + $request->infant_passenger;
             $_amount = $this->routeAmount($request->route_id, $request->passenger, $request->child_passenger, $request->infant_passenger);
             $_extra_meal = isset($request->meal_id) ? $this->extraAddon($request->meal_id, $request->meal_qty) : [0, []];
             $_extra_activity = isset($request->activity_id) ? $this->extraAddon($request->activity_id, $request->activity_qty) : [0, []];
@@ -128,11 +129,11 @@ class BookingController extends Controller
                     foreach($route_addon as $item) {
                         $r_addon = RouteAddons::find($item);
                         if($r_addon->type == 'longtail_boat' && $isfreelongtailboat == 'Y')
-                            $payment = PaymentHelper::updateRouteAddonFree($payment_id, $r_addon->name, $r_addon->price);
+                            $payment = PaymentHelper::updateRouteAddonFree($payment_id, $r_addon->name, $r_addon->price, $_passenger);
                         if($r_addon->type == 'shuttle_bus' && $isfreeshuttlebus == 'Y')
-                            $payment = PaymentHelper::updateRouteAddonFree($payment_id, $r_addon->name, $r_addon->price);
+                            $payment = PaymentHelper::updateRouteAddonFree($payment_id, $r_addon->name, $r_addon->price, $_passenger);
                         if($r_addon->type == 'private_taxi' && $isfreeprivatetaxi == 'Y')
-                            $payment = PaymentHelper::updateRouteAddonFree($payment_id, $r_addon->name, $r_addon->price);
+                            $payment = PaymentHelper::updateRouteAddonFree($payment_id, $r_addon->name, $r_addon->price, $_passenger);
                     }
                 }
             }
@@ -163,6 +164,7 @@ class BookingController extends Controller
             $route = $this->getRoute($request->route_id[0]);
             if($route) {
                 $_pro = NULL;
+                $_passenger = $request->passenger + $request->child_passenger + $request->infant_passenger;
                 $_promo = [];
                 $_promotion = [];
                 $_promo_id = '';
@@ -292,11 +294,11 @@ class BookingController extends Controller
                         foreach($route_addon as $item) {
                             $r_addon = RouteAddons::find($item);
                             if($r_addon->type == 'longtail_boat' && $isfreelongtailboat == 'Y')
-                                $payment = PaymentHelper::updateRouteAddonFree($payment_id, $r_addon->name, $r_addon->price);
+                                $payment = PaymentHelper::updateRouteAddonFree($payment_id, $r_addon->name, $r_addon->price, $_passenger);
                             if($r_addon->type == 'shuttle_bus' && $isfreeshuttlebus == 'Y')
-                                $payment = PaymentHelper::updateRouteAddonFree($payment_id, $r_addon->name, $r_addon->price);
+                                $payment = PaymentHelper::updateRouteAddonFree($payment_id, $r_addon->name, $r_addon->price, $_passenger);
                             if($r_addon->type == 'private_taxi' && $isfreeprivatetaxi == 'Y')
-                                $payment = PaymentHelper::updateRouteAddonFree($payment_id, $r_addon->name, $r_addon->price);
+                                $payment = PaymentHelper::updateRouteAddonFree($payment_id, $r_addon->name, $r_addon->price, $_passenger);
                         }
                     }
                 }
@@ -467,6 +469,7 @@ class BookingController extends Controller
     private function setRoutes($route_id, $departdate, $returndate = null, $adult, $child, $infant, $addons, $addon_detail) {
         $route = [];
         $traveldate = $returndate != null ? [$departdate, $returndate] : $departdate;
+        $passenger = $adult + $child + $infant;
 
         if(is_array($traveldate)) {
             foreach($route_id as $key => $_route) {
@@ -479,7 +482,7 @@ class BookingController extends Controller
 
                 // Log::debug($addons);
                 if(!empty($addons[$key])) {
-                    $route_addons = $this->setRouteAddon($addons[$key], $addon_detail[$key]);
+                    $route_addons = $this->setRouteAddon($addons[$key], $addon_detail[$key], $passenger);
                 }
 
                 array_push($route, [
@@ -500,7 +503,7 @@ class BookingController extends Controller
             $amount += $r->infant_price*$infant;
 
             if(!empty($addons[0])) {
-                $route_addons = $this->setRouteAddon($addons[0], $addon_detail[0]);
+                $route_addons = $this->setRouteAddon($addons[0], $addon_detail[0], $passenger);
             }
 
             array_push($route, [
@@ -515,7 +518,7 @@ class BookingController extends Controller
         return $route;
     }
 
-    private function setRouteAddon($addons, $addon_detail) {
+    private function setRouteAddon($addons, $addon_detail, $passenger) {
         $_addon = [];
         foreach($addons as $index => $addon) {
             $a = $this->getRouteAddonById($addon);
@@ -523,7 +526,7 @@ class BookingController extends Controller
                 $amount = $a->isservice_charge == 'Y' ? $a->price : 0;
                 array_push($_addon, [
                     'route_addon_id' => $a->id,
-                    'amount' => $amount,
+                    'amount' => $amount * $passenger,
                     'description' => $addon_detail[$index]
                 ]);
             }

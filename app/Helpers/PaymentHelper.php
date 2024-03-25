@@ -252,8 +252,9 @@ class PaymentHelper
         return $payment;
     }
 
-    public static function updateRouteAddonFree($payment_id, $addon_name, $addon_price) {
+    public static function updateRouteAddonFree($payment_id, $addon_name, $addon_price, $passenger) {
         $title = 'Free '.$addon_name;
+        $addon_price = $addon_price * $passenger;
         $price = -$addon_price;
         $paymentLine = PaymentHelper::createPaymentLine($payment_id,'ADDON',NULL,$title,$price,NULL,'');
     }

@@ -624,7 +624,8 @@ class BookingController extends Controller
     public function bookingRecord(string $bookingno = null, string $email = null) {
         $booking = $this->getBookingByBookingNumber($bookingno);
         if(isset($booking)) {
-            $cus_email = $booking->bookingCustomers[0]->email;
+            $cus_email = '';
+            foreach($booking->bookingCustomers as $lead) { if($lead->email != NULL) $cus_email = $lead->email; }
             if($cus_email == $email) {
                 $addons = $this->getRouteAddon($booking);
                 $booking_routes = $booking->bookingRoutes->toArray();

@@ -88,6 +88,7 @@ class PaymentHelper
     {
         $booking = BookingHelper::getBookingInfoByBookingId($booking_id);
         $totalAmount = 0;
+        $passenger = 1;
 
         //Make draft payment
         $payment = Payments::create([
@@ -100,6 +101,7 @@ class PaymentHelper
 
         //Customer
         if (!is_null($booking->bookingCustomers)) {
+            $passenger = count($booking->bookingCustomers);
             $bookingCustomer = $booking->bookingCustomers[0];
             $payment->customer_id = $bookingCustomer->id;
             $payment->save();
@@ -122,6 +124,7 @@ class PaymentHelper
             if(!is_null($bRoute->bookingRouteAddons)) {
                 foreach($bRoute->bookingRouteAddons as $key => $addon) {
                     $amount = $addon->isservice_charge == 'Y' ? $addon->price : 0;
+                    $amount = $amount * $passenger;
                     PaymentHelper::createPaymentLine($payment->id,'ADDON',$booking->id,sprintf('%s', $addon->name),$amount,$bookingRoute->id,$addon->pivot->description);
                 }
             }

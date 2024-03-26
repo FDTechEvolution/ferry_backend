@@ -32,13 +32,13 @@ class SevenMiddleware
             $this->log($request, $response, 200);
             return $response;
         }
-        
+
         $this->log($request, $response, 403);
         return response('Unauthorized', 403);
     }
 
-    private function starts_with($string, $startString) { 
-        $len = strlen($startString); 
+    private function starts_with($string, $startString) {
+        $len = strlen($startString);
         return (substr($string, 0, $len) === $startString);
     }
 

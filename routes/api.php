@@ -168,7 +168,7 @@ Route::middleware(['seven'])->prefix('v1')->group(function() {
 
 
 // Route Api for agent
-Route::middleware(['agent'])->prefix('v1')->group(function() {
+Route::middleware(['agent'])->prefix('agent')->group(function() {
 
     // Route
     Route::controller(AgentRoute::class)->group(function() {

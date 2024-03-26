@@ -55,8 +55,10 @@ class RouteController extends Controller
 
         if(!empty($routes)) {
             foreach($routes as $route) {
-                if($route->api_route->isactive == 'Y') {
-                    array_push($result, $route);
+                if(!is_null($route->api_route)) {
+                    if($route->api_route->isactive == 'Y') {
+                        array_push($result, $route);
+                    }
                 }
             }
         }

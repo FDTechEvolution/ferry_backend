@@ -8,46 +8,36 @@ use Illuminate\Support\Facades\Log;
 
 use App\Http\Resources\RouteResource;
 use App\Models\Route;
+use App\Models\ApiRoutes;
+use App\Models\ApiMerchants;
+
+use App\Helpers\RouteHelper;
 
 class RouteController extends Controller
 {
-    public function getRouteByStationFrom(string $from_id = null) {
-        $routes = Route::where('station_from_id', $from_id)->where('isactive', 'Y')->where('status', 'CO')
-                        ->with('station_to')
-                        ->orderBy('regular_price', 'ASC')
-                        ->get();
+    protected $SEVEN;
 
-        if($routes)
-            return response()->json(['data' => RouteResource::collection($routes)], 200);
-        else
-            return response()->json(['data' => NULL], 200);
-    }
-
-    public function getRouteByStationTo(string $to_id = null) {
-        $routes = Route::where('station_to_id', $to_id)->where('isactive', 'Y')->where('status', 'CO')
-                        ->with('station_to')
-                        ->orderBy('regular_price', 'ASC')
-                        ->get();
-
-        if($routes)
-            return response()->json(['data' => RouteResource::collection($routes)], 200);
-        else
-            return response()->json(['data' => NULL], 200);
+    public function __construct() {
+        $this->SEVEN = ApiMerchants::where('code', 'SEVEN')->where('isactive', 'Y')->first();
     }
 
     public function getRouteByStation(string $from_id = null, string $to_id = null) {
-        $routes = Route::where('station_from_id', $from_id)->where('station_to_id', $to_id)
-                        ->where('isactive', 'Y')->where('status', 'CO')
-                        ->with('station_from', 'station_to', 'api_route')
-                        ->orderBy('regular_price', 'ASC')
-                        ->get();
+        if(isset($this->SEVEN)) {
+            $routes = Route::where('station_from_id', $from_id)->where('station_to_id', $to_id)
+                            ->where('isactive', 'Y')->where('status', 'CO')
+                            ->with('station_from', 'station_to', 'api_route')
+                            ->orderBy('regular_price', 'ASC')
+                            ->get();
 
-        $routes = $this->whereApiActive($routes);
+            $routes = $this->whereApiActive($routes);
 
-        if(isset($routes))
-            return response()->json(['data' => RouteResource::collection($routes)], 200);
-        else
-            return response()->json(['data' => NULL], 200);
+            if(isset($routes))
+                return response()->json(['data' => RouteResource::collection($routes)], 200);
+            else
+                return response()->json(['data' => NULL], 200);
+        }
+
+        return $this->returnUnauthorized();
     }
 
     private function whereApiActive($routes) {
@@ -64,5 +54,9 @@ class RouteController extends Controller
         }
 
         return $result;
+    }
+
+    private function returnUnauthorized() {
+        return response()->json(['data' => 'Unauthorized'], 401);
     }
 }

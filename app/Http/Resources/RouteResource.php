@@ -28,14 +28,14 @@ class RouteResource extends JsonResource
             // 'ispromocode' => $this->ispromocode,
             'station_from' => [
                 'name' => $this->station_from->name,
-                'name_th' => $this->station_from->this_name,
+                'name_th' => $this->station_from->thai_name,
                 'piername' => $this->station_from->piername,
                 'piername_th' => $this->station_from->thai_piername,
                 'nickname' => $this->station_from->nickname
             ],
             'station_to' => [
                 'name' => $this->station_to->name,
-                'name_th' => $this->station_to->this_name,
+                'name_th' => $this->station_to->thai_name,
                 'piername' => $this->station_to->piername,
                 'piername_th' => $this->station_to->thai_piername,
                 'nickname' => $this->station_to->nickname

@@ -17,8 +17,8 @@ class RouteResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'depart_time' => date('h:i', strtotime($this->depart_time)),
-            'arrive_time' => date('h:i', strtotime($this->arrive_time)),
+            'depart_time' => date('H:i', strtotime($this->depart_time)),
+            'arrive_time' => date('H:i', strtotime($this->arrive_time)),
             'regular_price' => intval($this->api_route->regular_price),
             'discount' => intval($this->api_route->discount),
             'totalamt' => intval($this->api_route->totalamt),

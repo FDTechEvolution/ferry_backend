@@ -295,7 +295,7 @@ class BookingController extends Controller
                     $payment = PaymentHelper::updatePremiumFlexFree($payment->id, $payment_amt);
 
                 // update Route Addon Promocode
-                if(isset($request->route_addon)) {
+                if($request->route_addon[0] != NULL) {
                     foreach($request->route_addon as $route_addon) {
                         foreach($route_addon as $item) {
                             $r_addon = RouteAddons::find($item);

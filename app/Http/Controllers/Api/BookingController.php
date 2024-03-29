@@ -99,9 +99,12 @@ class BookingController extends Controller
                         }
                     }
                     else {
-                        if($_r->ispromocode == 'Y' && $_r->id == $p_line['route'][$pr] ||
-                            $_r->ispromocode == 'Y' && $_r->station_from_id == $p_line['from'][$fr] ||
-                            $_r->ispromocode == 'Y' && $_r->station_to_id == $p_line['to'][$tr]
+                        $p_line_route = !empty($p_line['route']) ? $p_line['route'][$pr] : '';
+                        $p_line_from = !empty($p_line['from']) ? $p_line['from'][$fr] : '';
+                        $p_line_to = !empty($p_line['to']) ? $p_line['to'][$tr] : '';
+                        if($_r->ispromocode == 'Y' && $_r->id == $p_line_route ||
+                            $_r->ispromocode == 'Y' && $_r->station_from_id == $p_line_from ||
+                            $_r->ispromocode == 'Y' && $_r->station_to_id == $p_line_to
                         ){
                             $amount += $_r->regular_price*$request->passenger;
                             $amount += $_r->child_price*$request->child_passenger;
@@ -124,7 +127,7 @@ class BookingController extends Controller
                 $payment = PaymentHelper::updatePremiumFlexFree($payment_id, $payment_amt);
 
             // update Route Addon Promocode
-            if(isset($request->route_addon)) {
+            if($request->route_addon[0] != NULL) {
                 foreach($request->route_addon as $route_addon) {
                     foreach($route_addon as $item) {
                         $r_addon = RouteAddons::find($item);
@@ -264,9 +267,12 @@ class BookingController extends Controller
                             }
                         }
                         else {
-                            if($_r->ispromocode == 'Y' && $_r->id == $p_line['route'][$pr] ||
-                                $_r->ispromocode == 'Y' && $_r->station_from_id == $p_line['from'][$fr] ||
-                                $_r->ispromocode == 'Y' && $_r->station_to_id == $p_line['to'][$tr]
+                            $p_line_route = !empty($p_line['route']) ? $p_line['route'][$pr] : '';
+                            $p_line_from = !empty($p_line['from']) ? $p_line['from'][$fr] : '';
+                            $p_line_to = !empty($p_line['to']) ? $p_line['to'][$tr] : '';
+                            if($_r->ispromocode == 'Y' && $_r->id == $p_line_route ||
+                                $_r->ispromocode == 'Y' && $_r->station_from_id == $p_line_from ||
+                                $_r->ispromocode == 'Y' && $_r->station_to_id == $p_line_to
                             ){
                                 $amount += $_r->regular_price*$request->passenger;
                                 $amount += $_r->child_price*$request->child_passenger;

@@ -205,6 +205,7 @@ class RouteHelper
         $routes  = $routes->orderBy('station_from_id', 'ASC')
             ->orderBy('depart_time', 'ASC')
             ->get();
+        //dd($routes);
 
         return $routes;
     }

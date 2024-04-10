@@ -31,10 +31,10 @@ class RouteController extends Controller
 
             $routes = $this->whereApiActive($routes);
 
-            if(isset($routes))
+            if(sizeof($routes)>0)
                 return response()->json(['data' => RouteResource::collection($routes)], 200);
             else
-                return response()->json(['data' => NULL], 200);
+                return response()->json(['data' => NULL,'msg'=>'no route avaliable.'], 200);
         }
 
         return $this->returnUnauthorized();

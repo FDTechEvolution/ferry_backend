@@ -18,7 +18,7 @@
                 <a href="{{ route('routeSchedules.create') }}?merchant_id={{ $merchant_id }}"
                     class="btn button-orange-bg">Create New</a>
 
-                <img src="{{ $apiMerchant->logo }}" width="200px" class="px-2" />
+
             @endif
 
             @if ($countBooking > 0)

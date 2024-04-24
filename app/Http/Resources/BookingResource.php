@@ -45,7 +45,8 @@ class BookingResource extends JsonResource
                     'adult_price' => $route->regular_price,
                     'child_price' => $route->child_price,
                     'infant_price' => $route->infant_price,
-                    'amount' => $route->pivot->amount
+                    'amount' => $route->pivot->amount,
+                    'icons' => $route->icons
                 ];
             }),
             'customer' => $this->bookingCustomers->map(function($customer) {
@@ -79,6 +80,7 @@ class BookingResource extends JsonResource
                             'name' => $ex_addon->name,
                             'type' => $ex_addon->type,
                             'subtype' => $ex_addon->subtype,
+                            'price' => $ex_addon->price,
                             'description' => $ex_addon->pivot->description
                         ];
                     })

@@ -20,7 +20,7 @@ class BookingRoutes extends Model
     ];
 
     public function route() {
-        return $this->hasOne(Route::class, 'id', 'route_id')->with(['station_from','station_to','partner']);
+        return $this->hasOne(Route::class, 'id', 'route_id')->with(['station_from','station_to','partner', 'icons']);
     }
 
     public function booking() {

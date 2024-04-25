@@ -36,6 +36,7 @@ class BookingController extends Controller
             $_extra_activity = isset($request->activity_id) ? $this->extraAddon($request->activity_id, $request->activity_qty) : [0, []];
             $_extra_shuttle_bus = isset($request->bus_id) ? $this->extraAddon($request->bus_id, $request->bus_qty) : [0, []];
             $_extra_longtail_boat = isset($request->boat_id) ? $this->extraAddon($request->boat_id, $request->boat_qty) : [0, []];
+            $_extra_private_taxi = isset($request->taxi_id) ? $this->extraAddon($request->taxi_id, $request->taxi_qty) : [0, []];
             $_addons = isset($request->route_addon) ? $request->route_addon : [];
             $_addon_detail = isset($request->route_addon_detail) ? $request->route_addon_detail : [];
             $_promotion = $request->promocode != '' ? $this->promoCode($request->promocode, $request->route_id) : false;
@@ -44,7 +45,7 @@ class BookingController extends Controller
             $_booking = $this->setBooking($request->departdate, $request->passenger, $request->child_passenger,
                                             $request->infant_passenger, $request->trip_type, $request->book_channel,
                                             $_amount, $_extra_meal[0], $_extra_activity[0], $_extra_shuttle_bus[0],
-                                            $_extra_longtail_boat[0], $request->ispremiumflex, $_promo);
+                                            $_extra_longtail_boat[0], $_extra_private_taxi[0], $request->ispremiumflex, $_promo);
             $_customer = $this->setPassenger($request->fullname, $request->mobile, $request->passenger_type,
                                                 $request->passportno, $request->email, $request->address, $request->mobile_code,
                                                 $request->th_mobile, $request->country, $request->titlename, $request->birth_day);
@@ -181,6 +182,7 @@ class BookingController extends Controller
                 $_extra_activity = isset($request->activity_id) ? $this->extraAddon($request->activity_id, $request->activity_qty) : [0, []];
                 $_extra_shuttle_bus = isset($request->bus_id) ? $this->extraAddon($request->bus_id, $request->bus_qty) : [0, []];
                 $_extra_longtail_boat = isset($request->boat_id) ? $this->extraAddon($request->boat_id, $request->boat_qty) : [0, []];
+                $_extra_private_taxi = isset($request->taxi_id) ? $this->extraAddon($request->taxi_id, $request->taxi_qty) : [0, []];
                 $_addons = isset($request->route_addon) ? $request->route_addon : [];
                 $_addon_detail = isset($request->route_addon_detail) ? $request->route_addon_detail : [];
                 if($request->promocode != '') {
@@ -213,7 +215,7 @@ class BookingController extends Controller
                 $_booking = $this->setBooking($request->departdate[0], $request->passenger, $request->child_passenger,
                                                 $request->infant_passenger, $request->trip_type, $request->book_channel,
                                                 $_amount, $_extra_meal[0], $_extra_activity[0], $_extra_shuttle_bus[0],
-                                                $_extra_longtail_boat[0], $request->ispremiumflex, $_pro);
+                                                $_extra_longtail_boat[0], $_extra_private_taxi[0], $request->ispremiumflex, $_pro);
                 $_customer = $this->setPassenger($request->fullname, $request->mobile, $request->passenger_type,
                                                     $request->passportno, $request->email, $request->address,
                                                     $request->mobile_code, $request->th_mobile, $request->country,
@@ -399,8 +401,8 @@ class BookingController extends Controller
         return NULL;
     }
 
-    private function setBooking($departdate, $adult, $child, $infant, $trip_type, $book_channel, $amount, $meal, $activity, $bus, $boat, $ispremiumflex, $promo) {
-        $extra_amount = ($meal + $activity + $bus + $boat);
+    private function setBooking($departdate, $adult, $child, $infant, $trip_type, $book_channel, $amount, $meal, $activity, $bus, $boat, $taxi, $ispremiumflex, $promo) {
+        $extra_amount = ($meal + $activity + $bus + $boat + $taxi);
         $booking = [
             'departdate' => $departdate,
             'adult_passenger' => $adult,

@@ -40,6 +40,6 @@ class BookingRoutes extends Model
     }
 
     public function bookingRouteAddons() {
-        return $this->belongsToMany(RouteAddons::class, 'booking_extras','booking_route_id', 'route_addon_id')->withPivot('description');
+        return $this->belongsToMany(RouteAddons::class, 'booking_extras','booking_route_id', 'route_addon_id')->withPivot('description', 'amount');
     }
 }

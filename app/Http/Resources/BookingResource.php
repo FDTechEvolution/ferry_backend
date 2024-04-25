@@ -80,7 +80,7 @@ class BookingResource extends JsonResource
                             'name' => $ex_addon->name,
                             'type' => $ex_addon->type,
                             'subtype' => $ex_addon->subtype,
-                            'price' => $ex_addon->price,
+                            'price' => $ex_addon->pivot->amount,
                             'description' => $ex_addon->pivot->description
                         ];
                     })

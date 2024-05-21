@@ -30,7 +30,7 @@ class PaymentController extends Controller
     }
 
     private function updateBookingpayment($result) {
-        $cardType = $result['cardType'] != '' ? $result['cardType'] : 'CREDIT';
+        $cardType = isset($result['cardType']) ? $result['cardType'] : $result['channelCode'];
         $description = json_encode($result);
         $payment_data = ['payment_method' => $cardType, 'totalamt' => $result['amount'], 'description' => $description];
 

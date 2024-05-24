@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Http\Resources\RouteResource;
 use App\Models\Route;
+use App\Models\Station;
 
 use App\Helpers\RouteHelper;
 
@@ -22,8 +23,16 @@ class RouteController extends Controller
         //                 ->get();
 
         $routes = RouteHelper::getAvaliableRoutes($from, $to, $date);
+        $_station = ['depart' => $this->getStation($from), 'arrive' => $this->getStation($to), 'date' => $date];
 
-        return response()->json(['data' => $routes, 'status' => 'success']);
+        return response()->json(['data' => $routes, 'station' => $_station, 'status' => 'success']);
+    }
+
+    private function getStation($id) {
+        $station = Station::find($id);
+        $name = $station['name'];
+        $pier = $station['piername'] != '' ? '('.$station['piername'].')' : '';
+        return $name.' '.$pier;
     }
 
     public function getAllRoute() {

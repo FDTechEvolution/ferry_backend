@@ -115,7 +115,7 @@ class BookingController extends Controller
     }
 
     public function getBookingById(string $id = null) {
-        $booking = Bookings::find($id);
+        $booking = Bookings::with('bookingCustomers', 'bookingRoutes')->find($id);
         if(isset($booking)) return response()->json(['result' => true, 'data' => $booking]);
         return response()->json(['result' => false, 'data' => 'No Booking.']);
     }

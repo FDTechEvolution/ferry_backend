@@ -17,7 +17,7 @@ use Ramsey\Uuid\Uuid;
 use App\Helpers\SequentNumber;
 use App\Models\Promotions;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Log;
 
 class BookingHelper
 {
@@ -176,7 +176,9 @@ class BookingHelper
         //$totalPassenger = ($booking->adult_passenger+$booking->child_passenger+$booking->infant_passenger);
 
         $_c = $data['customers'];
+        $mobileno = '';
         foreach ($_c as $key => $customerData) {
+            if($customerData['mobile'] != '') $mobileno = $customerData['mobile'];
             $customer = Customers::create([
                 'fullname' => $customerData['fullname'],
                 'type' => $customerData['type'],
@@ -240,6 +242,7 @@ class BookingHelper
 
         TransactionLogHelper::tranLog(['type' => 'booking', 'title' => 'Create booking', 'description' => '', 'booking_id' => $booking->id]);
 
+        $booking->mobileno = $mobileno;
         return $booking;
     }
 
@@ -268,6 +271,8 @@ class BookingHelper
 
         $customers = $booking->bookingCustomers;
         $routes = $booking->bookingRoutes;
+        $mobileno = '';
+        foreach($customers as $c) { if($c->mobile != '') $mobileno = $c->mobile; }
 
         /*
         foreach ($routes as $key => $route) {
@@ -305,6 +310,7 @@ class BookingHelper
 
         TransactionLogHelper::tranLog(['type' => 'booking', 'title' => 'Complate payment', 'description' => '', 'booking_id' => $booking->id]);
 
+        $booking->mobileno = $mobileno;
         return $booking;
     }
 

@@ -49,7 +49,8 @@ class BookingsController extends Controller
         $sql = 'select
         b.id,b.created_at,b.bookingno,t.ticketno,b.adult_passenger,b.child_passenger,b.infant_passenger,
         b.trip_type,br.type,b.amend,concat(sf.nickname,"-",st.nickname) as route,br.traveldate,b.ispayment,
-        b.book_channel,u.firstname,c.fullname as customer_name,c.email,r.depart_time,r.arrive_time,b.totalamt,b.status
+        b.book_channel,u.firstname,c.fullname as customer_name,c.email,r.depart_time,r.arrive_time,b.totalamt,
+        b.status,b.ispremiumflex
     from
         bookings b
         join booking_routes br on b.id = br.booking_id
@@ -60,7 +61,7 @@ class BookingsController extends Controller
         left join users u on b.user_id = u.id
         join booking_customers bc on b.id = bc.booking_id and bc.isdefault = "Y"
         join customers c on bc.customer_id = c.id
-    where :conditions order by b.bookingno ASC,br.traveldate ASC';
+    where :conditions order by b.bookingno DESC,br.traveldate DESC';
 
         $startDate = date('d/m/Y');
         $endDate = date('d/m/Y', strtotime('+30 day', time()));
@@ -386,7 +387,10 @@ class BookingsController extends Controller
     }
 
     public function changeStatus($id){
+        $booking = Bookings::find($id);
         $status = request()->status;
+        $booking->ispayment = $status == 'CO' ? 'Y' : 'N';
+        $booking->save();
         $statusLabel = BookingHelper::status();
         return view('pages.bookings.modal.change_status',['booking_id'=>$id,'status'=>$status,'statusLabel'=>$statusLabel]);
     }

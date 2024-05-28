@@ -172,6 +172,7 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Price</th>
+                                <th>Premuim Flex</th>
                                 <th>Route</th>
                                 <th>Time</th>
                                 <th>Status</th>
@@ -201,6 +202,7 @@
                                     <td>{{ $item['customer_name'] }}</td>
                                     <td>{{ $item['email'] }}</td>
                                     <td class="text-end">{{ number_format($item['totalamt']) }}</td>
+                                    <td class="{{ $item['ispremiumflex'] == 'Y' ? 'text-primary' : '' }} text-center">{{ $item['ispremiumflex'] == 'Y' ? 'Yes' : 'No'}}</td>
                                     <td> {{ $item['route'] }}</td>
                                     <td>
                                         <small>

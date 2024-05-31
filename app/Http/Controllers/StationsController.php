@@ -68,7 +68,7 @@ class StationsController extends Controller
         $maxSeq = $this->getMaxSortBySection($station->section_id);
 
         $station->info_line;
-        $sections = Section::where('isactive', 'Y')->orderBy('created_at', 'DESC')->get();
+        $sections = Section::orderBy('created_at', 'DESC')->get();
         $info = StationInfomation::where('status', 'Y')->get();
 
         return view('pages.stations.edit', ['station' => $station, 'sections' => $sections, 'info' => $info, 'maxSeq' => $maxSeq]);
@@ -306,12 +306,16 @@ class StationsController extends Controller
     private function getMaxSortBySection($section_id,$sort = 'DESC')
     {
         $stations = Station::where('section_id', $section_id)
+            ->with('section')
             ->orderBy('sort', 'ASC')
             ->orderBy('updated_at', $sort)
             ->get();
 
 
         foreach ($stations as $index => $station) {
+            //$sectionSeq = $station->section->sort;
+            //$sectionSeq = $sectionSeq*10;
+
             $station->sort = ($index + 1);
             $station->save();
         }

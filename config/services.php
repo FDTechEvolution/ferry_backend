@@ -47,7 +47,14 @@ return [
         'merchant_id_etc' => env('MERCHANT_ID_ETC'),
         'secret_key' => env('PAYMENT_SECRETKEY'),
         'backend_return' => env('PAYMENT_RESPONSE_BACKEND'),
-        'frontend_return' => env('PAYMENT_RESPONSE_FRONTEND')
+        'frontend_return' => env('PAYMENT_RESPONSE_FRONTEND'),
+
+        'ctsv_base_url' => env('CTSV_BASE_PAYMENT_URL'),
+        'ctsv_merchant_id' => env('CTSV_MERCHANT_ID'),
+        'cstv_shop_id' => env('CTSV_SHOP_ID'),
+        'ctsv_secret_key' => env('CTSV_PAYMENT_SECRETKEY'),
+        'ctsv_backend_return' => env('CTSV_PAYMENT_RESPONSE_BACKEND'),
+        'ctsv_frontend_return' => env('CTSV_PAYMENT_RESPONSE_FRONTEND'),
     ],
 
     'code_country' => ['213','376','244','1264','1268','54','374','297',

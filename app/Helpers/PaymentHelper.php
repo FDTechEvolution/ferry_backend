@@ -83,6 +83,33 @@ class PaymentHelper
         return $decoded_array;
     }
 
+    // send to counter service 7-11
+    public static function postTo_ctsv($payload) {
+        $BASEURL = config('services.payment.ctsv_base_url');
+        $MERCHANTID = config('services.payment.ctsv_merchant_id');
+        $SECRETKEY = config('services.payment.ctsv_secret_key');
+
+        // encryptedPaymentData
+        $jwt = JWT::encode($payload, $SECRETKEY, 'HS256');
+        $data = '{"payload":"' . $jwt . '"}';
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $BASEURL);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'merchantId:' . $MERCHANTID,
+            'secretKey:' . $SECRETKEY,
+        ));
+
+        $result = curl_exec($ch); //execute post
+        curl_close($ch); //close connection
+        return $result;
+    }
+
     //Make draf payment
     public static function createPaymentFromBooking($booking_id)
     {

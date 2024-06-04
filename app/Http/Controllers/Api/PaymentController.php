@@ -60,4 +60,27 @@ class PaymentController extends Controller
 
         return response()->json(['result' => true, 'data' => $result, 'booking' => $booking->bookingno], 200);
     }
+
+    public function paymentCounterService(Request $request) {
+        $payment = Payments::find($request->payment_id);
+        $booking = Bookings::find($payment->booking_id);
+
+        $payload = array(
+            'merchantId' => config('services.payment.merchant_id'),
+            'shopId' => config('services.payment.cstv_shop_id'),
+            'inv' => $payment->paymentno,
+            'desc' => 'TEST LOCAL',
+            'urlBack' => config('services.payment.ctsv_frontend_return'),
+            'urlConfirm' => config('services.payment.ctsv_backend_return'),
+            'paymentMethod' => $request->payment_method,
+            'amt' => $payment->totalamt,
+            'currency' => 'THB',
+            'ref1' => $payment->id,
+            'ref2' => $booking->bookingno
+        );
+
+        $response = PaymentHelper::postTo_ctsv($payload);
+        // Log::debug($response);
+        return response()->json(['result' => true, 'data' => [], 'booking' => $booking->bookingno], 200);
+    }
 }

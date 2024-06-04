@@ -314,15 +314,16 @@
                                                     id="master_from_info" value="Y" data-action="boxswitch"
                                                     data-id="master_from_info"
                                                     @if ($route->master_from_info == 'Y') @checked(true) @endif>
-                                                <i class="switch-icon switch-icon-success switch-icon-sm"></i>
+                                                <i class="switch-icon switch-icon-primary switch-icon-sm"></i>
 
                                             </label><span class="px-3 user-select-none">On/Off</span>
                                         </div>
 
-                                        <div class="col-12" id="box_master_from_info">
+                                        <div class="col-12" @if ($route->master_from_info == 'N') style="display: none;" @endif
+                                            id="box_master_from_info">
                                             <div class="row">
                                                 <div class="col-12 mb-2">
-                                                    <textarea class="form-control" id="master_from" name="master_from" rows="5">{{ $route->master_from }}</textarea>
+                                                    <textarea class="form-control" id="master_from" name="master_from" rows="4">{{ $route->master_from }}</textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -341,15 +342,16 @@
                                                     id="master_to_info" value="Y" data-action="boxswitch"
                                                     data-id="master_to_info"
                                                     @if ($route->master_to_info == 'Y') @checked(true) @endif>
-                                                <i class="switch-icon switch-icon-success switch-icon-sm"></i>
+                                                <i class="switch-icon switch-icon-primary switch-icon-sm"></i>
 
                                             </label> <span class="px-3 user-select-none">On/Off</span>
                                         </div>
 
-                                        <div class="col-12" id="box_master_to_info">
+                                        <div class="col-12" @if ($route->master_to_info == 'N') style="display: none;" @endif
+                                            id="box_master_to_info">
                                             <div class="row">
                                                 <div class="col-12 mb-2">
-                                                    <textarea class="form-control" id="master_to" name="master_to" rows="5">{{ $route->master_to }}</textarea>
+                                                    <textarea class="form-control" id="master_to" name="master_to" rows="4">{{ $route->master_to }}</textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -371,12 +373,14 @@
                                                     value="Y" data-action="boxswitch"
                                                     data-id="isinformation_from_active"
                                                     @if ($route->isinformation_from_active == 'Y') @checked(true) @endif>
-                                                <i class="switch-icon switch-icon-success switch-icon-sm"></i>
+                                                <i class="switch-icon switch-icon-primary switch-icon-sm"></i>
 
                                             </label> <span class="px-3 user-select-none">On/Off</span>
                                         </div>
 
-                                        <div class="col-12" id="box_isinformation_from_active">
+                                        <div class="col-12"
+                                            @if ($route->isinformation_from_active == 'N') style="display: none;" @endif
+                                            id="box_isinformation_from_active">
                                             <div class="row">
                                                 <div class="col-12 mb-2">
                                                     <textarea class="form-control" id="information_from" name="information_from" rows="3">{{ $route->information_from }}</textarea>
@@ -399,12 +403,14 @@
                                                     value="Y" data-action="boxswitch"
                                                     data-id="isinformation_to_active"
                                                     @if ($route->isinformation_to_active == 'Y') @checked(true) @endif>
-                                                <i class="switch-icon switch-icon-success switch-icon-sm"></i>
+                                                <i class="switch-icon switch-icon-primary switch-icon-sm"></i>
 
                                             </label> <span class="px-3 user-select-none">On/Off</span>
                                         </div>
 
-                                        <div class="col-12" id="box_isinformation_to_active">
+                                        <div class="col-12"
+                                            @if ($route->isinformation_to_active == 'N') style="display: none;" @endif
+                                            id="box_isinformation_to_active">
                                             <div class="row">
                                                 <div class="col-12 mb-2">
                                                     <textarea class="form-control" id="information_to" name="information_to" rows="3">{{ $route->information_to }}</textarea>
@@ -433,7 +439,7 @@
                                                         data-id="{{ $item->type }}_{{ $item->subtype }}"
                                                         data-action="boxswitch"
                                                         @if ($item->isactive == 'Y') @checked(true) @endif>
-                                                    <i class="switch-icon switch-icon-success switch-icon-sm"></i>
+                                                    <i class="switch-icon switch-icon-primary switch-icon-sm"></i>
 
                                                 </label><span class="px-3 user-select-none">On/Off</span>
                                                 <input type="hidden" name="route_addons[{{ $index }}][id]"
@@ -449,11 +455,12 @@
                                                         name="route_addons[{{ $index }}][isservice_charge]"
                                                         id="" value="Y"
                                                         @if ($item->isservice_charge == 'Y') @checked(true) @endif>
-                                                    <i class="switch-icon switch-icon-success switch-icon-sm"></i>
+                                                    <i class="switch-icon switch-icon-primary switch-icon-sm"></i>
 
                                                 </label><span class="px-3 user-select-none">Service charge</span>
                                             </div>
                                             <div class="col-12"
+                                                @if ($item->isactive == 'N') style="display: none;" @endif
                                                 id="box_{{ $item->type }}_{{ $item->subtype }}">
                                                 <div class="row">
 
@@ -494,7 +501,7 @@
                                 <div class="col-12 mt-4 text-center">
                                     <input type="hidden" name="route_id" value="{{ $route['id'] }}">
                                     <x-button-submit-loading class="btn-lg w--30 me-4 button-orange-bg" :form_id="_('route-update-form')"
-                                        :fieldset_id="_('route-update')" :text="_('SAVE')" />
+                                        :fieldset_id="_('route-update')" :text="_('Edit')" />
                                     <a href="{{ route('route-index') }}"
                                         class="btn btn-secondary btn-lg w--30">Cancel</a>
                                     <small id="user-create-error-notice" class="text-danger mt-3"></small>
@@ -590,7 +597,15 @@
         }
 
         $(document).ready(function() {
-
+            $('input[data-action="boxswitch"]').on('change', function() {
+                let id = ($(this).attr('data-id'));
+                let checked = (this.checked);
+                if (checked) {
+                    $('#box_' + id).show();
+                } else {
+                    $('#box_' + id).hide();
+                }
+            });
 
             $('#station-from-selected').on('change', function() {
                 let station_from_id = this.value;

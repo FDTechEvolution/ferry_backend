@@ -81,6 +81,6 @@ class PaymentController extends Controller
 
         $response = PaymentHelper::postTo_ctsv($payload);
         // Log::debug($response);
-        return response()->json(['result' => true, 'data' => [], 'booking' => $booking->bookingno], 200);
+        return response()->json(['result' => true, 'data' => $response ?? [], 'booking' => $booking->bookingno], 200);
     }
 }

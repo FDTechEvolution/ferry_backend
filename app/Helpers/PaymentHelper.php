@@ -89,9 +89,9 @@ class PaymentHelper
         $MERCHANTID = config('services.payment.ctsv_merchant_id');
         $SECRETKEY = config('services.payment.ctsv_secret_key');
 
-        // encryptedPaymentData
+        // encrypted
         $jwt = JWT::encode($payload, $SECRETKEY, 'HS256');
-        $data = '{"payload":"' . $jwt . '"}';
+        $data = '{"body":"' . $jwt . '"}';
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $BASEURL);
@@ -107,7 +107,15 @@ class PaymentHelper
 
         $result = curl_exec($ch); //execute post
         curl_close($ch); //close connection
-        return $result;
+
+        // Log::debug($result);
+        $decoded = json_decode($result, true);
+        $payloadResponse = $decoded['encryptedPaymentData'];
+        // $decodedPayload = JWT::decode($payloadResponse, new Key($SECRETKEY, 'HS256'));
+        // $decoded_array = (array) $decodedPayload;
+        // Log::debug($decodedPayload);
+
+        return $payloadResponse;
     }
 
     //Make draf payment

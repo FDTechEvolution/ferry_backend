@@ -51,7 +51,7 @@ return [
 
         'ctsv_base_url' => env('CTSV_BASE_PAYMENT_URL'),
         'ctsv_merchant_id' => env('CTSV_MERCHANT_ID'),
-        'cstv_shop_id' => env('CTSV_SHOP_ID'),
+        'ctsv_shop_id' => env('CTSV_SHOP_ID'),
         'ctsv_secret_key' => env('CTSV_PAYMENT_SECRETKEY'),
         'ctsv_backend_return' => env('CTSV_PAYMENT_RESPONSE_BACKEND'),
         'ctsv_frontend_return' => env('CTSV_PAYMENT_RESPONSE_FRONTEND'),

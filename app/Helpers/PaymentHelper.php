@@ -83,19 +83,15 @@ class PaymentHelper
         return $decoded_array;
     }
 
-    // send to counter service 7-11
+    // send to counter service
     public static function postTo_ctsv($payload) {
         $BASEURL = config('services.payment.ctsv_base_url');
         $MERCHANTID = config('services.payment.ctsv_merchant_id');
         $SECRETKEY = config('services.payment.ctsv_secret_key');
 
-        // encrypted
-        $jwt = JWT::encode($payload, $SECRETKEY, 'HS256');
-        $data = '{"body":"' . $jwt . '"}';
-
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $BASEURL);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -110,10 +106,8 @@ class PaymentHelper
 
         // Log::debug($result);
         $decoded = json_decode($result, true);
+        // Log::debug($decoded);
         $payloadResponse = $decoded['encryptedPaymentData'];
-        // $decodedPayload = JWT::decode($payloadResponse, new Key($SECRETKEY, 'HS256'));
-        // $decoded_array = (array) $decodedPayload;
-        // Log::debug($decodedPayload);
 
         return $payloadResponse;
     }

@@ -63,11 +63,12 @@ class PaymentController extends Controller
 
     public function paymentCounterService(Request $request) {
         $payment = Payments::find($request->payment_id);
-        $booking = Bookings::find($payment->booking_id);
+        $booking = Bookings::with('bookingCustomers')->find($payment->booking_id);
+        $customer = $this->getLeadCustomer($booking->bookingCustomers);
 
         $payload = array(
-            'merchantId' => config('services.payment.merchant_id'),
-            'shopId' => config('services.payment.cstv_shop_id'),
+            'merchantId' => config('services.payment.ctsv_merchant_id'),
+            'shopId' => config('services.payment.ctsv_shop_id'),
             'inv' => $payment->paymentno,
             'desc' => 'TEST LOCAL',
             'urlBack' => config('services.payment.ctsv_frontend_return'),
@@ -75,12 +76,22 @@ class PaymentController extends Controller
             'paymentMethod' => $request->payment_method,
             'amt' => $payment->totalamt,
             'currency' => 'THB',
+            'memberId' => isset($request->member_id) ? $request->memer_id : '',
+            'name' => $customer->fullname,
+            'email' => $customer->email,
+            'phone' => $customer->mobile,
             'ref1' => $payment->id,
             'ref2' => $booking->bookingno
         );
 
-        $response = PaymentHelper::postTo_ctsv($payload);
-        // Log::debug($response);
+        // Log::debug($payload);
+        $response = PaymentHelper::postTo_ctsv(json_encode($payload));
         return response()->json(['result' => true, 'data' => $response ?? [], 'booking' => $booking->bookingno], 200);
+    }
+
+    private function getLeadCustomer($customers) {
+        foreach($customers as $cus) {
+            if($cus['email'] != '') return $cus;
+        }
     }
 }

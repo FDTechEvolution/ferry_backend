@@ -65,11 +65,12 @@ class PaymentController extends Controller
         $payment = Payments::find($request->payment_id);
         $booking = Bookings::with('bookingCustomers')->find($payment->booking_id);
         $customer = $this->getLeadCustomer($booking->bookingCustomers);
+        $inv = 'inv-'.time();
 
         $payload = array(
             'merchantId' => config('services.payment.ctsv_merchant_id'),
             'shopId' => config('services.payment.ctsv_shop_id'),
-            'inv' => $payment->paymentno,
+            'inv' => strval($inv),
             'desc' => 'TEST LOCAL',
             'urlBack' => config('services.payment.ctsv_frontend_return'),
             'urlConfirm' => config('services.payment.ctsv_backend_return'),
@@ -81,10 +82,11 @@ class PaymentController extends Controller
             'email' => $customer->email,
             'phone' => $customer->mobile,
             'ref1' => $payment->id,
-            'ref2' => $booking->bookingno
+            'ref2' => $booking->bookingno,
+            'ref3' => $payment->paymentno
         );
 
-        // Log::debug($payload);
+        Log::debug($payload);
         $response = PaymentHelper::postTo_ctsv(json_encode($payload));
         return response()->json(['result' => true, 'data' => $response ?? [], 'booking' => $booking->bookingno], 200);
     }

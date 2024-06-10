@@ -438,9 +438,9 @@
                                                 </label><span class="px-3 user-select-none">On/Off</span>
                                                 <input type="hidden" name="route_addons[{{ $index }}][id]"
                                                     value="{{ $item->id }}">
-                                                    <input type="hidden" name="route_addons[{{ $index }}][type]"
+                                                <input type="hidden" name="route_addons[{{ $index }}][type]"
                                                     value="{{ $item->type }}">
-                                                    <input type="hidden" name="route_addons[{{ $index }}][subtype]"
+                                                <input type="hidden" name="route_addons[{{ $index }}][subtype]"
                                                     value="{{ $item->subtype }}">
                                             </div>
                                             <div class="col-6">
@@ -453,8 +453,7 @@
 
                                                 </label><span class="px-3 user-select-none">Service charge</span>
                                             </div>
-                                            <div class="col-12"
-                                                id="box_{{ $item->type }}_{{ $item->subtype }}">
+                                            <div class="col-12" id="box_{{ $item->type }}_{{ $item->subtype }}">
                                                 <div class="row">
 
                                                     <div class="col-12 col-lg-5">
@@ -523,7 +522,10 @@
 @stop
 
 @section('script')
+
     <script>
+        //$.SOW.core.toast.show('danger', '', `Something wrong.`, 'top-right', 0, true);
+
         const icons = {{ Js::from($icons) }}
         let stations = ''
         const route = {{ Js::from($route) }}
@@ -542,6 +544,8 @@
         const fare_infant = {{ Js::from($fare_infant) }};
 
         const stationJson = {{ Js::from($stations) }};
+        var countCheckFrom =0;
+        var countCheckTo =0;
         //console.log(stationJson);
         function appendMasterInfo(station, type) {
             $('#master_' + type).text(station['master_' + type]);
@@ -590,10 +594,29 @@
         }
 
         $(document).ready(function() {
+            $('#station-from-selected').on('click', function() {
+                if(countCheckFrom !==0){
+                    return;
+                }
 
+                if (confirm('การเปลี่ยน Station จะทำให้ข้อมูลของ Master Info เปลี่ยนไป')) {
+                    countCheckFrom++;
+                }
+            });
+
+            $('#station-to-selected').on('click', function() {
+                if(countCheckTo !==0){
+                    return;
+                }
+
+                if (confirm('การเปลี่ยน Station จะทำให้ข้อมูลของ Master Info เปลี่ยนไป')) {
+                    countCheckTo++;
+                }
+            });
 
             $('#station-from-selected').on('change', function() {
                 let station_from_id = this.value;
+
                 //console.log(station_from_id);
                 $.each(stationJson, function(index, station) {
                     if (station.id === station_from_id) {
@@ -601,6 +624,8 @@
                         return true;
                     }
                 });
+
+
             });
 
             $('#station-to-selected').on('change', function() {

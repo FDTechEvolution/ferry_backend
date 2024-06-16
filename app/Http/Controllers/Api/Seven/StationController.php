@@ -24,6 +24,7 @@ class StationController extends Controller
         $routes = Route::where('isactive', 'Y')->where('status', 'CO')
                 ->with('station_from', 'station_to')
                 ->get();
+        //Log::debug($routes);
 
         $stations['from'] = $this->stationCollection($routes, 'station_from');
         $stations['to'] = $this->stationCollection($routes, 'station_to');
@@ -71,7 +72,12 @@ class StationController extends Controller
         $stations = [];
 
         foreach($routes as $item) {
-            $route = $item->route;
+            $route = $item;
+            //Log::debug($item);
+            if(!isset($route->$station->section)){
+                continue;
+                //Log::debug($item);
+            }
             if($route->$station->section->isactive == 'Y') {
                 $_station = [
                     'id' => $route->$station->id,

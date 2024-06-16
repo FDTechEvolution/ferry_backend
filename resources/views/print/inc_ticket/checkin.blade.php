@@ -20,7 +20,7 @@
                     {{ $route['station_from']['name'] }}
                 </td>
                 <td class="w-75" style="white-space:wrap;font-size: 9px;">
-                    <a href="https://www.andamanexpress.com/station/detail/{{ $route['station_from']['nickname'] }}"
+                    <a href="{{env('SITE_URL')}}/station/detail/{{ $route['station_from']['nickname'] }}"
                         class="text-main" target="_blank">Click to see your check-in points</a>
                     @if ($route->master_from_info == 'Y')
                         <br>#{{ strip_tags($route['master_from']) }}
@@ -36,7 +36,7 @@
                     {{ $route['station_to']['name'] }}
                 </td>
                 <td class="w-75" style="white-space:wrap;font-size: 9px;">
-                    <a href="https://www.andamanexpress.com/station/detail/{{ $route['station_to']['nickname'] }}"
+                    <a href="{{env('SITE_URL')}}/station/detail/{{ $route['station_to']['nickname'] }}"
                         class="text-main" target="_blank">Click to see your check-in points</a>
                     @if ($route->master_to_info == 'Y')
                         <br>#{{ strip_tags($route['master_to']) }}

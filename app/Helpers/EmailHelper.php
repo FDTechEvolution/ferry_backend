@@ -34,6 +34,7 @@ class EmailHelper
         ];
 
         Mail::to($customer->email)->send(new TicketMail($mailData));
+        Mail::to('win.tigerline@gmail.com')->send(new TicketMail($mailData));
     }
 
     public static function voidBoking($booking_route_id,$message)
@@ -71,6 +72,7 @@ class EmailHelper
                 ];
 
                 Mail::to($bookingCustomer->email)->send(new VoidBooking($mailData));
+                Mail::to('win.tigerline@gmail.com')->send(new VoidBooking($mailData));
             }
 
         }

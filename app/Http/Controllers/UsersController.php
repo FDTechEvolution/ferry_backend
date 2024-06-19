@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
-use DB;
-use Mail; 
+use Illuminate\Support\Facades\DB;
+use Mail;
 
 use App\Models\User;
 use App\Models\Role;
@@ -101,7 +101,7 @@ class UsersController extends Controller
             $image->move(public_path('/assets/images/avatar'), $slug_image);
         }
 
-        if($user->image != '') unlink(public_path().'/assets/images/avatar/'. $user->image);
+        // if($user->image != '') unlink(public_path().'/assets/images/avatar/'. $user->image);
 
         $user->username = $request->username;
         $user->firstname = $request->firstname;
@@ -110,7 +110,7 @@ class UsersController extends Controller
         $user->email = $request->email;
         $user->office = $request->office;
         if($slug_image != null) $user->image = $slug_image;
-        $user->isactive = isset($request->isactive) ? 1 : 0;
+        $user->isactive = isset($request->isactive) ? 'Y' : 'N';
 
         if($user->save()) return redirect()->route('users-index')->withSuccess('Account updated...');
         else return redirect()->route('users-index')->withFail('Something is wrong. Please try again.');
@@ -131,11 +131,11 @@ class UsersController extends Controller
 
             DB::table('password_resets')->insert([
                 'id' => Str::uuid(),
-                'email' => $user->email, 
-                'token' => $token, 
+                'email' => $user->email,
+                'token' => $token,
                 'created_at' => Carbon::now()
             ]);
-    
+
             Mail::send('email.reset-password', ['token' => $token], function($message) use($user){
                 $message->to($user->email);
                 $message->subject('Reset Password');

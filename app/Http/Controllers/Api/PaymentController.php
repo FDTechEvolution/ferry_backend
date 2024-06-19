@@ -78,7 +78,7 @@ class PaymentController extends Controller
             'amt' => $payment->totalamt,
             'currency' => 'THB',
             'memberId' => isset($request->member_id) ? $request->memer_id : '',
-            'name' => $customer->fullname,
+            'name' => explode(' ', $customer->fullname)[0],
             'email' => $customer->email,
             'phone' => $customer->mobile,
             'ref1' => $payment->id,
@@ -86,7 +86,7 @@ class PaymentController extends Controller
             'ref3' => $payment->paymentno
         );
 
-        Log::debug($payload);
+        // Log::debug($payload);
         $response = PaymentHelper::postTo_ctsv(json_encode($payload));
         return response()->json(['result' => true, 'data' => $response ?? [], 'booking' => $booking->bookingno], 200);
     }

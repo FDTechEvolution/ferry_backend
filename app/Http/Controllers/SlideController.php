@@ -19,7 +19,7 @@ class SlideController extends Controller
     protected $ImagePath = '/uploads/slide';
 
     public function index() {
-        $slides = Slide::where('status', 'CO')->where('type', 'BLOG')->orderBy('sort', 'ASC')->get();
+        $slides = Slide::where('status', 'CO')->where('type', 'BLOG')->orderBy('sort', 'ASC')->with('image')->get();
 
         return view('pages.slide.index', ['slides' => $slides]);
     }
@@ -76,8 +76,6 @@ class SlideController extends Controller
         $slide = Slide::where('id', $id)->where('status', 'CO')->with('image')->first();
         $max_sort = Slide::where('type', 'BLOG')->orderBy('sort', 'DESC')->first();
 
-        // Log::debug($slide->toArray());
-
         if(isset($slide)) return view('pages.slide.edit', ['slide' => $slide, 'max_sort' => $max_sort->sort]);
         return redirect()->route('blog-index')->withFail('No blog.');
     }
@@ -98,7 +96,7 @@ class SlideController extends Controller
         $image_id = null;
         if ($request->hasFile('file_picture')) {
             $image_id = $this->storeImage($request->file_picture, $this->ImagePath);
-            $this->destroyImage($slide->image_id, $slide->image);
+            if($slide->image_id != NULL) $this->destroyImage($slide->image_id, $slide->image);
         }
 
         $slide->title = $request->title;
@@ -131,9 +129,9 @@ class SlideController extends Controller
     public function destroy(string $id = null) {
         $slide = Slide::find($id);
 
-        $this->destroyImage($slide->image_id, $slide->image);
-        if($slide->delete()) return redirect()->route('slide-index')->withSuccess('Slide deleted.');
-        else return redirect()->route('slide-index')->withFail('Something is wrong. Please try again.');
+        if($slide->imagi_id != NULL) $this->destroyImage($slide->image_id, $slide->image);
+        if($slide->delete()) return redirect()->route('blog-index')->withSuccess('Slide deleted.');
+        else return redirect()->route('blog-index')->withFail('Something is wrong. Please try again.');
     }
 
     private function storeImage($image, $path) {
@@ -153,8 +151,12 @@ class SlideController extends Controller
     private function destroyImage($image_id, $_image) {
         $image = Image::find($image_id)->delete();
         if($image) {
-            unlink(public_path().$_image->path.'/'.$_image->name);
+            if($_image != NULL) {
+                $file_path = public_path().$_image->path.'/'.$_image->name;
+                if(file_exists($file_path)) unlink($file_path);
+            }
         }
+        return;
     }
 
 

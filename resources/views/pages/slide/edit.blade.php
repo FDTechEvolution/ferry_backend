@@ -74,9 +74,11 @@
                                 <div class="position-relative hide-empty mt-2">
                                     <div class="d-flex clearfix position-relative show-hover-container shadow-md mb-2 rounded">
                                         <div class="position-relative d-inline-block bg-cover" id="edit-image-cover">
-                                            <a class="fancybox" href="{{ asset($slide->image->path.'/'.$slide->image->name) }}">
-                                                <img src="{{ asset($slide->image->path.'/'.$slide->image->name) }}" id="edit-image-src" class="animate-bouncein rounded mw-100">
-                                            </a>
+                                            @if($slide->image != NULL)
+                                                <a class="fancybox" href="{{ asset($slide->image->path.'/'.$slide->image->name) }}">
+                                                    <img src="{{ asset($slide->image->path.'/'.$slide->image->name) }}" id="edit-image-src" class="animate-bouncein rounded mw-100">
+                                                </a>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

@@ -9,13 +9,13 @@
                         <h1 class="fw-bold text-second-color mb-4"><span>Add new Meal</h1>
 
                         <div class="mb-3 row">
-                            <label for="meal-name" class="col-sm-3 col-form-label-sm text-start">Meal Name* :</label>
+                            <label for="meal-name" class="col-sm-3 col-form-label-sm text-start">Meal Name<span class="text-danger">*</span> :</label>
                             <div class="col-sm-9">
                                 <input type="text" required class="form-control form-control-sm" id="meal-name" name="name" value="">
                             </div>
                         </div>
                         <div class="mb-3 row">
-                            <label for="meal-price" class="col-sm-3 col-form-label-sm text-start">Price* :</label>
+                            <label for="meal-price" class="col-sm-3 col-form-label-sm text-start">Price<span class="text-danger">*</span> :</label>
                             <div class="col-sm-9">
                                 <input type="number" required class="form-control form-control-sm w--40" id="meal-price" name="price" value="">
                             </div>
@@ -161,7 +161,7 @@
                             :fieldset_id="_('meal-created')"
                             :text="_('Add')"
                         />
-                        <button type="button" class="btn btn-secondary btn-lg w--20" id="btn-cancel-create">Cancel</button>
+                        <a href="{{ route('meals-index') }}" type="button" class="btn btn-secondary btn-lg w--20" id="btn-cancel-create">Cancel</a>
                         <small id="user-create-error-notice" class="text-danger mt-3"></small>
                     </div>
                 </div>

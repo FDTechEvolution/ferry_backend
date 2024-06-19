@@ -164,13 +164,14 @@ function setDataToEditForm(meal) {
     if(edit_data['image'] !== '') {
         document.querySelector('#current-image').classList.remove('d-none')
         document.querySelector('#edit-image-cover').style = `background-image: url('..${meal.image.path}/${meal.image.name}'); width: 80px; height: 80px; min-width: 80px;`
-        document.querySelector('#has-image').value = 1
+        document.querySelector('#has-image').value = 0
     }
 }
 
 function deleteCurrentImage(element_id, is_has, element_restore) {
     let element = document.querySelector(`#${element_id}`)
-    document.querySelector(`#${is_has}`).value = 0
+    console.log(is_has)
+    document.querySelector(`#${is_has}`).value = 1
 
     element.classList.add('hidden-element')
     setTimeout(() => {
@@ -181,7 +182,7 @@ function deleteCurrentImage(element_id, is_has, element_restore) {
 
 function restoreCurrentImage(element_id, is_has, element_restore) {
     let element = document.querySelector(`#${element_id}`)
-    document.querySelector(`#${is_has}`).value = 1
+    document.querySelector(`#${is_has}`).value = 0
     element.classList.remove('d-none')
 
     setTimeout(() => {

@@ -128,7 +128,7 @@
         </a>
       </li>
 
-      <li class="nav-item {{ (request()->is('reports*')) ? 'active' : '' }}">
+      <li class="nav-item {{ (request()->is('report*')) ? 'active' : '' }}">
           <a class="nav-link" href="{{ route('report-index') }}">
               <i class="fi fi-arrow-right"></i>
               <span>Report</span>

@@ -34,8 +34,6 @@ class MealsController extends Controller
     {
         $meals = Addon::where('type', $this->Type)->where('status', 'CO')->with('image', 'icon')->get();
 
-        Log::debug($meals->toArray());
-
         $icons = IconController::getListIcon();
         return view('pages.meals.index', ['meals' => $meals, 'icons' => $icons]);
     }
@@ -128,31 +126,32 @@ class MealsController extends Controller
         $image = $meal->image;
         $icon = $meal->icon;
 
-        $image_id = null;
-        $icon_id = null;
-        if ($request->hasFile('file_picture')) {
-            $image_id = $this->storeImage($request->file('file_picture'), $this->PathImage);
+        if($request->hasFile('file_picture')) {
+            $meal->image_id = $this->storeImage($request->file('file_picture'), $this->PathImage);
             if ($meal->image_id != '')
                 $this->isDeleteImage($meal->id, $meal->image_id, $image->path, $image->name, 'image');
         }
         if($request->hasFile('file_icon')) {
-            $icon_id = $this->storeImage($request->file('file_icon'), $this->PathIcon);
-            if($meal->image_icon_id != '') $this->isDeleteImage($meal->id, $meal->image_icon_id, $image->path, $image->name, 'icon');
+            $meal->image_icon_id = $this->storeImage($request->file('file_icon'), $this->PathIcon);
+            if($meal->image_icon_id != '')
+                $this->isDeleteImage($meal->id, $meal->image_icon_id, $icon->path, $icon->name, 'icon');
         }
 
-        if (!$request->_image && $image_id == null)
+        if($request->_image == '1') {
             $this->isDeleteImage($meal->id, $meal->image_id, $image->path, $image->name, 'image');
-        if(!$request->_icon && $icon_id == null) $this->isDeleteImage($meal->id, $meal->image_icon_id, $icon->path, $icon->name, 'icon');
+            $meal->image_id = NULL;
+        }
+        if($request->_icon == '1') {
+            $this->isDeleteImage($meal->id, $meal->image_icon_id, $icon->path, $icon->name, 'icon');
+            $meal->image_icon_id = NULL;
+        }
 
         $meal->name = $request->name;
         $meal->amount = $request->price;
         $meal->description = $request->detail;
-        if ($image_id != null)
-            $meal->image_id = $image_id;
         $meal->image_icon = $request->icon;
         $meal->is_route_station = isset($request->route_station) ? 'Y' : 'N';
         $meal->is_main_menu = isset($request->main_menu) ? 'Y' : 'N';
-        if($icon_id != null) $meal->image_icon_id = $icon_id;
 
         if ($meal->save())
             return redirect()->route('meals-index')->withSuccess('Meal updated...');
@@ -164,7 +163,8 @@ class MealsController extends Controller
     {
         $image = Image::find($image_id)->delete();
         if ($image) {
-            unlink(public_path() . $path . '/' . $name);
+            $file_path = public_path() . $path . '/' . $name;
+            if(file_exists($file_path)) unlink($file_path);
             $meal = Addon::find($meal_id);
             if ($type == 'image')
                 $meal->image_id = NULL;
@@ -178,8 +178,9 @@ class MealsController extends Controller
     {
         $meal = Addon::find($id);
         $meal->status = 'VO';
-        if ($meal->save())
+        if ($meal->save()) {
             return redirect()->route('meals-index')->withSuccess('Meal deleted...');
+        }
         return redirect()->route('meals-index')->withFail('Something is wrong. Please try again.');
     }
 

@@ -36,7 +36,7 @@
                             @foreach ($icons as $index => $icon)
                                 <div class="form-check">
                                     <input class="form-check-input form-check-input-primary" type="checkbox" name="icon"
-                                        value="{{$index}}" id="icon-{{$index}}" @checked($index==$billboard->icon)>
+                                        value="{{$index}}" id="icon-{{$index}}" @checked($index==$billboard->icon) @required(true)>
                                     <label class="form-check-label" for="icon-{{$index}}">
                                         <div class="avatar avatar-xs" style="background-image:url({{asset($icon)}})"></div>
                                     </label>

@@ -76,9 +76,11 @@
                             <tr class="text-center align-middle">
                                 <td>{{ $slide->sort }}</td>
                                 <td class="px-3" style="max-width: 40px;">
-                                    <a class="fancybox" href="{{ asset($slide->image->path.'/'.$slide->image->name) }}">
-                                        <img src="{{ asset($slide->image->path.'/'.$slide->image->name) }}" class="w-100">
-                                    </a>
+                                    @if($slide->image != NULL)
+                                        <a class="fancybox" href="{{ asset($slide->image->path.'/'.$slide->image->name) }}">
+                                            <img src="{{ asset($slide->image->path.'/'.$slide->image->name) }}" class="w-100">
+                                        </a>
+                                    @endif
                                 </td>
                                 <td class="text-start">{{ $slide->title }}</td>
                                 <td>

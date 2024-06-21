@@ -68,7 +68,7 @@
                             <tr class="text-center align-middle">
                                 <td>{{ $item->sort }}</td>
                                 <td>
-                                    <div class="avatar avatar-xs" style="background-image:url({{asset($icons[$item->icon])}})"></div>
+                                    <div class="avatar avatar-sm" style="background-image:url({{asset($icons[$item->icon])}})"></div>
                                 </td>
                                 <td class="text-start">
                                     <div class="d-flex align-items-center">

@@ -34,11 +34,11 @@
                         <div class="checkgroup" data-checkgroup-checkbox-single="true"
                             data-checkgroup-ajax-toast-position="top-center">
                             @foreach ($icons as $index => $icon)
-                                <div class="form-check">
-                                    <input class="form-check-input form-check-input-primary" type="checkbox" name="icon"
-                                        value="{{$index}}" id="icon-{{$index}}" @checked($index==$billboard->icon) @required(true)>
+                                <div class="form-check d-flex align-items-center">
+                                    <input class="form-check-input form-check-input-primary me-2" type="radio" name="icon"
+                                        value="{{$index}}" id="icon-{{$index}}" @checked($index==$billboard->icon) @required(true) style="margin-top: -4px;">
                                     <label class="form-check-label" for="icon-{{$index}}">
-                                        <div class="avatar avatar-xs" style="background-image:url({{asset($icon)}})"></div>
+                                        <div class="avatar avatar-sm" style="background-image:url({{asset($icon)}})"></div>
                                     </label>
                                 </div>
                             @endforeach

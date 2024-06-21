@@ -17,11 +17,11 @@ class BillboardController extends Controller
 
     public function icon(){
         return [
-            'icon/billbord/carlendar.png'=>'icon/billbord/carlendar-g.png',
-            'icon/billbord/news.png'=>'icon/billbord/news-g.png',
-            'icon/billbord/sound.png'=>'icon/billbord/sound-g.png',
-            'icon/billbord/sun.png'=>'icon/billbord/sun-g.png',
-            'icon/billbord/tigerline.png'=>'icon/billbord/tigerline-g.png',
+            'icon/billbord/carlendar.png'=>'icon/billbord/carlendar-g2.png',
+            'icon/billbord/news.png'=>'icon/billbord/news-g2.png',
+            'icon/billbord/sound.png'=>'icon/billbord/sound-g2.png',
+            'icon/billbord/sun.png'=>'icon/billbord/sun-g2.png',
+            'icon/billbord/tigerline.png'=>'icon/billbord/tigerline-g2.png',
         ];
     }
 

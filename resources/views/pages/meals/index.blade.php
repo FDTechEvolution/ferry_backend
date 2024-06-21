@@ -95,5 +95,5 @@
 <script>
     const meals = {{ Js::from($meals) }}
 </script>
-<script src="{{ asset('assets/js/app/meal.js') }}"></script>
+<script src="{{ asset('assets/js/app/meal.js') }}?v=@php echo date('YmdHis'); @endphp"></script>
 @stop

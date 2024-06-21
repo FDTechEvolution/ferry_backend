@@ -251,5 +251,5 @@
 <script>
     const is_meal = {{ Js::from($meal) }}
 </script>
-<script src="{{ asset('assets/js/app/meal.js') }}"></script>
+<script src="{{ asset('assets/js/app/meal.js') }}?v=@php echo date('YmdHis'); @endphp"></script>
 @stop

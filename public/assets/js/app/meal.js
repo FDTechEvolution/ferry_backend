@@ -170,7 +170,6 @@ function setDataToEditForm(meal) {
 
 function deleteCurrentImage(element_id, is_has, element_restore) {
     let element = document.querySelector(`#${element_id}`)
-    console.log(is_has)
     document.querySelector(`#${is_has}`).value = 1
 
     element.classList.add('hidden-element')

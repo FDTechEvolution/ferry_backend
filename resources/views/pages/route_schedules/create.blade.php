@@ -61,12 +61,21 @@
                 <div class="row">
                     <div class="col-12 col-lg-6 border-end">
                         <div class="table-responsive">
+                            <div class="btn-select-all">
+                                <div class="form-check mb-2 ms-2">
+                                    <input class="form-check-input form-check-input-success" type="checkbox" value="" id="check-all-route">
+                                    <label class="form-check-label border-bottom cursor-pointer small" for="check-all-route">
+                                        Select All Route
+                                    </label>
+                                </div>
+                            </div>
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
                                         <th>Route (Click to select)</th>
-                                        <th>Depart Time</th>
-                                        <th>Arrive Time</th>
+                                        <th class="text-center">Icon</th>
+                                        <th class="text-center">Depart Time</th>
+                                        <th class="text-center">Arrive Time</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -74,9 +83,9 @@
                                         <tr>
                                             <td>
                                                 <div class="form-check mb-2">
-                                                    <input class="form-check-input form-check-input-success" type="checkbox"
+                                                    <input class="form-check-input form-check-input-success check-route" type="checkbox"
                                                         value="{{ $route->id }}" name="route_id[]"
-                                                        id="{{ $route->id }}" checked>
+                                                        id="{{ $route->id }}">
                                                     <label class="form-check-label" for="{{ $route->id }}">
                                                         <img src="{{asset($route->partner->image->path)}}" width="25" class="rounded-circle"/>
                                                         <strong>{{ $route->station_from->name }} -
@@ -84,8 +93,17 @@
                                                     </label>
                                                 </div>
                                             </td>
-                                            <td>{{ date('H:i', strtotime($route['depart_time'])) }}</td>
-                                            <td>{{ date('H:i', strtotime($route['arrive_time'])) }}</td>
+                                            <td class="text-center">
+                                                <div class="d-flex justify-content-center">
+                                                    @foreach ($route->icons as $icon)
+                                                        <div class="col-sm-4 px-0 me-1" style="width: 25px;">
+                                                            <img src="{{ $icon['path'] }}" class="w-100">
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </td>
+                                            <td class="text-center">{{ date('H:i', strtotime($route['depart_time'])) }}</td>
+                                            <td class="text-center">{{ date('H:i', strtotime($route['arrive_time'])) }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -228,5 +246,14 @@
                 $('#frm-search').submit();
             });
         });
+    </script>
+
+    <script>
+        const all_check = document.querySelector('#check-all-route')
+        const check = document.querySelectorAll('.check-route')
+        all_check.addEventListener('click', () => {
+            if(all_check.checked) check.forEach(c => { c.checked = true })
+            else check.forEach(c => { c.checked = false })
+        })
     </script>
 @stop

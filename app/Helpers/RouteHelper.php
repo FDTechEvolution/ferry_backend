@@ -192,7 +192,7 @@ class RouteHelper
     public static function getRoutes($stationFromId, $stationToId)
     {
         $routes = Route::where('isactive', 'Y')
-            ->with(['station_from', 'station_to','partner.image']);
+            ->with(['station_from', 'station_to','partner.image', 'icons']);
         if(!is_null($stationFromId) && $stationFromId !=''){
             $routes = $routes->where('station_from_id', $stationFromId);
         }

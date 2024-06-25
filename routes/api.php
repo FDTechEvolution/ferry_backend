@@ -54,6 +54,7 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
 Route::prefix('v1')->group(function() {
     Route::controller(PaymentController::class)->group(function() {
         Route::post('payment/get-response', 'paymentResponse');
+        Route::post('payment/ctsv-response', 'paymentCtsvResponse');
     });
 });
 
@@ -103,7 +104,7 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
 
     Route::controller(PaymentController::class)->group(function () {
         Route::post('payment/create', 'paymentRequest');
-        Route::post('/payment/create-ctsv', 'paymentCounterService');
+        Route::post('payment/create-ctsv', 'paymentCounterService');
     });
 
     Route::controller(PromotionController::class)->group(function() {

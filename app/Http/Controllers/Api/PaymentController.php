@@ -29,9 +29,28 @@ class PaymentController extends Controller
         else if($result['respCode'] == '4005') $this->paymentFail(); // payment fail
     }
 
+    public function paymentCtsvResponse(Request $request) {
+        $res = json_decode($request['paymentResult'], true);
+        // Log::debug($res);
+        if($res['code'] == '100') {
+            $payment = Payments::where('paymentno', $res['ref1'])->first();
+            $booking = Bookings::where('bookingno', $res['desc'])->first();
+
+            $payload = [
+                'userDefined1' => $payment->id, // payment_id
+                'userDefined2' => $booking->id, // booking_no
+                'cardType' => $res['paymentMethod'],
+                'amount' => $res['amt'],
+                'ctsv_description' => $res
+            ];
+
+            $this->updateBookingpayment($payload);
+        }
+    }
+
     private function updateBookingpayment($result) {
         $cardType = isset($result['cardType']) ? $result['cardType'] : $result['channelCode'];
-        $description = json_encode($result);
+        $description = isset($result['ctsv_description']) ? json_encode($result['ctsv_description']) : json_encode($result);
         $payment_data = ['payment_method' => $cardType, 'totalamt' => $result['amount'], 'description' => $description];
 
         // $result['userDefined1'] = $payment_id
@@ -71,7 +90,7 @@ class PaymentController extends Controller
             'merchantId' => config('services.payment.ctsv_merchant_id'),
             'shopId' => config('services.payment.ctsv_shop_id'),
             'inv' => strval($inv),
-            'desc' => 'TEST LOCAL',
+            'desc' => $booking->bookingno,
             'urlBack' => config('services.payment.ctsv_frontend_return'),
             'urlConfirm' => config('services.payment.ctsv_backend_return'),
             'paymentMethod' => $request->payment_method,
@@ -81,9 +100,8 @@ class PaymentController extends Controller
             'name' => explode(' ', $customer->fullname)[0],
             'email' => $customer->email,
             'phone' => $customer->mobile,
-            'ref1' => $payment->id,
-            'ref2' => $booking->bookingno,
-            'ref3' => $payment->paymentno
+            'ref1' => $payment->paymentno,
+            'redirectResult' => 'Y'
         );
 
         // Log::debug($payload);

@@ -61,6 +61,47 @@ class BookingController extends Controller
         return response()->json(['result' => false, 'data' => 'No Route.'], 200);
     }
 
+    public function checkBookingStatus(Request $request) {
+        $booking = Bookings::find($request->id);
+        $payload = ['id' => $request->id, 'expired_at' => NULL, 'amount' => NULL];
+        if(isset($booking)) {
+            $expired = $booking->created_at->addHours(1)->toDateTimeString();
+            $_exprired = date('Y-m-d\TH:i:s.u\Z', strtotime($expired));
+            $now = date('Y-m-d H:i:s');
+            $payload = [
+                'id' => $booking->id,
+                'expired_at' => $_exprired,
+                'amount' => $booking->totalamt
+            ];
+
+            if($booking->status == 'DR') {
+                if(strtotime($now) > strtotime($expired)) {
+                    $payload['code'] = 'E003';
+                    $payload['desc'] = 'Expired';
+                }
+                else {
+                    $payload['code'] = '100';
+                    $payload['desc'] = 'Success';
+                }
+            }
+            if($booking->status == 'CO') {
+                $payload['code'] = 'E002';
+                $payload['desc'] = 'Duplicate';
+            }
+            return response()->json($payload, 200);
+        }
+
+        $payload['code'] = 'E001';
+        $payload['desc'] = 'Not Found';
+        return response()->json($payload, 200);
+
+        // Error code
+        // "code": "100", "desc": "Success"
+        // "code": "E001", "desc": "Not Found"
+        // "code": "E002", "desc": "Duplicate"
+        // "code": "E003", "desc": "Expired"
+    }
+
     private function getRoute($route_id) {
         $route = Route::find($route_id);
         return isset($route) ? $route : false;

@@ -162,6 +162,7 @@ Route::middleware(['seven'])->prefix('v1')->group(function() {
             Route::post('complete', 'complete');
             Route::post('cancel', 'destroy');
             Route::post('update', 'update');
+            Route::post('status', 'checkBookingStatus');
 
             Route::get('get/{id}', 'getBookingById');
         });

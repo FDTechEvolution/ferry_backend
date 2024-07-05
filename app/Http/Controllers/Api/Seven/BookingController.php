@@ -116,6 +116,7 @@ class BookingController extends Controller
         if($this->checkBooking($request->booking_id)) {
             $c = new BookingHelper;
             $complete = $c->completeBooking($request->booking_id);
+            $complete['booking_pdf'] = '//'.$_SERVER['SERVER_NAME'].'/print/ticket/'.$complete['bookingno'];
             return response()->json(['result' => true, 'data' => $complete]);
         }
 

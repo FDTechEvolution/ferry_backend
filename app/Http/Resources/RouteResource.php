@@ -20,6 +20,7 @@ class RouteResource extends JsonResource
             'depart_time' => date('H:i', strtotime($this->depart_time)),
             'arrive_time' => date('H:i', strtotime($this->arrive_time)),
             'regular_price' => intval($this->api_route->regular_price),
+            'gross_fare' => number_format(floatval($this->api_route->totalamt) + intval($this->api_route->discount), 2),
             'discount' => intval($this->api_route->discount),
             'totalamt' => $this->api_route->totalamt,
             'avaliable_seat' => 100,

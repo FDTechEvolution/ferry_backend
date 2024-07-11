@@ -88,7 +88,7 @@
                             <th>Time</th>
                             <th>Effective date</th>
                             <th>Timestamp</th>
-                            <th></th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -140,7 +140,7 @@
                                             {{ date('D,d M Y H:i', strtotime($routeSchedule->updated_at)) }}</small>
                                     @endif
                                 </td>
-                                <td class="text-end">
+                                <td class="text-end" style="display: none;">
                                     @if ($routeSchedule->isactive == 'Y')
                                         <x-action-edit class="me-2" :url="route('routeSchedules.edit', [
                                             'routeSchedule' => $routeSchedule->id,

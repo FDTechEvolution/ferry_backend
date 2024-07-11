@@ -183,9 +183,9 @@
                                                     @endif
 
                                                     <a class="px-2 text-warning"
-                                            href="{{ route('routeSchedules.edit', ['routeSchedule' => $routeSchedule->id]) }}"
+                                            href="{{ route('routeSchedules.index',['station_from_id'=>$route['station_from']['id'],'station_to_id'=>$route['station_to']['id']]) }}"
                                             data-bs-toggle="tooltip" data-bs-placement="top"
-                                            title="edit latest Route Schedule"><i class="fa-regular fa-pen-to-square"></i></a>
+                                            title="All Route Schedule"><i class="fa-regular fa-pen-to-square"></i></a>
 
                                                 </td>
                                             </tr>

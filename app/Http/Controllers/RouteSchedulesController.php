@@ -359,6 +359,7 @@ class RouteSchedulesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+    /*
     public function destroy(string $id)
     {
         $routeSchedule = RouteSchedules::where('id', $id)->first();
@@ -366,6 +367,7 @@ class RouteSchedulesController extends Controller
         $routeSchedule->delete();
         return redirect()->route('routeSchedules.index', ['merchant_id' => $merchant_id])->withSuccess('');
     }
+        */
 
     private function isHasEffectBooking($routeId, $startDateSql, $endDateSql)
     {

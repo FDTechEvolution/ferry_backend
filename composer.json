@@ -15,7 +15,8 @@
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
         "league/oauth2-server": "^8.2",
-        "milon/barcode": "^10.0"
+        "milon/barcode": "^10.0",
+        "phattarachai/line-notify": "^2.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9",

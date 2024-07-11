@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Log;
+use Phattarachai\LineNotify\Facade\Line;
 
 class SevenMiddleware
 {
@@ -30,6 +31,7 @@ class SevenMiddleware
 
         if($request->header('Authorization') == config('services.api.seven_key')) {
             $this->log($request, $response, 200);
+
             return $response;
         }
 
@@ -55,6 +57,9 @@ class SevenMiddleware
         $response_body = json_decode($response->getContent(), true) ?: '';
 
         $log = '['.$method.'] : ['.$auth_code.'] : '.$url.' ('.$ip.') | '.$status_code;
+
+        Line::setToken(env('LINE_ACCESS_TOKEN'))->send('api-seven: '.$log);
+
         Log::channel('api-seven')->info($log);
         Log::channel('api-seven')->info($request_body);
         Log::channel('api-seven')->info($response_body);

@@ -87,6 +87,7 @@ class BookingController extends Controller
             if($booking->status == 'CO') {
                 $payload['code'] = 'E002';
                 $payload['desc'] = 'Duplicate';
+                $payload['booking_pdf'] = '//'.$_SERVER['SERVER_NAME'].'/print/ticket/'.$booking->bookingno;
             }
             return response()->json($payload, 200);
         }

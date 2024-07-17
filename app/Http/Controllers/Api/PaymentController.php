@@ -31,10 +31,10 @@ class PaymentController extends Controller
 
     public function paymentCtsvResponse(Request $request) {
         $res = json_decode($request['paymentResult'], true);
-        // Log::debug($res);
         if($res['code'] == '100') {
-            $payment = Payments::where('paymentno', $res['ref1'])->first();
-            $booking = Bookings::where('bookingno', $res['desc'])->first();
+            $ex = explode('-', $res['desc']);
+            $payment = Payments::where('paymentno', $ex[1])->first();
+            $booking = Bookings::where('bookingno', $ex[0])->first();
 
             $payload = [
                 'userDefined1' => $payment->id, // payment_id
@@ -90,7 +90,7 @@ class PaymentController extends Controller
             'merchantId' => config('services.payment.ctsv_merchant_id'),
             'shopId' => config('services.payment.ctsv_shop_id'),
             'inv' => strval($inv),
-            'desc' => $booking->bookingno,
+            'desc' => $booking->bookingno.'-'.$payment->paymentno,
             'urlBack' => config('services.payment.ctsv_frontend_return'),
             'urlConfirm' => config('services.payment.ctsv_backend_return'),
             'paymentMethod' => $request->payment_method,

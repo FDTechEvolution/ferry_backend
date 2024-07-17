@@ -71,7 +71,8 @@ class BookingController extends Controller
             $payload = [
                 'id' => $booking->id,
                 'expired_at' => $_exprired,
-                'amount' => $booking->totalamt
+                'amount' => $booking->totalamt,
+                'booking_pdf' => '//'.$_SERVER['SERVER_NAME'].'/print/ticket/'.$booking->bookingno
             ];
 
             if($booking->status == 'DR') {
@@ -87,7 +88,6 @@ class BookingController extends Controller
             if($booking->status == 'CO') {
                 $payload['code'] = 'E002';
                 $payload['desc'] = 'Duplicate';
-                $payload['booking_pdf'] = '//'.$_SERVER['SERVER_NAME'].'/print/ticket/'.$booking->bookingno;
             }
             return response()->json($payload, 200);
         }
@@ -118,10 +118,10 @@ class BookingController extends Controller
             $c = new BookingHelper;
             $complete = $c->completeBooking($request->booking_id);
             $complete['booking_pdf'] = '//'.$_SERVER['SERVER_NAME'].'/print/ticket/'.$complete['bookingno'];
-            return response()->json(['result' => true, 'data' => $complete]);
+            return response()->json(['result' => true, 'data' => $complete, 'code' => '100']);
         }
 
-        return response()->json(['result' => false, 'data' => 'No Booking.']);
+        return response()->json(['result' => false, 'data' => 'No Booking.', 'code' => 'E001']);
     }
 
     public function destroy(Request $request) {

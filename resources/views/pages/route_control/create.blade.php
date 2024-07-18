@@ -236,7 +236,7 @@
                                                                 href="javascript:void(0)"
                                                                 onClick="addRouteIcon({{ $index }})">
                                                                 <img src="{{ asset($icon->path) }}" class="me-2"
-                                                                    width="42" height="42"> {{ $icon->name }}
+                                                                    width="42" height="42"> {{ $icon->name }} <small>(1)</small>
                                                             </a>
                                                         </li>
                                                     @endforeach

@@ -31,7 +31,7 @@ class TicketMail extends Mailable
     {
         return new Envelope(
             from: new Address('no-replay@andamanexpress.com', 'Tigerline Ferry'),
-            subject: 'reservation has been confirmed.',
+            subject: 'Tigerline Ferry Booking Confirmation (Ticket Number : '. $this->mailData['ticketno'] .').',
         );
     }
 

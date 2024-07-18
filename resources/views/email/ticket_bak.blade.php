@@ -50,6 +50,9 @@
 </head>
 <body>
     <div class="ticket">
+        <div class="ticket-header">
+            <h2>Your reservation has been confirmed.</h2>
+        </div>
         <div class="ticket-content">
             <strong>Dear: {{$mailData['customer_name']}}</strong><br>
             <strong>Your Ticket Number: {{ $mailData['ticketno'] }}</strong><br><br>

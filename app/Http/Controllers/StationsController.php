@@ -28,6 +28,14 @@ class StationsController extends Controller
         'N' => '<span class="text-danger">Off</span>',
     ];
 
+    protected $_Type = [
+        'island' => 'Island',
+        'pier' => 'Pier',
+        'airport' => 'Airport',
+        'hotel' => 'Hotel',
+        'other' => 'Other'
+    ];
+
     public static function avaliableStation()
     {
         $sql = 'select s.id,s.name,s.piername,s.nickname from stations s join routes r on s.id = r.station_from_id left join sections sec on s.section_id = sec.id where r.isactive ="Y" group by s.id,s.name,s.piername,s.nickname order by sec.sort ASC,s.sort ASC';
@@ -57,8 +65,9 @@ class StationsController extends Controller
     {
         $sections = Section::where('isactive', 'Y')->orderBy('created_at', 'DESC')->get();
         $info = StationInfomation::where('status', 'Y')->get();
+        $type = $type = $this->_Type;
 
-        return view('pages.stations.create', ['sections' => $sections, 'info' => $info]);
+        return view('pages.stations.create', ['sections' => $sections, 'info' => $info, 'type' => $type]);
     }
 
     public function edit(string $id = null)
@@ -70,8 +79,9 @@ class StationsController extends Controller
         $station->info_line;
         $sections = Section::orderBy('created_at', 'DESC')->get();
         $info = StationInfomation::where('status', 'Y')->get();
+        $type = $type = $this->_Type;
 
-        return view('pages.stations.edit', ['station' => $station, 'sections' => $sections, 'info' => $info, 'maxSeq' => $maxSeq]);
+        return view('pages.stations.edit', ['station' => $station, 'sections' => $sections, 'info' => $info, 'maxSeq' => $maxSeq, 'type' => $type]);
     }
 
     public function store(Request $request)

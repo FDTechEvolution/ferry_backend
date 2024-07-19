@@ -48,6 +48,36 @@ class StationsController extends Controller
         return response()->json(['data' => $stations], 200);
     }
 
+    public function getStationType() {
+        $routes = Route::where('isactive', 'Y')->where('status', 'CO')
+                ->with('station_from', 'station_to')
+                ->get();
+
+        $stations = $this->groupStation($routes);
+        $unique_from = $this->arrayUniqueSet($stations['from']);
+        $unique_to = $this->arrayUniqueSet($stations['to']);
+
+        $unique_all = $this->arrayUniqueSet(array_merge($unique_from, $unique_to));
+        $_stations = [];
+
+        foreach($unique_all as $u) {
+            if($u['type'] != '') array_push($_stations, $u);
+        }
+
+        return response()->json(['data' => $_stations], 200);
+    }
+
+    private function arrayUniqueSet($arr) {
+        $array = $arr;
+        $ids = array_column($array, 'id');
+        $ids = array_unique($ids);
+        $array = array_filter($array, function ($key, $value) use ($ids) {
+            return in_array($value, array_keys($ids));
+        }, ARRAY_FILTER_USE_BOTH);
+
+        return $array;
+    }
+
     private function groupStation($routes) {
         $stations = [
             'from' => [],
@@ -66,7 +96,8 @@ class StationsController extends Controller
                     's_sort' => $route['station_from']['section']['sort'],
                     'col' => $route['station_from']['section']['sectionscol'],
                     'image' => isset($route['station_from']['image']['path']) ? $route['station_from']['image']['path'] : '',
-                    'map' => $route['station_from']['google_map']
+                    'map' => $route['station_from']['google_map'],
+                    'type' => $route['station_from']['type']
                 ];
                 if(!in_array($_from, $stations['from'])) array_push($stations['from'], $_from);
             }
@@ -82,7 +113,8 @@ class StationsController extends Controller
                     's_sort' => $route['station_to']['section']['sort'],
                     'col' => $route['station_to']['section']['sectionscol'],
                     'image' => isset($route['station_to']['image']['path']) ? $route['station_to']['image']['path'] : '',
-                    'map' => $route['station_to']['google_map']
+                    'map' => $route['station_to']['google_map'],
+                    'type' => $route['station_from']['type']
                 ];
                 if(!in_array($_to, $stations['to'])) array_push($stations['to'], $_to);
             }

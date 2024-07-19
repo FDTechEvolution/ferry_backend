@@ -70,6 +70,7 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
         Route::get('stations/route', 'getStationFromRoute');
         Route::get('stations/get/to/{from_id}', 'getToStation');
         Route::get('stations/get/nickname/{nickname}', 'getStationByNickname');
+        Route::get('stations/get/type', 'getStationType');
     });
     Route::controller(SlideController::class)->group(function() {
         Route::get('blog/get', 'getBlog');

@@ -34,7 +34,8 @@ class Station extends Model
         'longtail_boat_text',
         'longtail_boat_mouseover',
         'thai_name',
-        'thai_piername'
+        'thai_piername',
+        'type'
     ];
 
     protected $hidden = [

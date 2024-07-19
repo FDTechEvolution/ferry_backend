@@ -105,6 +105,7 @@ class RouteController extends Controller
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->orderBy('name', 'ASC')->get();
         $partners = PartnerController::listPartners();
+        $icons = $this->setRouteIconGroup($icons);
 
         $meals = Addon::where('type', $this->Meal)->where('isactive', 'Y')->where('status', 'CO')->get();
         $activities = Addon::where('type', $this->Activity)->where('isactive', 'Y')->where('status', 'CO')->get();
@@ -129,6 +130,20 @@ class RouteController extends Controller
                 'stationJsons' => $stationjsons,
             ],
         );
+    }
+
+    private function setRouteIconGroup($icons) {
+        $group_1 = [];
+        $group_2 = [];
+
+        foreach($icons->toArray() as $ic) {
+            if(strpos($ic->name, '(1)') != '') {
+                array_push($group_2, $ic);
+            }
+            else array_push($group_1, $ic);
+        }
+
+        return array_merge($group_1, $group_2);
     }
 
     public function edit(string $id = null)
@@ -200,7 +215,7 @@ class RouteController extends Controller
 
         $partners = PartnerController::listPartners();
         $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
-        $icons = DB::table('icons')->where('type', $this->Type)->get();
+        $icons = DB::table('icons')->where('type', $this->Type)->orderBy('name', 'ASC')->get();
         $activities = Addon::where('type', $this->Activity)->where('status', 'CO')->with('icon')->get();
         $meals = Addon::where('type', $this->Meal)->where('status', 'CO')->get();
         $fare_child = Fare::where('name', 'Child')->first();
@@ -208,7 +223,7 @@ class RouteController extends Controller
         $infos = $this->getRouteAddons();
 
         $stationjsons = $stations->toJson();
-
+        $icons = $this->setRouteIconGroup($icons);
 
         return view('pages.route_control.edit', [
             'route' => $route,

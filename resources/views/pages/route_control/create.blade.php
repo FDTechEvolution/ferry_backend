@@ -228,7 +228,7 @@
                                                     </span>
                                                 </a>
 
-                                                <ul class="dropdown-menu shadow-lg p-1 w-100"
+                                                <ul class="dropdown-menu shadow-lg p-1 w-100 dd-overflow-y"
                                                     aria-labelledby="dropdownIcons">
                                                     @foreach ($icons as $index => $icon)
                                                         <li id="icon-active-{{ $index }}" class="text-start">
@@ -236,9 +236,12 @@
                                                                 href="javascript:void(0)"
                                                                 onClick="addRouteIcon({{ $index }})">
                                                                 <img src="{{ asset($icon->path) }}" class="me-2"
-                                                                    width="42" height="42"> {{ $icon->name }} <small>(1)</small>
+                                                                    width="42" height="42"> {{ $icon->name }}
                                                             </a>
                                                         </li>
+                                                        @if($index == 8)
+                                                            <li><hr class="dropdown-divider my-3" style="border-color: #afafaf;"></li>
+                                                        @endif
                                                     @endforeach
                                                 </ul>
                                             </div>
@@ -552,6 +555,29 @@
             position: absolute;
             right: 10px;
             top: -5px;
+        }
+        .dd-overflow-y {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        /* width */
+        .dd-overflow-y::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        /* Track */
+        .dd-overflow-y::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        /* Handle */
+        .dd-overflow-y::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+        /* Handle on hover */
+        .dd-overflow-y::-webkit-scrollbar-thumb:hover {
+            background: #555;
         }
     </style>
 @stop

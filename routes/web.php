@@ -36,6 +36,8 @@ use App\Http\Controllers\BillboardController;
 use App\Http\Controllers\PremiumFlexController;
 use App\Http\Controllers\ReportsController;
 
+use App\Http\Controllers\FileController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -366,6 +368,11 @@ Route::controller(PrintController::class)->group(function () {
 
 Route::get('/email/ticket', function() {
     return view('email.ticket');
+});
+
+// Test Download pdf
+Route::get('/download-pdf', function () {
+    return 'hello...';
 });
 
 // Route::get('/{pathMatch}', function() {

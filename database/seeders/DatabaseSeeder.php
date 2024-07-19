@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
-            // IconSeeder::class
+            IconSeeder::class
         ]);
     }
 }

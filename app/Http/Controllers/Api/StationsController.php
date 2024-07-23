@@ -97,7 +97,8 @@ class StationsController extends Controller
                     'col' => $route['station_from']['section']['sectionscol'],
                     'image' => isset($route['station_from']['image']['path']) ? $route['station_from']['image']['path'] : '',
                     'map' => $route['station_from']['google_map'],
-                    'type' => $route['station_from']['type']
+                    'type' => $route['station_from']['type'],
+                    'detail' => $route['station_from']['master_from']
                 ];
                 if(!in_array($_from, $stations['from'])) array_push($stations['from'], $_from);
             }
@@ -114,7 +115,8 @@ class StationsController extends Controller
                     'col' => $route['station_to']['section']['sectionscol'],
                     'image' => isset($route['station_to']['image']['path']) ? $route['station_to']['image']['path'] : '',
                     'map' => $route['station_to']['google_map'],
-                    'type' => $route['station_from']['type']
+                    'type' => $route['station_to']['type'],
+                    'detail' => $route['station_to']['master_to']
                 ];
                 if(!in_array($_to, $stations['to'])) array_push($stations['to'], $_to);
             }

@@ -61,11 +61,7 @@ When checking-in with the Tigerline Stations / Staff, please refer to Your Ticke
 If you would like to change your reservation, please call our call center at +6681 358 8989 (09:00-21:00) or Email 168ferry@gmail.com and refer to this number. Please note that change fees may apply.
             </p><br><br>
 
-            <strong>Download your ticket </strong><a href="{{ $mailData['link'] }}/print/ticket/{{ $mailData['bookingno'] }}" target="_blank">Here!</a>
-        </div>
-        <div class="ticket-footer">
-            <p>Kind regards,<br>
-                Your Tigerline Ferry Team</p>
+
         </div>
     </div>
 </body>

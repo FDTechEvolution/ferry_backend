@@ -58,12 +58,6 @@ Route::prefix('v1')->group(function() {
     });
 });
 
-Route::prefix('v2')->group(function() {
-    Route::controller(EmailController::class)->group(function() {
-        Route::get('email/send', 'sendEmail');
-    });
-});
-
 Route::middleware(['cors'])->prefix('v1')->group(function () {
     Route::controller(StationsController::class)->group(function() {
         Route::get('stations/get', 'getStations');
@@ -197,5 +191,15 @@ Route::middleware(['agent'])->prefix('agent')->group(function() {
 
             Route::get('get/{id}', 'getBookingById');
         });
+    });
+});
+
+
+
+// Debug Only //////////////////////////////////////////////////////////////////
+Route::prefix('v8')->group(function() {
+    // Email Debuging /////////////////////////
+    Route::controller(EmailController::class)->group(function() {
+        Route::get('email/send/{booking_id}', 'sendEmail');
     });
 });

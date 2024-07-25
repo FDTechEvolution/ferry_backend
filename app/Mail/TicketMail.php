@@ -9,19 +9,24 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Mail\Mailables\Attachment;
+
+use App\Helpers\TicketHelper;
 
 class TicketMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $mailData;
+    public $bookingNo;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($mailData)
+    public function __construct($mailData, $bookingNo = null)
     {
         $this->mailData = $mailData;
+        $this->bookingNo = $bookingNo;
     }
 
     /**
@@ -52,6 +57,17 @@ class TicketMail extends Mailable
      */
     public function attachments(): array
     {
+        if($this->bookingNo != null) {
+            $t = new TicketHelper();
+            $t->makePdf($this->bookingNo);
+
+            return [
+                Attachment::fromStorageDisk('attachments', $this->bookingNo.'.pdf')
+                    ->as('ticket.pdf')
+                    ->withMime('application/pdf'),
+            ];
+        }
+
         return [];
     }
 }

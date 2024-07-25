@@ -12,8 +12,8 @@ use App\Models\Bookings;
 
 class EmailController extends Controller
 {
-    public function sendEmail() {
-        EmailHelper::ticket('9b3aff15-6e1d-4f6c-87ba-96ba0704ea1e');
+    public function sendEmail($booking_id) {
+        EmailHelper::ticket($booking_id);
         // $booking = Bookings::find('9b3aff15-6e1d-4f6c-87ba-96ba0704ea1e');
         // $customer = $booking->bookingCustomers;
         // $tickets = $booking->tickets;

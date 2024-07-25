@@ -33,10 +33,10 @@ class EmailHelper
             'link' => URL::previous(),
         ];
 
-        Mail::to($customer->email)->send(new TicketMail($mailData));
-        Mail::to('win.tigerline@gmail.com')->send(new TicketMail($mailData));
-        Mail::to('168ferry@gmail.com')->send(new TicketMail($mailData));
-        Mail::to('reservation@tigerlineferry.com')->send(new TicketMail($mailData));
+        $cc = ['win.tigerline@gmail.com', '168ferry@gmail.com', 'reservation@tigerlineferry.com'];
+        Mail::to($customer->email)
+            ->cc($cc)
+            ->send(new TicketMail($mailData, $booking->bookingno));
     }
 
     public static function voidBoking($booking_route_id,$message)

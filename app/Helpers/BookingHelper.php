@@ -276,11 +276,11 @@ class BookingHelper
 
 
         foreach ($routes as $key => $route) {
-            foreach ($customers as $index => $customer) {
+            //foreach ($customers as $index => $customer) {
                 $ticketNo = newSequenceNumber('TICKET');
 
                 if($booking['trip_type'] == 'multiple'){
-                    $ticketNo .= '#'.($index+1);
+                    $ticketNo .= '#'.($key+1);
                 }
                 $ticket = Tickets::create(
                     [
@@ -288,12 +288,12 @@ class BookingHelper
                         'station_from_id' => $route['station_from']['id'],
                         'station_to_id' => $route['station_to']['id'],
                         'status' => 'CO',
-                        'customer_id' => $customer['id'],
+                        //'customer_id' => $customer['id'],
                         'booking_id' => $booking['id'],
-                        'isdefault' => $customer->pivot->isdefault,
+                        //'isdefault' => $customer->pivot->isdefault,
                     ],
                 );
-            }
+            //}
 
 
         }

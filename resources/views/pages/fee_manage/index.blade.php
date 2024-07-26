@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('page-title')
-    <h1 class="ms-2 mb-0" id="fee-manage-page-title">Fee Manage</h1>
+    <h1 class="ms-2 mb-0 text-main-color-2" id="fee-manage-page-title">Fee Manage</h1>
 @stop
 
 @section('content')

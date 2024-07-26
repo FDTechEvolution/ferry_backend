@@ -46,6 +46,10 @@ nav.nav-deep-light .nav-item:hover>.nav-link {
     color: #ff6100 !important;
 }
 
+.border-color-main {
+    border-color: #ff6100 !important;
+}
+
 /* Custom Css */
 .btn-ferry {
     --bs-btn-color: #fff;

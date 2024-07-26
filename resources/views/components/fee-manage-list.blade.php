@@ -14,7 +14,7 @@
                     <div class="col-12 d-none d-lg-block">
                         <h2 class="text-main-color-2">{{ $fee['name'] }}</h2>
                     </div>
-                    <div class="col-12 col-lg-6 border-lg-end border-2 border-bottom border-lg-bottom-0 mb-3 mb-lg-0 pb-3 pb-lg-0">
+                    <div class="col-12 col-lg-6 border-lg-end border-2 border-bottom border-lg-bottom-0 border-color-main mb-3 mb-lg-0 pb-3 pb-lg-0">
                         <h6 class="text-center mb-3 fw-bold">Processing fee (เลือกได้เพียงอย่างเดียว)</h6>
                         <div class="checkgroup" data-checkgroup-checkbox-single="true">
                             <div class="row">
@@ -178,7 +178,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-2 border-lg-start border-2 order-1 order-lg-2 border-bottom border-lg-bottom-0 mb-3 mb-lg-0">
+            <div class="col-12 col-md-2 border-lg-start border-2 border-color-main order-1 order-lg-2 border-bottom border-lg-bottom-0 mb-3 mb-lg-0">
                 <p class="text-main-color-2 text-center text-lg-start">
                     สูตรการใช้ <br/>
                     <small>(เลือกใช้ได้อย่างเดียว)</small>

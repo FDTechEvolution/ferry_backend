@@ -25,15 +25,15 @@ class FeeManageController extends Controller
         foreach($request['is_fee'] as $id) {
             $fee = FeeSetting::find($id);
             $type = $fee->type;
-            $fee->regular_pf = $request['regular_pf_'.$type];
-            $fee->child_pf = $request['child_pf_'.$type];
-            $fee->infant_pf = $request['infant_pf_'.$type];
-            $fee->percent_pf = $request['percent_pf_'.$type];
+            $fee->regular_pf = $request['regular_pf_'.$type] != '' ? $request['regular_pf_'.$type] : 0;
+            $fee->child_pf = $request['child_pf_'.$type] != '' ? $request['child_pf_'.$type] : 0;
+            $fee->infant_pf = $request['infant_pf_'.$type] != '' ? $request['infant_pf_'.$type] : 0;
+            $fee->percent_pf = $request['percent_pf_'.$type] != '' ? $request['percent_pf_'.$type] : 0;
             $fee->is_pf_perperson = $request['is_pf_perperson_'.$type];
-            $fee->regular_sc = $request['regular_sc_'.$type];
-            $fee->child_sc = $request['child_sc_'.$type];
-            $fee->infant_sc = $request['infant_sc_'.$type];
-            $fee->percent_sc = $request['percent_sc_'.$type];
+            $fee->regular_sc = $request['regular_sc_'.$type] != '' ? $request['regular_sc_'.$type] : 0;
+            $fee->child_sc = $request['child_sc_'.$type] != '' ? $request['child_sc_'.$type] : 0;
+            $fee->infant_sc = $request['infant_sc_'.$type] != '' ? $request['infant_sc_'.$type] : 0;
+            $fee->percent_sc = $request['percent_sc_'.$type] != '' ? $request['percent_sc_'.$type] : 0;
             $fee->is_sc_perperson = $request['is_sc_perperson_'.$type];
             $fee->isuse_pf = isset($request['isuse_pf_'.$type]) ? $request['isuse_pf_'.$type] : 'N';
             $fee->isuse_sc = isset($request['isuse_sc_'.$type]) ? $request['isuse_sc_'.$type] : 'N';

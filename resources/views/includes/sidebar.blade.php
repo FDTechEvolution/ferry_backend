@@ -170,6 +170,12 @@
               <span>API</span>
           </a>
       </li>
+      <li class="nav-item {{ (request()->is('fee-manage*')) ? 'active' : '' }}">
+        <a class="nav-link" href="{{route('fee.index')}}">
+            <i class="fi fi-arrow-right"></i>
+            <span>Fee Manage</span>
+        </a>
+    </li>
 
 
     </ul>

@@ -35,6 +35,7 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\BillboardController;
 use App\Http\Controllers\PremiumFlexController;
 use App\Http\Controllers\ReportsController;
+use App\Http\Controllers\FeeManageController;
 
 use App\Http\Controllers\FileController;
 
@@ -355,6 +356,12 @@ Route::middleware('auth')->group(function () {
 
         // AJAX
         Route::get('/ajax/report/depart-arrive-time/{from_id}/{to_id}', 'routeDepartArriveTime');
+    });
+
+    Route::controller(FeeManageController::class)->group(function() {
+        Route::get('/fee-manage', 'index')->name('fee.index');
+
+        Route::post('/fee-manage/update', 'update')->name('fee.update');
     });
 
 });

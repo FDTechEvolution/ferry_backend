@@ -7,6 +7,7 @@ use Firebase\JWT\Key;
 use App\Models\Payments;
 use App\Models\PaymentLines;
 use App\Models\Promotions;
+use App\Models\FeeSetting;
 
 class PaymentHelper
 {
@@ -320,5 +321,16 @@ class PaymentHelper
         }
 
         return $payment;
+    }
+
+    public static function updateFeePaymentLine($payment_id, $_fee, $type) {
+        $fee = FeeSetting::where('type', $type)->first();
+        $title = '';
+        if($fee->isuse_sc == 'Y') $title .= 'Service';
+        if($fee->isuse_sc == 'Y' && $fee->isuse_pf == 'Y') $title .= ' + ';
+        if($fee->isuse_pf == 'Y') $title .= 'Processing';
+        $title .= ' fee ['. $type .']';
+
+        $line = PaymentHelper::createPaymentLine($payment_id, 'FEE', NULL, $title, $_fee, NULL, '');
     }
 }

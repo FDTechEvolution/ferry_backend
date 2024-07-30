@@ -26,7 +26,7 @@ class PaymentController extends Controller
         $data = '{"payload":"' . $request['payload'] . '"}';
         $result = PaymentHelper::decodeResponse($data);
 
-        if($result['respCode'] == '0000') $this->updateBookingpayment($result); // payment successs
+        if($result['respCode'] == '0000') $this->updateBookingpayment($result, '2C2P'); // payment successs
         else if($result['respCode'] == '4005') $this->paymentFail(); // payment fail
     }
 
@@ -45,11 +45,11 @@ class PaymentController extends Controller
                 'ctsv_description' => $res
             ];
 
-            $this->updateBookingpayment($payload);
+            $this->updateBookingpayment($payload, 'PATALL');
         }
     }
 
-    private function updateBookingpayment($result) {
+    private function updateBookingpayment($result, $type) {
         $cardType = isset($result['cardType']) ? $result['cardType'] : $result['channelCode'];
         $description = isset($result['ctsv_description']) ? json_encode($result['ctsv_description']) : json_encode($result);
         $payment_data = ['payment_method' => $cardType, 'totalamt' => $result['amount'], 'description' => $description];
@@ -58,6 +58,13 @@ class PaymentController extends Controller
         // $result['userDefined2'] = $booking_id
         $payment = PaymentHelper::completePayment($result['userDefined1'], $payment_data);
         $booking = BookingHelper::completeBooking($result['userDefined2']);
+
+        // update payment line with fee
+        $passengers = ['adult' => $booking->adult_passenger, 'child' => $booking->child_passenger, 'infant' => $booking->infant_passenger];
+        $fee = FeeHelper::getFeeSetting($passengers, $payment_data['totalamt'], $type);
+        PaymentHelper::updateFeePaymentLine($result['userDefined1'], $fee, $type);
+
+        // Send Email
         EmailHelper::ticket($result['userDefined2']);
     }
 

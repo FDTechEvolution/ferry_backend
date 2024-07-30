@@ -20,6 +20,7 @@ use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\Api\BillboardController;
 use App\Http\Controllers\Api\PremiumFlexController;
 use App\Http\Controllers\Api\EmailController;
+use App\Http\Controllers\Api\FeeManageController;
 
 // 7 Controller
 use App\Http\Controllers\Api\Seven\BookingController as SevenBooking;
@@ -131,6 +132,10 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
 
     Route::controller(PremiumFlexController::class)->group(function() {
         Route::get('premium-flex', 'index');
+    });
+
+    Route::controller(FeeManageController::class)->group(function() {
+        Route::get('fee-manage', 'index');
     });
 });
 

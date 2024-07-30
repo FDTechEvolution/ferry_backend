@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use App\Helpers\PaymentHelper;
 use App\Helpers\BookingHelper;
 use App\Helpers\EmailHelper;
+use App\Helpers\FeeHelper;
 
 use App\Models\Bookings;
 use App\Models\Payments;
@@ -68,12 +69,15 @@ class PaymentController extends Controller
         $payment = Payments::find($request->payment_id);
         $booking = Bookings::find($payment->booking_id);
         $payment_method = $request->payment_method;
+        $passengers = ['adult' => $booking->adult_passenger, 'child' => $booking->child_passenger, 'infant' => $booking->infant_passenger];
+        $fee = FeeHelper::getFeeSetting($passengers, $payment->totalamt, '2C2P');
+        // Log::debug($fee);
 
         // Log::debug($booking->bookingCustomers);
         // $customer_email = $booking->bookingCustomers->customer[0]->email;
         // Log::debug($customer_email);
 
-        $payload = PaymentHelper::encodeRequest($payment, $payment_method);
+        $payload = PaymentHelper::encodeRequest($payment, $payment_method, $fee);
         $response = PaymentHelper::postTo_2c2p($payload);
         $result = PaymentHelper::decodeResponse($response);
 
@@ -84,6 +88,8 @@ class PaymentController extends Controller
         $payment = Payments::find($request->payment_id);
         $booking = Bookings::with('bookingCustomers')->find($payment->booking_id);
         $customer = $this->getLeadCustomer($booking->bookingCustomers);
+        $passengers = ['adult' => $booking->adult_passenger, 'child' => $booking->child_passenger, 'infant' => $booking->infant_passenger];
+        $fee = FeeHelper::getFeeSetting($passengers, $payment->totalamt, 'PATALL');
         $inv = 'inv-'.time();
 
         $payload = array(
@@ -94,7 +100,7 @@ class PaymentController extends Controller
             'urlBack' => config('services.payment.ctsv_frontend_return'),
             'urlConfirm' => config('services.payment.ctsv_backend_return'),
             'paymentMethod' => $request->payment_method,
-            'amt' => $payment->totalamt,
+            'amt' => $payment->totalamt + $fee,
             'currency' => 'THB',
             'memberId' => isset($request->member_id) ? $request->memer_id : '',
             'name' => explode(' ', $customer->fullname)[0],

@@ -10,7 +10,7 @@ use App\Models\Promotions;
 
 class PaymentHelper
 {
-    public static function encodeRequest($payment, $payment_method)
+    public static function encodeRequest($payment, $payment_method, $fee)
     {
         $payment_channel = [
             'CC' => 'CC',
@@ -32,7 +32,7 @@ class PaymentHelper
             "merchantID" => $merchantID,
             "invoiceNo" => $payment->paymentno,
             "description" => $payment_channel[$payment_method],
-            "amount" => $payment->totalamt,
+            "amount" => $payment->totalamt + $fee,
             "currencyCode" => $currencyCode,
 
             "paymentChannel" => [$payment_channel[$payment_method]],

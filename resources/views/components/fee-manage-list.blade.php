@@ -183,7 +183,7 @@
                     สูตรการใช้ <br/>
                     <small>(เลือกใช้ได้อย่างเดียว)</small>
                 </p>
-                <div class="checkgroup" data-checkgroup-checkbox-single="true">
+                <div class="checkgroup" data-checkgroup-checkbox-single="false">
                     <div class="row">
                         <div class="col-6 col-lg-12 border-sm-end border-2">
                             <div class="form-check mb-3 text-center text-lg-start">

@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap">
 
 <!-- Custom Style -->
-<link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/style.css') }}?v=@php echo date('YmdHis'); @endphp">
 <script src="https://kit.fontawesome.com/4e1914be33.js" crossorigin="anonymous"></script>
 
 <!-- favicon -->

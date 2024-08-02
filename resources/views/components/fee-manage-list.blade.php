@@ -63,7 +63,7 @@
                                         <div class="col-12 mb-2">
                                             <div class="row">
                                                 <div class="col-5 d-flex align-items-center">
-                                                    <small>infant</small>
+                                                    <small>Infant</small>
                                                 </div>
                                                 <div class="col-7 ps-0 text-end">
                                                     <div class="d-flex align-items-center justify-content-end">
@@ -144,7 +144,7 @@
                                         <div class="col-12 mb-2">
                                             <div class="row">
                                                 <div class="col-5 d-flex align-items-center">
-                                                    <small>infant</small>
+                                                    <small>Infant</small>
                                                 </div>
                                                 <div class="col-7 ps-0 text-end">
                                                     <div class="d-flex align-items-center justify-content-end">
@@ -179,10 +179,9 @@
                 </div>
             </div>
             <div class="col-12 col-md-2 border-lg-start border-2 border-color-main order-1 order-lg-2 border-bottom border-lg-bottom-0 mb-3 mb-lg-0">
-                <p class="text-main-color-2 text-center text-lg-start">
-                    สูตรการใช้ <br/>
-                    <small>(เลือกใช้ได้อย่างเดียว)</small>
-                </p>
+                <h6 class="text-main-color-2 text-center text-lg-start mb-3 fw-bold">
+                    สูตรการใช้
+                </h6>
                 <div class="checkgroup" data-checkgroup-checkbox-single="false">
                     <div class="row">
                         <div class="col-6 col-lg-12 border-sm-end border-2">

@@ -70,13 +70,13 @@
                         data-date-start="{{ $startDate }}" data-date-end="{{ $endDate }}"
                         data-date-format="DD/MM/YYYY"
                         data-quick-locale='{
-		"lang_apply"	: "Apply",
-		"lang_cancel" : "Cancel",
-		"lang_crange" : "Custom Range",
-		"lang_months"	 : ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-		"lang_weekdays" : ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
-	}'>
-                    <label for="departdate">Depart Date</label>
+                            "lang_apply"	: "Apply",
+                            "lang_cancel" : "Cancel",
+                            "lang_crange" : "Custom Range",
+                            "lang_months"	 : ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                            "lang_weekdays" : ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+                        }'>
+                    <label for="departdate">Today</label>
                 </div>
             </div>
             <div class="col-12 col-md-3">

@@ -27,14 +27,15 @@ discounts.forEach((item) => {
         let price = document.querySelector(`#regular-${index}`)
         let amount = document.querySelector(`#amount-${index}`)
         let net_price = parseInt(price.value) - parseInt(discount)
-        let commission = calCommission(net_price, index)
-        let vat = calVat(commission, index)
+        // let commission = calCommission(net_price, index)
+        // let vat = calVat(commission, index)
 
         document.querySelector(`#discount-updating-${index}`).classList.remove('d-none')
         document.querySelector(`#discount-updated-${index}`).classList.add('d-none')
         if(discount === '') discount = 0
 
-        amount.innerHTML = net_price + parseFloat(commission) + parseFloat(vat)
+        // amount.innerHTML = net_price + parseFloat(commission) + parseFloat(vat)
+        amount.innerHTML = net_price
     })
     beforeUpdate(item, 'discount')
 })
@@ -197,7 +198,7 @@ function updateDatatableData() {
             },
             {
                 data: 'price',
-                className: "position-relative",
+                className: "position-relative d-none",
                 render: (data, index) => {
                     return `<input type="number" class="form-control form-control-sm input-regular text-center" id="regular-${data[1]}"
                                     data-index="${data[1]}" value="${data[0]}" onKeyup="updateInputPrice(this, '${data[1]}')">
@@ -219,14 +220,14 @@ function updateDatatableData() {
             },
             {
                 data: 'commission',
-                className: "text-center",
+                className: "text-center d-none",
                 render: (data) => {
                     return `<p class="mt-2" id="commission-${data[1]}">${parseFloat(data[0]).toFixed(2)}</p>`
                 }
             },
             {
                 data: 'vat',
-                className: "text-center",
+                className: "text-center d-none",
                 render: (data) => {
                     return `<p class="mt-2" id="vat-${data[1]}">${parseFloat(data[0]).toFixed(2)}</p>`
                 }

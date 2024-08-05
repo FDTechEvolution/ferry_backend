@@ -40,7 +40,9 @@
                                                 <div class="col-7 ps-0 text-end">
                                                     <div class="d-flex align-items-center justify-content-end">
                                                         <input type="number" class="form-control form-control-sm px-2 w--60 text-center"
-                                                            value="{{ $fee['regular_pf'] }}" id="regular-pf-{{ $type }}" name="regular_pf_{{ $type }}">
+                                                            value="{{ $fee['regular_pf'] }}" id="regular-pf-{{ $type }}" name="regular_pf_{{ $type }}"
+                                                            step="any"
+                                                        >
                                                         <label for="regular-pf-{{ $type }}" class="mb-0 ms-1 form-label smaller">Bath</label>
                                                     </div>
                                                 </div>
@@ -54,7 +56,9 @@
                                                 <div class="col-7 ps-0 text-end">
                                                     <div class="d-flex align-items-center justify-content-end">
                                                         <input type="number" class="form-control form-control-sm px-2 w--60 text-center"
-                                                            value="{{ $fee['child_pf'] }}" id="child-pf-{{ $type }}" name="child_pf_{{ $type }}">
+                                                            value="{{ $fee['child_pf'] }}" id="child-pf-{{ $type }}" name="child_pf_{{ $type }}"
+                                                            step="any"
+                                                        >
                                                         <label for="child-pf-{{ $type }}" class="mb-0 ms-1 form-label smaller">Bath</label>
                                                     </div>
                                                 </div>
@@ -68,7 +72,9 @@
                                                 <div class="col-7 ps-0 text-end">
                                                     <div class="d-flex align-items-center justify-content-end">
                                                         <input type="number" class="form-control form-control-sm px-2 w--60 text-center"
-                                                            value="{{ $fee['infant_pf'] }}" id="infant-pf-{{ $type }}" name="infant_pf_{{ $type }}">
+                                                            value="{{ $fee['infant_pf'] }}" id="infant-pf-{{ $type }}" name="infant_pf_{{ $type }}"
+                                                            step="any"
+                                                        >
                                                         <label for="infant-pf-{{ $type }}" class="mb-0 ms-1 form-label smaller">Bath</label>
                                                     </div>
                                                 </div>
@@ -88,7 +94,10 @@
                                         </label>
                                     </div>
                                     <div class="d-flex align-items-center justify-content-center">
-                                        <input type="number" class="form-control form-control-sm text-center w-50" name="percent_pf_{{ $type }}" value="{{ $fee['percent_pf'] }}">
+                                        <input type="number" class="form-control form-control-sm text-center w-50"
+                                            name="percent_pf_{{ $type }}" value="{{ $fee['percent_pf'] }}"
+                                            step="any"
+                                        >
                                         <label class="mb-0 ms-1 form-label smaller">%</label>
                                     </div>
                                 </div>
@@ -121,7 +130,9 @@
                                                 <div class="col-7 ps-0 text-end">
                                                     <div class="d-flex align-items-center justify-content-end">
                                                         <input type="number" class="form-control form-control-sm px-2 w--60 text-center"
-                                                            value="{{ $fee['regular_sc'] }}" id="regular-sc-{{ $type }}" name="regular_sc_{{ $type }}">
+                                                            value="{{ $fee['regular_sc'] }}" id="regular-sc-{{ $type }}" name="regular_sc_{{ $type }}"
+                                                            step="any"
+                                                        >
                                                         <label for="regular-sc-{{ $type }}" class="mb-0 ms-1 form-label smaller">Bath</label>
                                                     </div>
                                                 </div>
@@ -135,7 +146,9 @@
                                                 <div class="col-7 ps-0 text-end">
                                                     <div class="d-flex align-items-center justify-content-end">
                                                         <input type="number" class="form-control form-control-sm px-2 w--60 text-center"
-                                                            value="{{ $fee['child_sc'] }}" id="child-sc-{{ $type }}" name="child_sc_{{ $type }}">
+                                                            value="{{ $fee['child_sc'] }}" id="child-sc-{{ $type }}" name="child_sc_{{ $type }}"
+                                                            step="any"
+                                                        >
                                                         <label for="child-sc-{{ $type }}" class="mb-0 ms-1 form-label smaller">Bath</label>
                                                     </div>
                                                 </div>
@@ -149,7 +162,9 @@
                                                 <div class="col-7 ps-0 text-end">
                                                     <div class="d-flex align-items-center justify-content-end">
                                                         <input type="number" class="form-control form-control-sm px-2 w--60 text-center"
-                                                            value="{{ $fee['infant_sc'] }}" id="infant-sc-{{ $type }}" name="infant_sc_{{ $type }}">
+                                                            value="{{ $fee['infant_sc'] }}" id="infant-sc-{{ $type }}" name="infant_sc_{{ $type }}"
+                                                            step="any"
+                                                        >
                                                         <label for="infant-sc-{{ $type }}" class="mb-0 ms-1 form-label smaller">Bath</label>
                                                     </div>
                                                 </div>
@@ -169,7 +184,10 @@
                                         </label>
                                     </div>
                                     <div class="d-flex align-items-center justify-content-center">
-                                        <input type="number" class="form-control form-control-sm text-center w-50" name="percent_sc_{{ $type }}" value="{{ $fee['percent_sc'] }}">
+                                        <input type="number" class="form-control form-control-sm text-center w-50"
+                                            name="percent_sc_{{ $type }}" value="{{ $fee['percent_sc'] }}"
+                                            step="any"
+                                        >
                                         <label class="mb-0 ms-1 form-label smaller">%</label>
                                     </div>
                                 </div>

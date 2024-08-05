@@ -11,10 +11,10 @@
                 <thead>
                     <tr>
 
-                        <th></th>
+                        <th style="width: 15%;"></th>
                         <th>Name</th>
-                        <th class="text-center">Commission (%)</th>
-                        <th class="text-center">Vat. (%)</th>
+                        <th class="text-center d-none">Commission (%)</th>
+                        <th class="text-center d-none">Vat. (%)</th>
                         {{-- <th class="text-center">Status</th> --}}
                         <th class="text-end">Action</th>
                     </tr>
@@ -26,13 +26,13 @@
                         <td>
                             <img src="{{ $merchant->logo }}" width="100px" />
                         </td>
-                        <td>{{ $merchant['name'] }}</td>
-                        <td class="text-center">{{ $merchant['commission'] }}</td>
-                        <td class="text-center">{{ $merchant['vat'] }}</td>
-                        <td class="d-flex justify-content-end align-items-center">
-                            <x-api-merchant-comm-vat :comm="$merchant['commission']" :vat="$merchant['vat']" :id="$merchant['id']" />
+                        <td style="vertical-align: middle;">{{ $merchant['name'] }}</td>
+                        <td class="text-center d-none">{{ $merchant['commission'] }}</td>
+                        <td class="text-center d-none">{{ $merchant['vat'] }}</td>
+                        <td class="text-end" style="vertical-align: middle;">
+                            {{-- <x-api-merchant-comm-vat :comm="$merchant['commission']" :vat="$merchant['vat']" :id="$merchant['id']" /> --}}
                             <a href="{{ route('api-route-index', ['merchant_id' => $merchant['id']]) }}"
-                                data-bs-toggle="tooltip" data-bs-placement="top" title="" class="ms-2">
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="" class="ms-2 mt-2">
                                 <i class="fa-solid fa-gear"></i> Routes Setting
                             </a>
                         </td>

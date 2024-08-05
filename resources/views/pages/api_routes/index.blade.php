@@ -14,7 +14,7 @@
         <a href="{{ route('api.index') }}" class="btn btn-sm btn-secondary">Back</a>
         {{-- <a href="{{ route('api-route-updatecommission') }}" class="btn btn-sm btn-primary">Update</a> --}}
         <a href="{{route('routeSchedules.index')}}?merchant_id={{$merchant_id}}" class="btn btn-warning btn-sm"><i class="fi fi-calendar"></i> Open/Close API Route Schedule</a>
-        <img src="{{$api_merchant->logo}}" width="200px" />
+        <img src="{{$api_merchant->logo}}" width="200px" class="d-none" />
     </div>
     <div class="col-12 col-lg-12 ">
         <div class="card card-body mx-3 table-responsiv">
@@ -55,11 +55,11 @@
                 <thead>
                     <tr>
                         <th>Route</th>
-                        <th class="w--15 text-center">Price <small>(THB)</small></th>
+                        <th class="w--15 text-center d-none">Price <small>(THB)</small></th>
                         <th class="w--15 text-center">Discount <small>(THB)</small></th>
-                        <th class="text-center">Com. <small>(<span class="is-commission">{{ $commission }}</span>%)</small></th>
-                        <th class="text-center">Vat. <small>(<span class="is-vat">{{ $vat }}</span>%)</small></th>
-                        <th class="text-center">Amount <small>(THB)</small></th>
+                        <th class="text-center d-none">Com. <small>(<span class="is-commission">{{ $commission }}</span>%)</small></th>
+                        <th class="text-center d-none">Vat. <small>(<span class="is-vat">{{ $vat }}</span>%)</small></th>
+                        <th class="text-center">Total <small>(THB)</small></th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -77,10 +77,10 @@
                         @endphp
                         <tr>
                             <td>
-                                <p class="mb-0">[{{ $f_nickname }}] {{ $f_name }} <span class="small">({{ $f_pier }})</span> <span class="fw-bold mx-2">--></span> [{{ $t_nickname }}] {{ $t_name }} <span class="small">({{ $t_pier }})</span></p>
+                                <p class="mb-0">[{{ $f_nickname }}] {{ $f_name }} <span class="small">({{ $f_pier }})</span> <span class="fw-bold mx-2 text-danger">--></span> [{{ $t_nickname }}] {{ $t_name }} <span class="small">({{ $t_pier }})</span></p>
                                 <p class="mb-0 small">Depart : {{ date('H:i', strtotime($depart)) }} <span class="mx-2">|</span> Arrive : {{ date('H:i', strtotime($arrive)) }}</p>
                             </td>
-                            <td class="position-relative">
+                            <td class="position-relative d-none">
                                 <input type="number" class="form-control form-control-sm input-regular text-center" id="regular-{{ $index }}"
                                         data-index="{{ $index }}" value="{{ intval($item['regular_price']) }}">
                                 <i class="fi fi-loading-dots fi-spin spin-updating d-none" id="price-updating-{{ $index }}"></i>
@@ -94,10 +94,10 @@
                                 <i class="fi mdi-check check-updated d-none" id="discount-updated-{{ $index }}"></i>
                                 <i class="fi mdi-close fail-updated text-danger d-none" id="discount-fail-{{ $index }}"></i>
                             </td>
-                            <td class="text-center">
+                            <td class="text-center d-none">
                                 <p class="mt-2" id="commission-{{ $index }}">{{ $item['commission'] }}</p>
                             </td>
-                            <td class="text-center">
+                            <td class="text-center d-none">
                                 <p class="mt-2" id="vat-{{ $index }}">{{ $item['vat'] }}</p>
                             </td>
                             <td class="text-center">
@@ -122,7 +122,7 @@
 <script>
     const routes = {{ Js::from($routes) }}
 </script>
-<script src="{{ asset('assets/js/app/api_route.js') }}"></script>
+<script src="{{ asset('assets/js/app/api_route.js') }}?v=@php echo date('YmdHis'); @endphp"></script>
 <style>
     .spin-updating, .check-updated, .fail-updated {
         position: absolute;

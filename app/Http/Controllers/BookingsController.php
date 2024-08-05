@@ -61,10 +61,10 @@ class BookingsController extends Controller
         left join users u on b.user_id = u.id
         join booking_customers bc on b.id = bc.booking_id and bc.isdefault = "Y"
         join customers c on bc.customer_id = c.id
-    where :conditions order by b.bookingno DESC,br.traveldate DESC';
+    where :conditions order by b.created_at DESC';
 
         $startDate = date('d/m/Y');
-        $endDate = date('d/m/Y', strtotime('+30 day', time()));
+        $endDate = date('d/m/Y');
 
         $conditionStr = '1=1';
 
@@ -75,10 +75,11 @@ class BookingsController extends Controller
 
         }
 
-        $startDateSql = Carbon::createFromFormat('d/m/Y', $startDate)->format('Y-m-d');
-        $endDateSql = Carbon::createFromFormat('d/m/Y', $endDate)->format('Y-m-d');
+        $startDateSql = Carbon::createFromFormat('d/m/Y', $startDate)->format('Y-m-d 00:00:00');
+        $endDateSql = Carbon::createFromFormat('d/m/Y', $endDate)->format('Y-m-d 23:59:59');
 
-        $conditionStr .= ' and (b.departdate >="' . $startDateSql . '" and b.departdate <="' . $endDateSql . '") ';
+        // $conditionStr .= ' and (b.departdate >="' . $startDateSql . '" and b.departdate <="' . $endDateSql . '") ';
+        $conditionStr .= ' and (b.created_at >="' . $startDateSql . '" and b.created_at <="' . $endDateSql . '") ';
 
         if (!is_null($station_from) && $station_from != '') {
             $conditionStr .= ' and sf.id = "' . $station_from . '"';

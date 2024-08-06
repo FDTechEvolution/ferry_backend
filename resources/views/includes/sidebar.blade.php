@@ -53,6 +53,12 @@
           <span>Route Manage</span>
         </a>
       </li>
+      <li class="nav-item {{ (request()->is('routeSchedules*')) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('routeSchedules.index') }}">
+          <i class="fi fi-arrow-right"></i>
+          <span>Route Schedule</span>
+        </a>
+      </li>
       <li class="nav-item {{ (request()->is('promotion*')) ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('promotion-index') }}">
           <i class="fi fi-arrow-right"></i>

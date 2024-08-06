@@ -19,7 +19,6 @@ class ApiRoutesController extends Controller
     {
         $api_merchant = $this->getApiMerchantById($merchant_id);
         $api_routes = ApiRoutes::where('api_merchant_id', $merchant_id)->with('route', 'api_merchant')->get();
-        // Log::debug($api_routes->toArray());
 
         return view('pages.api_routes.index', ['routes' => $api_routes, 'merchant_id' => $merchant_id,
                     'commission' => $api_merchant->commission, 'vat' => $api_merchant->vat,'api_merchant'=>$api_merchant]);

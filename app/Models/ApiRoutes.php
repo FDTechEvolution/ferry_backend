@@ -26,7 +26,7 @@ class ApiRoutes extends Model
     ];
 
     public function route() {
-        return $this->hasOne(Route::class, 'id', 'route_id')->with('station_from', 'station_to');
+        return $this->hasOne(Route::class, 'id', 'route_id')->with('station_from', 'station_to', 'partner');
     }
 
     public function api_merchant() {

@@ -641,6 +641,7 @@ class BookingController extends Controller
                 $m_route = $this->getRouteMultiple($last_route['station_to_id']);
                 $m_from_route = $last_route['station_to'];
 
+                // Log::debug($booking->toArray());
                 return response()->json(['result' => true, 'data' => new BookingResource($booking), 'addon' => $addons, 'm_route' => $m_route, 'm_from_route' => $m_from_route], 200);
             }
         }

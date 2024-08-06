@@ -54,6 +54,8 @@
             >
                 <thead>
                     <tr>
+                        <th class="text-center">#</th>
+                        <th>Partner</th>
                         <th>Route</th>
                         <th class="w--15 text-center">Price <small>(THB)</small></th>
                         <th class="w--15 text-center">Discount <small>(THB)</small></th>
@@ -76,9 +78,17 @@
                             $arrive = $item['route'] ? $item['route']['arrive_time'] : '';
                         @endphp
                         <tr>
+                            <td class="text-center" style="vertical-align: middle;">
+                                <span>{{ $index+1 }}</span>
+                            </td>
+                            <td style="vertical-align: middle;">
+                                <div class="avatar avatar-xs"
+                                    style="background-image:url({{ asset($item['route']['partner']['image']['path']) }})">
+                                </div>
+                            </td>
                             <td>
-                                <p class="mb-0">[{{ $f_nickname }}] {{ $f_name }} <span class="small">({{ $f_pier }})</span> <span class="fw-bold mx-2 text-danger">--></span> [{{ $t_nickname }}] {{ $t_name }} <span class="small">({{ $t_pier }})</span></p>
-                                <p class="mb-0 small">Depart : {{ date('H:i', strtotime($depart)) }} <span class="mx-2">|</span> Arrive : {{ date('H:i', strtotime($arrive)) }}</p>
+                                <p class="mb-0">[{{ $f_nickname }}] {{ $f_name }} <span class="small">({{ $f_pier }})</span> <i class="fa-solid fa-angles-right text-info"></i> [{{ $t_nickname }}] {{ $t_name }} <span class="small">({{ $t_pier }})</span></p>
+                                <p class="mb-0">{{ date('H:i', strtotime($depart)) }} <span class="mx-1">/</span> {{ date('H:i', strtotime($arrive)) }}</p>
                             </td>
                             <td class="position-relative">
                                 <input type="number" class="form-control form-control-sm input-regular text-center" id="regular-{{ $index }}"

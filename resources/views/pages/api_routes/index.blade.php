@@ -26,7 +26,7 @@
                     <input type="text" class="form-control form-control-sm" id="filter-station-to" placeholder="Station To">
                 </div>
             </div>
-            <table class="table-datatable table table-hover" id="api-route-datatable"
+            <table class="table-datatable table table-hover table-bordered" id="api-route-datatable"
                 data-lng-empty="No data available in table"
                 data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
                 data-lng-filtered="(filtered from _MAX_ total entries)"
@@ -55,7 +55,7 @@
                 <thead>
                     <tr>
                         <th class="text-center">#</th>
-                        <th>Partner</th>
+                        <th class="text-center">Partner</th>
                         <th>Route</th>
                         <th class="w--15 text-center">Price <small>(THB)</small></th>
                         <th class="w--15 text-center">Discount <small>(THB)</small></th>
@@ -81,14 +81,14 @@
                             <td class="text-center" style="vertical-align: middle;">
                                 <span>{{ $index+1 }}</span>
                             </td>
-                            <td style="vertical-align: middle;">
+                            <td class="text-center" style="vertical-align: middle;">
                                 <div class="avatar avatar-xs"
                                     style="background-image:url({{ asset($item['route']['partner']['image']['path']) }})">
                                 </div>
                             </td>
                             <td>
                                 <p class="mb-0">[{{ $f_nickname }}] {{ $f_name }} <span class="small">({{ $f_pier }})</span> <i class="fa-solid fa-angles-right text-info"></i> [{{ $t_nickname }}] {{ $t_name }} <span class="small">({{ $t_pier }})</span></p>
-                                <p class="mb-0">{{ date('H:i', strtotime($depart)) }} <span class="mx-1">/</span> {{ date('H:i', strtotime($arrive)) }}</p>
+                                <p class="mb-0">{{ date('H:i', strtotime($depart)) }} <span class="mx-0">/</span> {{ date('H:i', strtotime($arrive)) }}</p>
                             </td>
                             <td class="position-relative">
                                 <input type="number" class="form-control form-control-sm input-regular text-center" id="regular-{{ $index }}"

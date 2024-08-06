@@ -8,17 +8,6 @@
     <div class="row">
         <div class="col-12 col-lg-12">
             <table class="table table-hover table-lg">
-                <thead>
-                    <tr>
-
-                        <th style="width: 15%;"></th>
-                        <th>Name</th>
-                        <th class="text-center d-none">Commission (%)</th>
-                        <th class="text-center d-none">Vat. (%)</th>
-                        {{-- <th class="text-center">Status</th> --}}
-                        <th class="text-end">Action</th>
-                    </tr>
-                </thead>
                 <tbody>
 
                     <tr>
@@ -30,11 +19,10 @@
                         <td class="text-center d-none">{{ $merchant['commission'] }}</td>
                         <td class="text-center d-none">{{ $merchant['vat'] }}</td>
                         <td class="text-end" style="vertical-align: middle;">
-                            {{-- <x-api-merchant-comm-vat :comm="$merchant['commission']" :vat="$merchant['vat']" :id="$merchant['id']" /> --}}
+
+
                             <a href="{{ route('api-route-index', ['merchant_id' => $merchant['id']]) }}"
-                                data-bs-toggle="tooltip" data-bs-placement="top" title="" class="ms-2 mt-2">
-                                <i class="fa-solid fa-gear"></i> Routes Setting
-                            </a>
+                                class="btn btn-sm btn-secondary"><i class="me-0 fa-solid fa-gear"></i></a>
                         </td>
                     </tr>
 
@@ -52,7 +40,7 @@
                 data-ajax-modal-centered="true" data-ajax-modal-callback-function="" data-ajax-modal-backdrop="static"
                 class="btn btn-ferry js-ajax-modal"><i class="fa-solid fa-plug-circle-plus"></i> Create</a>
         </div>
-        <div class="col-12">
+        <div class="col-12 mt-2">
             <table class="table table-hover table-align-middle table-bordered">
                 <thead>
                     <tr>

@@ -8,6 +8,7 @@ use App\Models\ApiMerchants;
 use App\Models\ApiRoutes;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ApiMerchantsController extends Controller
 {
@@ -61,6 +62,7 @@ class ApiMerchantsController extends Controller
     {
         $apiMerchant = ApiMerchants::with(['apiRoutes','apiRoutes.partner','apiRoutes.partner.image','apiRoutes.station_from','apiRoutes.station_to'])->where('id',$id)->first();
 
+        // Log::debug($apiMerchant->toArray());
         return view('pages.api_merchants.edit',['apiMerchant'=>$apiMerchant]);
     }
 
@@ -89,20 +91,26 @@ class ApiMerchantsController extends Controller
         //dd($request);
         //ApiRoutes::where('api_merchant_id',$apiMerchantId)->where('isactive','Y')->update(['isactive'=>'N']);
 
-        foreach($routes as $routeId){
-            $apiRoute = ApiRoutes::updateOrCreate(
-                ['api_merchant_id'=>$apiMerchantId,'route_id'=>$routeId],
-                [
-                    'route_id'=>$routeId,
-                    'isactive'=>'Y',
-                    'api_merchant_id'=>$apiMerchantId,
-                    'discount'=> isset($request['discount_'.$routeId])?$request['discount_'.$routeId]:0,
-                    'ontop'=> isset($request['ontop_'.$routeId])?$request['ontop_'.$routeId]:0,
-                ]
-            );
+        if(!empty($request->routes)) {
+            foreach($routes as $routeId){
+                $apiRoute = ApiRoutes::updateOrCreate(
+                    ['api_merchant_id'=>$apiMerchantId,'route_id'=>$routeId],
+                    [
+                        'route_id'=>$routeId,
+                        'isactive'=>'Y',
+                        'api_merchant_id'=>$apiMerchantId,
+                        'regular_price' => $request['adult_'.$routeId] ?? 0,
+                        'child_price' => $request['child_'.$routeId] ?? 0,
+                        'infant_price' => $request['infant_'.$routeId] ?? 0,
+                        'seat' => $request['seat_'.$routeId] ?? 100,
+                    ]
+                );
+            }
+
+            return redirect()->route('api.edit',['id'=>$apiMerchantId])->withSuccess('Saved.');
         }
 
-        return redirect()->route('api.edit',['id'=>$apiMerchantId])->withSuccess('saved.');
+        return redirect()->route('api.edit',['id'=>$apiMerchantId])->withFail('Please Select Route.');
     }
 
     /**

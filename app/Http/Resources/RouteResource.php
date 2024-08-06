@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class RouteResource extends JsonResource
 {
@@ -15,14 +16,19 @@ class RouteResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $regular_price = floatval($this->api_route->regular_price) - floatval($this->api_route->discount);
+        $discount = floatval($this->api_route->discount);
+        $gross_fare = number_format($regular_price + $discount, 2);
+        $totalamt = number_format($regular_price, 2);
+
         return [
             'id' => $this->id,
             'depart_time' => date('H:i', strtotime($this->depart_time)),
             'arrive_time' => date('H:i', strtotime($this->arrive_time)),
-            'regular_price' => intval($this->api_route->regular_price),
-            'gross_fare' => number_format(floatval($this->api_route->totalamt) + intval($this->api_route->discount), 2),
-            'discount' => intval($this->api_route->discount),
-            'totalamt' => $this->api_route->totalamt,
+            'regular_price' => $regular_price,
+            'gross_fare' => $gross_fare,
+            'discount' => $discount,
+            'totalamt' => $totalamt,
             'avaliable_seat' => 100,
             // 'master_from_info' => $this->master_from_info,
             // 'master_to_info' => $this->master_to_info,

@@ -198,7 +198,7 @@ function updateDatatableData() {
             },
             {
                 data: 'price',
-                className: "position-relative d-none",
+                className: "position-relative",
                 render: (data, index) => {
                     return `<input type="number" class="form-control form-control-sm input-regular text-center" id="regular-${data[1]}"
                                     data-index="${data[1]}" value="${data[0]}" onKeyup="updateInputPrice(this, '${data[1]}')">
@@ -234,7 +234,7 @@ function updateDatatableData() {
             },
             {
                 data: 'amount',
-                className: "text-center",
+                className: "text-center d-none",
                 render: (data) => {
                     return `<p class="mt-2 fw-bold" id="amount-${data[1]}" data-index="${data[1]}">${data[0]}</p>`
                 }

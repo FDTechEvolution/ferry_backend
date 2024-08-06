@@ -31,13 +31,15 @@
                         data-enable-column-visibility="false" data-lng-column-visibility="Column Visibility"
                         data-enable-export="false">
                         <thead>
-                            <tr>
+                            <tr class="small">
                                 <th class="text-center">#</th>
                                 <th>Partner</th>
                                 <th>Route</th>
                                 <th class="text-center">Arrive/Depart Time</th>
-                                <th>Discount%</th>
-                                <th>On Top%</th>
+                                <th class="text-center">Adult</th>
+                                <th class="text-center">Child</th>
+                                <th class="text-center">Infant</th>
+                                <th class="text-center">Seat</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -68,15 +70,29 @@
                                     </td>
                                     <td>
                                         <div class="col-auto">
-                                            <label class="sr-only" for="discount_{{$route->route_id}}">Discount</label>
-                                            <input type="text" class="form-control form-control-sm" id="discount_{{$route->route_id}}"
-                                                placeholder="" name="" value="">
+                                            <label class="sr-only" for="adult_{{$route->route_id}}">Regular Price</label>
+                                            <input type="number" class="form-control form-control-sm text-center" id="adult_{{$route->route_id}}"
+                                                placeholder="" name="" value="" step="any">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="col-auto">
-                                            <label class="sr-only" for="ontop_{{$route->route_id}}">On Top</label>
-                                            <input type="text" class="form-control form-control-sm" id="ontop_{{$route->route_id}}"
+                                            <label class="sr-only" for="child_{{$route->route_id}}">Child Price</label>
+                                            <input type="number" class="form-control form-control-sm text-center" id="child_{{$route->route_id}}"
+                                                placeholder="" name="" value="" step="any">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto">
+                                            <label class="sr-only" for="infant_{{$route->route_id}}">Infant Price</label>
+                                            <input type="number" class="form-control form-control-sm text-center" id="infant_{{$route->route_id}}"
+                                                placeholder="" name="" value="" step="any">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto">
+                                            <label class="sr-only" for="seat_{{$route->route_id}}">Seat</label>
+                                            <input type="number" class="form-control form-control-sm text-center" id="seat_{{$route->route_id}}"
                                                 placeholder="" name="" value="">
                                         </div>
                                     </td>
@@ -104,12 +120,16 @@
                 let id = $(this).data('id');
                 if ($('#'+id).is(":checked")) {
                     $('#'+id).prop('checked', false);
-                    $('#discount_'+id).attr('name','');
-                    $('#ontop_'+id).attr('name','');
+                    $('#adult_'+id).attr('name','');
+                    $('#child_'+id).attr('name','');
+                    $('#infant_'+id).attr('name','');
+                    $('#seat_'+id).attr('name','');
                 } else {
                     $('#'+id).prop('checked', true);
-                    $('#discount_'+id).attr('name','discount_'+id);
-                    $('#ontop_'+id).attr('name','ontop_'+id);
+                    $('#adult_'+id).attr('name','adult_'+id);
+                    $('#child_'+id).attr('name','child_'+id);
+                    $('#infant_'+id).attr('name','infant_'+id);
+                    $('#seat_'+id).attr('name','seat_'+id);
                 }
 
             });

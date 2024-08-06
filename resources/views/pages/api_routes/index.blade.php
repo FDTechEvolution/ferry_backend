@@ -55,11 +55,11 @@
                 <thead>
                     <tr>
                         <th>Route</th>
-                        <th class="w--15 text-center d-none">Price <small>(THB)</small></th>
+                        <th class="w--15 text-center">Price <small>(THB)</small></th>
                         <th class="w--15 text-center">Discount <small>(THB)</small></th>
                         <th class="text-center d-none">Com. <small>(<span class="is-commission">{{ $commission }}</span>%)</small></th>
                         <th class="text-center d-none">Vat. <small>(<span class="is-vat">{{ $vat }}</span>%)</small></th>
-                        <th class="text-center">Total <small>(THB)</small></th>
+                        <th class="text-center d-none">Total <small>(THB)</small></th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -80,7 +80,7 @@
                                 <p class="mb-0">[{{ $f_nickname }}] {{ $f_name }} <span class="small">({{ $f_pier }})</span> <span class="fw-bold mx-2 text-danger">--></span> [{{ $t_nickname }}] {{ $t_name }} <span class="small">({{ $t_pier }})</span></p>
                                 <p class="mb-0 small">Depart : {{ date('H:i', strtotime($depart)) }} <span class="mx-2">|</span> Arrive : {{ date('H:i', strtotime($arrive)) }}</p>
                             </td>
-                            <td class="position-relative d-none">
+                            <td class="position-relative">
                                 <input type="number" class="form-control form-control-sm input-regular text-center" id="regular-{{ $index }}"
                                         data-index="{{ $index }}" value="{{ intval($item['regular_price']) }}">
                                 <i class="fi fi-loading-dots fi-spin spin-updating d-none" id="price-updating-{{ $index }}"></i>
@@ -100,7 +100,7 @@
                             <td class="text-center d-none">
                                 <p class="mt-2" id="vat-{{ $index }}">{{ $item['vat'] }}</p>
                             </td>
-                            <td class="text-center">
+                            <td class="text-center d-none">
                                 <p class="mt-2 fw-bold" id="amount-{{ $index }}" data-index="{{ $index }}">{{ number_format($item['totalamt'], 2) }}</p>
                             </td>
                             <td class="text-center">

@@ -14,5 +14,5 @@
     <del class="text-muted">{{ number_format($price) }}</del>
     <strong>{{ number_format($price - ($price * $ontop) / 100) }}</strong>
 @else
-    {{ number_format($price) }}
+    {{ number_format($price, 2) }}
 @endif

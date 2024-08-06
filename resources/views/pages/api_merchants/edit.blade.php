@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('page-title')
-    <h1 class="ms-2 mb-0" id="promotion-page-title"><span class="text-main-color-2">{{$apiMerchant->name}}</span>API Setting</h1>
+    <h1 class="ms-2 mb-0" id="promotion-page-title"><span class="text-main-color-2">{{$apiMerchant->name}}</span> API Setting</h1>
 @stop
 
 @section('content')
@@ -44,7 +44,7 @@
         <div class="col-6 mb-2 text-end">
             <div class="btn-group" role="group">
                 <a href="#" data-href="{{ route('api.addRoute', ['id' => $apiMerchant->id]) }}"
-                    data-ajax-modal-size="modal-lg" data-ajax-modal-centered="true" data-ajax-modal-callback-function=""
+                    data-ajax-modal-size="modal-xl" data-ajax-modal-centered="true" data-ajax-modal-callback-function=""
                     data-ajax-modal-backdrop="static" class="btn btn-primary js-ajax-modal">Add Route</a>
             </div>
         </div>
@@ -69,7 +69,7 @@
                         <tr>
                             <th></th>
                             <th class="text-center">#</th>
-                            <th>Partner</th>
+                            <th class="text-center">Partner</th>
                             <th class="">Route</th>
                             @if ($apiMerchant->isopenregular == 'Y')
                                 <th class="text-center">Regular</th>
@@ -80,9 +80,7 @@
                             @if ($apiMerchant->isopeninfant == 'Y')
                                 <th class="text-center">Infant</th>
                             @endif
-                            <th class="text-end">Seat</th>
-                            <th class="text-end">Discount%</th>
-                            <th class="text-end">On Top%</th>
+                            <th class="text-center">Seat</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -90,7 +88,7 @@
                         @foreach ($apiMerchant->apiRoutes as $index => $route)
                             <tr data-id="#{{ $route->route_id }}" data-action="click">
                                 <td class="text-center">
-                                    <div class="form-check">
+                                    <div class="form-check d-flex justify-content-center">
                                         <input class="form-check-input form-check-input-success" type="checkbox"
                                             data-action="check_all" value="{{ $route->pivot->id }}"
                                             id="{{ $route->pivot->id }}" name="api_route_id[]">
@@ -100,7 +98,7 @@
                                 <td class="text-center">
                                     <label>{{ $index + 1 }}</label>
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     <span>
                                         @if (!is_null($route->partner->image) && $route->partner->image->path != '')
                                             <div class="avatar avatar-xs"
@@ -119,31 +117,31 @@
 
                                 @if ($apiMerchant->isopenregular == 'Y')
                                     <td class="text-center">
-                                        <x-agent-discount-column :price="$route->regular_price" :discount="$route->pivot->discount" :ontop="$route->pivot->ontop" />
+                                        <x-agent-discount-column :price="$route->pivot->regular_price" :discount="$route->pivot->discount" :ontop="$route->pivot->ontop" />
                                     </td>
                                 @endif
 
                                 @if ($apiMerchant->isopenchild == 'Y')
                                     <td class="text-center">
-                                        <x-agent-discount-column :price="$route->child_price" :discount="$route->pivot->discount" :ontop="$route->pivot->ontop" />
-
+                                        <x-agent-discount-column :price="$route->pivot->child_price" :discount="$route->pivot->discount" :ontop="$route->pivot->ontop" />
                                     </td>
                                 @endif
 
                                 @if ($apiMerchant->isopeninfant == 'Y')
                                     <td class="text-center">
-                                        <x-agent-discount-column :price="$route->infant_price" :discount="$route->pivot->discount" :ontop="$route->pivot->ontop" />
-
+                                        <x-agent-discount-column :price="$route->pivot->infant_price" :discount="$route->pivot->discount" :ontop="$route->pivot->ontop" />
                                     </td>
                                 @endif
 
-                                <td class="text-end">
+                                <td class="text-center">
                                     {{ $route->pivot->seat }}
+                                </td>
+                                <td class="text-end">
                                     <a href="#"
-                                        data-href="{{ route('apiagent.edit', ['id' => $route->pivot->id, 'type' => 'seat']) }}"
+                                        data-href="{{ route('apiagent.edit', ['id' => $route->pivot->id]) }}"
                                         data-ajax-modal-size="modal-md" data-ajax-modal-centered="true"
                                         data-ajax-modal-callback-function="" data-ajax-modal-backdrop="static"
-                                        class="js-ajax-modal">
+                                        class="me-2 js-ajax-modal">
                                         <svg width="18px" height="18px" xmlns="http://www.w3.org/2000/svg"
                                             fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                             <path
@@ -154,47 +152,6 @@
                                             </path>
                                         </svg>
                                     </a>
-                                </td>
-                                <td class="text-end">
-                                    {{ $route->pivot->discount }}%
-
-                                    <a href="#"
-                                        data-href="{{ route('apiagent.edit', ['id' => $route->pivot->id, 'type' => 'discount']) }}"
-                                        data-ajax-modal-size="modal-md" data-ajax-modal-centered="true"
-                                        data-ajax-modal-callback-function="" data-ajax-modal-backdrop="static"
-                                        class="js-ajax-modal">
-                                        <svg width="18px" height="18px" xmlns="http://www.w3.org/2000/svg"
-                                            fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                            <path
-                                                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z">
-                                            </path>
-                                            <path fill-rule="evenodd"
-                                                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z">
-                                            </path>
-                                        </svg>
-                                    </a>
-                                </td>
-                                <td class="text-end">
-                                    {{ $route->pivot->ontop }}%
-
-                                    <a href="#"
-                                        data-href="{{ route('apiagent.edit', ['id' => $route->pivot->id, 'type' => 'ontop']) }}"
-                                        data-ajax-modal-size="modal-md" data-ajax-modal-centered="true"
-                                        data-ajax-modal-callback-function="" data-ajax-modal-backdrop="static"
-                                        class="js-ajax-modal">
-                                        <svg width="18px" height="18px" xmlns="http://www.w3.org/2000/svg"
-                                            fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                            <path
-                                                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z">
-                                            </path>
-                                            <path fill-rule="evenodd"
-                                                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z">
-                                            </path>
-                                        </svg>
-                                    </a>
-                                </td>
-                                <td class="text-end">
-
                                     <a href="{{ route('apiroute.calendar', ['id' => $route->pivot->id, 'api_route_id' => $route->pivot->id]) }}"
                                         class="me-2 text-primary" >
                                         <svg width="18px" height="18px" xmlns="http://www.w3.org/2000/svg"

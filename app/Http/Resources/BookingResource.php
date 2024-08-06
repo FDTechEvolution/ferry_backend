@@ -46,7 +46,8 @@ class BookingResource extends JsonResource
                     'child_price' => $route->child_price,
                     'infant_price' => $route->infant_price,
                     'amount' => $route->pivot->amount,
-                    'icons' => $route->icons
+                    'icons' => $route->icons,
+                    'travel_date' => $route->traveldate
                 ];
             }),
             'customer' => $this->bookingCustomers->map(function($customer) {

@@ -14,44 +14,42 @@
     <form novalidate class="bs-validate" id="frm" method="POST" action="{{ route('apiagent.update',['id'=>$apiRoute->id]) }}">
         @csrf
         <input type="hidden" name="id" value="{{$apiRoute->id}}">
-        <input type="hidden" name="type" value="{{$type}}">
         <div class="modal-body p-4">
             <div class="row">
-                @if ($type == 'seat')
-                    <div class="col-12 mb-2">
-                        <div class="form-floating mb-3">
-                            <input type="number" class="form-control" id="seat" name="seat"
-                                value="{{ $apiRoute->seat }}" required>
-                            <label for="seat">Seat *</label>
-                        </div>
-                    </div>
-                @endif
-
-                @if ($type == 'discount')
+                @if ($apiRoute->api_merchant->isopenregular == 'Y')
                     <div class="col-12 mb-2">
                         <div class="form-floating">
-                            <input type="number" class="form-control" id="discount" name="discount" required value="{{ $apiRoute->discount }}">
-                            <label for="discount">Discount *</label>
+                            <input type="number" class="form-control" id="adult" name="adult_price"
+                                required value="{{ $apiRoute->regular_price }}" step="any">
+                            <label for="discount">Regular Price *</label>
                         </div>
-
                     </div>
                 @endif
 
-                @if ($type == 'ontop')
+                @if ($apiRoute->api_merchant->isopenchild == 'Y')
                     <div class="col-12 mb-2">
                         <div class="form-floating">
-                            <input type="number" class="form-control" id="ontop" name="ontop" required value="{{ $apiRoute->ontop }}">
-                            <label for="discount">On Top *</label>
+                            <input type="number" class="form-control" id="child" name="child_price"
+                                required value="{{ $apiRoute->child_price }}" step="any">
+                            <label for="discount">Child Price *</label>
                         </div>
-
                     </div>
                 @endif
+
+                @if ($apiRoute->api_merchant->isopeninfant == 'Y')
+                    <div class="col-12 mb-2">
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="infant" name="infant_price"
+                                required value="{{ $apiRoute->infant_price }}" step="any">
+                            <label for="discount">Infant *</label>
+                        </div>
+                    </div>
+                @endif
+
                 <div class="col-12 mb-2">
-                    <div class="form-check mb-2">
-                        <input class="form-check-input form-check-input-success" type="checkbox" value="Y" id="isapply" name="isapply">
-                        <label class="form-check-label" for="isapply">
-                            Apply to all routes
-                        </label>
+                    <div class="form-floating mb-3">
+                        <input type="number" class="form-control" id="seat" name="seat" required value="{{ $apiRoute->seat }}">
+                        <label for="seat">Seat *</label>
                     </div>
                 </div>
 

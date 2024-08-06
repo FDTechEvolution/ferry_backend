@@ -72,15 +72,16 @@ class ApiRoutesController extends Controller
 
         $api_merchant = ApiMerchants::find($api_route->api_merchant_id);
         $net_price = intval($request->regular) - intval($request->discount);
-        $commission = (($net_price * (100 + intval($api_merchant->commission))) / 100 ) - $net_price;
-        $commission = $commission > 50 ? $commission : 50;
-        $vat = (($commission * (100 + intval($api_merchant->vat))) / 100) - $commission;
+        // $commission = (($net_price * (100 + intval($api_merchant->commission))) / 100 ) - $net_price;
+        // $commission = $commission > 50 ? $commission : 50;
+        // $vat = (($commission * (100 + intval($api_merchant->vat))) / 100) - $commission;
 
         $api_route->regular_price = $request->regular;
         $api_route->discount = $request->discount;
-        $api_route->commission = $commission;
-        $api_route->vat = $vat;
-        $api_route->totalamt = $net_price + $commission + $vat;
+        $api_route->totalamt = $net_price;
+        // $api_route->commission = $commission;
+        // $api_route->vat = $vat;
+        // $api_route->totalamt = $net_price + $commission + $vat;
 
         if($api_route->save()) return response()->json(['result' => true, 'data' => $api_route], 200);
         return response()->json(['result' => false], 200);

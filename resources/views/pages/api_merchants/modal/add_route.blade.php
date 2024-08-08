@@ -47,12 +47,11 @@
                                 <tr class="cursor-pointer">
                                     <td class="text-center">
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input form-check-input-success" type="checkbox"
+                                            <input class="form-check-input form-check-input-success route-select" type="checkbox"
                                                 value="{{ $route->route_id }}" id="{{ $route->route_id }}" name="routes[]"
                                                 @checked($route->isactive == 'Y')>
                                             <label>{{ $index + 1 }}</label>
                                         </div>
-
                                     </td>
                                     <td data-id="{{ $route->route_id }}" data-action="click" >
                                         <span>
@@ -120,19 +119,37 @@
                 let id = $(this).data('id');
                 if ($('#'+id).is(":checked")) {
                     $('#'+id).prop('checked', false);
-                    $('#adult_'+id).attr('name','');
-                    $('#child_'+id).attr('name','');
-                    $('#infant_'+id).attr('name','');
-                    $('#seat_'+id).attr('name','');
+                    setOffInput(id)
                 } else {
                     $('#'+id).prop('checked', true);
-                    $('#adult_'+id).attr('name','adult_'+id);
-                    $('#child_'+id).attr('name','child_'+id);
-                    $('#infant_'+id).attr('name','infant_'+id);
-                    $('#seat_'+id).attr('name','seat_'+id);
+                    setInput(id)
                 }
 
             });
         });
+
+        const routes = document.querySelectorAll('.route-select')
+        if(routes.length > 0) {
+            routes.forEach((item, index) => {
+                item.addEventListener('click', () => {
+                    if(item.checked) setInput(item.id)
+                    else setOffInput(item.id)
+                })
+            })
+        }
+
+        function setOffInput(id) {
+            $('#adult_'+id).attr('name','');
+            $('#child_'+id).attr('name','');
+            $('#infant_'+id).attr('name','');
+            $('#seat_'+id).attr('name','');
+        }
+
+        function setInput(id) {
+            $('#adult_'+id).attr('name','adult_'+id);
+            $('#child_'+id).attr('name','child_'+id);
+            $('#infant_'+id).attr('name','infant_'+id);
+            $('#seat_'+id).attr('name','seat_'+id);
+        }
     </script>
 @stop

@@ -63,7 +63,7 @@ class BookingsController extends Controller
         join customers c on bc.customer_id = c.id
     where :conditions order by b.created_at DESC';
 
-        $startDate = date('d/m/Y');
+        $startDate = date_format(date_create('2024-01-01'), 'd/m/Y');
         $endDate = date('d/m/Y');
 
         $conditionStr = '1=1';

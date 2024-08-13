@@ -1,6 +1,7 @@
 <?php
 namespace App\Helpers;
 
+use App\Mail\BookingMail;
 use App\Mail\VoidBooking;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -33,7 +34,7 @@ class EmailHelper
             'link' => URL::previous(),
         ];
 
-        $cc = ['win.tigerline@gmail.com', '168ferry@gmail.com', 'reservation@tigerlineferry.com'];
+        $cc = ['win.tigerline@gmail.com', '168ferry@gmail.com', 'RSVN_Tigerline@outlook.com'];
         Mail::to($customer->email)
             ->cc($cc)
             ->send(new TicketMail($mailData, $booking->bookingno));
@@ -78,6 +79,21 @@ class EmailHelper
             }
 
         }
+    }
+
+    public static function emailBooking($booking_id) {
+        $booking = Bookings::find($booking_id);
+        $customer = $booking->bookingCustomers[0];
+        $url = 'https://tigerlineferry.com/booking/payment/'.$booking->bookingno.'/'.$customer->email;
+
+        $mailData = [
+            'bookingno' => $booking->bookingno,
+            'customer_name' => sprintf('%s.%s',$customer->title,ucwords($customer->fullname)),
+            'payment' => $url,
+        ];
+
+        Mail::to($customer->email)
+            ->send(new BookingMail($mailData));
     }
 
 }

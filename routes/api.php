@@ -206,5 +206,6 @@ Route::prefix('v8')->group(function() {
     // Email Debuging /////////////////////////
     Route::controller(EmailController::class)->group(function() {
         Route::get('email/send/{booking_id}', 'sendEmail');
+        Route::get('email/booking/{booking_id}', 'sendBookingEmail');
     });
 });

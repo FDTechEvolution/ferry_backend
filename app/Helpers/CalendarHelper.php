@@ -23,16 +23,57 @@ class CalendarHelper
                 'day' => $startOfCalendar->format('j'),
                 'day_name' => $startOfCalendar->format('l'),
                 'day_of_week' => $startOfCalendar->format('N'),
-                'current_month'=>$startOfCalendar->format('n') == $month?'Y':'N',
-                'date'=>$startOfCalendar->format('Y-m-d'),
+                'current_month' => $startOfCalendar->format('n') == $month ? 'Y' : 'N',
+                'date' => $startOfCalendar->format('Y-m-d'),
                 'fulldate' => $startOfCalendar,
             ]);
 
             $startOfCalendar->addDay();
         }
 
-        $rows = array_chunk($data,7);
+        $rows = array_chunk($data, 7);
 
         return $rows;
+    }
+
+    public static function getYearCalendar($year = null)
+    {
+        $dt = Carbon::now();
+        $year = empty($year) ? $dt->year : $year;
+        $date = Carbon::createFromDate($year.'-01-01');
+
+        $items = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $startOfCalendar = $date->copy()->firstOfMonth()->startOfWeek(Carbon::SUNDAY);
+            $endOfCalendar = $date->copy()->lastOfMonth()->endOfWeek(Carbon::SATURDAY);
+            $month = $date->format('n');
+
+            //Build data to array
+            $data = [];
+            while ($startOfCalendar <= $endOfCalendar) {
+                array_push($data, [
+                    'day' => $startOfCalendar->format('j'),
+                    'day_name' => $startOfCalendar->format('l'),
+                    'day_of_week' => $startOfCalendar->format('N'),
+                    'current_month' => $startOfCalendar->format('n') == $month ? 'Y' : 'N',
+                    'date' => $startOfCalendar->format('Y-m-d'),
+                    'fulldate' => $startOfCalendar,
+                ]);
+
+                $startOfCalendar->addDay();
+            }
+
+            $rows = array_chunk($data, 7);
+
+            array_push($items,[
+                'calendar'=>$rows,
+                'name'=>$date->format('F').' '.$year
+            ]);
+            $date->addMonthsNoOverflow(1);
+        }
+
+        //Log::debug($items);
+
+        return $items;
     }
 }

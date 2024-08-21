@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Helpers\EmailHelper;
 use App\Helpers\RouteHelper;
-use App\Mail\VoidBooking;
+use App\Helpers\CalendarHelper;
 use App\Models\ApiMerchants;
 use App\Models\BookingRoutes;
-use App\Models\Bookings;
+use App\Models\Route;
+use App\Models\RouteDailyStatus;
 use App\Models\RouteSchedules;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -47,7 +48,9 @@ class RouteSchedulesController extends Controller
                 ->whereNull('api_merchant_id')
                 ->update(['isactive' => 'N']);
             */
+            $routes = Route::with('lastSchedule', 'partner', 'station_from', 'station_to')->get();
 
+            /*
             $routeSchedules = DB::table('routes')
                 ->select('sfrom.name as station_from_name', 'sto.name as station_to_name', 'routes.*', 'route_schedules.*', 'createdby.firstname as created_name', 'updatedby.firstname as updated_name', 'images.path')
                 ->join('stations as sfrom', 'routes.station_from_id', '=', 'sfrom.id')
@@ -70,6 +73,7 @@ class RouteSchedulesController extends Controller
             $routeSchedules = $routeSchedules->orderBy('sfrom.name', 'ASC')
                 ->orderBy('routes.depart_time', 'ASC')
                 ->get();
+            */
 
         } else {
             $title = 'API Route';
@@ -102,7 +106,7 @@ class RouteSchedulesController extends Controller
 
         //
 
-        return view('pages.route_schedules.index', ['routeSchedules' => $routeSchedules, 'merchant_id' => $merchant_id, 'title' => $title, 'stationFroms' => $stationFroms, 'stationTos' => $stationTos, 'stationFromId' => $stationFromId, 'stationToId' => $stationToId, 'apiMerchant' => $apiMerchant, 'countBooking' => $countBooking]);
+        return view('pages.route_schedules.index', ['routeSchedules' => $routeSchedules, 'merchant_id' => $merchant_id, 'title' => $title, 'stationFroms' => $stationFroms, 'stationTos' => $stationTos, 'stationFromId' => $stationFromId, 'stationToId' => $stationToId, 'apiMerchant' => $apiMerchant, 'countBooking' => $countBooking, 'routes' => $routes]);
     }
 
     /**
@@ -152,6 +156,7 @@ class RouteSchedulesController extends Controller
             'type' => 'required|string',
             'daterange' => 'required|string',
         ]);
+        //dd($request->all());
 
         $dates = explode('-', $request->daterange);
         $startDate = trim($dates[0]);
@@ -174,8 +179,6 @@ class RouteSchedulesController extends Controller
         //Check bookingAffected
         $isHasEffectBookingMaster = false;
 
-
-        $routeSchedule = null;
         foreach ($route_ids as $index => $route_id) {
             $isHasEffectBooking = false;
 
@@ -205,13 +208,61 @@ class RouteSchedulesController extends Controller
                 'api_merchant_id' => $merchant_id,
                 'created_by' => Auth::id(),
             ]);
-        }
 
+        }
         if ($isHasEffectBookingMaster) {
-            return redirect()->route('routeSchedules.bookingAffected', ['merchant_id' => $merchant_id]);
+            //return redirect()->route('routeSchedules.bookingAffected', ['merchant_id' => $merchant_id]);
         }
 
-        return redirect()->route('routeSchedules.index', ['merchant_id' => $merchant_id])->withSuccess('');
+        return redirect()->route('routeSchedules.jobProcess', ['haseff' => $isHasEffectBookingMaster])->withSuccess('');
+        //return redirect()->route('routeSchedules.index', ['merchant_id' => null])->withSuccess('');
+    }
+
+    public function jobProcess()
+    {
+        $isHasEffectBookingMaster = request()->haseff;
+
+        $routeSchedules = RouteSchedules::where('isjobsuccess', 'N')->with('route')->get();
+        //dd($routeSchedules);
+        return view('pages.route_schedules.job_process', ['routeSchedules' => $routeSchedules, 'isHasEffectBookingMaster' => $isHasEffectBookingMaster, 'title' => 'Make Calendar process...']);
+
+    }
+
+    public function jobRun($id)
+    {
+        //Make daily records
+        $routeSchedule = RouteSchedules::where('id',$id)->where('isjobsuccess','N')->first();
+
+        if(!empty($routeSchedule)){
+            $sd = $routeSchedule->start_datetime;
+            $ed = $routeSchedule->end_datetime;
+            $routeId = $routeSchedule->route_id;
+            $t = ($routeSchedule->type == 'OPEN') ? 'Y' : 'N';
+
+            $startDay = Carbon::parse($sd);
+            $endDay = Carbon::parse($ed);
+            $period = $startDay->range($endDay, 1, 'day');
+
+            foreach ($period as $date) {
+                //Log::debug($date);
+                $date = $date->format('Y-m-d');
+
+                RouteDailyStatus::updateOrCreate(
+                    ['route_id' => $routeId, 'date' => $date],
+                    [
+                        'route_id' => $routeId,
+                        'date' => $date,
+                        'isopen' => $t,
+                    ],
+                );
+            }
+
+            $routeSchedule->isjobsuccess = 'Y';
+            $routeSchedule->save();
+
+        }
+
+        return response()->json(['result' => true, 'data' => ''], 200);
     }
 
     /**
@@ -219,6 +270,19 @@ class RouteSchedulesController extends Controller
      */
     public function show(string $id)
     {
+        $routeId = $id;
+        $route = Route::where('id', $routeId)->with('station_from', 'station_to', 'routeDailyStatuses')->first();
+
+        $routeDailyMaps = [];
+        if (!empty($route->routeDailyStatuses)) {
+            foreach ($route->routeDailyStatuses as $routeDailyStatus) {
+                $routeDailyMaps[$routeDailyStatus->date] = $routeDailyStatus->isopen;
+            }
+        }
+
+
+        $yearCalendar = CalendarHelper::getYearCalendar();
+        return view('pages.route_schedules.show', ['yearCalendar' => $yearCalendar, 'route' => $route, 'routeDailyMaps' => $routeDailyMaps]);
 
     }
 
@@ -249,11 +313,11 @@ class RouteSchedulesController extends Controller
                 $booking->isconflict = 'Y';
                 $booking->save();
                 */
-                array_push($bookingIds,$item->id);
+                array_push($bookingIds, $item->id);
             }
 
-            if(sizeof($datas) ==0){
-                $routeSchedule->isconflict ='N';
+            if (sizeof($datas) == 0) {
+                $routeSchedule->isconflict = 'N';
                 $routeSchedule->isactive = 'Y';
                 $routeSchedule->save();
             }
@@ -261,7 +325,7 @@ class RouteSchedulesController extends Controller
 
         $bookingIds = json_decode(json_encode($bookingIds), true);
 
-        $sql = 'select b.id,br.id as booking_route_id,b.created_at,b.bookingno,b.adult_passenger,b.child_passenger,b.infant_passenger,b.trip_type,concat(sf.nickname,"-",st.nickname) as route,br.traveldate,b.ispayment,b.book_channel,u.firstname,r.depart_time,r.arrive_time,b.totalamt from bookings b join booking_routes br on b.id = br.booking_id join routes r on br.route_id = r.id join stations sf on r.station_from_id = sf.id join stations st on r.station_to_id = st.id left join users u on b.user_id = u.id where br.id IN ("'.implode('","',$bookingIds).'") and b.status = "CO" order by br.traveldate ASC,b.created_at ASC  ';
+        $sql = 'select b.id,br.id as booking_route_id,b.created_at,b.bookingno,b.adult_passenger,b.child_passenger,b.infant_passenger,b.trip_type,concat(sf.nickname,"-",st.nickname) as route,br.traveldate,b.ispayment,b.book_channel,u.firstname,r.depart_time,r.arrive_time,b.totalamt from bookings b join booking_routes br on b.id = br.booking_id join routes r on br.route_id = r.id join stations sf on r.station_from_id = sf.id join stations st on r.station_to_id = st.id left join users u on b.user_id = u.id where br.id IN ("' . implode('","', $bookingIds) . '") and b.status = "CO" order by br.traveldate ASC,b.created_at ASC  ';
 
         $bookings = DB::select($sql);
         $bookings = json_decode(json_encode($bookings), true);
@@ -273,14 +337,15 @@ class RouteSchedulesController extends Controller
         return view('pages.route_schedules.booking_effect', ['merchant_id' => $merchant_id, 'bookings' => $bookings]);
     }
 
-    public function sendVoidBooking(Request $request){
+    public function sendVoidBooking(Request $request)
+    {
         $message = $request->message;
         $booking_route_ids = $request->booking_route_id;
         $merchant_id = $request->merchant_id;
 
-        foreach($booking_route_ids as $booking_route_id){
-            EmailHelper::voidBoking($booking_route_id,$message);
-            $bookingRoute = BookingRoutes::where('id',$booking_route_id)->with('booking')->first();
+        foreach ($booking_route_ids as $booking_route_id) {
+            EmailHelper::voidBoking($booking_route_id, $message);
+            $bookingRoute = BookingRoutes::where('id', $booking_route_id)->with('booking')->first();
             $booking = $bookingRoute->booking;
 
             $booking->status = 'VO';

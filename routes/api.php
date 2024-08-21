@@ -22,15 +22,6 @@ use App\Http\Controllers\Api\PremiumFlexController;
 use App\Http\Controllers\Api\EmailController;
 use App\Http\Controllers\Api\FeeManageController;
 
-// 7 Controller
-use App\Http\Controllers\Api\Seven\BookingController as SevenBooking;
-use App\Http\Controllers\Api\Seven\StationController as SevenStation;
-use App\Http\Controllers\Api\Seven\RouteController as SevenRoute;
-
-// Agent Controller
-use App\Http\Controllers\Api\Agent\RouteController as AgentRoute;
-use App\Http\Controllers\Api\Agent\StationController as AgentStation;
-use App\Http\Controllers\Api\Agent\BookingController as AgentBooking;
 
 /*
 |--------------------------------------------------------------------------
@@ -141,6 +132,8 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
 
 
 // Route Api for 7seven
+
+/*
 Route::middleware(['seven'])->prefix('v1')->group(function() {
 
     // Route
@@ -168,26 +161,27 @@ Route::middleware(['seven'])->prefix('v1')->group(function() {
         });
     });
 });
+*/
 
 
 // Route Api for agent
-Route::middleware(['agent'])->prefix('agent')->group(function() {
-
+Route::middleware(['agent'])->prefix('v1')->group(function() {
+    //Log::debug('agen');
     // Route
-    Route::controller(AgentRoute::class)->group(function() {
+    Route::controller(\App\Http\Controllers\Api\Agent\RouteController::class)->group(function() {
         Route::get('routes', 'getRoutes');
         Route::get('route/get/{from}/{to}', 'getRouteByStation');
     });
 
     // Station
-    Route::controller(AgentStation::class)->group(function() {
+    Route::controller(\App\Http\Controllers\Api\Agent\StationController::class)->group(function() {
         Route::get('stations', 'getStationFromRoute');
         Route::get('stations/depart', 'stationDepart');
         Route::get('stations/arrive/{from_id}', 'stationArrive');
     });
 
     // Booking
-    Route::controller(AgentBooking::class)->group(function() {
+    Route::controller(\App\Http\Controllers\Api\Agent\BookingController::class)->group(function() {
         Route::prefix('booking')->group(function() {
             Route::post('create', 'store');
             Route::post('complete', 'complete');

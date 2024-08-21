@@ -17,12 +17,13 @@
                         class="fi fi-arrow-left"></i> Back</a>
                 <a href="{{ route('routeSchedules.create') }}?merchant_id={{ $merchant_id }}"
                     class="btn button-orange-bg">Create New</a>
+
+
             @endif
 
             @if ($countBooking > 0)
-                <a href="{{ route('routeSchedules.bookingAffected', ['routeSchedules' => $merchant_id]) }}?merchant_id={{ $merchant_id }}"
-                    class="btn btn-outline-danger"><span class="animate-blink text-danger"><i
-                            class="fa-regular fa-circle-dot"></i></span> Check Booking Affected</a>
+                <a href="{{ route('routeSchedules.bookingAffected',['routeSchedules'=>$merchant_id ]) }}?merchant_id={{ $merchant_id }}"
+                    class="btn btn-outline-danger"><span class="animate-blink text-danger"><i class="fa-regular fa-circle-dot"></i></span> Check Booking Affected</a>
             @endif
         </div>
     </div>
@@ -85,59 +86,79 @@
                         <tr>
                             <th>Route</th>
                             <th>Time</th>
-                            <th>Last action</th>
+                            <th>Effective date</th>
                             <th>Timestamp</th>
-                            <th></th>
+
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($routes as $index => $route)
-                            @if (!empty($route->lastSchedule))
-                                <tr>
-                                    <td>
-                                        {{ $route->station_from->name }} <i
-                                            class="fa-solid fa-angles-right px-2 fa-1x"></i>
-                                        {{ $route->station_to->name }}
-                                    </td>
-                                    <td>
-                                        <span class="">{{ date('H:i', strtotime($route->depart_time)) }}<i
-                                                class="fa-solid fa-angles-right px-2 fa-1x"></i>{{ date('H:i', strtotime($route->arrive_time)) }}
-                                        </span>
-                                    </td>
-                                    <td>
+                        @php
+                            $route_id = '';
+                        @endphp
+                        @foreach ($routeSchedules as $index => $routeSchedule)
+                            <tr>
+                                <td>
+                                    @if ($route_id != $routeSchedule->route_id)
+                                        <p class="pb-0 mb-0">
+                                            <img src="{{ $routeSchedule->path }}" class="rounded-circle" width="20" />
+                                            {{ $routeSchedule->station_from_name }}
+                                            <i class="fa-solid fa-angles-right px-2 fa-1x"></i>
+                                            {{ $routeSchedule->station_to_name }}
+                                        </p>
+                                    @endif
+                                </td>
+                                <td>
+                                    <span class="">{{ date('H:i', strtotime($routeSchedule->depart_time)) }}<i
+                                            class="fa-solid fa-angles-right px-2 fa-1x"></i>{{ date('H:i', strtotime($routeSchedule->arrive_time)) }}
+                                    </span>
+                                </td>
+                                <td>
+                                    @if ($routeSchedule->isactive == 'Y')
                                         <p class="p-0 m-0">
                                             <span
-                                                class=" @if ($route->lastSchedule->type == 'CLOSE') text-danger @else text-success @endif">{{ $route->lastSchedule->type }}
-                                            {{ date('d M Y', strtotime($route->lastSchedule->start_datetime)) }} -
-                                            {{ date('d M Y', strtotime($route->lastSchedule->end_datetime)) }}
+                                                class=" @if ($routeSchedule->type == 'CLOSE') text-danger @else text-success @endif">{{ $routeSchedule->type }}
+                                            {{ date('d M Y', strtotime($routeSchedule->start_datetime)) }} -
+                                            {{ date('d M Y', strtotime($routeSchedule->end_datetime)) }}
                                         </span>
                                         </p>
-                                    </td>
-                                    <td>
-                                        <small class="d-flex">Created By {{ $route->lastSchedule->created_name }}:
-                                            {{ date('D,d M Y H:i', strtotime($route->lastSchedule->created_at)) }}</small>
-                                        @if (!is_null($route->lastSchedule->updated_name) && $route->lastSchedule->updated_name != '')
-                                            <small>Updated By {{ $route->lastSchedule->updated_name }}:
-                                                {{ date('D,d M Y H:i', strtotime($route->lastSchedule->updated_at)) }}</small>
-                                        @endif
-                                    </td>
-                                    <td class="text-end">
-                                        <a href="{{ route('routeSchedules.show', ['routeSchedule' => $route->id]) }}"
-                                            data-ajax-modal-size="modal-xl" data-ajax-modal-centered="true" data-ajax-modal-callback-function=""
-                                            data-ajax-modal-backdrop="static" class="me-2 text-primary js-ajax-modal">
-                                            <svg width="18px" height="18px" xmlns="http://www.w3.org/2000/svg"
-                                                fill="currentColor" class="bi bi-calendar-week" viewBox="0 0 16 16">
-                                                <path
-                                                    d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z">
-                                                </path>
-                                                <path
-                                                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z">
-                                                </path>
-                                            </svg>
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endif
+                                        <small>{{ $routeSchedule->description }}</small>
+                                    @else
+                                        <p class="p-0 m-0 text-gray-400">
+                                            <span class="text-warning pe-2">Auto disable</span><span
+                                                class="badge bg-secondary text-dark">{{ $routeSchedule->type }}</span>
+                                            {{ date('D,d M Y', strtotime($routeSchedule->start_datetime)) }} -
+                                            {{ date('D,d M Y', strtotime($routeSchedule->end_datetime)) }}
+                                        </p>
+                                        <small class="text-gray-400">{{ $routeSchedule->description }}</small>
+                                    @endif
+                                </td>
+
+                                <td>
+                                    <small class="d-flex">Created By {{ $routeSchedule->created_name }}:
+                                        {{ date('D,d M Y H:i', strtotime($routeSchedule->created_at)) }}</small>
+                                    @if (!is_null($routeSchedule->updated_name) && $routeSchedule->updated_name != '')
+                                        <small>Updated By {{ $routeSchedule->updated_name }}:
+                                            {{ date('D,d M Y H:i', strtotime($routeSchedule->updated_at)) }}</small>
+                                    @endif
+                                </td>
+                                <td class="text-end" style="display: none;">
+                                    @if ($routeSchedule->isactive == 'Y')
+                                        <x-action-edit class="me-2" :url="route('routeSchedules.edit', [
+                                            'routeSchedule' => $routeSchedule->id,
+                                        ])" id="btn-section-edit" />
+                                        <x-delete-button :url="route('routeSchedules.destroy', [
+                                            'routeSchedule' => $routeSchedule->id,
+                                        ])" :id="$routeSchedule->id" />
+                                    @else
+                                        <x-delete-button :url="route('routeSchedules.destroy', [
+                                            'routeSchedule' => $routeSchedule->id,
+                                        ])" :id="$routeSchedule->id" />
+                                    @endif
+                                </td>
+                            </tr>
+                            @php
+                                $route_id = $routeSchedule->route_id;
+                            @endphp
                         @endforeach
                     </tbody>
                 </table>

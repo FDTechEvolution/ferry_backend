@@ -27,7 +27,8 @@ class RouteSchedules extends Model
         'api_merchant_id',
         'created_by',
         'updated_by',
-        'isconflict'
+        'isconflict',
+        'isjobsuccess'
     ];
 
     public function route() {

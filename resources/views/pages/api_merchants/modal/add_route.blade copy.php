@@ -3,29 +3,18 @@
 @section('content')
     <div class="modal-header">
         <h4 class="modal-title m-0">
-            Add Route to Agent
+            Update Route
         </h4>
-
-
 
         <button type="button" class="close pointer" data-bs-dismiss="modal" aria-label="Close">
             <span class="fi fi-close " aria-hidden="true"></span>
         </button>
-
-
     </div>
 
     <form novalidate class="bs-validate" id="frm" method="POST" action="{{ route('api.storeroute', ['id' => $id]) }}">
         @csrf
         <input type="hidden" name="api_merchant_id" value="{{ $id }}">
         <div class="modal-body p-2">
-            <div class="row">
-                <div class="col-12">
-                    <div class="alert alert-primary" role="alert">
-                        เส้นทางที่แสดง คือเส้นทางที่ยังไม่เคยเพิ่มใน Agent นี้มาก่อน
-                    </div>
-                </div>
-            </div>
             <div class="row">
                 <div class="col-12">
                     <table class="table table-sm table-datatable table-align-middle table-hover"
@@ -35,7 +24,7 @@
                         data-lng-processing="Processing..." data-lng-search="Search..."
                         data-lng-norecords="No matching records found"
                         data-lng-sort-ascending=": activate to sort column ascending"
-                        data-lng-sort-descending=": activate to sort column descending" data-main-search="false"
+                        data-lng-sort-descending=": activate to sort column descending" data-main-search="true"
                         data-column-search="false" data-row-reorder="false" data-col-reorder="false" data-responsive="true"
                         data-header-fixed="false" data-select-onclick="false" data-enable-paging="true"
                         data-enable-col-sorting="false" data-autofill="false" data-group="false" data-items-per-page="10"
@@ -45,10 +34,12 @@
                             <tr class="small">
                                 <th class="text-center">#</th>
                                 <th>Partner</th>
-                                <th>Depart Station</th>
-                                <th>Arrive Station</th>
+                                <th>Route</th>
                                 <th class="text-center">Arrive/Depart Time</th>
-
+                                <th class="text-center">Adult</th>
+                                <th class="text-center">Child</th>
+                                <th class="text-center">Infant</th>
+                                <th class="text-center">Seat</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -72,12 +63,38 @@
 
                                         </span>
                                     </td>
-                                    <td data-id="{{ $route->route_id }}" data-action="click">{{ $route->station_from }}</td>
-                                    <td data-id="{{ $route->route_id }}" data-action="click">{{ $route->station_to }}</td>
+                                    <td data-id="{{ $route->route_id }}" data-action="click">{{ $route->route_name }}</td>
                                     <td class="text-center" data-id="{{ $route->route_id }}" data-action="click">
                                         {{ date('H:i', strtotime($route->depart_time)) }}/{{ date('H:i', strtotime($route->arrive_time)) }}
                                     </td>
-
+                                    <td>
+                                        <div class="col-auto">
+                                            <label class="sr-only" for="adult_{{$route->route_id}}">Regular Price</label>
+                                            <input type="number" class="form-control form-control-sm text-center" id="adult_{{$route->route_id}}"
+                                                placeholder="" name="" value="" step="any">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto">
+                                            <label class="sr-only" for="child_{{$route->route_id}}">Child Price</label>
+                                            <input type="number" class="form-control form-control-sm text-center" id="child_{{$route->route_id}}"
+                                                placeholder="" name="" value="" step="any">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto">
+                                            <label class="sr-only" for="infant_{{$route->route_id}}">Infant Price</label>
+                                            <input type="number" class="form-control form-control-sm text-center" id="infant_{{$route->route_id}}"
+                                                placeholder="" name="" value="" step="any">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto">
+                                            <label class="sr-only" for="seat_{{$route->route_id}}">Seat</label>
+                                            <input type="number" class="form-control form-control-sm text-center" id="seat_{{$route->route_id}}"
+                                                placeholder="" name="" value="">
+                                        </div>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

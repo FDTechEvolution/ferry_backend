@@ -164,32 +164,7 @@
                                             </td>
                                         </tr>
 
-                                        @if (sizeof($route->lastSchedule) > 0)
-                                            @php
-                                                $routeSchedule = $route->lastSchedule[0];
-                                            @endphp
-                                            <tr>
-                                                <td colspan="3" class="p-0">
-                                                    @if ($routeSchedule->type == 'CLOSE')
-                                                        <span class="badge bg-warning-soft">Close on
-                                                            {{ date('D,d M Y', strtotime($routeSchedule->start_datetime)) }}
-                                                            -
-                                                            {{ date('D,d M Y', strtotime($routeSchedule->end_datetime)) }}</span>
-                                                    @else
-                                                        <span class="badge bg-success-soft">Open on
-                                                            {{ date('D,d M Y', strtotime($routeSchedule->start_datetime)) }}
-                                                            -
-                                                            {{ date('D,d M Y', strtotime($routeSchedule->end_datetime)) }}</span>
-                                                    @endif
 
-                                                    <a class="px-2 text-warning"
-                                            href="{{ route('routeSchedules.index',['station_from_id'=>$route['station_from']['id'],'station_to_id'=>$route['station_to']['id']]) }}"
-                                            data-bs-toggle="tooltip" data-bs-placement="top"
-                                            title="All Route Schedule"><i class="fa-regular fa-pen-to-square"></i></a>
-
-                                                </td>
-                                            </tr>
-                                        @endif
                                     </table>
 
                                 </td>

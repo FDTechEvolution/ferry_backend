@@ -43,7 +43,7 @@ class Route extends Model
     }
 
     public function lastSchedule(){
-        return $this->hasMany(RouteSchedules::class,'route_id','id')->latest();
+        return $this->hasOne(RouteSchedules::class,'route_id','id')->latest();
     }
 
     public function partner() {
@@ -101,5 +101,9 @@ class Route extends Model
 
     public function booking_extra() {
         return $this->belongsToMany(BookingExtras::class, 'booking_routes', 'route_id', 'id');
+    }
+
+    public function routeDailyStatuses(){
+        return $this->hasMany(RouteDailyStatus::class, 'route_id', 'id')->orderBy('date','ASC');
     }
 }

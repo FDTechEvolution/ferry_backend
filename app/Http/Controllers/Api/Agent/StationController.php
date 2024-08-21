@@ -10,34 +10,47 @@ use App\Http\Resources\StationResource;
 use App\Models\Station;
 use App\Models\Route;
 use App\Models\ApiRoutes;
+use App\Models\ApiMerchants;
 
 class StationController extends Controller
 {
-    public function getStationFromRoute(Request $request) {
-        $merchant = $request->attributes->get('merchant');
-        $routes = ApiRoutes::where('api_merchant_id', $merchant)->with(['route'])->get();
+    protected $SEVEN;
+
+    public function __construct() {
+        //$this->SEVEN = ApiMerchants::where('code', 'SEVEN')->where('isactive', 'Y')->first();
+    }
+
+    public function getStationFromRoute() {
+        $routes = Route::where('isactive', 'Y')->where('status', 'CO')
+                ->with('station_from', 'station_to')
+                ->get();
+        //Log::debug($routes);
 
         $stations['from'] = $this->stationCollection($routes, 'station_from');
         $stations['to'] = $this->stationCollection($routes, 'station_to');
         return response()->json(['data' => $stations], 200);
     }
 
-    public function stationDepart(Request $request) {
-        $merchant = $request->attributes->get('merchant');
-        $routes = ApiRoutes::where('api_merchant_id', $merchant)->with(['route'])->get();
+    public function stationDepart() {
+        //if(isset($this->SEVEN)) {
+            $routes = ApiRoutes::where('api_merchant_id', $this->SEVEN->id)->with(['route'])->get();
+            $stations = $this->stationCollection($routes, 'station_from');
+            return response()->json(['data' => $stations], 200);
+        //}
 
-        $stations = $this->stationCollection($routes, 'station_from');
-        return response()->json(['data' => $stations], 200);
+        //$this->returnUnauthorized();
     }
 
-    public function stationArrive(Request $request, string $from_id = null) {
-        $merchant = $request->attributes->get('merchant');
-        $_routes = ApiRoutes::where('api_merchant_id', $merchant)->with(['route'])->get();
+    public function stationArrive(string $from_id = null) {
+        //if(isset($this->SEVEN)) {
+            $_routes = ApiRoutes::where('api_merchant_id', $this->SEVEN->id)->with(['route'])->get();
+            $routes = $this->stationArriveFrom($_routes, $from_id);
 
-        $routes = $this->stationArriveFrom($_routes, $from_id);
+            $stations = $this->stationCollection($routes, 'station_to');
+            return response()->json(['data' => $stations], 200);
+        //}
 
-        $stations = $this->stationCollection($routes, 'station_to');
-        return response()->json(['data' => $stations], 200);
+       // $this->returnUnauthorized();
     }
 
     private function stationArriveFrom($route, $from_id) {
@@ -51,11 +64,20 @@ class StationController extends Controller
         return $_route;
     }
 
+    private function returnUnauthorized() {
+        return response()->json(['data' => 'Unauthorized'], 401);
+    }
+
     private function stationCollection($routes, $station) {
         $stations = [];
 
         foreach($routes as $item) {
-            $route = $item->route;
+            $route = $item;
+            //Log::debug($item);
+            if(!isset($route->$station->section)){
+                continue;
+                //Log::debug($item);
+            }
             if($route->$station->section->isactive == 'Y') {
                 $_station = [
                     'id' => $route->$station->id,

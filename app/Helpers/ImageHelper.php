@@ -9,7 +9,7 @@ class ImageHelper
 {
     //public static $DefaultPath = '/uploads';
 
-    public static function upload($file, $subFolder = '', $isrename = 'Y')
+    public static function upload($file, $subFolder = '', $isrename = false,$newName = '')
     {
         $storePath = 'uploads';
 
@@ -18,6 +18,10 @@ class ImageHelper
         }
 
         $imageName = date('YmdHi').'.'.$file->getClientOriginalExtension();
+
+        if($isrename){
+            $imageName = $newName.'.'.$file->getClientOriginalExtension();
+        }
 
         /*
         $path = $file->storeAs(

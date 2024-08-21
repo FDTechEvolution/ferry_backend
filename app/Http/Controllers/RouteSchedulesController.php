@@ -7,6 +7,7 @@ use App\Helpers\RouteHelper;
 use App\Helpers\CalendarHelper;
 use App\Models\ApiMerchants;
 use App\Models\BookingRoutes;
+use App\Models\Partners;
 use App\Models\Route;
 use App\Models\RouteDailyStatus;
 use App\Models\RouteSchedules;
@@ -28,13 +29,14 @@ class RouteSchedulesController extends Controller
         $apiMerchant = null;
         $stationFromId = request()->station_from_id;
         $stationToId = request()->station_to_id;
+        $partnerId = request()->partner_id;
 
         $routeSchedules = [];
         $title = 'Route';
 
         $stationFroms = RouteHelper::getStationFrom();
-
         $stationTos = RouteHelper::getStationTo($stationFromId);
+        $partners = Partners::where('isactive','Y')->orderBy('name','ASC')->get();
 
         $countBooking = RouteSchedules::where('isconflict', 'Y')->count();
 
@@ -48,32 +50,20 @@ class RouteSchedulesController extends Controller
                 ->whereNull('api_merchant_id')
                 ->update(['isactive' => 'N']);
             */
-            $routes = Route::with('lastSchedule', 'partner', 'station_from', 'station_to')->get();
-
-            /*
-            $routeSchedules = DB::table('routes')
-                ->select('sfrom.name as station_from_name', 'sto.name as station_to_name', 'routes.*', 'route_schedules.*', 'createdby.firstname as created_name', 'updatedby.firstname as updated_name', 'images.path')
-                ->join('stations as sfrom', 'routes.station_from_id', '=', 'sfrom.id')
-                ->join('stations as sto', 'routes.station_to_id', '=', 'sto.id')
-                ->join('route_schedules', 'routes.id', '=', 'route_schedules.route_id')
-                ->leftJoin('users as createdby', 'route_schedules.created_by', 'createdby.id')
-                ->leftJoin('users as updatedby', 'route_schedules.updated_by', 'updatedby.id')
-                ->leftJoin('partners', 'routes.partner_id', 'partners.id')
-                ->leftJoin('images', 'partners.image_id', 'images.id')
-                ->whereNull('route_schedules.api_merchant_id');
-
+            $routes = Route::with('lastSchedule', 'partner', 'station_from', 'station_to');
             if (!is_null($stationFromId) && $stationFromId != 'all') {
-                $routeSchedules = $routeSchedules->where('routes.station_from_id', $stationFromId);
+                $routes = $routes->where('routes.station_from_id', $stationFromId);
             }
 
             if (!is_null($stationToId) && $stationToId != 'all') {
-                $routeSchedules = $routeSchedules->where('routes.station_to_id', $stationToId);
+                $routes = $routes->where('routes.station_to_id', $stationToId);
             }
 
-            $routeSchedules = $routeSchedules->orderBy('sfrom.name', 'ASC')
-                ->orderBy('routes.depart_time', 'ASC')
-                ->get();
-            */
+            if (!is_null($partnerId) && $partnerId != 'all') {
+                $routes = $routes->where('routes.partner_id', $partnerId);
+            }
+
+            $routes = $routes->get();
 
         } else {
             $title = 'API Route';
@@ -106,7 +96,7 @@ class RouteSchedulesController extends Controller
 
         //
 
-        return view('pages.route_schedules.index', ['routeSchedules' => $routeSchedules, 'merchant_id' => $merchant_id, 'title' => $title, 'stationFroms' => $stationFroms, 'stationTos' => $stationTos, 'stationFromId' => $stationFromId, 'stationToId' => $stationToId, 'apiMerchant' => $apiMerchant, 'countBooking' => $countBooking, 'routes' => $routes]);
+        return view('pages.route_schedules.index', ['routeSchedules' => $routeSchedules, 'merchant_id' => $merchant_id, 'title' => $title, 'stationFroms' => $stationFroms, 'stationTos' => $stationTos, 'stationFromId' => $stationFromId, 'stationToId' => $stationToId, 'apiMerchant' => $apiMerchant, 'countBooking' => $countBooking, 'routes' => $routes,'partners'=>$partners,'partnerId'=>$partnerId]);
     }
 
     /**
@@ -170,10 +160,16 @@ class RouteSchedulesController extends Controller
             $merchant_id = $request->merchant_id;
         }
 
-
-        $route_ids = $request->route_id;
-        if (!isset($route_ids) || sizeof($route_ids) == 0) {
+        $route_ids = [];
+        if ($request->station_from_id == 'all' && $request->station_to_id == 'all') {
+            $routes = Route::where('isactive', 'Y')->get();
+            foreach ($routes as $route) {
+                array_push($route_ids, $route->id);
+            }
+        } elseif (!isset($request->route_id)) {
             return redirect()->route('routeSchedules.index', ['merchant_id' => $merchant_id]);
+        } else {
+            $route_ids = $request->route_id;
         }
 
         //Check bookingAffected
@@ -231,9 +227,9 @@ class RouteSchedulesController extends Controller
     public function jobRun($id)
     {
         //Make daily records
-        $routeSchedule = RouteSchedules::where('id',$id)->where('isjobsuccess','N')->first();
+        $routeSchedule = RouteSchedules::where('id', $id)->where('isjobsuccess', 'N')->first();
 
-        if(!empty($routeSchedule)){
+        if (!empty($routeSchedule)) {
             $sd = $routeSchedule->start_datetime;
             $ed = $routeSchedule->end_datetime;
             $routeId = $routeSchedule->route_id;

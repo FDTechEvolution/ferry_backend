@@ -58,6 +58,17 @@
                     <label for="station_to_id">Station To</label>
                 </div>
             </div>
+            <div class="col-12 col-lg-4">
+                <div class="form-floating mb-3">
+                    <select class="form-select" id="partner_id" name="partner_id" aria-label="">
+                        <option value="all" selected>-- All --</option>
+                        @foreach ($partners as $partner)
+                            <option value="{{ $partner->id }}" @selected($partnerId == $partner->id)>{{ $partner->name }}</option>
+                        @endforeach
+                    </select>
+                    <label for="partner_id">Partner</label>
+                </div>
+            </div>
         </div>
     </form>
     <hr>
@@ -83,6 +94,7 @@
 
                     <thead class="bg-light">
                         <tr>
+                            <th>Partner</th>
                             <th>Route</th>
                             <th>Time</th>
                             <th>Last action</th>
@@ -91,13 +103,25 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @php
+                            $routeIdTxt = '';
+                        @endphp
                         @foreach ($routes as $index => $route)
                             @if (!empty($route->lastSchedule))
                                 <tr>
+                                    <td class="text-center p-0">
+                                        @if (!is_null($route->partner))
+                                            <img src="{{ asset($route->partner->image->path) }}" width="25"
+                                                class="rounded-circle" alt="{{ $route->partner->name }}" />
+                                        @endif
+                                    </td>
                                     <td>
-                                        {{ $route->station_from->name }} <i
-                                            class="fa-solid fa-angles-right px-2 fa-1x"></i>
-                                        {{ $route->station_to->name }}
+                                        @if ($routeIdTxt != ($route->station_from->id . $route->station_to->id))
+                                            {{ $route->station_from->name }} <i
+                                                class="fa-solid fa-angles-right px-2 fa-1x"></i>
+                                            {{ $route->station_to->name }}
+                                        @endif
+
                                     </td>
                                     <td>
                                         <span class="">{{ date('H:i', strtotime($route->depart_time)) }}<i
@@ -108,14 +132,13 @@
                                         <p class="p-0 m-0">
                                             <span
                                                 class=" @if ($route->lastSchedule->type == 'CLOSE') text-danger @else text-success @endif">{{ $route->lastSchedule->type }}
-                                            {{ date('d M Y', strtotime($route->lastSchedule->start_datetime)) }} -
-                                            {{ date('d M Y', strtotime($route->lastSchedule->end_datetime)) }}
-                                        </span>
+                                                {{ date('d M Y', strtotime($route->lastSchedule->start_datetime)) }} -
+                                                {{ date('d M Y', strtotime($route->lastSchedule->end_datetime)) }}
+                                            </span>
                                         </p>
                                     </td>
                                     <td>
-                                        <small class="d-flex">Created By {{ $route->lastSchedule->created_name }}:
-                                            {{ date('D,d M Y H:i', strtotime($route->lastSchedule->created_at)) }}</small>
+                                        <small class="d-flex">{{ date('D,d M Y H:i', strtotime($route->lastSchedule->created_at)) }}</small>
                                         @if (!is_null($route->lastSchedule->updated_name) && $route->lastSchedule->updated_name != '')
                                             <small>Updated By {{ $route->lastSchedule->updated_name }}:
                                                 {{ date('D,d M Y H:i', strtotime($route->lastSchedule->updated_at)) }}</small>
@@ -123,8 +146,9 @@
                                     </td>
                                     <td class="text-end">
                                         <a href="{{ route('routeSchedules.show', ['routeSchedule' => $route->id]) }}"
-                                            data-ajax-modal-size="modal-xl" data-ajax-modal-centered="true" data-ajax-modal-callback-function=""
-                                            data-ajax-modal-backdrop="static" class="me-2 text-primary js-ajax-modal">
+                                            data-ajax-modal-size="modal-xl" data-ajax-modal-centered="true"
+                                            data-ajax-modal-callback-function="" data-ajax-modal-backdrop="static"
+                                            class="me-2 text-primary js-ajax-modal">
                                             <svg width="18px" height="18px" xmlns="http://www.w3.org/2000/svg"
                                                 fill="currentColor" class="bi bi-calendar-week" viewBox="0 0 16 16">
                                                 <path
@@ -137,6 +161,10 @@
                                         </a>
                                     </td>
                                 </tr>
+
+                                @php
+                                    $routeIdTxt = ($route->station_from->id . $route->station_to->id);
+                                @endphp
                             @endif
                         @endforeach
                     </tbody>
@@ -162,6 +190,11 @@
             });
 
             $('#station_to_id').on('change', function() {
+                $('#page-loader').show();
+                $('#frm-search').submit();
+            });
+
+            $('#partner_id').on('change', function() {
                 $('#page-loader').show();
                 $('#frm-search').submit();
             });

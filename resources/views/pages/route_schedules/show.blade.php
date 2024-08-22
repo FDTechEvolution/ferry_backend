@@ -43,9 +43,9 @@
                             @foreach ($monthCalendar['calendar'] as $row)
                                 <tr>
                                     @foreach ($row as $col)
-                                        <td class="text-end @if (isset($routeDailyMaps[$col['date']]))
+                                        <td class="text-end @if (isset($routeDailyMaps[$col['date']]) && ($routeDailyMaps[$col['date']]=='Y'))
                                             text-success
-                                        @endif">
+                                        @else text-danger @endif">
                                             <strong class="@if ($col['current_month'] == 'N') text-gray-300 @endif">
                                                 {{ $col['day'] }}</strong>
 

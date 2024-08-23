@@ -290,6 +290,7 @@ class BookingHelper
                         'status' => 'CO',
                         //'customer_id' => $customer['id'],
                         'booking_id' => $booking['id'],
+                        'booking_route_id' =>$route->pivot->id,
                         //'isdefault' => $customer->pivot->isdefault,
                     ],
                 );

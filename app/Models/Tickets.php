@@ -17,7 +17,8 @@ class Tickets extends Model
         'status',
         'customer_id',
         'booking_id',
-        'isdefault'
+        'isdefault',
+        'booking_route_id'
     ];
 
     public function customer() {

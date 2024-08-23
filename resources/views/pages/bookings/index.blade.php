@@ -169,16 +169,17 @@
 
                                 </th>
                                 <th class="">Booking Date</th>
+                                <th>Travel Date</th>
                                 <th>Invoice No</th>
                                 <th>Ticket No</th>
-                                <th>Ticket Type</th>
-                                <th>Travel Date</th>
-                                <th>Name</th>
-                                <th>Email</th>
+                                <th>Type</th>
+
+                                <th>Customer</th>
+                                <th>Total Passenger</th>
                                 <th>Price</th>
                                 <th>Premuim Flex</th>
                                 <th>Route</th>
-                                <th>Time</th>
+
                                 <th>Status</th>
                                 <th>Bank Ref.</th>
                                 <th>Amend</th>
@@ -199,21 +200,28 @@
                                         </div>
                                     </td>
                                     <td><small>{{ date('d/m/Y H:i', strtotime($item['created_at'])) }}</small></td>
+                                    <td style="white-space: pre;">{{ $item['traveldate'] }}</td>
                                     <td>{{ $item['bookingno'] }}</td>
                                     <td>{{ $item['ticketno'] }}</td>
                                     <td>{{ $item['type'] }}</td>
-                                    <td>{{ $item['traveldate'] }}</td>
-                                    <td>{{ $item['customer_name'] }}</td>
-                                    <td>{{ $item['email'] }}</td>
+
+                                    <td>
+                                        {{ $item['customer_name'] }}<br>
+                                        <span class="badge bg-secondary-soft">{{ $item['email'] }}</span>
+                                    </td>
+                                    <td>
+                                        {{$item['total_passenger']}}
+                                    </td>
+
                                     <td class="text-end">{{ number_format($item['totalamt']) }}</td>
                                     <td class="{{ $item['ispremiumflex'] == 'Y' ? 'text-primary' : '' }} text-center">{{ $item['ispremiumflex'] == 'Y' ? 'Yes' : 'No'}}</td>
-                                    <td> {{ $item['route'] }}</td>
                                     <td>
-                                        <small>
+                                        {{ $item['route'] }}
+
                                             <span class="badge rounded-pill bg-secondary">
-                                                {{ date('H:i', strtotime($item['depart_time'])) }}-{{ date('H:i', strtotime($item['arrive_time'])) }}
+                                                {{ date('H:i', strtotime($item['depart_time'])) }}/{{ date('H:i', strtotime($item['arrive_time'])) }}
                                             </span>
-                                        </small>
+
                                     </td>
                                     <td class="text-center">
                                         <small

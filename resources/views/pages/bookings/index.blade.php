@@ -76,11 +76,7 @@
                             "lang_months"	 : ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
                             "lang_weekdays" : ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
                         }'>
-                    @if(!isset($_GET['daterange']))
-                        <label for="departdate">All</label>
-                    @else
                         <label for="departdate">Date</label>
-                    @endif
                 </div>
             </div>
             <div class="col-12 col-md-3">

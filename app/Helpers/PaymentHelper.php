@@ -33,7 +33,7 @@ class PaymentHelper
             "merchantID" => $merchantID,
             "invoiceNo" => $payment->paymentno,
             "description" => $payment_channel[$payment_method],
-            "amount" => number_format($payment->totalamt + $fee, 2),
+            "amount" => round($payment->totalamt + $fee, 2),
             "currencyCode" => $currencyCode,
 
             "paymentChannel" => [$payment_channel[$payment_method]],

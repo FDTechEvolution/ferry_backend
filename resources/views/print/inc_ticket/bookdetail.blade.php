@@ -1,26 +1,40 @@
 <div class="prow">
-    <h3>YOUR BOOKING DETAILS</h3>
+
     <table class="w-100 ptable">
 
         <tbody>
+            <tr>
+                <td colspan="2">
+                    <h3>YOUR BOOKING DETAILS</h3>
+                </td>
+                <td colspan="2" class="text-end">
+                    <h3
+                    style="color:{{ $colors[$booking['trip_type']] }};">{{ ucwords(str_replace('-',' ',$booking['trip_type'])) }}
+                    ticket
+                    @if ($booking['trip_type'] == 'multi-trip')
+                        <span>{{$i+1}}/{{sizeof($bookingRoutes)}}</span>
+                    @endif
+                </h3>
+                </td>
+            </tr>
             <tr class="bg-gray font-w-700">
                 <td class="w-15">ISSUED DATE</td>
                 <td class="w-15">INVOICE NO.</td>
                 <td class="w-15">TICKET NO.</td>
-                <td class="w-15">
-                    <strong
-                        style="color:{{ $colors[$booking['trip_type']] }};">{{ ucwords(str_replace('-',' ',$booking['trip_type'])) }}
-                        ticket</strong>
-                    </td>
+                <td class="w-15">Number of Passenger: </td>
             </tr>
             <tr>
                 <td><small>{{ date('l d M Y', strtotime($booking['created_at'])) }}</small></td>
                 <td>{{ $booking['bookingno'] }}</td>
                 <td class="font-bold-14">
+                    @if (isset($ticket['ticketno']))
                     {{ $ticket['ticketno'] }}
+                    @endif
                 </td>
                 <td>
-                    Channel of Distribution: {{ $booking['book_channel'] }}
+                    Adult:{{$booking['adult_passenger']}}/
+                    Child:{{$booking['child_passenger']}}/
+                    Infant:{{$booking['infant_passenger']}}
                 </td>
             </tr>
 
@@ -57,13 +71,12 @@
 
                 </td>
                 <td colspan="2">
+                    Total Amount: {{$payment['totalamt']}}<br>
                     Payment Status: @if($booking['ispayment']=='Y') <span class="text-success">Paid</span> @else <span class="text-danger">Unpay</span>  @endif <br>
-                    Method: {{ isset($payment['payment_method'])?$payment['payment_method']:'-' }}<br>
+                    Method:{{ $booking['book_channel'] }}/ {{ isset($payment['payment_method'])?$payment['payment_method']:'-' }}<br>
                     Transaction No. {{$referenceNo}}<br>
                     Approved by: @if(isset($user->firstname)) {{$user->firstname}} @else System  @endif<br>
-                    Approved Date:  @if (isset($payment['created_at']))
-                    {{ date('d M Y', strtotime($payment['created_at'])) }}
-                    @endif
+
 
 
                 </td>

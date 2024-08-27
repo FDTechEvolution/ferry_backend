@@ -50,7 +50,7 @@ class BookingsController extends Controller
         b.id,b.created_at,b.bookingno,t.ticketno,b.adult_passenger,b.child_passenger,b.infant_passenger,
         (b.adult_passenger+b.child_passenger+b.infant_passenger) as total_passenger,
         b.trip_type,br.type,b.amend,concat(sf.nickname,"-",st.nickname) as route,br.traveldate,b.ispayment,
-        b.book_channel,u.firstname,c.fullname as customer_name,c.email,r.depart_time,r.arrive_time,b.totalamt,
+        b.book_channel,c.fullname as customer_name,c.email,r.depart_time,r.arrive_time,b.totalamt,p.totalamt as payment_totalamt,
         b.status,b.ispremiumflex
     from
         bookings b
@@ -59,9 +59,9 @@ class BookingsController extends Controller
         left join tickets t on br.id = t.booking_route_id
         join stations sf on r.station_from_id = sf.id
         join stations st on r.station_to_id = st.id
-        left join users u on b.user_id = u.id
         join booking_customers bc on (b.id = bc.booking_id and bc.isdefault = "Y")
         join customers c on bc.customer_id = c.id
+        left join payments p on b.id = p.booking_id
     where :conditions order by b.created_at DESC';
 
         $startDate = date_format(date_create('2024-01-01'), 'd/m/Y');
@@ -199,6 +199,31 @@ class BookingsController extends Controller
             )
             ->first();
         return view('pages.bookings.view', [
+            'booking' => $booking,
+            'status'=>BookingHelper::status(),
+            'tripType' => BookingHelper::tripType(),
+
+        ]);
+    }
+
+    public function modalView($booking_id)
+    {
+        $booking = Bookings::where(['id' => $booking_id])
+            ->with(
+                'bookingCustomers',
+                'user',
+                'bookingRoutes',
+                'bookingRoutesX.bookingExtraAddons',
+                'bookingRoutesX.bookingRouteAddons',
+                'bookingRoutes.station_from',
+                'bookingRoutes.station_to',
+                'bookingRoutes.station_lines',
+                'payments',
+                'payments.paymentLines',
+                'transactionLogs'
+            )
+            ->first();
+        return view('pages.bookings.mview', [
             'booking' => $booking,
             'status'=>BookingHelper::status(),
             'tripType' => BookingHelper::tripType(),

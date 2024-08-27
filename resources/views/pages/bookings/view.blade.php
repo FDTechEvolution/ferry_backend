@@ -9,6 +9,7 @@
     $bookingRoutesX = $booking['bookingRoutesX'];
     //$payment = sizeof($booking['payments']) > 0 ? $booking['payments'][0] : null;
     $payments = $booking->payments;
+    //dd($payments);
 @endphp
 
 @section('page-title')

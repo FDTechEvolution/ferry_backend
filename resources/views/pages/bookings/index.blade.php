@@ -197,7 +197,13 @@
                                     </td>
                                     <td><small>{{ date('d/m/Y H:i', strtotime($item['created_at'])) }}</small></td>
                                     <td style="white-space: pre;">{{ $item['traveldate'] }}</td>
-                                    <td>{{ $item['bookingno'] }}</td>
+                                    <td>
+                                        <a href="#" data-href="{{route('booking-mview',['id'=>$item['id']])}}" data-ajax-modal-size="modal-xl" data-ajax-modal-centered="true"
+                                        data-ajax-modal-callback-function="" data-ajax-modal-backdrop="static"
+                                        class="me-2 text-primary js-ajax-modal">
+                                            {{ $item['bookingno'] }}
+                                        </a>
+                                    </td>
                                     <td>{{ $item['ticketno'] }}</td>
                                     <td>{{ $item['type'] }}</td>
 
@@ -209,7 +215,7 @@
                                         {{$item['total_passenger']}}
                                     </td>
 
-                                    <td class="text-end">{{ number_format($item['totalamt']) }}</td>
+                                    <td class="text-end">{{ number_format($item['payment_totalamt']) }}</td>
                                     <td class="{{ $item['ispremiumflex'] == 'Y' ? 'text-primary' : '' }} text-center">{{ $item['ispremiumflex'] == 'Y' ? 'Yes' : 'No'}}</td>
                                     <td>
                                         {{ $item['route'] }}
@@ -228,14 +234,14 @@
                                     <td class="text-end">
                                         <div class="d-none">
                                             <div class="btn-group" role="group" aria-label="Basic example">
-                                                @if ($item['ispayment'] == 'Y')
+
                                                     <a href="{{ route('print-ticket', ['bookingno' => $item['bookingno']]) }}"
                                                         class="transition-hover-top me-2 fs-5" rel="noopener"
                                                         target="_blank" data-bs-toggle="tooltip" data-bs-placement="top"
                                                         title="Print Ticket">
                                                         <i class="fi fi-print m-0"></i>
                                                     </a>
-                                                @endif
+
                                                 <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
                                                     class="transition-hover-top me-2 fs-5" rel="noopener" target="_blank"
                                                     style="display: none;">
@@ -261,13 +267,13 @@
                                                 <div
                                                     class="dropdown-menu dropdown-menu-clean dropdown-click-ignore max-w-220">
                                                     <div class="scrollable-vertical max-vh-50">
-                                                        @if ($item['ispayment'] == 'Y')
+
                                                             <a href="{{ route('print-ticket', ['bookingno' => $item['bookingno']]) }}"
                                                                 class="dropdown-item text-truncate" rel="noopener"
                                                                 target="_blank">
                                                                 <i class="fi fi-print m-1"></i> Print Ticket
                                                             </a>
-                                                        @endif
+
 
                                                         <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
                                                             class="dropdown-item text-truncate" rel="noopener"

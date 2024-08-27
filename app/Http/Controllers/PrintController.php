@@ -47,6 +47,13 @@ class PrintController extends Controller
             Pdf::setOption(['dpi' => 150, 'defaultMediaType' => 'a4', 'debugCss' => true]);
             $pdf = Pdf::loadView('print.ticket_v2', ['bookings' => $bookings, 'term' => $term]);
 
+            /*
+            if($booking->ispayment=='N'){
+                //dd($booking);
+                $pdf = Pdf::loadView('print.ticket_v2_nopayment', ['bookings' => $bookings, 'term' => $term]);
+            }
+                */
+
             return $pdf->stream();
         }
 

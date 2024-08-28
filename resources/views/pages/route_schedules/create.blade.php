@@ -169,8 +169,8 @@
     </form>
 
     <form action="{{ route('routeSchedules.create') }}" method="GET" id="frm-search">
-        <input type="hidden" name="station_from_id" id="_station_from_id">
-        <input type="hidden" name="station_to_id" id="_station_to_id">
+        <input type="hidden" name="station_from_id" id="_station_from_id" value="{{$stationFromId}}">
+        <input type="hidden" name="station_to_id" id="_station_to_id" value="{{$stationToId}}">
     </form>
 
 @stop

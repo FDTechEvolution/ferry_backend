@@ -272,12 +272,17 @@ class BookingHelper
         $customers = $booking->bookingCustomers;
         $routes = $booking->bookingRoutes;
         $mobileno = '';
+        $ticketTpe = 'TICKET';
+
+        if($booking->book_channel != 'ONLINE' && $booking->book_channel != 'ADMIN'){
+
+        }
         foreach($customers as $c) { if($c->mobile != '') $mobileno = $c->mobile; }
 
 
         foreach ($routes as $key => $route) {
             //foreach ($customers as $index => $customer) {
-                $ticketNo = newSequenceNumber('TICKET');
+                $ticketNo = newSequenceNumber($ticketTpe);
 
                 if($booking['trip_type'] == 'multiple'){
                     $ticketNo .= '#'.($key+1);

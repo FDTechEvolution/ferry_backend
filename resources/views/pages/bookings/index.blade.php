@@ -171,7 +171,7 @@
                                 <th>Type</th>
 
                                 <th>Customer</th>
-                                <th>Total Passenger</th>
+                                <th><i class="fa-solid fa-people-group"></i></th>
                                 <th>Price</th>
                                 <th>Premuim Flex</th>
                                 <th>Route</th>

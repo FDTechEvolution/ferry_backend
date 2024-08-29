@@ -226,7 +226,7 @@
                                         {{$item['total_passenger']}}
                                     </td>
 
-                                    <td class="text-end">{{ number_format($item['payment_totalamt']) }}</td>
+                                    <td class="text-end">{{ number_format($item['payment_totalamt'], 2) }}</td>
                                     <td class="{{ $item['ispremiumflex'] == 'Y' ? 'text-primary' : '' }} text-center">{{ $item['ispremiumflex'] == 'Y' ? 'Yes' : 'No'}}</td>
                                     <td>
                                         {{ $item['route'] }}<br>

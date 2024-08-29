@@ -226,13 +226,13 @@
                                                 #{{ $line->title }}
                                             </td>
                                             <td class="text-end">
-                                                {{ number_format($line->amount) }}
+                                                {{ number_format($line->amount, 2) }}
                                             </td>
                                         </tr>
                                     @endforeach
                                     <tr>
                                         <td class="fw-bold">Total</td>
-                                        <td class="text-end">{{ number_format($payment->totalamt) }}</td>
+                                        <td class="text-end">{{ number_format($payment->totalamt, 2) }}</td>
                                     </tr>
                                 </table>
                             </div>

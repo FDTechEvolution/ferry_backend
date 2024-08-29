@@ -61,7 +61,7 @@ class PaymentController extends Controller
 
         // update payment line with fee
         $passengers = ['adult' => $booking->adult_passenger, 'child' => $booking->child_passenger, 'infant' => $booking->infant_passenger];
-        $fee = FeeHelper::getFeeSetting($passengers, $payment_data['totalamt'], $type);
+        $fee = FeeHelper::getFeeSetting($passengers, $payment->totalamt, $type);
         PaymentHelper::updateFeePaymentLine($result['userDefined1'], $fee, $type);
 
         // Send Email

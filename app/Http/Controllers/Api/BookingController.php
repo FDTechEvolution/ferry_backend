@@ -142,20 +142,6 @@ class BookingController extends Controller
                 }
             }
 
-            // $payment_amt = $_amount;
-
-            // update CreditCard Free
-            // if($payment_channel == 'CC')
-            //     $payment = PaymentHelper::updatePayWithCreditCard($payment_id);
-            // if($payment_channel == 'CC' && $isfreecreditcharge == 'Y')
-            //     $payment = PaymentHelper::updatePayWithCreditCardFree($payment_id, $payment_amt);
-
-            // $payment->totalamt = number_format($payment->totalamt, 2, '.', '');
-
-            // $payload = PaymentHelper::encodeRequest($payment, $payment_channel);
-            // $response = PaymentHelper::postTo_2c2p($payload);
-            // $result = PaymentHelper::decodeResponse($response);
-
             return response()->json(['result' => true, 'booking' => $booking->bookingno, 'email' => $request->email], 200);
         }
 

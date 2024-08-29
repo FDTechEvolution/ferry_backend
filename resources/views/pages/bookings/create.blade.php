@@ -139,13 +139,13 @@
                             <div class="col-8 col-md-4">
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input form-check-input-danger" type="radio"
-                                        name="ispayment" value="N" id="" required>
-                                    <label class="form-check-label" for="checkDanger">Unpay</label>
+                                        name="ispayment" value="N" id="unpay" required>
+                                    <label class="form-check-label" for="unpay">Unpay</label>
                                 </div>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input form-check-input-success" type="radio"
-                                        name="ispayment" value="Y" id="" required>
-                                    <label class="form-check-label" for="checkSuccess">Paid</label>
+                                        name="ispayment" value="Y" id="paid" required>
+                                    <label class="form-check-label" for="paid">Paid</label>
                                 </div>
                             </div>
                         </div>
@@ -182,7 +182,7 @@
                 </div>
             </fieldset>
         </form>
-    
+
 
 @stop
 
@@ -258,7 +258,7 @@
             let child_passenger = parseInt($('#child_passenger').val());
             let infant_passenger = parseInt($('#infant_passenger').val());
 
-            
+
 
             let price = isNaN($('#price').val()) ? 0 : $('#price').val();
             let extra_price = parseFloat(isNaN($('#extra_price').val()) ? 0 : $('#extra_price').val());

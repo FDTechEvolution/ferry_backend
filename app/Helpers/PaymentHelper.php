@@ -8,6 +8,7 @@ use App\Models\Payments;
 use App\Models\PaymentLines;
 use App\Models\Promotions;
 use App\Models\FeeSetting;
+use Phattarachai\LineNotify\Facade\Line;
 
 class PaymentHelper
 {
@@ -194,7 +195,7 @@ class PaymentHelper
 
     public static function completePayment($payment_id, $paymentData = [])
     {
-        $payment = Payments::where('id', $payment_id)->first();
+        $payment = Payments::with('booking')->where('id', $payment_id)->first();
 
         if (!is_null($payment)) {
             $payment->status = 'CO';
@@ -210,6 +211,8 @@ class PaymentHelper
 
             $title = sprintf('Payment successfully with %s amount %s',$payment->payment_method,$payment->totalamt);
             TransactionLogHelper::tranLog(['type' => 'PAYMENT', 'title' => $title, 'description' => '', 'booking_id' => $payment->booking_id]);
+
+            LineNotifyHelper::newBooking($payment->booking_id);
         }
 
         return $payment;

@@ -45,6 +45,7 @@ class BookingsController extends Controller
         $ticketno = request()->ticketno;
         $bookingno = request()->bookingno;
         $daterange = request()->daterange;
+        $status = request()->status;
 
         $sql = 'select
         b.id,b.created_at,b.bookingno,t.ticketno,b.adult_passenger,b.child_passenger,b.infant_passenger,
@@ -81,6 +82,12 @@ class BookingsController extends Controller
 
         // $conditionStr .= ' and (b.departdate >="' . $startDateSql . '" and b.departdate <="' . $endDateSql . '") ';
         $conditionStr .= ' and (b.created_at >="' . $startDateSql . '" and b.created_at <="' . $endDateSql . '") ';
+
+        if (!is_null($status) && $status != '') {
+            $conditionStr .= ' and b.status = "' . $status . '"';
+        } else {
+            $conditionStr .= ' and b.status != "delete"';
+        }
 
         if (!is_null($station_from) && $station_from != '') {
             $conditionStr .= ' and sf.id = "' . $station_from . '"';
@@ -124,9 +131,9 @@ class BookingsController extends Controller
             'ticketno' => $ticketno,
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'bookingStatus'=>$bookingStatus,
-            'tripTypes'=>$tripTypes,
-            'bookChannels'=>$bookChannels
+            'bookingStatus' => $bookingStatus,
+            'tripTypes' => $tripTypes,
+            'bookChannels' => $bookChannels,
         ]);
     }
 
@@ -138,7 +145,7 @@ class BookingsController extends Controller
         $stationFromId = request()->station_from_id;
         $stationToId = request()->station_to_id;
 
-        if(is_null($departdate)){
+        if (is_null($departdate)) {
             $departdate = date('d/m/Y');
         }
         $stationFroms = RouteHelper::getStationFrom();
@@ -149,7 +156,7 @@ class BookingsController extends Controller
 
         if (!is_null($stationFromId) && !is_null($stationToId)) {
             $departdateSql = Carbon::createFromFormat('d/m/Y', $departdate)->format('Y-m-d');
-            $routes = RouteHelper::getAvaliableRoutes($stationFromId, $stationToId,$departdateSql);
+            $routes = RouteHelper::getAvaliableRoutes($stationFromId, $stationToId, $departdateSql);
         }
         //dd($stationFroms);
 
@@ -195,14 +202,17 @@ class BookingsController extends Controller
                 'bookingRoutes.station_lines',
                 'payments',
                 'payments.paymentLines',
-                'transactionLogs'
+                'transactionLogs',
             )
             ->first();
+
+        $bookingStatus = BookingHelper::status();
+
         return view('pages.bookings.view', [
             'booking' => $booking,
-            'status'=>BookingHelper::status(),
+            'status' => BookingHelper::status(),
             'tripType' => BookingHelper::tripType(),
-
+            'bookingStatus' => $bookingStatus,
         ]);
     }
 
@@ -220,12 +230,12 @@ class BookingsController extends Controller
                 'bookingRoutes.station_lines',
                 'payments',
                 'payments.paymentLines',
-                'transactionLogs'
+                'transactionLogs',
             )
             ->first();
         return view('pages.bookings.mview', [
             'booking' => $booking,
-            'status'=>BookingHelper::status(),
+            'status' => BookingHelper::status(),
             'tripType' => BookingHelper::tripType(),
 
         ]);
@@ -403,58 +413,61 @@ class BookingsController extends Controller
 
     }
 
-    public function sendConfirmEmail(Request $request){
+    public function sendConfirmEmail(Request $request)
+    {
         $bookingNos = $request->booking_nos;
 
-        foreach($bookingNos as $bookingno){
-            $booking = Bookings::where('bookingno',$bookingno)->first();
+        foreach ($bookingNos as $bookingno) {
+            $booking = Bookings::where('bookingno', $bookingno)->first();
             EmailHelper::ticket($booking->id);
         }
         return redirect()->route('booking-index')->withSuccess('sent email.');
     }
 
-    public function changeStatus($id){
+    public function changeStatus($id)
+    {
         $booking = Bookings::find($id);
         $status = request()->status;
         $booking->ispayment = $status == 'CO' ? 'Y' : 'N';
         $booking->save();
         $statusLabel = BookingHelper::status();
-        return view('pages.bookings.modal.change_status',['booking_id'=>$id,'status'=>$status,'statusLabel'=>$statusLabel]);
+        return view('pages.bookings.modal.change_status', ['booking_id' => $id, 'status' => $status, 'statusLabel' => $statusLabel]);
     }
 
-    public function updateStatus(Request $request){
+    public function updateStatus(Request $request)
+    {
         $booking_id = $request->booking_id;
-        $booking = Bookings::where('id',$booking_id)->first();
+        $booking = Bookings::where('id', $booking_id)->first();
         $status = $request->status;
         $description = $request->description;
         $statusLabel = BookingHelper::status();
 
-        if(isset($statusLabel[$status])){
+        if (isset($statusLabel[$status])) {
 
 
-            if($status =='CO'){
-                BookingHelper::completeBooking($booking_id,[]);
+            if ($status == 'CO') {
+                BookingHelper::completeBooking($booking_id, []);
 
-                $payments = Payments::where('booking_id',$booking_id)->get();
-                if(sizeof($payments) ==0){
+                $payments = Payments::where('booking_id', $booking_id)->get();
+                if (sizeof($payments) == 0) {
                     $payment = PaymentHelper::createPaymentFromBooking($booking_id);
                     PaymentHelper::completePayment($payment->id);
                 }
 
-               $booking->ispayment = 'Y';
+                $booking->ispayment = 'Y';
 
             }
 
             $booking->status = $status;
-            $booking->amend = $booking->amend+1;
+            $booking->amend = $booking->amend + 1;
             $booking->save();
 
             //Log
-            TransactionLogHelper::tranLog(['type' => 'booking', 'title' => 'Change booking status to '.$statusLabel[$status]['title'], 'description' => $description, 'booking_id' => $booking_id]);
+            TransactionLogHelper::tranLog(['type' => 'booking', 'title' => 'Change booking status to ' . $statusLabel[$status]['title'], 'description' => $description, 'booking_id' => $booking_id]);
 
-            return redirect()->route('booking-index')->withSuccess('Saved.');
+            return redirect()->route('booking-view',['id'=>$booking_id])->withSuccess('Saved.');
         }
 
-        return redirect()->route('booking-index')->withFail('Something is wrong. Please try again.');
+        return redirect()->route('booking-view',['id'=>$booking_id])->withFail('Something is wrong. Please try again.');
     }
 }

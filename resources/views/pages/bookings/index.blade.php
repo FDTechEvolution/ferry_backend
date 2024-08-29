@@ -112,7 +112,7 @@
     </form>
     <hr>
     <div class="row">
-        <div class="col-12 mb-2">
+        <div class="col-12 col-lg-7 mb-2">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb bg-light p-3">
                     <li class="breadcrumb-item">
@@ -134,6 +134,15 @@
                     </li>
                 </ol>
             </nav>
+        </div>
+        <div class="col-12 col-lg-5 mb-2 text-end">
+            <a href="{{route('booking-index',['status'=>'delete'])}}" class="btn btn-sm btn-outline-danger position-relative">
+                Deleted
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    10+
+                    <span class="visually-hidden">booking</span>
+                </span>
+            </a>
         </div>
         <div class="col-12">
 
@@ -168,12 +177,13 @@
                                 <th>Travel Date</th>
                                 <th>Invoice No</th>
                                 <th>Ticket No</th>
+                                <th></th>
                                 <th>Type</th>
 
                                 <th>Customer</th>
                                 <th><i class="fa-solid fa-people-group"></i></th>
                                 <th>Price</th>
-                                <th>Premuim Flex</th>
+                                <th>P-Flex</th>
                                 <th>Route</th>
 
                                 <th>Status</th>
@@ -205,6 +215,7 @@
                                         </a>
                                     </td>
                                     <td>{{ $item['ticketno'] }}</td>
+                                    <td>{{$item['book_channel']}}</td>
                                     <td>{{ $item['type'] }}</td>
 
                                     <td>
@@ -218,7 +229,7 @@
                                     <td class="text-end">{{ number_format($item['payment_totalamt']) }}</td>
                                     <td class="{{ $item['ispremiumflex'] == 'Y' ? 'text-primary' : '' }} text-center">{{ $item['ispremiumflex'] == 'Y' ? 'Yes' : 'No'}}</td>
                                     <td>
-                                        {{ $item['route'] }}
+                                        {{ $item['route'] }}<br>
 
                                             <span class="badge rounded-pill bg-secondary">
                                                 {{ date('H:i', strtotime($item['depart_time'])) }}/{{ date('H:i', strtotime($item['arrive_time'])) }}

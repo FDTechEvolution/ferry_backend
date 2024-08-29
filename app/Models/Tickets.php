@@ -29,6 +29,10 @@ class Tickets extends Model
         return $this->hasOne(Bookings::class, 'id', 'booking_id');
     }
 
+    public function bookingRoute() {
+        return $this->hasOne(BookingRoutes::class, 'id', 'booking_route_id');
+    }
+
     public function station_from() {
         return $this->hasOne(Station::class, 'id', 'station_from_id');
     }

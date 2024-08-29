@@ -30,6 +30,7 @@
             $firstCustomer = $customers[0];
             $payment = sizeof($booking['payments']) > 0 ? $booking['payments'][0] : null;
 
+
             //$paymentDetails = json_decode($payment['description']);
             $referenceNo = isset($paymentDetails->referenceNo) ? $paymentDetails->referenceNo : '';
 
@@ -38,6 +39,9 @@
         @endphp
 
         @foreach ($bookingRoutes as $i => $bookingRoute)
+            @php
+                $bookingRouteX = $bookingRoutesX[$i];
+            @endphp
             <div class="{{ $booking['book_channel'] == 'ADMIN' ? 'bg-staff' : '' }}">
 
                 @include('print.inc_ticket.head')

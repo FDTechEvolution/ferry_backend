@@ -27,8 +27,8 @@
                 <td><small>{{ date('l d M Y', strtotime($booking['created_at'])) }}</small></td>
                 <td>{{ $booking['bookingno'] }}</td>
                 <td class="font-bold-14">
-                    @if (isset($ticket['ticketno']))
-                    {{ $ticket['ticketno'] }}
+                    @if (isset($bookingRouteX->tickets[0]))
+                    {{ $bookingRouteX->tickets[0]['ticketno'] }}
                     @endif
                 </td>
                 <td>

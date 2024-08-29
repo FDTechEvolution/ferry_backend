@@ -46,7 +46,7 @@
             </td>
         </tr>
     </table>
-    @if (sizeof($bookingRoutesX[$i]->bookingRouteAddons) > 0 || sizeof($bookingRoutesX[$i]->bookingExtraAddons) > 0)
+    @if (sizeof($bookingRouteX->bookingRouteAddons) > 0 || sizeof($bookingRouteX->bookingExtraAddons) > 0)
         <table>
             <tbody>
                 @if ($booking['ispremiumflex'] == 'Y')
@@ -57,7 +57,7 @@
                 </tr>
                 @endif
 
-                @foreach ($bookingRoutesX[$i]->bookingRouteAddons as $extra)
+                @foreach ($bookingRouteX->bookingRouteAddons as $extra)
                     <tr>
                         <td style="white-space:wrap;">
                             <p style="padding: 0;margin: 0;">- {{ $extra->name }}: {{ $extra->pivot->description }}</p>
@@ -65,7 +65,7 @@
                     </tr>
                 @endforeach
 
-                @foreach ($bookingRoutesX[$i]->bookingExtraAddons as $extra)
+                @foreach ($bookingRouteX->bookingExtraAddons as $extra)
                     <tr>
                         <td style="white-space:wrap;">
                             <p style="padding: 0;margin: 0;">- </p>

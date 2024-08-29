@@ -43,62 +43,17 @@
                         </svg>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                        @foreach ($bookingStatus as $key=> $item)
                         <li>
-                            <a class="dropdown-item rounded js-ajax-modal text-success" href="#"
-                                data-href="{{ route('booking.changeStatus', ['id' => $booking['id'], 'status' => 'CO']) }}"
+                            <a class="dropdown-item rounded js-ajax-modal {{$item['class']}}" href="#"
+                                data-href="{{ route('booking.changeStatus', ['id' => $booking['id'], 'status' => $key]) }}"
                                 data-ajax-modal-size="modal-md" data-ajax-modal-centered="true"
                                 data-ajax-modal-backdrop="static">
-                                <svg width="18px" height="18px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-check2-all" viewBox="0 0 16 16">
-                                    <path d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0l7-7zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0z"></path>
-                                    <path d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708z"></path>
-                                  </svg>
-                                <span>Paid</span>
+                                {!!$item['icon']!!}
+                                <span>Change to {{$item['title']}}</span>
                             </a>
                         </li>
-
-                        <li>
-                            <a class="dropdown-item rounded js-ajax-modal text-secondary" href="#"
-                                data-href="{{ route('booking.changeStatus', ['id' => $booking['id'], 'status' => 'UNP']) }}"
-                                data-ajax-modal-size="modal-md" data-ajax-modal-centered="true"
-                                data-ajax-modal-backdrop="static">
-                                <svg width="18px" height="18px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                                    <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path>
-                                  </svg>
-                                <span>Unpaid</span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a class="dropdown-item rounded js-ajax-modal text-warning" href="#"
-                                data-href="{{ route('booking.changeStatus', ['id' => $booking['id'], 'status' => 'void']) }}"
-                                data-ajax-modal-size="modal-md" data-ajax-modal-centered="true"
-                                data-ajax-modal-backdrop="static">
-                                <svg width="18px" height="18px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"></path>
-                                  </svg>
-                                <span>Cancel</span>
-                            </a>
-                        </li>
-                        <li class="dropdown-divider my-2"></li>
-                        <li>
-                            <a class="dropdown-item rounded js-ajax-modal" href="#"
-                                data-href="{{ route('booking.changeStatus', ['id' => $booking['id'], 'status' => 'delete']) }}"
-                                data-ajax-modal-size="modal-md" data-ajax-modal-centered="true"
-                                data-ajax-modal-backdrop="static">
-                                <svg class="text-danger" xmlns="http://www.w3.org/2000/svg" width="18px" height="18px"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="3 6 5 6 21 6"></polyline>
-                                    <path
-                                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
-                                    </path>
-                                    <line x1="10" y1="11" x2="10" y2="17"></line>
-                                    <line x1="14" y1="11" x2="14" y2="17"></line>
-                                </svg>
-                                <span>Delete</span>
-                            </a>
-                        </li>
-
+                        @endforeach
 
                     </ul>
                 </div>

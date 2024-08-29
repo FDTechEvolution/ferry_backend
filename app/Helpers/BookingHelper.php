@@ -25,13 +25,14 @@ class BookingHelper
     public static function status()
     {
         $status = [
-            'DR' => ['title' => 'Pending', 'icon' => '', 'class' => 'text-mute','action'=>''],
-            'UNP' => ['title' => 'Unpaid', 'icon' => '', 'class' => 'text-warning','action'=>'Unpaid'],
-            'CO' => ['title' => 'Paid', 'icon' => '', 'class' => 'text-success','action'=>'Paid'],
-            'void' => ['title' => 'CANX', 'icon' => '', 'class' => 'text-mute','action'=>'Cancel'],
-            'VO' => ['title' => 'CANX', 'icon' => '', 'class' => 'text-mute','action'=>'Cancel'],
-            'delete' => ['title' => 'Deleted', 'icon' => '', 'class' => 'text-danger','action'=>'Delete'],
-            'amended' => ['title' => 'Amended', 'icon' => '', 'class' => '','action'=>''],
+            'DR' => ['title' => 'Pending', 'icon' => '<i class="fi fi-circle-spin"></i>', 'class' => 'text-mute','action'=>''],
+            'UNP' => ['title' => 'Unpaid', 'icon' => '<i class="fa-solid fa-clock-rotate-left"></i>', 'class' => 'text-warning','action'=>'Unpaid'],
+            'CO' => ['title' => 'Paid', 'icon' => '<i class="fa-solid fa-check-double"></i>', 'class' => 'text-success','action'=>'Paid'],
+            'void' => ['title' => 'Cancelled', 'icon' => '<i class="fa-solid fa-xmark"></i>', 'class' => 'text-mute','action'=>'Cancel'],
+            //'VO' => ['title' => 'CANX', 'icon' => '', 'class' => 'text-mute','action'=>'Cancel'],
+            'amended' => ['title' => 'Amended', 'icon' => '<i class="fa-solid fa-list-check"></i>', 'class' => '','action'=>''],
+            'delete' => ['title' => 'Deleted', 'icon' => '<i class="fa-solid fa-trash"></i>', 'class' => 'text-danger','action'=>'Delete'],
+
         ];
 
         return $status;
@@ -63,7 +64,7 @@ class BookingHelper
     public static function getBookingInfoByBookingNo($bookingno)
     {
         $booking = Bookings::where(['bookingno' => $bookingno])
-            ->with('bookingCustomers', 'tickets', 'user', 'bookingRoutes', 'bookingRoutesX.bookingExtraAddons', 'bookingRoutes.station_from', 'bookingRoutes.station_to', 'payments')
+            ->with('bookingCustomers', 'user', 'bookingRoutes','bookingRoutesX.tickets', 'bookingRoutesX.bookingExtraAddons', 'bookingRoutes.station_from', 'bookingRoutes.station_to', 'payments')
             ->first();
 
         //dd($booking);
@@ -272,7 +273,7 @@ class BookingHelper
         $customers = $booking->bookingCustomers;
         $routes = $booking->bookingRoutes;
         $mobileno = '';
-        $ticketTpe = 'TICKET';
+        $ticketType = 'TICKET';
 
         if($booking->book_channel != 'ONLINE' && $booking->book_channel != 'ADMIN'){
 
@@ -282,7 +283,7 @@ class BookingHelper
 
         foreach ($routes as $key => $route) {
             //foreach ($customers as $index => $customer) {
-                $ticketNo = newSequenceNumber($ticketTpe);
+                $ticketNo = newSequenceNumber($ticketType);
 
                 if($booking['trip_type'] == 'multiple'){
                     $ticketNo .= '#'.($key+1);

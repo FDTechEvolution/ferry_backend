@@ -7,6 +7,10 @@ use Phattarachai\LineNotify\Facade\Line;
 class LineNotifyHelper
 {
     public static function newBooking($bookingId){
+        if(env('LINE_ACCESS_TOKEN_NEW_BOOKING') == '' || empty(env('LINE_ACCESS_TOKEN_NEW_BOOKING'))){
+            return false;
+        }
+
         $booking = Bookings::with('bookingRoutes','payments')->where('id',$bookingId)->first();
 
         //Send Line

@@ -36,7 +36,7 @@ class RouteSchedulesController extends Controller
 
         $stationFroms = RouteHelper::getStationFrom();
         $stationTos = RouteHelper::getStationTo($stationFromId);
-        $partners = Partners::where('isactive','Y')->orderBy('name','ASC')->get();
+        $partners = Partners::where('isactive', 'Y')->orderBy('name', 'ASC')->get();
 
         $countBooking = RouteSchedules::where('isconflict', 'Y')->count();
 
@@ -50,7 +50,7 @@ class RouteSchedulesController extends Controller
                 ->whereNull('api_merchant_id')
                 ->update(['isactive' => 'N']);
             */
-            $routes = Route::with('lastSchedule', 'partner', 'station_from', 'station_to');
+            $routes = Route::with('lastSchedule', 'partner', 'station_from', 'station_to', 'icons');
             if (!is_null($stationFromId) && $stationFromId != 'all') {
                 $routes = $routes->where('routes.station_from_id', $stationFromId);
             }
@@ -96,7 +96,7 @@ class RouteSchedulesController extends Controller
 
         //
 
-        return view('pages.route_schedules.index', ['routeSchedules' => $routeSchedules, 'merchant_id' => $merchant_id, 'title' => $title, 'stationFroms' => $stationFroms, 'stationTos' => $stationTos, 'stationFromId' => $stationFromId, 'stationToId' => $stationToId, 'apiMerchant' => $apiMerchant, 'countBooking' => $countBooking, 'routes' => $routes,'partners'=>$partners,'partnerId'=>$partnerId]);
+        return view('pages.route_schedules.index', ['routeSchedules' => $routeSchedules, 'merchant_id' => $merchant_id, 'title' => $title, 'stationFroms' => $stationFroms, 'stationTos' => $stationTos, 'stationFromId' => $stationFromId, 'stationToId' => $stationToId, 'apiMerchant' => $apiMerchant, 'countBooking' => $countBooking, 'routes' => $routes, 'partners' => $partners, 'partnerId' => $partnerId]);
     }
 
     /**
@@ -266,6 +266,18 @@ class RouteSchedulesController extends Controller
      */
     public function show(string $id)
     {
+        $startYear = request()->start_year;
+        $endYear = request()->end_year;
+
+        $sql = 'select a.*
+from (
+select date_format(start_datetime,"%Y") as y from route_schedules
+union
+select date_format(end_datetime,"%Y") as y from route_schedules
+) as a group by a.y order by a.y asc';
+        $years = DB::select($sql);
+
+
         $routeId = $id;
         $route = Route::where('id', $routeId)->with('station_from', 'station_to', 'routeDailyStatuses')->first();
 
@@ -276,9 +288,17 @@ class RouteSchedulesController extends Controller
             }
         }
 
+        $dt = Carbon::now();
+        if(empty($startYear)){
+            $startYear = $dt->year;
+        }
 
-        $yearCalendar = CalendarHelper::getYearCalendar();
-        return view('pages.route_schedules.show', ['yearCalendar' => $yearCalendar, 'route' => $route, 'routeDailyMaps' => $routeDailyMaps]);
+        if(empty($endYear)){
+            $endYear = $dt->year;
+        }
+
+        $yearCalendar = CalendarHelper::getYearRangCalendar($startYear,$endYear);
+        return view('pages.route_schedules.show', ['yearCalendar' => $yearCalendar, 'route' => $route, 'routeDailyMaps' => $routeDailyMaps,'years'=>$years,'routeId'=>$routeId,'startYear'=>$startYear,'endYear'=>$endYear]);
 
     }
 

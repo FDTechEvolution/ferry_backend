@@ -21,41 +21,21 @@ class PrintController extends Controller
 
     public function ticket($bookingno = null)
     {
-        $type = request()->type;
-        if ($type == 'V') {
-            $booking = BookingHelper::getBookingInfoByBookingNo($bookingno);
-            $term = Informations::where('position', 'TERM_TICKET')->first();
-            $bookings[0] = $booking;
-            //dd($booking->bookingCustomers);
-            return view('print.ticket', ['bookings' => $bookings, 'term' => $term]);
-        } else {
-            /*
-            $booking = BookingHelper::getBookingInfoByBookingNo($bookingno);
-            $term = Informations::where('position', 'TERM_TICKET')->first();
-            $bookings[0] = $booking;
-            Pdf::setOption(['dpi' => 150, 'defaultMediaType' => 'a4', 'debugCss' => true]);
-            $pdf = Pdf::loadView('print.ticket', ['bookings' => $bookings, 'term' => $term]);
+        $booking = BookingHelper::getBookingInfoByBookingNo($bookingno);
+        $term = Informations::where('position', 'TERM_TICKET')->first();
+        $bookings[0] = $booking;
+        //dd($booking);
+        Pdf::setOption(['dpi' => 150, 'defaultMediaType' => 'a4', 'debugCss' => true]);
+        $pdf = Pdf::loadView('print.ticket_v2', ['bookings' => $bookings, 'term' => $term]);
 
-            return $pdf->stream();
-            */
-            //$t = new TicketHelper();
-            //$t->makePdf($bookingno);
-            $booking = BookingHelper::getBookingInfoByBookingNo($bookingno);
-            $term = Informations::where('position', 'TERM_TICKET')->first();
-            $bookings[0] = $booking;
+        /*
+        if($booking->ispayment=='N'){
             //dd($booking);
-            Pdf::setOption(['dpi' => 150, 'defaultMediaType' => 'a4', 'debugCss' => true]);
-            $pdf = Pdf::loadView('print.ticket_v2', ['bookings' => $bookings, 'term' => $term]);
-
-            /*
-            if($booking->ispayment=='N'){
-                //dd($booking);
-                $pdf = Pdf::loadView('print.ticket_v2_nopayment', ['bookings' => $bookings, 'term' => $term]);
-            }
-                */
-
-            return $pdf->stream();
+            $pdf = Pdf::loadView('print.ticket_v2_nopayment', ['bookings' => $bookings, 'term' => $term]);
         }
+            */
+
+        return $pdf->stream();
 
     }
 
@@ -64,10 +44,10 @@ class PrintController extends Controller
         $bookingNos = $request->booking_nos;
         $bookings = [];
 
-        foreach($bookingNos as $bookingno){
+        foreach ($bookingNos as $bookingno) {
             $booking = BookingHelper::getBookingInfoByBookingNo($bookingno);
-            if($booking->ispayment =='Y'){
-                array_push($bookings,$booking);
+            if ($booking->ispayment == 'Y') {
+                array_push($bookings, $booking);
             }
 
         }

@@ -23,7 +23,7 @@
 
             @if ($countBooking > 0)
                 <a href="{{ route('routeSchedules.bookingAffected',['routeSchedules'=>$merchant_id ]) }}?merchant_id={{ $merchant_id }}"
-                    class="btn btn-outline-danger"><span class="animate-blink text-danger"><i class="fa-regular fa-circle-dot"></i></span> Check Booking Affected</a>
+                    class="btn btn-outline-danger"><span class="animate-blink text-danger"><i class="fa-regular fa-circle-dot"></i></span> Check Affecting Booking</a>
             @endif
         </div>
     </div>

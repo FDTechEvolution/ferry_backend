@@ -30,6 +30,13 @@
             $bookingRoutesX = $booking['bookingRoutesX'];
             $customers = $booking['bookingCustomers'];
             $firstCustomer = $customers[0];
+            foreach ($customers as $key => $customer) {
+                if($customer->pivot->isdefault == 'Y'){
+                    $firstCustomer = $customer;
+                    break;
+                }
+            }
+
             $payment = sizeof($booking['payments']) > 0 ? $booking['payments'][0] : null;
 
             $paymentDetails = json_decode($payment['description']);

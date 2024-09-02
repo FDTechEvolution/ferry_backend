@@ -75,14 +75,13 @@ class RouteHelper
     {
         $routes = Route::where('isactive', 'Y')
             ->with(['station_from', 'station_to','partner.image', 'icons']);
-        if(!is_null($stationFromId) && $stationFromId !=''){
+        if(!is_null($stationFromId) && $stationFromId !='' && $stationFromId !='all'){
             $routes = $routes->where('station_from_id', $stationFromId);
         }
 
-        if(!is_null($stationToId) && $stationToId !=''){
+        if(!is_null($stationToId) && $stationToId !='' && $stationToId !='all'){
             $routes = $routes->where('station_to_id', $stationToId);
         }
-
 
         $routes  = $routes->orderBy('station_from_id', 'ASC')
             ->orderBy('depart_time', 'ASC')

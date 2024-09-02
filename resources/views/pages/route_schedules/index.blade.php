@@ -22,7 +22,7 @@
             @if ($countBooking > 0)
                 <a href="{{ route('routeSchedules.bookingAffected', ['routeSchedules' => $merchant_id]) }}?merchant_id={{ $merchant_id }}"
                     class="btn btn-outline-danger"><span class="animate-blink text-danger"><i
-                            class="fa-regular fa-circle-dot"></i></span> Check Booking Affected</a>
+                            class="fa-regular fa-circle-dot"></i></span> Check Affecting Booking</a>
             @endif
         </div>
     </div>
@@ -76,7 +76,7 @@
     <div class="row">
         <div class="col-12">
             <div class="table-responsive">
-                <table class="table table-datatable  table-align-middle table-hover table-bordered"
+                <table class="table-datatable table table-bordered table-striped"
                     data-lng-empty="No data available in table"
                     data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
                     data-lng-filtered="(filtered from _MAX_ total entries)" data-lng-loading="Loading..."
@@ -109,46 +109,36 @@
                         @foreach ($routes as $index => $route)
                             @if (!empty($route->lastSchedule))
                                 <tr>
-                                    <td class="text-center p-0">
+                                    <td class="text-center p-0 align-middle">
                                         @if (!is_null($route->partner))
                                             <img src="{{ asset($route->partner->image->path) }}" width="25"
                                                 class="rounded-circle" alt="{{ $route->partner->name }}" />
                                         @endif
                                     </td>
                                     <td>
-                                        @if ($routeIdTxt != ($route->station_from->id . $route->station_to->id))
-                                            {{ $route->station_from->name }} <i
-                                                class="fa-solid fa-angles-right px-2 fa-1x"></i>
-                                            {{ $route->station_to->name }}
-                                        @endif
-
+                                        <x-view-route-detail :stationfrom="$route['station_from']" :stationto="$route['station_to']" :icons="$route['icons']" />
                                     </td>
-                                    <td>
+
+                                    <td class="align-middle">
                                         <span class="">{{ date('H:i', strtotime($route->depart_time)) }}<i
                                                 class="fa-solid fa-angles-right px-2 fa-1x"></i>{{ date('H:i', strtotime($route->arrive_time)) }}
                                         </span>
                                     </td>
-                                    <td>
-                                        <p class="p-0 m-0">
-                                            <span
-                                                class=" @if ($route->lastSchedule->type == 'CLOSE') text-danger @else text-success @endif">{{ $route->lastSchedule->type }}
+                                    <td class="align-middle">
+                                        <span class=" @if ($route->lastSchedule->type == 'CLOSE') text-danger @else text-success @endif">{{ $route->lastSchedule->type }}
                                                 {{ date('d M Y', strtotime($route->lastSchedule->start_datetime)) }} -
                                                 {{ date('d M Y', strtotime($route->lastSchedule->end_datetime)) }}
                                             </span>
-                                        </p>
                                     </td>
-                                    <td>
+                                    <td class="align-middle">
                                         <small class="d-flex">{{ date('D,d M Y H:i', strtotime($route->lastSchedule->created_at)) }}</small>
                                         @if (!is_null($route->lastSchedule->updated_name) && $route->lastSchedule->updated_name != '')
                                             <small>Updated By {{ $route->lastSchedule->updated_name }}:
                                                 {{ date('D,d M Y H:i', strtotime($route->lastSchedule->updated_at)) }}</small>
                                         @endif
                                     </td>
-                                    <td class="text-end">
-                                        <a href="{{ route('routeSchedules.show', ['routeSchedule' => $route->id]) }}"
-                                            data-ajax-modal-size="modal-xl" data-ajax-modal-centered="true"
-                                            data-ajax-modal-callback-function="" data-ajax-modal-backdrop="static"
-                                            class="me-2 text-primary js-ajax-modal">
+                                    <td class="text-end align-middle">
+                                        <a href="{{ route('routeSchedules.show', ['routeSchedule' => $route->id]) }}" class="me-2 text-primary" target="_blank">
                                             <svg width="18px" height="18px" xmlns="http://www.w3.org/2000/svg"
                                                 fill="currentColor" class="bi bi-calendar-week" viewBox="0 0 16 16">
                                                 <path

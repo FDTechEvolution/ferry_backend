@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\RouteHelper;
 use App\Models\PromotionLines;
 use App\Models\RouteAddons;
 use App\Models\RouteSchedules;
@@ -66,17 +67,38 @@ class RouteController extends Controller
 
     public function index()
     {
+        $stationFromId = request()->sf;
+        $stationToId = request()->st;
+
+        $stationFroms = RouteHelper::getStationFrom();
+        $stationTos = RouteHelper::getStationTo();
+
         $routes = Route::where('status', 'CO')
-            ->with('station_from', 'station_from.section', 'station_to', 'icons', 'routeAddons', 'activity_lines', 'meal_lines', 'partner', 'lastSchedule')
-            ->orderBy('depart_time', 'ASC')
-            ->get();
+            ->with('station_from', 'station_from.section', 'station_to', 'icons', 'routeAddons', 'activity_lines', 'meal_lines', 'partner');
+        if(empty($stationFromId)){
+            $stationFromId = $stationFroms[0]->id;
+            $routes = $routes->where('station_from_id',$stationFromId);
+        }else{
+            if($stationFromId != 'all'){
+                $routes = $routes->where('station_from_id',$stationFromId);
+            }
+        }
+
+        if(empty($stationToId) || $stationToId == 'all'){
+            $stationToId = 'all';
+            //$stationToId = $stationTos[0]->id;
+            //$routes = $routes->where('station_to_id',$stationToId);
+        }else{
+            $routes = $routes->where('station_to_id',$stationToId);
+        }
+
+        $routes = $routes->orderBy('depart_time', 'ASC')->get();
         //dd($routes);
 
         $newRoutes = [];
         foreach($routes as $index => $route){
             $a = $route->station_from->section->sort.$route->station_from->sort;
             $b = $route->station_to->section->sort.$route->station_to->sort;
-            //log::debug($a.$b.date('Hi', strtotime($route->depart_time)));
             $route['key'] = $a.$b.date('Hi', strtotime($route->depart_time));
 
             array_push($newRoutes,$route);
@@ -85,18 +107,20 @@ class RouteController extends Controller
         $key_values = array_column($newRoutes, 'key');
         array_multisort($key_values, SORT_ASC, $newRoutes);
 
-        //dd($newRoutes);
-        //$stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
         $icons = DB::table('icons')->where('type', $this->Type)->get();
 
-        //$this->make($routes);
         $status = $this->_Status;
 
-        //$this->updateAddonManual();
-
         return view(
-            'pages.route_control.index',
-            ['routes' => $newRoutes, 'route_status' => $status, 'icons' => $icons],
+            'pages.route_control.index',[
+                'routes' => $newRoutes,
+                'route_status' => $status,
+                'icons' => $icons,
+                'stationFroms'=>$stationFroms,
+                'stationTos'=>$stationTos,
+                'stationFromId'=>$stationFromId,
+                'stationToId'=>$stationToId
+            ],
         );
     }
 

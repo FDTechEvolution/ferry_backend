@@ -72,7 +72,7 @@
                 </td>
                 <td colspan="2">
                     Total Amount: {{$payment['totalamt']}}<br>
-                    Payment Status: @if($booking['ispayment']=='Y') <span class="text-success">Paid</span> @else <span class="text-danger">Unpay</span>  @endif <br>
+                    Payment Status: @if($booking['status']=='CO') <span class="text-success">Paid</span> @else <span class="text-danger">Unpay</span>  @endif <br>
                     Method:{{ $booking['book_channel'] }}/ {{ isset($payment['payment_method'])?$payment['payment_method']:'-' }}<br>
                     Transaction No. {{$referenceNo}}<br>
                     Approved by: @if(isset($user->firstname)) {{$user->firstname}} @else System  @endif<br>

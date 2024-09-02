@@ -54,10 +54,11 @@
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label for="station-sort" class="col-sm-4 col-form-label-sm text-start">Type
+                                <label for="station-sort" class="col-sm-4 col-form-label-sm text-start">Type <strong
+                                    class="text-danger">*</strong>
                                     :</label>
                                 <div class="col-sm-8">
-                                    <select class="form-select form-select-sm" id="station-type" name="type">
+                                    <select class="form-select form-select-sm" id="station-type" name="type" required>
                                         <option value="" selected>-- No Type --</option>
                                         @foreach ($type as $index => $t)
                                             <option value="{{ $index }}" @selected($station['type'] == $index)>{{ $t }}</option>

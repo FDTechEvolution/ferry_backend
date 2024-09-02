@@ -27,20 +27,32 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-12 mb-2 col-lg-3">
+                    <input type="text" class="form-control form-control-sm" id="search-station-from" value=""
+                        placeholder="Station From">
+                </div>
+                <div class="col-12 mb-2 col-lg-3">
+                    <input type="text" class="form-control form-control-sm" id="search-station-to" value=""
+                        placeholder="Station To">
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-12">
-                    <table class="table table-sm table-datatable table-align-middle table-hover"
-                        data-lng-empty="No data available in table"
-                        data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
-                        data-lng-filtered="(filtered from _MAX_ total entries)" data-lng-loading="Loading..."
-                        data-lng-processing="Processing..." data-lng-search="Search..."
-                        data-lng-norecords="No matching records found"
-                        data-lng-sort-ascending=": activate to sort column ascending"
-                        data-lng-sort-descending=": activate to sort column descending" data-main-search="false"
-                        data-column-search="false" data-row-reorder="false" data-col-reorder="false" data-responsive="true"
-                        data-header-fixed="false" data-select-onclick="false" data-enable-paging="true"
-                        data-enable-col-sorting="false" data-autofill="false" data-group="false" data-items-per-page="10"
-                        data-enable-column-visibility="false" data-lng-column-visibility="Column Visibility"
-                        data-enable-export="false">
+                    <table class="table table-datatable-custom table-hover table table-align-middle table-bordered" id="route-datatable"
+                    data-lng-empty="No data available in table"
+                    data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
+                    data-lng-filtered="(filtered from _MAX_ total entries)" data-lng-loading="Loading..."
+                    data-lng-processing="Processing..." data-lng-search="Search..."
+                    data-lng-norecords="No matching records found"
+                    data-lng-sort-ascending=": activate to sort column ascending"
+                    data-lng-sort-descending=": activate to sort column descending" data-enable-col-sorting="false"
+                    data-items-per-page="15" data-enable-column-visibility="false" data-enable-export="false"
+                    data-lng-export="<i class='fi fi-squared-dots fs-5 lh-1'></i>" data-lng-pdf="PDF" data-lng-xls="XLS"
+                    data-lng-all="All" data-export-pdf-disable-mobile="true" data-responsive="false"
+                    data-export='["pdf", "xls"]' data-main-search="false" data-column-search="false"
+                    data-custom-config='{
+
+                    }'>
                         <thead>
                             <tr class="small">
                                 <th class="text-center">#</th>
@@ -91,29 +103,40 @@
 
         </div>
     </form>
+    <style>
+        .custom-padding {
+            padding-top: 9px;
+            padding-bottom: 8px;
+        }
 
+        .fix-width-120 {
+            width: 120px;
+        }
+
+        .a-href-disabled {
+            pointer-events: none;
+            cursor: default;
+            opacity: 0.5;
+        }
+
+        div.dataTables_wrapper div.dataTables_filter input {
+            margin-left: 0;
+        }
+
+        .lh--1-2 {
+            line-height: 1rem !important;
+        }
+    </style>
 
 @stop
 
 @section('script')
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+
     <script>
-        $(document).ready(function() {
-            $('td[data-action="click"]').on('click', function() {
-                let id = $(this).data('id');
-                if ($('#'+id).is(":checked")) {
-                    $('#'+id).prop('checked', false);
-                    setOffInput(id)
-                } else {
-                    $('#'+id).prop('checked', true);
-                    setInput(id)
-                }
-
-            });
-        });
-
-        const routes = document.querySelectorAll('.route-select')
-        if(routes.length > 0) {
-            routes.forEach((item, index) => {
+        var _routes = document.querySelectorAll('.route-select')
+        if(_routes.length > 0) {
+            _routes.forEach((item, index) => {
                 item.addEventListener('click', () => {
                     if(item.checked) setInput(item.id)
                     else setOffInput(item.id)
@@ -134,5 +157,47 @@
             $('#infant_'+id).attr('name','infant_'+id);
             $('#seat_'+id).attr('name','seat_'+id);
         }
+
+        $(document).ready(function() {
+            $('td[data-action="click"]').on('click', function() {
+                let id = $(this).data('id');
+                if ($('#'+id).is(":checked")) {
+                    $('#'+id).prop('checked', false);
+                    setOffInput(id)
+                } else {
+                    $('#'+id).prop('checked', true);
+                    setInput(id)
+                }
+
+            });
+
+            let table = new DataTable('#route-datatable', {
+                searching: true,
+                ordering: true,
+
+                pageLength: 10
+            });
+            table.order([2, 'asc']).draw();
+            $('#route-datatable_filter').empty();
+
+
+
+
+            $('#search-station-from').on('keyup', function() {
+                //console.log(table.columns(2).search(this.value));
+                //console.log(this.value);
+                table.column(2).search(this.value).draw();
+            });
+
+            $('#search-station-to').on('keyup', function() {
+                //console.log(table.columns(2).search(this.value));
+                //console.log(this.value);
+                table.column(3).search(this.value).draw();
+            });
+
+        });
+
+
+
     </script>
 @stop

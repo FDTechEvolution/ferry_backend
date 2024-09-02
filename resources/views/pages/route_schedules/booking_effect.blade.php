@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('page-title')
-    <h1 class="ms-2 mb-0" id="station-page-title"><span class="text-main-color-2">Affected</span> bookings</h1>
+    <h1 class="ms-2 mb-0" id="station-page-title"><span class="text-main-color-2">Affecting</span> bookings</h1>
 
 @stop
 

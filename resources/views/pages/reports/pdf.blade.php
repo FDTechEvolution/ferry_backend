@@ -11,7 +11,7 @@
 <div class="row p-4 w-100">
     <div class="col-12 mb-3 no-print text-end">
         <button class="btn btn-sm btn-primary me-3" id="download-button"><i class="fi fi-arrow-download"></i> Download</button>
-        <button class="btn btn-sm btn-primary" id="print-button" onclick="setupToPrint()"><i class="fi fi-print"></i> Print</button>
+        <button class="btn btn-sm btn-primary" id="print-button" ><i class="fi fi-print"></i> Print</button>
     </div>
     <div class="col-12" id="pdf-report">
         <div class="row">

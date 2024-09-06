@@ -12,15 +12,6 @@
         <th class="p-0">
             <p class="mb-0">Shuttle Bus</p>(From)
         </th>
-        <th class="p-0">
-            <p class="mb-0">Shuttle Bus</p>(To)
-        </th>
-        <th class="p-0">
-            <p class="mb-0">Longtail Boat</p>(From)
-        </th>
-        <th class="p-0">
-            <p class="mb-0">Longtail Boat</p>(To)
-        </th>
         <th class="p-0">Meal on Board</th>
         <th class="p-0">Activity</th>
         <th class="text-center p-0">Status</th>
@@ -69,30 +60,16 @@
             </td>
             <td class="p-0">
                 @if($item['shuttle_bus_from'] != '')
-                    Detail : {{ $item['shuttle_bus_from'] }}
-                @else
-                    <p class="mb-0">-</p>
+                    Shuttle Bus from: {{ $item['shuttle_bus_from'] }}<br>
                 @endif
-            </td>
-            <td class="p-0">
                 @if($item['shuttle_bus_to'] != '')
-                    Detail : {{ $item['shuttle_bus_to'] }}
-                @else
-                    <p class="mb-0">-</p>
+                    Shuttle Bus to: {{ $item['shuttle_bus_to'] }}<br>
                 @endif
-            </td>
-            <td class="p-0">
                 @if($item['longtail_boat_from'] != '')
-                    Detail : {{ $item['longtail_boat_from'] }}
-                @else
-                    <p class="mb-0">-</p>
+                    Longtail Boat from: {{ $item['longtail_boat_from'] }}<br>
                 @endif
-            </td>
-            <td class="p-0">
                 @if($item['longtail_boat_to'] != '')
-                    Detail : {{ $item['longtail_boat_to'] }}
-                @else
-                    <p class="mb-0">-</p>
+                    Longtail Boat to: {{ $item['longtail_boat_to'] }}
                 @endif
             </td>
             <td class="p-0">

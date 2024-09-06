@@ -11,6 +11,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DevTestController;
 use App\Http\Controllers\InformationsController;
 use App\Http\Controllers\PartnerController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RouteCalendarController;
 use App\Http\Controllers\RouteSchedulesController;
 use App\Http\Controllers\SectionsController;
@@ -360,6 +361,11 @@ Route::middleware('auth')->group(function () {
 
         // AJAX
         Route::get('/ajax/report/depart-arrive-time/{from_id}/{to_id}', 'routeDepartArriveTime');
+    });
+
+    //ner version
+    Route::controller(ReportController::class)->group(function() {
+        Route::get('/app-report', 'index')->name('report.index');
     });
 
     Route::controller(FeeManageController::class)->group(function() {

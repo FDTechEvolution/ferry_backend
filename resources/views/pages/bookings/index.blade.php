@@ -7,13 +7,14 @@
 
 @php
     $colors = [
-        'one-way' => '#0580c4',
-        'round-trip' => '#00bf63',
-        'multi-trip' => '#ff6100',
+        'one-way' => 'text-light-blue-600',
+        'round-trip' => 'text-pink-600',
+        'multi-trip' => 'text-green-800',
     ];
 @endphp
 
 @section('content')
+
     <form novalidate class="bs-validate" id="frm" method="GET">
         <div class="row">
 
@@ -196,6 +197,9 @@
                         <tbody id="">
 
                             @foreach ($bookings as $index => $item)
+                                @php
+                                    $textClass = $colors[$item['trip_type']];
+                                @endphp
                                 <tr>
                                     <td>
                                         <div class="form-check mb-2">
@@ -205,24 +209,24 @@
 
                                         </div>
                                     </td>
-                                    <td><small>{{ date('d/m/Y H:i', strtotime($item['created_at'])) }}</small></td>
-                                    <td style="white-space: pre;">{{ $item['traveldate'] }}</td>
-                                    <td>
+                                    <td class="{{$textClass}}"><small>{{ date('d/m/Y H:i', strtotime($item['created_at'])) }}</small></td>
+                                    <td style="white-space: pre;" class="{{$textClass}}">{{ $item['traveldate'] }}</td>
+                                    <td class="{{$textClass}}">
                                         <a href="#" data-href="{{route('booking-mview',['id'=>$item['id']])}}" data-ajax-modal-size="modal-xl" data-ajax-modal-centered="true"
                                         data-ajax-modal-callback-function="" data-ajax-modal-backdrop="static"
-                                        class="me-2 text-primary js-ajax-modal">
+                                        class="me-2 js-ajax-modal {{$textClass}}">
                                             {{ $item['bookingno'] }}
                                         </a>
                                     </td>
-                                    <td>{{ $item['ticketno'] }}</td>
-                                    <td>{{$item['book_channel']}}</td>
-                                    <td>{{ $item['type'] }}</td>
+                                    <td class="{{$textClass}}">{{ $item['ticketno'] }}</td>
+                                    <td class="{{$textClass}}">{{$item['book_channel']}}</td>
+                                    <td class="text-center {{$textClass}}">{{ $item['type'] }}</td>
 
-                                    <td>
+                                    <td class="{{$textClass}}">
                                         {{ $item['customer_name'] }}<br>
                                         <span class="badge bg-secondary-soft">{{ $item['email'] }}</span>
                                     </td>
-                                    <td>
+                                    <td class="{{$textClass}}">
                                         {{$item['total_passenger']}}
                                     </td>
 

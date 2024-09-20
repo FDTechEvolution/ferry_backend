@@ -68,9 +68,12 @@
                         @foreach($route_maps as $index => $map)
                             <tr class="text-center align-middle">
                                 <td class="mx-w--100">
+                                    @empty(!$map->image)
                                     <a class="fancybox" href="{{ asset($map->image->path.'/'.$map->image->name) }}">
                                         <img src="{{ asset($map->image->path.'/'.$map->image->name) }}" class="w--100 w-sm--200">
                                     </a>
+                                    @endempty
+
                                 </td>
                                 <td>{{ $map->detail }}</td>
                                 <td>
@@ -81,13 +84,13 @@
                                 </td>
                                 <td>{{ $map->sort }}</td>
                                 <td>
-                                    <x-action-edit 
+                                    <x-action-edit
                                         class="me-2"
                                         :url="_('javascript:void(0)')"
                                         id="btn-route-map-edit"
                                         onClick="updateEditData({{ $index }})"
                                     />
-                                    <x-action-delete 
+                                    <x-action-delete
                                         :url="route('route-map-delete', ['id' => $map->id])"
                                         :message="_('Are you sure? Delete this route map ?')"
                                     />

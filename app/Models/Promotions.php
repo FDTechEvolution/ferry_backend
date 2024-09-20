@@ -59,11 +59,11 @@ class Promotions extends Model
     }
 
     public function promotionStationFroms() {
-        return $this->belongsToMany(Station::class, 'promotion_lines', 'promotion_id', 'station_id')->withPivot('isactive')->wherePivot('isactive', 'Y')->where('type', 'STATION_FROM');
+        return $this->belongsToMany(Station::class, 'promotion_lines', 'promotion_id', 'station_id')->withPivot('isactive')->wherePivot('isactive', 'Y')->where('promotion_lines.type', 'STATION_FROM');
     }
 
     public function promotionStationTos() {
-        return $this->belongsToMany(Station::class, 'promotion_lines', 'promotion_id', 'station_id')->withPivot('isactive')->wherePivot('isactive', 'Y')->where('type', 'STATION_TO');
+        return $this->belongsToMany(Station::class, 'promotion_lines', 'promotion_id', 'station_id')->withPivot('isactive')->wherePivot('isactive', 'Y')->where('promotion_lines.type', 'STATION_TO');
     }
 
     public function promotion_lines() {

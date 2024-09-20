@@ -26,8 +26,8 @@ class TimeTableController extends Controller
 
     public function edit(string $id = null) {
         $time = TimeTable::find($id);
-        
-        if(is_null($time) || $time->status != 'CO') 
+
+        if(is_null($time) || $time->status != 'CO')
             return redirect()->route('time-table-index')->withFail('This time table not exist.');
 
         $time->image;
@@ -37,7 +37,7 @@ class TimeTableController extends Controller
     public function store(Request $request) {
         $request->validate([
             'sort' => 'integer|nullable',
-            'detail' => 'string|nullable',
+            'title' => 'string|nullable',
             'file_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
@@ -48,7 +48,7 @@ class TimeTableController extends Controller
         if($request->sort == '') $_sort = TimeTable::where('status', 'CO')->max('sort');
 
         $time_table = TimeTable::create([
-            'detail' => $request->detail,
+            'title' => $request->title,
             'image_id' => $image->id,
             'sort' => $request->sort != '' ? $request->sort : $_sort+1
         ]);
@@ -60,7 +60,7 @@ class TimeTableController extends Controller
     public function update(Request $request) {
         $request->validate([
             'sort' => 'integer|nullable',
-            'detail' => 'string|nullable',
+            'title' => 'string|nullable',
             'file_picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable'
         ]);
 
@@ -80,7 +80,7 @@ class TimeTableController extends Controller
 
         if($request->sort == '') $_sort = TimeTable::where('status', 'CO')->max('sort');
 
-        $table->detail = $request->detail;
+        $table->title = $request->title;
         $table->sort = $request->sort != '' ? $request->sort : $_sort+1;
 
         if($table->save()) return redirect()->route('time-table-index')->withSuccess('Time table updated.');

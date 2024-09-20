@@ -58,9 +58,9 @@
                 </div>
             </div>
             <div class="mb-2 row">
-                <label class="col-sm-12 col-lg-1 col-form-label-sm text-start text-light fw-bold">Detail :</label>
+                <label class="col-sm-12 col-lg-1 col-form-label-sm text-start text-light fw-bold">Title :</label>
                 <div class="col-sm-12 col-lg-5 mb-3 mb-lg-0">
-                    <textarea class="form-control" rows="2" name="detail"></textarea>
+                    <input class="form-control" name="title"></input>
                 </div>
                 <div class="col-sm-12 col-lg-6 justify-content-end d-flex align-items-end">
                     <x-button-submit-loading class="btn-sm w--20 me-2 button-green-bg border-radius-10"

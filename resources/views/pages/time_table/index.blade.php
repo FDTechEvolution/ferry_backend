@@ -52,7 +52,7 @@
                                         </a>
                                         @endif
                                     </td>
-                                    <td>{{ $table->detail }}</td>
+                                    <td>{{ $table->title }}</td>
                                     <td>
                                         <label class="align-items-center col-form-label-sm text-center">
                                             <input class="d-none-cloaked" type="checkbox" name="switch-checkbox"

@@ -78,7 +78,7 @@ class RouteMapController extends Controller
         $route_map->image;
         $route_map->banner;
         $route_map->thumb;
-        
+
         // check upload new image
         if($request->hasFile('file_picture')) {
             $image_id = $this->storeImage($request->file_picture, $this->ImagePath);
@@ -144,8 +144,11 @@ class RouteMapController extends Controller
     }
 
     private function destroyImage($image_id, $_image) {
+        if(empty($image_id)){
+            return;
+        }
         $image = Image::find($image_id)->delete();
-        if($image) {
+        if($image && file_exists(public_path().$_image->path.'/'.$_image->name)) {
             unlink(public_path().$_image->path.'/'.$_image->name);
         }
     }

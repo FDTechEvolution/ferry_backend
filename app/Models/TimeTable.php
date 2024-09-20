@@ -15,7 +15,8 @@ class TimeTable extends Model
         'image_id',
         'sort',
         'isactive',
-        'status'
+        'status',
+        'title'
     ];
 
     protected $hidden = [

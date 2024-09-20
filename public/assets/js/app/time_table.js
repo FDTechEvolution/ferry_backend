@@ -20,8 +20,8 @@ function updateEditData(index) {
 }
 
 function setDataToEditForm(table) {
-    // console.log(table)
-    document.querySelector('#time-table-detail-edit').innerText = table.detail
+    console.log(table)
+    document.querySelector('#time-table-title-edit').value = table.title
     document.querySelector('#time-table-sort-edit').value = table.sort
     document.querySelector('#time-table-id-edit').value = table.id
 

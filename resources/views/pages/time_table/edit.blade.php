@@ -66,8 +66,8 @@
                             </div>
                         </div>
                     </div>
-                    <svg id="restore-image" title="Restore Images" data-bs-toggle="tooltip" onClick="restoreCurrentImage('current-image', 'has-image', 'restore-image')" width="18px" height="18px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-counterclockwise d-none cursor-pointer" viewBox="0 0 16 16">  
-                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"></path>  
+                    <svg id="restore-image" title="Restore Images" data-bs-toggle="tooltip" onClick="restoreCurrentImage('current-image', 'has-image', 'restore-image')" width="18px" height="18px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-counterclockwise d-none cursor-pointer" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"></path>
                         <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"></path>
                     </svg>
 
@@ -81,12 +81,12 @@
                 </div>
             </div>
             <div class="mb-2 row">
-                <label class="col-sm-12 col-lg-1 col-form-label-sm text-start text-light fw-bold">Detail :</label>
+                <label class="col-sm-12 col-lg-1 col-form-label-sm text-start text-light fw-bold">Title :</label>
                 <div class="col-sm-12 col-lg-5 mb-3 mb-lg-0">
-                    <textarea class="form-control" rows="2" name="detail" id="time-table-detail-edit"></textarea>
+                    <input class="form-control" name="title" id="time-table-title-edit"></input>
                 </div>
                 <div class="col-sm-12 col-lg-6 justify-content-end d-flex align-items-end">
-                    <x-button-submit-loading 
+                    <x-button-submit-loading
                         class="btn-sm w--20 me-2 button-green-bg border-radius-10"
                         :form_id="_('time-table-update-form')"
                         :fieldset_id="_('time-table-update')"

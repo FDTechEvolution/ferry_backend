@@ -14,10 +14,10 @@
                 DESTINATION TO:
             </td>
             <td class="text-center" style="padding: 0;">
-                DEP.
+                DEPARTURE
             </td>
             <td class="text-center" style="padding: 0;">
-                ARR.
+                ARRIVAL
             </td>
         </tr>
 
@@ -46,36 +46,37 @@
             </td>
         </tr>
     </table>
-    @if (sizeof($bookingRouteX->bookingRouteAddons) > 0 || sizeof($bookingRouteX->bookingExtraAddons) > 0)
+
         <table>
             <tbody>
-                @if ($booking['ispremiumflex'] == 'Y')
+
                 <tr>
                     <td>
-                        Premium flex: <span class="text-success">YES</span>
+                        Premium flex: <span class="">{{ $booking['ispremiumflex'] == 'Y'?'YES':'NO' }}</span>
                     </td>
                 </tr>
+                @if (sizeof($bookingRouteX->bookingRouteAddons) > 0 || sizeof($bookingRouteX->bookingExtraAddons) > 0)
+
+                    @foreach ($bookingRouteX->bookingRouteAddons as $extra)
+                        <tr>
+                            <td style="white-space:wrap;">
+                                <p style="padding: 0;margin: 0;">- {{ $extra->name }}: {{ $extra->pivot->description }}</p>
+                            </td>
+                        </tr>
+                    @endforeach
+
+                    @foreach ($bookingRouteX->bookingExtraAddons as $extra)
+                        <tr>
+                            <td style="white-space:wrap;">
+                                <p style="padding: 0;margin: 0;">- </p>
+                            </td>
+                        </tr>
+                    @endforeach
                 @endif
-
-                @foreach ($bookingRouteX->bookingRouteAddons as $extra)
-                    <tr>
-                        <td style="white-space:wrap;">
-                            <p style="padding: 0;margin: 0;">- {{ $extra->name }}: {{ $extra->pivot->description }}</p>
-                        </td>
-                    </tr>
-                @endforeach
-
-                @foreach ($bookingRouteX->bookingExtraAddons as $extra)
-                    <tr>
-                        <td style="white-space:wrap;">
-                            <p style="padding: 0;margin: 0;">- </p>
-                        </td>
-                    </tr>
-                @endforeach
 
             </tbody>
         </table>
-    @endif
+
 
 
 </div>

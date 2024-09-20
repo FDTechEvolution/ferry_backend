@@ -21,12 +21,12 @@
                 <td class="w-15">ISSUED DATE</td>
                 <td class="w-15">INVOICE NO.</td>
                 <td class="w-15">TICKET NO.</td>
-                <td class="w-15">Number of Passenger: </td>
+                <td class="w-15">{{ Str::upper('Number of Passenger:') }} </td>
             </tr>
             <tr>
                 <td><small>{{ date('l d M Y', strtotime($booking['created_at'])) }}</small></td>
                 <td>{{ $booking['bookingno'] }}</td>
-                <td class="font-bold-14">
+                <td class="">
                     @if (isset($bookingRouteX->tickets[0]))
                     {{ $bookingRouteX->tickets[0]['ticketno'] }}
                     @endif
@@ -48,7 +48,7 @@
 
         <tbody>
 
-            <tr class="bg-gray font-w-700">
+            <tr class="bg-gray">
                 <td colspan="2" class="w-75">
                     {{strtoupper('Contact Information')}}
                     @if ($index==0 && sizeof($customers) >1)
@@ -63,7 +63,7 @@
             <tr>
                 <td colspan="2">
                     Name: <span
-                        class="font-bold-14 ">{{ $firstCustomer['title'] }}.{{ ucfirst($firstCustomer['fullname']) }}</span><br>
+                        class="">{{ $firstCustomer['title'] }}.{{ ucfirst($firstCustomer['fullname']) }}</span><br>
                     Passport No.: {{ $firstCustomer['passportno'] }}<br>
                     Tel: {{ $firstCustomer['mobile'] }}<br>
                     Thai: {{ $firstCustomer['mobile_th'] }}<br>

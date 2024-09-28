@@ -5,16 +5,16 @@
         <tbody>
             <tr>
                 <td colspan="2">
-                    <h3>YOUR BOOKING DETAILS</h3>
+                    <h3 style="color: #0580c4;">YOUR BOOKING DETAILS</h3>
                 </td>
                 <td colspan="2" class="text-end">
-                    <h3
-                    style="color:{{ $colors[$booking['trip_type']] }};">{{ ucwords(str_replace('-',' ',$booking['trip_type'])) }}
-                    ticket
-                    @if ($booking['trip_type'] == 'multi-trip')
+                    <h3 style="color:{{ $colors[$booking['trip_type']] }};">{{ ucwords(str_replace('-','
+                        ',$booking['trip_type'])) }}
+                        ticket
+                        @if ($booking['trip_type'] == 'multi-trip')
                         <span>{{$i+1}}/{{sizeof($bookingRoutes)}}</span>
-                    @endif
-                </h3>
+                        @endif
+                    </h3>
                 </td>
             </tr>
             <tr class="bg-gray font-w-700">
@@ -32,9 +32,9 @@
                     @endif
                 </td>
                 <td>
-                    Adult:{{$booking['adult_passenger']}}/
-                    Child:{{$booking['child_passenger']}}/
-                    Infant:{{$booking['infant_passenger']}}
+                    Adult: {{$booking['adult_passenger']}} &nbsp;&nbsp;
+                    Child: {{$booking['child_passenger']}} &nbsp;&nbsp;
+                    Infant: {{$booking['infant_passenger']}}
                 </td>
             </tr>
 
@@ -52,7 +52,7 @@
                 <td colspan="2" class="w-75">
                     {{strtoupper('Contact Information')}}
                     @if ($index==0 && sizeof($customers) >1)
-                        <span class="text-main">[Lead passenger]</span>
+                    <span class="text-main">[Lead passenger]</span>
                     @endif
                 </td>
                 <td colspan="2" class="w-25">
@@ -62,20 +62,24 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    Name: <span
-                        class="">{{ $firstCustomer['title'] }}.{{ ucfirst($firstCustomer['fullname']) }}</span><br>
+                    Name: <span class="">{{ $firstCustomer['title'] }}.{{ ucfirst($firstCustomer['fullname'])
+                        }}</span><br>
                     Passport No.: {{ $firstCustomer['passportno'] }}<br>
-                    Tel: {{ $firstCustomer['mobile'] }}<br>
-                    Thai: {{ $firstCustomer['mobile_th'] }}<br>
+                    Nationality: {{ $firstCustomer['country'] }}<br>
                     Email: {{ $firstCustomer['email'] }}<br>
+                    Tel: {{ $firstCustomer['mobile'] }} / Thai tel: {{ $firstCustomer['mobile_th'] }}
+
+
 
                 </td>
                 <td colspan="2">
                     Total Amount: {{$payment['totalamt']}}<br>
-                    Payment Status: @if($booking['status']=='CO') <span class="text-success">Paid</span> @else <span class="text-danger">Unpay</span>  @endif <br>
-                    Method:{{ $booking['book_channel'] }}/ {{ isset($payment['payment_method'])?$payment['payment_method']:'-' }}<br>
+                    Payment Status: @if($booking['status']=='CO') <span class="text-success">APPROVED</span> @else <span
+                        class="text-danger">Unpay</span> @endif <br>
+                    Method:{{ $booking['book_channel'] }}/ {{
+                    isset($payment['payment_method'])?$payment['payment_method']:'-' }}<br>
                     Transaction No. {{$referenceNo}}<br>
-                    Approved by: @if(isset($user->firstname)) {{$user->firstname}} @else System  @endif<br>
+                    Approved by: @if(isset($user->firstname)) {{$user->firstname}} @else RSVN @endif<br>
 
 
 

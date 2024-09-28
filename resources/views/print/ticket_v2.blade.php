@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 @php
-    //$data = file_get_contents('https://andamanexpress.com/tiger-line-ferry_logo-header-3.jpg');
-    //$base64 = 'data:image/jpg;base64,' . base64_encode($data);
-    $colors = [
-        'one-way' => '#0580c4',
-        'round-trip' => '#00bf63',
-        'multi-trip' => '#ff6100',
-    ];
+//$data = file_get_contents('https://andamanexpress.com/tiger-line-ferry_logo-header-3.jpg');
+//$base64 = 'data:image/jpg;base64,' . base64_encode($data);
+$colors = [
+'one-way' => '#0580c4',
+'round-trip' => '#00bf63',
+'multi-trip' => '#ff6100',
+];
 @endphp
 
 <head>
@@ -21,59 +21,59 @@
 
 <body>
     @foreach ($bookings as $index => $booking)
-        @php
-            $user = is_null($booking['user'])?[]:$booking['user'];
-            $extras = $booking['bookingRoutesX'];
-            $bookingRoutes = $booking['bookingRoutes'];
-            $bookingRoutesX = $booking['bookingRoutesX'];
-            $customers = $booking['bookingCustomers'];
-            $firstCustomer = $customers[0];
-            $firstCustomer = $customers[0];
-            foreach ($customers as $key => $customer) {
-                if($customer->pivot->isdefault == 'Y'){
-                    $firstCustomer = $customer;
-                    break;
-                }
-            }
+    @php
+    $user = is_null($booking['user'])?[]:$booking['user'];
+    $extras = $booking['bookingRoutesX'];
+    $bookingRoutes = $booking['bookingRoutes'];
+    $bookingRoutesX = $booking['bookingRoutesX'];
+    $customers = $booking['bookingCustomers'];
+    $firstCustomer = $customers[0];
+    $firstCustomer = $customers[0];
+    foreach ($customers as $key => $customer) {
+    if($customer->pivot->isdefault == 'Y'){
+    $firstCustomer = $customer;
+    break;
+    }
+    }
 
-            $payment = sizeof($booking['payments']) > 0 ? $booking['payments'][0] : null;
-
-
-            //$paymentDetails = json_decode($payment['description']);
-            $referenceNo = isset($paymentDetails->referenceNo) ? $paymentDetails->referenceNo : '';
-
-            $approveCode = isset($paymentDetails->approvalCode) ? $paymentDetails->approvalCode : '';
-
-        @endphp
-
-        @foreach ($bookingRoutes as $i => $bookingRoute)
-            @php
-                $bookingRouteX = $bookingRoutesX[$i];
-            @endphp
-            <div class="{{ $booking['book_channel'] == 'ADMIN' ? 'bg-staff' : '' }}">
-
-                @include('print.inc_ticket.head')
-
-                @include('print.inc_ticket.bookdetail')
-
-                @include('print.inc_ticket.travel')
+    $payment = sizeof($booking['payments']) > 0 ? $booking['payments'][0] : null;
 
 
-                @include('print.inc_ticket.passenger')
+    //$paymentDetails = json_decode($payment['description']);
+    $referenceNo = isset($paymentDetails->referenceNo) ? $paymentDetails->referenceNo : '';
 
-                @include('print.inc_ticket.footer')
-            </div>
-            @if(($i+1) != sizeof($bookingRoutes))
-                <div style="page-break-before:always;"> </div>
-            @endif
+    $approveCode = isset($paymentDetails->approvalCode) ? $paymentDetails->approvalCode : '';
+
+    @endphp
+
+    @foreach ($bookingRoutes as $i => $bookingRoute)
+    @php
+    $bookingRouteX = $bookingRoutesX[$i];
+    @endphp
+    <div class="{{ $booking['book_channel'] == 'ADMIN' ? 'bg-staff' : '' }}">
+
+        @include('print.inc_ticket.head')
+
+        @include('print.inc_ticket.bookdetail')
+
+        @include('print.inc_ticket.travel')
+        @include('print.inc_ticket.checkin')
+
+        @include('print.inc_ticket.passenger')
+
+        @include('print.inc_ticket.footer')
+    </div>
+    @if(($i+1) != sizeof($bookingRoutes))
+    <div style="page-break-before:always;"> </div>
+    @endif
 
 
-        @endforeach
+    @endforeach
 
 
-        @if (sizeof($bookings) != $index + 1)
-            <div style="page-break-before:always;"> </div>
-        @endif
+    @if (sizeof($bookings) != $index + 1)
+    <div style="page-break-before:always;"> </div>
+    @endif
     @endforeach
 </body>
 

@@ -6,10 +6,13 @@ use Illuminate\Http\Request;
 
 use App\Models\ApiMerchants;
 use App\Models\ApiRoutes;
+use App\Models\Route;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Helpers\ImageHelper;
+use App\Helpers\RouteHelper;
+
 
 class ApiMerchantsController extends Controller
 {
@@ -76,10 +79,45 @@ class ApiMerchantsController extends Controller
      */
     public function edit(string $id)
     {
-        $apiMerchant = ApiMerchants::with(['apiRoutes', 'apiRoutes.partner', 'apiRoutes.partner.image', 'apiRoutes.station_from', 'apiRoutes.station_to'])->where('id', $id)->first();
+        $stationFromId = request()->sf;
+        $stationToId = request()->st;
+        $stationFroms = RouteHelper::getStationFrom();
+
+        $stationTos = RouteHelper::getStationTo($stationFromId);
+
+        $routes = [];
+        if($stationFromId != 'all' || $stationToId !='all'){
+            $routes = Route::select('id');
+            if($stationFromId != 'all'){
+                $routes = $routes->where('station_from_id',$stationFromId);
+            }
+
+            if($stationToId != 'all'){
+                $routes = $routes->where('station_to_id',$stationToId);
+            }
+
+            $routes = $routes->get();
+        }
+
+
+
+        $apiMerchant = ApiMerchants::where('id', $id)->first();
+
+        $apiRoutes = ApiRoutes::where('api_merchant_id',$id);
+        if(sizeof($routes) >0){
+            $apiRoutes = $apiRoutes->whereIn('route_id',$routes);
+        }
+        $apiRoutes =  $apiRoutes->with(['route'])->get();
 
         // Log::debug($apiMerchant->toArray());
-        return view('pages.api_merchants.edit', ['apiMerchant' => $apiMerchant]);
+        return view('pages.api_merchants.edit', [
+            'apiMerchant' => $apiMerchant,
+            'stationFroms' => $stationFroms,
+            'stationTos' => $stationTos,
+            'stationFromId' => $stationFromId,
+            'stationToId' => $stationToId,
+            'apiRoutes'=>$apiRoutes
+        ]);
     }
 
     public function addRoute(string $id)

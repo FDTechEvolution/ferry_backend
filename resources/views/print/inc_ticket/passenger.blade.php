@@ -1,29 +1,35 @@
 @if (sizeof($customers) > 1)
-    <div class="prow mt-3">
-        <table class="ptable w-100 border">
-            <tr>
-                <td colspan="4">
-                    <h3>PASSENGER NAME LIST</h3>
-                </td>
-            </tr>
-            @foreach ($customers as $i => $customer)
-                <tr>
-                    <td>{{ $i + 1 }}.</td>
+<div class="prow mt-3">
+    <table class="ptable w-100 ">
+        <tr class="bg-gray">
+            <td colspan="8">
+                <h3>PASSENGER NAME LIST</h3>
+            </td>
+        </tr>
+        @foreach ($customers as $i => $customer)
+        @if ($i%2 ==0)
+        <tr>
+            @endif
 
-                    <td>{{ $customer['title'] }}.{{ ucfirst($customer['fullname']) }}</td>
-                    <td>{{ $customer['birth_day'] }}</td>
-                    <td>
-                        @if ($customer['type'] == 'ADULT')
-                            <div class="ico-adult"></div>
-                        @elseif ($customer['type'] == 'CHILD')
-                            <div class="ico-child"></div>
-                        @else
-                            <div class="ico-infant"></div>
-                        @endif
+            <td class="text-end">{{ $i + 1 }}.</td>
 
-                    </td>
-                </tr>
-            @endforeach
-        </table>
-    </div>
+            <td>{{ $customer['title'] }}.{{ ucfirst($customer['fullname']) }}</td>
+
+            <td class="text-end">
+                @if ($customer['type'] == 'ADULT')
+                <div class="ico-adult"></div>
+                @elseif ($customer['type'] == 'CHILD')
+                <div class="ico-child"></div>
+                @else
+                <div class="ico-infant"></div>
+                @endif
+
+            </td>
+            <td>{{ $customer['birth_day'] }}</td>
+            @if ($i%2 ==1)
+        </tr>
+        @endif
+        @endforeach
+    </table>
+</div>
 @endif

@@ -17,7 +17,8 @@ class InformationsController extends Controller
             'TERMS_OF_SERVICE'=>'Terms of Service',
             'PRIVACY_POLICY'=>'Privacy Policy',
             'Q&A'=>'Q&A',
-            'PRIVATE_CHATER_BOAT'=>'Private Chater Boat'
+            'PRIVATE_CHATER_BOAT'=>'Private Chater Boat',
+            'announcement'=>'Announcement on Home page'
         ];
     }
 
@@ -26,11 +27,11 @@ class InformationsController extends Controller
         $this->middleware('auth');
     }
 
-    public function index() 
+    public function index()
     {
         $informations = Informations::orderBy('created_at', 'DESC')->get();
         $positions = $this->getPosition();
-        return view('pages.informations.index', 
+        return view('pages.informations.index',
                     ['informations'=>$informations,'positions'=>$positions]
                 );
     }
@@ -59,7 +60,7 @@ class InformationsController extends Controller
             'position' => $request->position,
             'body' => $request->body
         ]);
-        
+
         if($data){
             return redirect()->route('information-index')->withSuccess('Information created...');
         }else{

@@ -47,6 +47,7 @@ class RouteHelper
             ->join('stations', 'routes.station_from_id', '=', 'stations.id')
             ->where('routes.isactive', 'Y')
             ->groupBy('stations.id', 'stations.name', 'stations.piername', 'stations.nickname')
+            ->orderBy('stations.name','ASC')
             ->Get();
 
         return $stations;
@@ -66,7 +67,7 @@ class RouteHelper
         }
 
         $stations = $stations->groupBy('stations.id', 'stations.name', 'stations.piername', 'stations.nickname')
-            ->Get();
+        ->orderBy('stations.name','ASC')->Get();
 
         return $stations;
     }

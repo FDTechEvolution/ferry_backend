@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\RouteHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
@@ -21,14 +22,15 @@ class ReportsController extends Controller
     }
 
     public function index() {
-        $sections = $this->getSection();
+        //$sections = $this->getSection();
+        $sections = RouteHelper::getSectionStationFrom(true);
         $partners = $this->getPartner();
 
         return view('pages.reports.index', ['sections' => $sections, 'partners' => $partners, 'reports' => []]);
     }
 
     public function getRoute(Request $request) {
-        $sections = $this->getSection();
+        $sections = RouteHelper::getSectionStationFrom(true);
         $partners = $this->getPartner();
 
         $depart_date = $this->setDepartDate($request->daterange);
@@ -210,10 +212,6 @@ class ReportsController extends Controller
             'nickname' => $station->nickname,
             'piername' => $station->piername
         ];
-    }
-
-    private function getSection() {
-        return Section::with('stations')->orderBy('sort', 'ASC')->get();
     }
 
     private function getPartner() {

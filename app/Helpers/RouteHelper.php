@@ -4,6 +4,7 @@ namespace App\Helpers;
 use App\Models\Route;
 use App\Models\RouteDailyStatus;
 use App\Models\RouteSchedules;
+use App\Models\Section;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -70,6 +71,57 @@ class RouteHelper
         ->orderBy('stations.name','ASC')->Get();
 
         return $stations;
+    }
+
+    public static function getSectionStationFrom($routeFillter = false){
+        $sections = [];
+
+        if($routeFillter){
+            $sections = Section::with(['stations' => function ($query) {
+                $query->has('stationFrom');
+            }])->orderBy('sort', 'ASC')->get();
+        }else{
+            $sections = Section::with('stations')->orderBy('sort', 'ASC')->get();
+        }
+
+        $_section = $sections;
+        foreach($_section as $index => $section){
+            if(sizeof($section->stations) ==0 || is_null($section->stations)){
+                unset($sections[$index]);
+            }
+        }
+
+        return $sections;
+    }
+
+    public static function getSectionStationTo($routeFillter = false,$stationFromId = NULL){
+        $sections = [];
+
+        if($routeFillter){
+            if($stationFromId !='' && $stationFromId !=null){
+                $routes = Route::select('station_to_id as id')->where('station_from_id',$stationFromId)->get();
+
+                $sections = Section::with(['stations' => function ($query) use($routes) {
+                    $query->whereIn('id',$routes);
+                }])->orderBy('sort', 'ASC')->get();
+            }else{
+                $sections = Section::with(['stations' => function ($query) {
+                    $query->has('stationTo');
+                }])->orderBy('sort', 'ASC')->get();
+            }
+
+        }else{
+            $sections = Section::with('stations')->orderBy('sort', 'ASC')->get();
+        }
+
+        $_section = $sections;
+        foreach($_section as $index => $section){
+            if(sizeof($section->stations) ==0 || is_null($section->stations)){
+                unset($sections[$index]);
+            }
+        }
+
+        return $sections;
     }
 
     public static function getRoutes($stationFromId, $stationToId)

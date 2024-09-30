@@ -21,7 +21,8 @@
                 <td class="w-15">ISSUED DATE</td>
                 <td class="w-15">INVOICE NO.</td>
                 <td class="w-15">TICKET NO.</td>
-                <td class="w-15">{{ Str::upper('Number of Passenger:') }} </td>
+                <td class="w-15 text-end">{{ Str::upper('Number of Passenger:') }}
+                    {{($booking['adult_passenger']+$booking['child_passenger']+$booking['infant_passenger'])}}</td>
             </tr>
             <tr>
                 <td><small>{{ date('l d M Y', strtotime($booking['created_at'])) }}</small></td>
@@ -31,7 +32,7 @@
                     {{ $bookingRouteX->tickets[0]['ticketno'] }}
                     @endif
                 </td>
-                <td>
+                <td class="text-end">
                     Adult: {{$booking['adult_passenger']}} &nbsp;&nbsp;
                     Child: {{$booking['child_passenger']}} &nbsp;&nbsp;
                     Infant: {{$booking['infant_passenger']}}
@@ -42,7 +43,15 @@
         </tbody>
 
     </table>
+    @php
+    $paymentDes = null;
+    if(!empty($payment['description']) ){
+    if(isset($payment['description'])){
+    $paymentDes = json_decode($payment['description']);
+    }
 
+    }
+    @endphp
 
     <table class="w-100 ptable">
 
@@ -67,18 +76,25 @@
                     Passport No.: {{ $firstCustomer['passportno'] }}<br>
                     Nationality: {{ $firstCustomer['country'] }}<br>
                     Email: {{ $firstCustomer['email'] }}<br>
-                    Tel: {{ $firstCustomer['mobile'] }} / Thai tel: {{ $firstCustomer['mobile_th'] }}
+                    Tel: {{ $firstCustomer['mobile_code'].$firstCustomer['mobile'] }} / Thai tel: {{
+                    $firstCustomer['mobile_th'] }}
 
 
 
                 </td>
                 <td colspan="2">
-                    Total Amount: {{$payment['totalamt']}}<br>
+                    Total Amount: {{number_format($payment['totalamt'])}}THB<br>
                     Payment Status: @if($booking['status']=='CO') <span class="text-success">APPROVED</span> @else <span
                         class="text-danger">Unpay</span> @endif <br>
                     Method:{{ $booking['book_channel'] }}/ {{
                     isset($payment['payment_method'])?$payment['payment_method']:'-' }}<br>
-                    Transaction No. {{$referenceNo}}<br>
+                    Transaction No.:
+                    @if ($paymentDes != null)
+                    {{$paymentDes->tranRef }}
+                    @else
+                    -
+                    @endif
+                    <br>
                     Approved by: @if(isset($user->firstname)) {{$user->firstname}} @else RSVN @endif<br>
 
 

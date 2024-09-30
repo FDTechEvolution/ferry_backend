@@ -67,30 +67,34 @@ class RouteController extends Controller
 
     public function index()
     {
-        $stationFromId = request()->sf;
-        $stationToId = request()->st;
+        $stationFromId = request()->station_from;
+        $stationToId = request()->station_to;
 
-        $stationFroms = RouteHelper::getStationFrom();
-        $stationTos = RouteHelper::getStationTo();
+        $stationFroms = RouteHelper::getSectionStationFrom(true);
 
         $routes = Route::where('status', 'CO')
             ->with('station_from', 'station_from.section', 'station_to', 'icons', 'routeAddons', 'activity_lines', 'meal_lines', 'partner');
-        if(empty($stationFromId)){
-            $stationFromId = $stationFroms[0]->id;
+        if(empty($stationFromId) || $stationFromId == ''){
+            foreach($stationFroms as $seaction){
+                if(sizeof($seaction->stations) !=0){
+                    $stationFromId = $seaction->stations[0]->id;
+                    break;
+                }
+            }
+
             $routes = $routes->where('station_from_id',$stationFromId);
         }else{
-            if($stationFromId != 'all'){
+            if($stationFromId != ''){
                 $routes = $routes->where('station_from_id',$stationFromId);
             }
         }
 
-        if(empty($stationToId) || $stationToId == 'all'){
-            $stationToId = 'all';
-            //$stationToId = $stationTos[0]->id;
-            //$routes = $routes->where('station_to_id',$stationToId);
+        if(empty($stationToId) || $stationToId == ''){
+            $stationToId = '';
         }else{
             $routes = $routes->where('station_to_id',$stationToId);
         }
+        $stationTos = RouteHelper::getSectionStationTo(true,$stationFromId);
 
         $routes = $routes->orderBy('depart_time', 'ASC')->get();
         //dd($routes);
@@ -126,7 +130,8 @@ class RouteController extends Controller
 
     public function create()
     {
-        $stations = Station::where('isactive', 'Y')->where('status', 'CO')->get();
+        $stations = Station::get();
+        $sections = RouteHelper::getSectionStationFrom();
         $icons = DB::table('icons')->where('type', $this->Type)->orderBy('name', 'ASC')->get();
         $partners = PartnerController::listPartners();
         $icons = $this->setRouteIconGroup($icons);
@@ -145,6 +150,7 @@ class RouteController extends Controller
             [
                 'partners' => $partners,
                 'stations' => $stations,
+                'sections'=>$sections,
                 'icons' => $icons,
                 'activities' => $activities,
                 'meals' => $meals,
@@ -370,6 +376,7 @@ class RouteController extends Controller
 
     public function store(Request $request)
     {
+        //dd($request);
         $request->validate([
             'station_from' => 'required|string|min:36|max:36',
             'station_to' => 'required|string|min:36|max:36',
@@ -378,7 +385,7 @@ class RouteController extends Controller
             'infant_price' => 'integer|nullable',
         ]);
 
-        //dd($request);
+
 
         $route = Route::create([
             'station_from_id' => $request->station_from,
@@ -392,13 +399,13 @@ class RouteController extends Controller
             'partner_id' => $request->partner_id,
             'text_1' => $request->text_1,
             'text_2' => $request->text_2,
-            'master_from_info' => isset($request->master_from_on) ? 'Y' : 'N',
-            'master_to_info' => isset($request->master_to_on) ? 'Y' : 'N',
+            'master_from_info' => isset($request->master_from_info) ? 'Y' : 'N',
+            'master_to_info' => isset($request->master_to_info) ? 'Y' : 'N',
             'ispromocode' => isset($request->promocode) ? 'Y' : 'N',
             'master_from' => $request->master_from,
             'master_to' => $request->master_to,
-            'isinformation_from_active' => isset($request->master_from_on) ? 'Y' : 'N',
-            'isinformation_to_active' => isset($request->master_to_on) ? 'Y' : 'N',
+            'isinformation_from_active' => isset($request->isinformation_from_active) ? 'Y' : 'N',
+            'isinformation_to_active' => isset($request->isinformation_to_active) ? 'Y' : 'N',
             'information_from' => $request->information_from,
             'information_to' => $request->information_to,
         ]);

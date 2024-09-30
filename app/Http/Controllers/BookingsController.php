@@ -116,7 +116,7 @@ class BookingsController extends Controller
             ->get();
         */
 
-        $station = StationsController::avaliableStation();
+        $sections = RouteHelper::getSectionStationFrom(true);
         $bookingStatus = BookingHelper::status();
         $tripTypes = BookingHelper::tripType();
         $bookChannels = BookingHelper::bookChannels();
@@ -124,7 +124,7 @@ class BookingsController extends Controller
         //dd($bookings);
         return view('pages.bookings.index', [
             'bookings' => $bookings,
-            'station' => $station,
+            'sections' => $sections,
             'station_from' => $station_from,
             'station_to' => $station_to,
             'bookingno' => $bookingno,

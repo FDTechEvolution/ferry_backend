@@ -27,15 +27,16 @@ class RouteSchedulesController extends Controller
 
         $merchant_id = request()->merchant_id;
         $apiMerchant = null;
-        $stationFromId = request()->station_from_id;
-        $stationToId = request()->station_to_id;
+        $stationFromId = request()->station_from;
+        $stationToId = request()->station_to;
         $partnerId = request()->partner_id;
 
         $routeSchedules = [];
         $title = 'Route';
 
-        $stationFroms = RouteHelper::getStationFrom();
-        $stationTos = RouteHelper::getStationTo($stationFromId);
+        $stationFroms = RouteHelper::getSectionStationFrom(true);
+        $stationTos = RouteHelper::getSectionStationTo(true,$stationFromId);
+
         $partners = Partners::where('isactive', 'Y')->orderBy('name', 'ASC')->get();
 
         $countBooking = RouteSchedules::where('isconflict', 'Y')->count();
@@ -107,12 +108,19 @@ class RouteSchedulesController extends Controller
 
         $merchant_id = request()->merchant_id;
         $routes = [];
-        $stationFromId = request()->station_from_id;
-        $stationToId = request()->station_to_id;
+        $stationFromId = request()->station_from;
+        $stationToId = request()->station_to;
 
-        $stationFroms = RouteHelper::getStationFrom();
+        $stationFroms = RouteHelper::getSectionStationFrom();
+
         if (is_null($stationFromId) && sizeof($stationFroms) > 0) {
-            $stationFromId = $stationFroms[0]->id;
+            //$stationFromId = $stationFroms[0]->id;
+            foreach($stationFroms as $seaction){
+                if(sizeof($seaction->stations) !=0){
+                    $stationFromId = $seaction->stations[0]->id;
+                    break;
+                }
+            }
         }
 
         $apiMerchant = NULL;
@@ -121,7 +129,8 @@ class RouteSchedulesController extends Controller
         }
 
 
-        $stationTos = RouteHelper::getStationTo($stationFromId);
+        $stationTos = RouteHelper::getSectionStationTo(true,$stationFromId);
+
 
         $routes = RouteHelper::getRoutes($stationFromId, $stationToId);
 

@@ -33,24 +33,24 @@ $colors = [
         </div>
         <div class="col-12 col-md-2">
             <div class="form-floating mb-3">
-                <select class="form-select" id="station_to" aria-label="" name="station_to">
+                <select class="form-select" id="" aria-label="" name="">
                     <option value="" selected>-- All --</option>
                     @foreach ($tripTypes as $key => $title)
                     <option value="{{ $key }}">{{ $title }}</option>
                     @endforeach
                 </select>
-                <label for="station_to">Trip Type</label>
+                <label for="">Trip Type</label>
             </div>
         </div>
         <div class="col-12 col-md-2">
             <div class="form-floating mb-3">
-                <select class="form-select" id="station_to" aria-label="" name="station_to">
+                <select class="form-select" id="" aria-label="" name="">
                     <option value="" selected>-- All --</option>
                     @foreach ($bookChannels as $key => $title)
                     <option value="{{ $key }}">{{ $title }}</option>
                     @endforeach
                 </select>
-                <label for="station_to">Salse Channel</label>
+                <label for="">Salse Channel</label>
             </div>
         </div>
         <div class="col-12 col-md-3">

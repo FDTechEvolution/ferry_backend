@@ -148,11 +148,24 @@ class BookingsController extends Controller
         if (is_null($departdate)) {
             $departdate = date('d/m/Y');
         }
-        $stationFroms = RouteHelper::getStationFrom();
+        $stationFroms = RouteHelper::getSectionStationFrom(true);
         if (is_null($stationFromId) && sizeof($stationFroms) > 0) {
-            $stationFromId = $stationFroms[0]->id;
+            foreach($stationFroms as $seaction){
+                if(sizeof($seaction->stations) !=0){
+                    $stationFromId = $seaction->stations[0]->id;
+                    break;
+                }
+            }
         }
-        $stationTos = RouteHelper::getStationTo($stationFromId);
+        $stationTos = RouteHelper::getSectionStationTo(true,$stationFromId);
+        if (is_null($stationToId) && sizeof($stationTos) > 0) {
+            foreach($stationTos as $seaction){
+                if(sizeof($seaction->stations) !=0){
+                    $stationToId = $seaction->stations[0]->id;
+                    break;
+                }
+            }
+        }
 
         if (!is_null($stationFromId) && !is_null($stationToId)) {
             $departdateSql = Carbon::createFromFormat('d/m/Y', $departdate)->format('Y-m-d');

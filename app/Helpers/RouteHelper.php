@@ -31,9 +31,12 @@ class RouteHelper
             ->whereIn('id', $routeIds)
             ->where('station_from_id', $stationFromId)
             ->where('status','CO')
-            ->where('isactive','Y')
-            ->where('station_to_id', $stationToId)
-            ->orderBy('station_from_id', 'ASC')
+            ->where('isactive','Y');
+        if($stationToId !='all' && $stationToId !=''){
+            $routes = $routes->where('station_to_id', $stationToId);
+        }
+
+        $routes = $routes->orderBy('station_from_id', 'ASC')
             ->orderBy('depart_time', 'ASC')
 
             ->get();

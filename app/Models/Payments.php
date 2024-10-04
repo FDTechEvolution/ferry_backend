@@ -22,7 +22,21 @@ class Payments extends Model
         'image_id',
         'status',
         'payment_date',
-        'customer_id'
+        'customer_id',
+        'c_accountno',
+        'c_paymentid',
+        'c_merchanid',
+        'c_invoiceno',
+        'c_amount',
+        'c_currencycode',
+        'c_tranref',
+        'c_referenceno',
+        'c_approvalcode',
+        'c_datetime',
+        'c_agent',
+        'c_issuercountry',
+        'c_issuerbank',
+        'c_cardtype',
     ];
 
     public function user() {

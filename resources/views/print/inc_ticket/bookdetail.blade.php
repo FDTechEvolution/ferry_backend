@@ -5,10 +5,11 @@
         <tbody>
             <tr>
                 <td colspan="2">
-                    <h3 style="color: #0580c4;">YOUR BOOKING DETAILS</h3>
+                    <h3 style="color: #0580c4;margin-top:0px;margin-bottom: 0px;">YOUR BOOKING DETAILS</h3>
                 </td>
                 <td colspan="2" class="text-end">
-                    <h3 style="color:{{ $colors[$booking['trip_type']] }};">{{ ucwords(str_replace('-','
+                    <h3 style="color:{{ $colors[$booking['trip_type']] }};margin-top:0px;margin-bottom: 0px;">{{
+                        ucwords(str_replace('-','
                         ',$booking['trip_type'])) }}
                         ticket
                         @if ($booking['trip_type'] == 'multi-trip')
@@ -38,39 +39,20 @@
                     Infant: {{$booking['infant_passenger']}}
                 </td>
             </tr>
-
-
-        </tbody>
-
-    </table>
-    @php
-    $paymentDes = null;
-    if(!empty($payment['description']) ){
-    if(isset($payment['description'])){
-    $paymentDes = json_decode($payment['description']);
-    }
-
-    }
-    @endphp
-
-    <table class="w-100 ptable">
-
-        <tbody>
-
             <tr class="bg-gray">
-                <td colspan="2" class="w-75">
+                <td colspan="3" class="w-75 font-w-700">
                     {{strtoupper('Contact Information')}}
                     @if ($index==0 && sizeof($customers) >1)
                     <span class="text-main">[Lead passenger]</span>
                     @endif
                 </td>
-                <td colspan="2" class="w-25">
+                <td colspan="1" class="w-25 font-w-700">
                     {{strtoupper('Payment Information')}}
                 </td>
 
             </tr>
             <tr>
-                <td colspan="2">
+                <td colspan="3">
                     Name: <span class="">{{ $firstCustomer['title'] }}.{{ ucfirst($firstCustomer['fullname'])
                         }}</span><br>
                     Passport No.: {{ $firstCustomer['passportno'] }}<br>
@@ -82,18 +64,13 @@
 
 
                 </td>
-                <td colspan="2">
+                <td colspan="1">
                     Total Amount: {{number_format($payment['totalamt'])}}THB<br>
                     Payment Status: @if($booking['status']=='CO') <span class="text-success">APPROVED</span> @else <span
                         class="text-danger">Unpay</span> @endif <br>
-                    Method:{{ $booking['book_channel'] }}/ {{
+                    Method:{{ $booking['book_channel'] }}-{{
                     isset($payment['payment_method'])?$payment['payment_method']:'-' }}<br>
-                    Transaction No.:
-                    @if ($paymentDes != null)
-                    {{$paymentDes->tranRef }}
-                    @else
-                    -
-                    @endif
+                    Transaction No.: {{ $payment['c_tranref'] }}
                     <br>
                     Approved by: @if(isset($user->firstname)) {{$user->firstname}} @else RSVN @endif<br>
 

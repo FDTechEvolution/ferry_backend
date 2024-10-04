@@ -209,6 +209,8 @@ class PaymentHelper
 
             $payment->save();
 
+            PaymentHelper::paymentAgentInfo($payment_id);
+
             $title = sprintf('Payment successfully with %s amount %s',$payment->payment_method,$payment->totalamt);
             TransactionLogHelper::tranLog(['type' => 'PAYMENT', 'title' => $title, 'description' => '', 'booking_id' => $payment->booking_id]);
 
@@ -335,5 +337,30 @@ class PaymentHelper
         $title .= ' fee ['. $type .']';
 
         $line = PaymentHelper::createPaymentLine($payment_id, 'FEE', NULL, $title, $_fee, NULL, '');
+    }
+
+    public static function paymentAgentInfo($paymentId){
+        $payment = Payments::find($paymentId);
+
+        $des = (array)json_decode($payment->description);
+                //dd($des);
+                if(isset($des['agentCode']) && $des['agentCode'] == 'SCB'){
+                    $payment->c_accountno = $des['accountNo'];
+                    $payment->c_paymentid = $des['paymentID'];
+                    $payment->c_merchanid = $des['merchantID'];
+                    $payment->c_invoiceno = $des['invoiceNo'];
+                    $payment->c_amount = $des['amount'];
+                    $payment->c_currencycode = $des['currencyCode'];
+                    $payment->c_tranref = $des['tranRef'];
+                    $payment->c_referenceno = $des['referenceNo'];
+                    $payment->c_approvalcode = $des['approvalCode'];
+                    //$payment->c_datetime = date('Y-m-d H:i:s', $des['transactionDateTime']);
+                    $payment->c_agent = $des['agentCode'];
+                    $payment->c_issuercountry = $des['issuerCountry'];
+                    $payment->c_issuerbank = $des['issuerBank'];
+                    $payment->c_cardtype = $des['cardType'];
+                }
+
+                $payment->save();
     }
 }

@@ -1,9 +1,8 @@
-@if (sizeof($customers) > 1)
-<div class="prow mt-3">
+<div class="prow">
     <table class="ptable w-100 ">
         <tr class="bg-gray">
             <td colspan="8">
-                <h3>PASSENGER NAME LIST</h3>
+                <h3 style="margin-top:0px;margin-bottom: 0px;">PASSENGER NAME LIST</h3>
             </td>
         </tr>
         @foreach ($customers as $i => $customer)
@@ -32,4 +31,3 @@
         @endforeach
     </table>
 </div>
-@endif

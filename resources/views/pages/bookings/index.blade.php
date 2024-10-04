@@ -238,7 +238,7 @@ $colors = [
                                 <small class="{{ $bookingStatus[$item['status']]['class'] }}">{{
                                     $bookingStatus[$item['status']]['title'] }}</small>
                             </td>
-                            <td></td>
+                            <td>{{ $item['c_tranref'] }}</td>
                             <td class="text-center">{{ $item['amend'] }}</td>
                             <td class="text-end">
                                 <div class="d-none">

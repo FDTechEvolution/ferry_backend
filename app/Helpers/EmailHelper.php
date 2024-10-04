@@ -15,29 +15,35 @@ class EmailHelper
 {
     public static function ticket($booking_id)
     {
+
         $booking = Bookings::find($booking_id);
         $tickets = $booking->tickets;
         $route = $booking->route;
         $customer = $booking->bookingCustomers[0];
-
+        //dd($customer);
         if(is_null($customer->email) || $customer->email ==''){
             return false;
         }
         if(is_null($tickets) || sizeof($tickets) ==0){
             return false;
         }
+        $ticketno = isset($tickets[0]->ticketno)?$tickets[0]->ticketno:'';
 
         $mailData = [
             'bookingno' => $booking->bookingno,
-            'ticketno' => $tickets[0]->ticketno,
+            'ticketno' => $ticketno,
             'customer_name' => sprintf('%s.%s',$customer->title,ucwords($customer->fullname)),
             'link' => URL::previous(),
         ];
 
+        //dd($mailData);
+
         $cc = ['win.tigerline@gmail.com', '168ferry@gmail.com', 'RSVN_Tigerline@outlook.com'];
         Mail::to($customer->email)
             ->cc($cc)
-            ->send(new TicketMail($mailData, $booking->bookingno));
+            ->send(new TicketMail($mailData, $booking->bookingno,$ticketno));
+
+        LineNotifyHelper::devLog(sprintf('send email %s | %s ',$customer->email,$ticketno));
     }
 
     public static function voidBoking($booking_route_id,$message)

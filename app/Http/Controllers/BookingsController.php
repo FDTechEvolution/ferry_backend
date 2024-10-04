@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LineNotifyHelper;
 use App\Helpers\PaymentHelper;
 use App\Models\Addon;
-use App\Models\BookingCustomers;
 use App\Models\Bookings;
 use App\Models\Customers;
 use App\Models\Payments;
-use App\Models\Station;
 use App\Models\Route;
-use Ramsey\Uuid\Uuid;
 use App\Helpers\BookingHelper;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\ImageHelper;
@@ -431,8 +429,11 @@ class BookingsController extends Controller
         $bookingNos = $request->booking_nos;
 
         foreach ($bookingNos as $bookingno) {
+
             $booking = Bookings::where('bookingno', $bookingno)->first();
+
             EmailHelper::ticket($booking->id);
+
         }
         return redirect()->route('booking-index')->withSuccess('sent email.');
     }

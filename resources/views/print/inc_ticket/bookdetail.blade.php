@@ -12,7 +12,7 @@
                         ucwords(str_replace('-','
                         ',$booking['trip_type'])) }}
                         ticket
-                        @if ($booking['trip_type'] == 'multi-trip')
+                        @if ($booking['trip_type'] != 'one-way')
                         <span>{{$i+1}}/{{sizeof($bookingRoutes)}}</span>
                         @endif
                     </h3>

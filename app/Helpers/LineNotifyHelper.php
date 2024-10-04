@@ -29,4 +29,9 @@ class LineNotifyHelper
         $str .= sprintf('Ticket: %s/print/ticket/%s',env('SITE_URL'),$booking->bookingno);
         Line::setToken(env('LINE_ACCESS_TOKEN_NEW_BOOKING'))->send($str);
     }
+
+    public static function devLog($msg = ''){
+
+        Line::setToken(env('LINE_ACCESS_TOKEN'))->send($msg);
+    }
 }

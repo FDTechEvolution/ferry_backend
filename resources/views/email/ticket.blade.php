@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +14,7 @@
         }
 
         .ticket {
-            max-width: 600px;
+            max-width: 1200px;
             margin: 0 auto;
             background-color: #fff;
             border-radius: 8px;
@@ -48,6 +49,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="ticket">
         <div class="ticket-content">
@@ -56,13 +58,17 @@
 
             <p>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thank you for choosing 168 Ferry.com! Your reservation has been confirmed.
-Please find the details of your travel arrangements, as attached "itinerary.pdf".
-When checking-in with the Tigerline Stations / Staff, please refer to Your Ticket Number. Also, have a valid photo ID ready for verification by our check-in staff.
-If you would like to change your reservation, please call our call center at +6681 358 8989 (09:00-21:00) or Email 168ferry@gmail.com and refer to this number. Please note that change fees may apply.
+                Please find the details of your travel arrangements, as attached "itinerary.pdf".
+                When checking-in with the Tigerline Stations / Staff, please refer to Your Ticket Number. Also, have a
+                valid photo ID ready for verification by our check-in staff.
+                If you would like to change your reservation, please call our call center at +6681 358 8989
+                (09:00-21:00) or Email 168ferry@gmail.com and refer to this number. Please note that change fees may
+                apply.
             </p><br><br>
 
 
         </div>
     </div>
 </body>
+
 </html>

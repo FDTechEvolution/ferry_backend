@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -20,13 +21,18 @@ class TicketMail extends Mailable
     public $mailData;
     public $bookingNo;
 
+    public $ticketNo;
+
     /**
      * Create a new message instance.
      */
-    public function __construct($mailData, $bookingNo = null)
+    public function __construct($mailData, $bookingNo = null,$ticketNo = '')
     {
         $this->mailData = $mailData;
         $this->bookingNo = $bookingNo;
+        $this->ticketNo = $ticketNo;
+
+
     }
 
     /**
@@ -60,10 +66,10 @@ class TicketMail extends Mailable
         if($this->bookingNo != null) {
             $t = new TicketHelper();
             $t->makePdf($this->bookingNo);
-
+            $fileName = 'Tigerline Ticket No '.$this->ticketNo.'.pdf';
             return [
                 Attachment::fromStorageDisk('attachments', $this->bookingNo.'.pdf')
-                    ->as('ticket.pdf')
+                    ->as($fileName)
                     ->withMime('application/pdf'),
             ];
         }

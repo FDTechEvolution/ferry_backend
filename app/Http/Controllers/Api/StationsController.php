@@ -83,8 +83,14 @@ class StationsController extends Controller
             'from' => [],
             'to' => []
         ];
-
+        //dd($routes);
         foreach($routes as $route) {
+            if(!isset($route['station_from']['section']['isactive'])){
+                continue;
+            }
+            if(!isset($route['station_to']['section']['isactive'])){
+                continue;
+            }
             if($route['station_from']['section']['isactive'] == 'Y') {
                 $_from = [
                     'id' => $route['station_from']['id'],

@@ -23,10 +23,11 @@ class PrintController extends Controller
     {
         $booking = BookingHelper::getBookingInfoByBookingNo($bookingno);
         $term = Informations::where('position', 'TERM_TICKET')->first();
+        $statusLabel = BookingHelper::status();
         $bookings[0] = $booking;
         //dd($booking);
         Pdf::setOption(['dpi' => 150, 'defaultMediaType' => 'a4', 'debugCss' => true]);
-        $pdf = Pdf::loadView('print.ticket_v2', ['bookings' => $bookings, 'term' => $term]);
+        $pdf = Pdf::loadView('print.ticket_v2', ['bookings' => $bookings, 'term' => $term,'statusLabel'=>$statusLabel]);
 
         /*
         if($booking->ispayment=='N'){

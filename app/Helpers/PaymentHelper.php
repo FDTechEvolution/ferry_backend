@@ -195,7 +195,7 @@ class PaymentHelper
 
     public static function completePayment($payment_id, $paymentData = [])
     {
-        $payment = Payments::with('booking')->where('id', $payment_id)->first();
+        $payment = Payments::with('booking')->where('id', $payment_id)->where('ispaid','N')->first();
 
         if (!is_null($payment)) {
             $payment->status = 'CO';

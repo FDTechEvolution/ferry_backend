@@ -50,19 +50,19 @@ class AuthController extends Controller
                     ]);
 
                     $request->session()->regenerate();
-                    return redirect()->route('dashboard')
+                    return redirect()->route('booking-index')
                         ->withSuccess('Welcome '.Auth::user()->username);
                 }
             }
         }
-        
+
         return back()->withFail('Your provided credentials do not match in our records. U');
     }
 
     private function checkUserCondition($user) {
 
         return true;
-        
+
         if($user->role->name == 'Admin' || $user->role->name == 'Agent') {
             if($user->isactive && $user->status == 'CO') return true;
         }
@@ -93,9 +93,9 @@ class AuthController extends Controller
                 $user->forceFill([
                     'password' => Hash::make($password)
                 ])->setRememberToken(Str::random(60));
-     
+
                 $user->save();
-     
+
                 event(new PasswordReset($user));
             }
         );

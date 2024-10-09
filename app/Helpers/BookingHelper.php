@@ -19,7 +19,7 @@ class BookingHelper
     {
         $status = [
             'DR' => ['title' => 'Non Approved', 'icon' => '<i class="fi fi-circle-spin"></i>', 'class' => 'text-mute','action'=>''],
-            'UNP' => ['title' => 'Non Approved', 'icon' => '<i class="fa-solid fa-clock-rotate-left"></i>', 'class' => 'text-warning','action'=>'Unpaid'],
+            'UNP' => ['title' => 'On Hold', 'icon' => '<i class="fa-solid fa-clock-rotate-left"></i>', 'class' => 'text-warning','action'=>'Unpaid'],
             'CO' => ['title' => 'Approved', 'icon' => '<i class="fa-solid fa-check-double"></i>', 'class' => 'text-success','action'=>'Paid'],
             'void' => ['title' => 'Cancelled', 'icon' => '<i class="fa-solid fa-xmark"></i>', 'class' => 'text-mute','action'=>'Cancel'],
             //'VO' => ['title' => 'CANX', 'icon' => '', 'class' => 'text-mute','action'=>'Cancel'],
@@ -246,10 +246,16 @@ class BookingHelper
             return null;
         }
 
-        $booking = Bookings::with('bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingCustomers')->where('id', $bookingId)->first();
+        $booking = Bookings::with('bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingCustomers')
+        ->where('id', $bookingId)
+        ->where('status','!=', 'CO')
+        ->first();
+
+        //dd($booking);
         if (is_null($booking)) {
             return null;
         }
+
 
         $booking->status = 'CO';
         $booking->ispayment = 'Y';

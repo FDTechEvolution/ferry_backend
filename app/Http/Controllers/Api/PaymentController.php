@@ -65,7 +65,7 @@ class PaymentController extends Controller
         PaymentHelper::updateFeePaymentLine($result['userDefined1'], $fee, $type);
 
         // Send Email
-        EmailHelper::ticket($result['userDefined2']);
+        //EmailHelper::ticket($result['userDefined2']);
     }
 
     private function paymentFail() {

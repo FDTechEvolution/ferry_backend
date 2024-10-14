@@ -39,11 +39,13 @@ class EmailHelper
         //dd($mailData);
 
         $cc = ['win.tigerline@gmail.com', '168ferry@gmail.com', 'RSVN_Tigerline@outlook.com'];
-        Mail::to($customer->email)
+        $sendResult = Mail::to($customer->email)
             ->cc($cc)
             ->send(new TicketMail($mailData, $booking->bookingno,$ticketno));
 
-        LineNotifyHelper::devLog(sprintf('send email %s | %s ',$customer->email,$ticketno));
+        TransactionLogHelper::tranLog(['type' => 'email', 'title' => 'Sent ticket email', 'description' => json_encode($sendResult), 'booking_id' => $booking->id]);
+
+        //LineNotifyHelper::devLog(sprintf('send email %s | %s ',$customer->email,$ticketno));
     }
 
     public static function voidBoking($booking_route_id,$message)

@@ -12,9 +12,10 @@ class TicketHelper
     {
         $booking = BookingHelper::getBookingInfoByBookingNo($bookingNo);
         $term = Informations::where('position', 'TERM_TICKET')->first();
+        $statusLabel = BookingHelper::status();
         $bookings[0] = $booking;
         Pdf::setOption(['dpi' => 150, 'defaultMediaType' => 'a4', 'debugCss' => true]);
-        $pdf = Pdf::loadView('print.ticket_v2', ['bookings' => $bookings, 'term' => $term]);
+        $pdf = Pdf::loadView('print.ticket_v2', ['bookings' => $bookings, 'term' => $term,'statusLabel'=>$statusLabel]);
 
         $filename = sprintf('%s.pdf',$booking->bookingno);
         Storage::disk('attachments')->put($filename, $pdf->output());

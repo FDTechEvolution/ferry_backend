@@ -66,8 +66,9 @@
                 </td>
                 <td colspan="1">
                     Total Amount: {{number_format($payment['totalamt'])}}THB<br>
-                    Payment Status: @if($booking['status']=='CO') <span class="text-success">APPROVED</span> @else <span
-                        class="text-danger">Unpay</span> @endif <br>
+                    Payment Status: <span class="{{ $statusLabel[$booking['status']]['class']
+                        }}">{{ $statusLabel[$booking['status']]['title']
+                        }}</span><br>
                     Method:{{ $booking['book_channel'] }}-{{
                     isset($payment['payment_method'])?$payment['payment_method']:'-' }}<br>
                     Transaction No.: {{ $payment['c_tranref'] }}

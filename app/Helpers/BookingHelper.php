@@ -18,12 +18,12 @@ class BookingHelper
     public static function status()
     {
         $status = [
-            'DR' => ['title' => 'Non Approved', 'icon' => '<i class="fi fi-circle-spin"></i>', 'class' => 'text-mute','action'=>''],
+            'DR' => ['title' => 'Non Approved', 'icon' => '<i class="fi fi-circle-spin"></i>', 'class' => 'text-warning','action'=>''],
             'UNP' => ['title' => 'On Hold', 'icon' => '<i class="fa-solid fa-clock-rotate-left"></i>', 'class' => 'text-warning','action'=>'Unpaid'],
             'CO' => ['title' => 'Approved', 'icon' => '<i class="fa-solid fa-check-double"></i>', 'class' => 'text-success','action'=>'Paid'],
-            'void' => ['title' => 'Cancelled', 'icon' => '<i class="fa-solid fa-xmark"></i>', 'class' => 'text-mute','action'=>'Cancel'],
+            'void' => ['title' => 'Cancelled', 'icon' => '<i class="fa-solid fa-xmark"></i>', 'class' => 'text-danger','action'=>'Cancel'],
             //'VO' => ['title' => 'CANX', 'icon' => '', 'class' => 'text-mute','action'=>'Cancel'],
-            'amended' => ['title' => 'Amended', 'icon' => '<i class="fa-solid fa-list-check"></i>', 'class' => '','action'=>''],
+            'amended' => ['title' => 'Amended', 'icon' => '<i class="fa-solid fa-list-check"></i>', 'class' => 'text-warning','action'=>''],
             'delete' => ['title' => 'Deleted', 'icon' => '<i class="fa-solid fa-trash"></i>', 'class' => 'text-danger','action'=>'Delete'],
 
         ];

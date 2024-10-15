@@ -11,8 +11,8 @@ $icon =
             </td>
             <td class="">
                 FROM:
-                <br><a href="{{env('SITE_URL')}}/station/detail/{{ $bookingRoute['station_from']['nickname'] }}"
-                    class="text-main" target="_blank"><img src="{{ $icon }}" width="120" /></a>
+                <br><a href="{{env('SITE_URL')}}/station" class="text-main" target="_blank"><img src="{{ $icon }}"
+                        width="120" /></a>
             </td>
             <td class="">
                 DESTINATION TO:

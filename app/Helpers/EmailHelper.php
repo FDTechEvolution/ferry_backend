@@ -20,12 +20,12 @@ class EmailHelper
         $tickets = $booking->tickets;
         $route = $booking->route;
         $customer = $booking->bookingCustomers[0];
-        //dd($customer);
+        //dd($tickets);
         if(is_null($customer->email) || $customer->email ==''){
             return false;
         }
         if(is_null($tickets) || sizeof($tickets) ==0){
-            return false;
+            //return false;
         }
         $ticketno = isset($tickets[0]->ticketno)?$tickets[0]->ticketno:'';
 
@@ -38,9 +38,9 @@ class EmailHelper
 
         //dd($mailData);
 
-        $cc = ['win.tigerline@gmail.com', '168ferry@gmail.com', 'RSVN_Tigerline@outlook.com'];
+        $cc = ['RSVN_Tigerline@outlook.com'];
         $sendResult = Mail::to($customer->email)
-            ->cc($cc)
+            ->bcc($cc)
             ->send(new TicketMail($mailData, $booking->bookingno,$ticketno));
 
         TransactionLogHelper::tranLog(['type' => 'email', 'title' => 'Sent ticket email', 'description' => json_encode($sendResult), 'booking_id' => $booking->id]);

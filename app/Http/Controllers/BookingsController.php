@@ -456,6 +456,7 @@ class BookingsController extends Controller
         $description = $request->description;
         $statusLabel = BookingHelper::status();
 
+
         if (isset($statusLabel[$status])) {
 
 

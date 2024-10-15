@@ -4,17 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Ticket</title>
+    <title>Your Ticket Number: {{ $mailData['ticketno'] }}</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f4f4f4;
             text-align: center;
             padding: 20px;
+            font-size: 15px;
         }
 
         .ticket {
-            max-width: 1200px;
+
             margin: 0 auto;
             background-color: #fff;
             border-radius: 8px;
@@ -57,14 +58,20 @@
             <strong>Your Ticket Number: {{ $mailData['ticketno'] }}</strong><br><br>
 
             <p>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thank you for choosing 168 Ferry.com! Your reservation has been confirmed.
-                Please find the details of your travel arrangements, as attached "itinerary.pdf".
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thank you for choosing 168 Ferry.com! Your reservation has been
+                confirmed.<br>
+                Please find the details of your travel arrangements, as attached "Tigerline Ticket No {{
+                $mailData['ticketno']
+                }}.pdf".<br>
                 When checking-in with the Tigerline Stations / Staff, please refer to Your Ticket Number. Also, have a
-                valid photo ID ready for verification by our check-in staff.
+                valid photo ID ready for verification by our check-in staff.<br>
                 If you would like to change your reservation, please call our call center at +6681 358 8989
                 (09:00-21:00) or Email 168ferry@gmail.com and refer to this number. Please note that change fees may
                 apply.
             </p><br><br>
+
+            Kind regards,<br>
+            Your Tigerline Ferry Team
 
 
         </div>

@@ -213,7 +213,7 @@ class PaymentHelper
 
             $title = sprintf('Payment successfully with %s amount %s',$payment->payment_method,$payment->totalamt);
             TransactionLogHelper::tranLog(['type' => 'PAYMENT', 'title' => $title, 'description' => '', 'booking_id' => $payment->booking_id]);
-            EmailHelper::ticket($payment->booking_id);
+
 
             LineNotifyHelper::newBooking($payment->booking_id);
         }

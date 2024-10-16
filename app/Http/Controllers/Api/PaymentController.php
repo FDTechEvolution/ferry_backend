@@ -56,13 +56,20 @@ class PaymentController extends Controller
 
         // $result['userDefined1'] = $payment_id
         // $result['userDefined2'] = $booking_id
-        $payment = PaymentHelper::completePayment($result['userDefined1'], $payment_data);
-        $booking = BookingHelper::completeBooking($result['userDefined2']);
+        $paymentId = $result['userDefined1'];
+        $bookingId = $result['userDefined2'];
+
+        $booking = Bookings::where('id',$bookingId)->first();
+        $payment = Payments::where('id',$paymentId)->first();
 
         // update payment line with fee
         $passengers = ['adult' => $booking->adult_passenger, 'child' => $booking->child_passenger, 'infant' => $booking->infant_passenger];
         $fee = FeeHelper::getFeeSetting($passengers, $payment->totalamt, $type);
         PaymentHelper::updateFeePaymentLine($result['userDefined1'], $fee, $type);
+
+
+        $payment = PaymentHelper::completePayment($paymentId, $payment_data);
+        $booking = BookingHelper::completeBooking($bookingId);
 
         // Send Email
         //EmailHelper::ticket($result['userDefined2']);

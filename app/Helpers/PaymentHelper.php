@@ -118,13 +118,14 @@ class PaymentHelper
     public static function createPaymentFromBooking($booking_id)
     {
         $booking = BookingHelper::getBookingInfoByBookingId($booking_id);
-        $totalAmount = 0;
+        //$totalAmount = $booking->totalamt;
         $passenger = 1;
 
         //Make draft payment
         $payment = Payments::create([
             'payment_method' => 'NO',
             'totalamt' => 0,
+            'amount'=>$booking->totalamt,
             'docdate' => date('Y-m-d H:i:s'),
             'paymentno' => newSequenceNumber('PAYMENT'),
             'booking_id' => $booking->id,
@@ -163,7 +164,7 @@ class PaymentHelper
         }
         $payment = Payments::where('id',$payment->id)->first();
 
-        $title = sprintf('Create payment document no. %s',$payment->paymentno);
+        $title = sprintf('Create draft payment for booking no. %s',$booking->bookingno);
         TransactionLogHelper::tranLog(['type' => 'PAYMENT', 'title' => $title, 'description' => '', 'booking_id' => $booking_id]);
 
         return $payment;
@@ -182,8 +183,12 @@ class PaymentHelper
             'description' => $description
         ]);
 
+
         if ($paymentLine) {
             //TransactionLogHelper::tranLog(['type' => 'booking', 'title' => $title, 'description' => $description, 'booking_id' => $bookingId]);
+            if($type =='DISCOUNT'){
+                $payment->discount = $payment->discount+$amount;
+            }
 
             $payment->totalamt = $payment->totalamt + $amount;
             $payment->save();
@@ -323,7 +328,7 @@ class PaymentHelper
             $discount_type = $promotion->discount_type == 'PERCENT' ? '%' : 'THB';
 
             $title = sprintf('PromoCode Discount %s %s [%s]', $discount, $discount_type, $promotion->code);
-            $paymentLine = PaymentHelper::createPaymentLine($payment_id,'ROUTE',NULL,$title,$discountamt,NULL,'');
+            $paymentLine = PaymentHelper::createPaymentLine($payment_id,'DISCOUNT',NULL,$title,$discountamt,NULL,'');
         }
 
         return $payment;

@@ -33,24 +33,24 @@ $colors = [
         </div>
         <div class="col-12 col-md-2">
             <div class="form-floating mb-3">
-                <select class="form-select" id="" aria-label="" name="">
+                <select class="form-select" id="trip_type" aria-label="" name="trip_type">
                     <option value="" selected>-- All --</option>
                     @foreach ($tripTypes as $key => $title)
-                    <option value="{{ $key }}">{{ $title }}</option>
+                    <option value="{{ $key }}" @selected($tripType==$key)>{{ $title }}</option>
                     @endforeach
                 </select>
-                <label for="">Trip Type</label>
+                <label for="trip_type">Trip Type</label>
             </div>
         </div>
         <div class="col-12 col-md-2">
             <div class="form-floating mb-3">
-                <select class="form-select" id="" aria-label="" name="">
+                <select class="form-select" id="book_channel" aria-label="" name="book_channel">
                     <option value="" selected>-- All --</option>
                     @foreach ($bookChannels as $key => $title)
-                    <option value="{{ $key }}">{{ $title }}</option>
+                    <option value="{{ $key }}" @selected($bookChannel==$key)>{{ $title }}</option>
                     @endforeach
                 </select>
-                <label for="">Salse Channel</label>
+                <label for="book_channel">Salse Channel</label>
             </div>
         </div>
         <div class="col-12 col-md-3">
@@ -91,7 +91,26 @@ $colors = [
                 <label for="status">Status</label>
             </div>
         </div>
-        <div class="col-12 text-center">
+        <div class="col-12 col-md-3">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="paymentno" name="paymentno" value="{{ $paymentno }}">
+                <label for="paymentno">Payment Number</label>
+            </div>
+        </div>
+        <div class="col-12 col-md-3">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="customername" name="customername"
+                    value="{{ $customername }}">
+                <label for="customername">Customer</label>
+            </div>
+        </div>
+        <div class="col-12 col-md-3">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="email" name="email" value="{{ $email }}">
+                <label for="email">Emali</label>
+            </div>
+        </div>
+        <div class="col-12 col-md-3 text-end">
             <a class="btn btn-sm btn-secondary" href="{{ route('booking-index') }}"><i
                     class="fa-solid fa-arrows-rotate"></i> Clear</a>
             <button type="submit" class="btn btn-sm btn-ferry"><i class="fa-solid fa-magnifying-glass"></i>
@@ -164,6 +183,7 @@ $colors = [
                             <th class="">Booking Date</th>
                             <th>Travel Date</th>
                             <th>Invoice No</th>
+                            <th>Payment No</th>
                             <th>Ticket No</th>
                             <th></th>
                             <th>Type</th>
@@ -171,6 +191,8 @@ $colors = [
                             <th>Customer</th>
                             <th><i class="fa-solid fa-people-group"></i></th>
                             <th>Price</th>
+                            <th>Processing Fee</th>
+                            <th>Total Price</th>
                             <th>P-Flex</th>
                             <th>Route</th>
 
@@ -210,6 +232,7 @@ $colors = [
                                     {{ $item['bookingno'] }}
                                 </a>
                             </td>
+                            <td class="{{$textClass}}">{{ $item['book_channel']=='ADMIN'?'':$item['paymentno'] }}</td>
                             <td class="{{$textClass}}">{{ $item['ticketno'] }}</td>
                             <td class="{{$textClass}}">{{$item['book_channel']}}</td>
                             <td class="text-center {{$textClass}}">{{ $item['type'] }}</td>
@@ -222,6 +245,13 @@ $colors = [
                                 {{$item['total_passenger']}}
                             </td>
 
+                            <td class="text-end">{{ number_format($item['totalamt'], 2) }} @if ($item['discount']<0)
+                                    <small class="text-danger">({{
+                                    number_format($item['discount'], 2) }})</small> @endif</td>
+                            <td class="text-end">
+                                {{ number_format(($item['payment_totalamt']-($item['totalamt']-($item['discount']*-1))),
+                                2) }}
+                            </td>
                             <td class="text-end">{{ number_format($item['payment_totalamt'], 2) }}</td>
                             <td class="{{ $item['ispremiumflex'] == 'Y' ? 'text-primary' : '' }} text-center">{{
                                 $item['ispremiumflex'] == 'Y' ? 'Yes' : 'No'}}</td>

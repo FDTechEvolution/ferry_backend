@@ -1,4 +1,4 @@
-<div class="prow mt-3">
+<div class="prow">
 
     <table class="w-100 ptable ">
         <tr>

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\TicketMail;
 use Illuminate\Support\Facades\URL;
 use App\Models\BookingRoutes;
+use Exception;
 
 use App\Models\Bookings;
 
@@ -38,12 +39,18 @@ class EmailHelper
 
         //dd($mailData);
 
-        $cc = ['RSVN_Tigerline@outlook.com'];
-        $sendResult = Mail::to($customer->email)
-            ->bcc($cc)
-            ->send(new TicketMail($mailData, $booking->bookingno,$ticketno));
+        $cc = ['RSVN_Tigerline@outlook.com','tigerline8989@gmail.com'];
 
-        TransactionLogHelper::tranLog(['type' => 'email', 'title' => 'Sent ticket email', 'description' => json_encode($sendResult), 'booking_id' => $booking->id]);
+            try {
+                Mail::to($customer->email)
+                ->cc($cc)
+                ->send(new TicketMail($mailData, $booking->bookingno,$ticketno));
+                TransactionLogHelper::tranLog(['type' => 'email', 'title' => 'Sent ticket email successfully', 'description' => '', 'booking_id' => $booking->id]);
+            } catch (Exception $e) {
+                TransactionLogHelper::tranLog(['type' => 'email', 'title' => 'Sent ticket email failed', 'description' => $e->getMessage(), 'booking_id' => $booking->id]);
+
+            }
+
 
         //LineNotifyHelper::devLog(sprintf('send email %s | %s ',$customer->email,$ticketno));
     }

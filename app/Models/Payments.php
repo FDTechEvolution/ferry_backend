@@ -37,6 +37,8 @@ class Payments extends Model
         'c_issuercountry',
         'c_issuerbank',
         'c_cardtype',
+        'amount',
+        'discount'
     ];
 
     public function user() {

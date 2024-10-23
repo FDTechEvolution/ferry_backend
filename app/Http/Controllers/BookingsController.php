@@ -45,12 +45,19 @@ class BookingsController extends Controller
         $daterange = request()->daterange;
         $status = request()->status;
 
+        $paymentno = request()->paymentno;
+        $customername = request()->customername;
+        $email = request()->email;
+        $bookChannel = request()->book_channel;
+        $tripType = request()->trip_type;
+
+
         $sql = 'select
         b.id,b.created_at,b.bookingno,t.ticketno,b.adult_passenger,b.child_passenger,b.infant_passenger,
         (b.adult_passenger+b.child_passenger+b.infant_passenger) as total_passenger,
         b.trip_type,br.type,b.amend,concat(sf.nickname,"-",st.nickname) as route,br.traveldate,b.ispayment,
         b.book_channel,c.fullname as customer_name,c.email,r.depart_time,r.arrive_time,b.totalamt,p.totalamt as payment_totalamt,
-        b.status,b.ispremiumflex,p.c_tranref
+        b.status,b.ispremiumflex,p.c_tranref,p.paymentno,p.discount
     from
         bookings b
         join booking_routes br on b.id = br.booking_id
@@ -103,16 +110,27 @@ class BookingsController extends Controller
             $conditionStr .= ' and b.bookingno = "' . $bookingno . '"';
         }
 
+        if (!empty($paymentno)) {
+            $conditionStr .= ' and p.paymentno = "' . $paymentno . '"';
+        }
+        if (!empty($customername)) {
+            $conditionStr .= ' and c.fullname like "' . $customername . '%"';
+        }
+        if (!empty($email)) {
+            $conditionStr .= ' and c.email = "' . $email . '"';
+        }
+        if (!empty($bookChannel)) {
+            $conditionStr .= ' and b.book_channel = "' . $bookChannel . '"';
+        }
+        if (!empty($tripType)) {
+            $conditionStr .= ' and b.trip_type = "' . $tripType . '"';
+        }
+
         $sql = str_replace(':conditions', $conditionStr, $sql);
 
         $bookings = DB::select($sql);
         $bookings = json_decode(json_encode($bookings), true);
 
-        /*
-        $bookings = Bookings::with('bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingCustomers', 'user', 'tickets')
-            ->orderBy('departdate', 'ASC')
-            ->get();
-        */
 
         $sections = RouteHelper::getSectionStationFrom(true);
         $bookingStatus = BookingHelper::status();
@@ -132,6 +150,11 @@ class BookingsController extends Controller
             'bookingStatus' => $bookingStatus,
             'tripTypes' => $tripTypes,
             'bookChannels' => $bookChannels,
+            'customername'=>$customername,
+            'paymentno'=>$paymentno,
+            'email'=>$email,
+            'bookChannel'=>$bookChannel,
+            'tripType'=>$tripType
         ]);
     }
 

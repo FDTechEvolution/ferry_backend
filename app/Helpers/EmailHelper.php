@@ -19,15 +19,15 @@ class EmailHelper
 
         $booking = Bookings::find($booking_id);
         $tickets = $booking->tickets;
-        $route = $booking->route;
+        //$route = $booking->route;
         $customer = $booking->bookingCustomers[0];
-        //dd($tickets);
+        //dd($customer);
         if(is_null($customer->email) || $customer->email ==''){
+            TransactionLogHelper::tranLog(['type' => 'email', 'title' => 'Can not send email', 'description' => $customer->email, 'booking_id' => $booking->id]);
+
             return false;
         }
-        if(is_null($tickets) || sizeof($tickets) ==0){
-            //return false;
-        }
+
         $ticketno = isset($tickets[0]->ticketno)?$tickets[0]->ticketno:'';
 
         $mailData = [
@@ -36,8 +36,6 @@ class EmailHelper
             'customer_name' => sprintf('%s.%s',$customer->title,ucwords($customer->fullname)),
             'link' => URL::previous(),
         ];
-
-        //dd($mailData);
 
         $cc = ['RSVN_Tigerline@outlook.com','tigerline8989@gmail.com'];
 

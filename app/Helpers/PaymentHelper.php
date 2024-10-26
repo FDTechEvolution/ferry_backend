@@ -220,7 +220,7 @@ class PaymentHelper
             TransactionLogHelper::tranLog(['type' => 'PAYMENT', 'title' => $title, 'description' => '', 'booking_id' => $payment->booking_id]);
 
 
-            LineNotifyHelper::newBooking($payment->booking_id);
+            //LineNotifyHelper::newBooking($payment->booking_id);
         }
 
         return $payment;

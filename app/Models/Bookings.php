@@ -37,8 +37,9 @@ class Bookings extends Model
     }
 
     public function bookingCustomers() {
-        return $this->belongsToMany(Customers::class, 'booking_customers', 'booking_id', 'customer_id')->OrderBy('type', 'ASC')->withPivot('isdefault');
+        return $this->belongsToMany(Customers::class, 'booking_customers', 'booking_id', 'customer_id')->orderByPivot('isdefault','ASC')->OrderBy('type', 'ASC')->withPivot('isdefault');
     }
+
 
     public function bookingRoutes() {
         return $this->belongsToMany(Route::class, 'booking_routes', 'booking_id', 'route_id')->withPivot('type', 'traveldate','amount','id','ischange')->with('station_from', 'station_to', 'routeAddons');

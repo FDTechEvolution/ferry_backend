@@ -279,7 +279,8 @@ class BookingHelper
         }
         foreach($customers as $c) { if($c->mobile != '') $mobileno = $c->mobile; }
 
-
+        $isCreateTicket = false;
+        $countTicket = 0;
         foreach ($routes as $key => $route) {
             //foreach ($customers as $index => $customer) {
                 $ticketNo = newSequenceNumber($ticketType);
@@ -299,29 +300,22 @@ class BookingHelper
                         //'isdefault' => $customer->pivot->isdefault,
                     ],
                 );
+
+                if($ticket){
+                    $isCreateTicket = true;
+                    $countTicket++;
+                }
             //}
 
-
         }
-
-        /*
-        $ticket = Tickets::create(
-            [
-                'ticketno' => newSequenceNumber('TICKET'),
-                //'station_from_id' => $route['station_from']['id'],
-                //'station_to_id' => $route['station_to']['id'],
-                'status' => 'CO',
-                //'customer_id' => $customer['id'],
-                'booking_id' => $booking['id'],
-                'isdefault' => 'Y',
-            ],
-        );
-        */
+        if($isCreateTicket){
+            TransactionLogHelper::tranLog(['type' => 'ticket', 'title' => sprintf('Created ticket (%s)',$countTicket), 'description' => '', 'booking_id' => $booking->id]);
+        }
 
 
         $booking = Bookings::with('bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingCustomers', 'tickets')->where('id', $bookingId)->first();
 
-        TransactionLogHelper::tranLog(['type' => 'booking', 'title' => 'Complate payment', 'description' => '', 'booking_id' => $booking->id]);
+        TransactionLogHelper::tranLog(['type' => 'booking', 'title' => 'Complated booking', 'description' => '', 'booking_id' => $booking->id]);
         EmailHelper::ticket($bookingId);
         $booking->mobileno = $mobileno;
         return $booking;

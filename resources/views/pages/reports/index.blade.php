@@ -194,6 +194,11 @@
         </div>
     </div>
 </div>
+
+<form action="" method="GET" id="frm-search">
+    <input type="hidden" name="_station_from_id" id="_station_from_id">
+    <input type="hidden" name="_station_to_id" id="_station_to_id">
+</form>
 @stop
 
 @section('script')
@@ -209,4 +214,12 @@
     }
 </style>
 <script src="{{ asset('assets/js/app/report.js') }}"></script>
+
+<script>
+    $(document).ready(function(){
+        $('#station_from,#station_to').on('change',function(){
+            console.log('changed');
+        });
+    });
+</script>
 @stop

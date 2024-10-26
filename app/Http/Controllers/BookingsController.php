@@ -458,7 +458,8 @@ class BookingsController extends Controller
             EmailHelper::ticket($booking->id);
 
         }
-        return redirect()->route('booking-index')->withSuccess('sent email.');
+        return redirect()->back()->withSuccess('sent email.');
+        //return redirect()->route('booking-index')->withSuccess('sent email.');
     }
 
     public function changeStatus($id)

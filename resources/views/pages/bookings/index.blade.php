@@ -154,7 +154,7 @@ $colors = [
     </div>
     <div class="col-12">
 
-        <div class="table-responsive ">
+        <div class="table-responsive">
             <form novalidate class="bs-validate" id="frm_action" method="POST" target="_blank" action="">
                 @csrf
                 @method('POST')

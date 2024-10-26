@@ -11,6 +11,18 @@ function newSequenceNumber($type)
     $sequence = Sequencenumbers::where("type", $type)->first();
     $newSequenceNumber = '0000000000';
     if ($sequence) {
+        $today = date('Y-m-d');
+        $dataDate = $sequence->updated_at->format('Y-m-d');
+
+        if($type != 'BOOKING'){
+            if($today !=$dataDate){
+                $sequence->running = 0;
+                $sequence->save();
+                $sequence = Sequencenumbers::where("type", $type)->first();
+            }
+        }
+
+
         $prefix = $sequence->prefix;
         $dateformat = $sequence->dateformat;
         $currentNumber = $sequence->running;

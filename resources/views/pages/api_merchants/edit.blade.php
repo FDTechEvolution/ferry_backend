@@ -105,16 +105,15 @@
                         <th class="text-center">#</th>
                         <th class="text-center">Partner</th>
                         <th class="">Route</th>
-                        @if ($apiMerchant->isopenregular == 'Y')
-                        <th class="text-center">Regular</th>
-                        @endif
-                        @if ($apiMerchant->isopenchild == 'Y')
-                        <th class="text-center">Child</th>
-                        @endif
-                        @if ($apiMerchant->isopeninfant == 'Y')
-                        <th class="text-center">Infant</th>
-                        @endif
-                        <th class="text-center">Seat</th>
+
+                        <th class="text-end">Regular</th>
+
+                        <th class="text-end">Child</th>
+
+                        <th class="text-end">Infant</th>
+
+
+                        <th class="text-end">Seat</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -152,29 +151,15 @@
                             {{ date('H:i', strtotime($route->depart_time)) }}/{{ date('H:i',
                             strtotime($route->arrive_time)) }}
                         </td>
+                        <td class="text-end @if ($apiMerchant->isopenregular =='N') text-blue-gray-200 @endif">{{
+                            number_format($apiRoute->regular_price,2) }}</td>
+                        <td class="text-end @if ($apiMerchant->isopenchild =='N') text-blue-gray-200 @endif">{{
+                            number_format($apiRoute->child_price,2) }}</td>
+                        <td class=" text-end @if ($apiMerchant->isopeninfant =='N') text-blue-gray-200 @endif">{{
+                            number_format($apiRoute->infant_price,2) }}</td>
 
-                        @if ($apiMerchant->isopenregular == 'Y')
-                        <td class="text-center">
-                            <x-agent-discount-column :price="$apiRoute->regular_price" :discount="$apiRoute->discount"
-                                :ontop="$apiRoute->ontop" />
-                        </td>
-                        @endif
 
-                        @if ($apiMerchant->isopenchild == 'Y')
-                        <td class="text-center">
-                            <x-agent-discount-column :price="$apiRoute->child_price" :discount="$apiRoute->discount"
-                                :ontop="$apiRoute->ontop" />
-                        </td>
-                        @endif
-
-                        @if ($apiMerchant->isopeninfant == 'Y')
-                        <td class="text-center">
-                            <x-agent-discount-column :price="$apiRoute->infant_price" :discount="$apiRoute->discount"
-                                :ontop="$apiRoute->ontop" />
-                        </td>
-                        @endif
-
-                        <td class="text-center">
+                        <td class=" text-center">
                             {{ $apiRoute->seat }}
                         </td>
                         <td class="text-end">
@@ -204,7 +189,7 @@
                                     </path>
                                 </svg>
                             </a>
-                            <x-action-delete />
+
                         </td>
                     </tr>
                     @endforeach

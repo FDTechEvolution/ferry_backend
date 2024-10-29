@@ -139,7 +139,7 @@ class RouteHelper
             $routes = $routes->where('station_to_id', $stationToId);
         }
 
-        $routes  = $routes->orderBy('station_from_id', 'ASC')
+        $routes  = $routes->orderBy('station_from_id', 'ASC')->orderBy('station_to_id','ASC')
             ->orderBy('depart_time', 'ASC')
             ->get();
         //dd($routes);

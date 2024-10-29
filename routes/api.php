@@ -170,7 +170,7 @@ Route::middleware(['agent'])->prefix('v1')->group(function() {
     // Route
     Route::controller(\App\Http\Controllers\Api\Agent\RouteController::class)->group(function() {
         Route::get('routes', 'getRoutes');
-        Route::get('route/get/{from}/{to}', 'getRouteByStation');
+        Route::get('route/get/{from}/{to}/{depart}', 'getRouteByStation');
     });
 
     // Station

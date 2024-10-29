@@ -144,21 +144,21 @@ class ApiMerchantsController extends Controller
     {
         $apiMerchantId = $request->api_merchant_id;
         $routes = $request->routes;
-        //dd($request);
-        //ApiRoutes::where('api_merchant_id',$apiMerchantId)->where('isactive','Y')->update(['isactive'=>'N']);
+        $apiMerchant = ApiMerchants::find($apiMerchantId);
 
         if (!empty($request->routes)) {
             foreach ($routes as $routeId) {
-                $apiRoute = ApiRoutes::updateOrCreate(
+                $route = Route::find($routeId);
+                ApiRoutes::updateOrCreate(
                     ['api_merchant_id' => $apiMerchantId, 'route_id' => $routeId],
                     [
                         'route_id' => $routeId,
                         'isactive' => 'Y',
                         'api_merchant_id' => $apiMerchantId,
-                        'regular_price' => $request['adult_' . $routeId] ?? 0,
-                        'child_price' => $request['child_' . $routeId] ?? 0,
-                        'infant_price' => $request['infant_' . $routeId] ?? 0,
-                        'seat' => $request['seat_' . $routeId] ?? 100,
+                        'regular_price' => $route->regular_price,
+                        'child_price' => $route->child_price,
+                        'infant_price' => $route->infant_price,
+                        'seat' => 100,
                     ],
                 );
             }

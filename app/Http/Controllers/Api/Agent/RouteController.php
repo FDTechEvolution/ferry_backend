@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Agent;
 
+use App\Helpers\RouteHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -10,6 +11,8 @@ use App\Http\Resources\RouteResource;
 use App\Models\Route;
 use App\Models\ApiMerchants;
 use App\Models\ApiRoutes;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class RouteController extends Controller
 {
@@ -24,11 +27,15 @@ class RouteController extends Controller
         return response()->json(['data' => $data], 200);
     }
 
-    public function getRouteByStation(Request $request, string $from_id = null, string $to_id = null) {
+    public function getRouteByStation(Request $request, string $from_id = null, string $to_id = null,$depart='') {
         $merchant = $request->attributes->get('merchant');
         $_merchant = ApiMerchants::find($merchant);
         $routes = ApiRoutes::where('api_merchant_id', $merchant)->with('route')->get();
 
+        if(empty($depart)){
+            $depart = Carbon::now()->format('Y-m-d');
+        }
+        /*
         $_routes = $this->routeFromAndToCondition($routes, $from_id, $to_id);
 
         if(sizeof($_routes) > 0) {
@@ -37,6 +44,66 @@ class RouteController extends Controller
         }
         else
             return response()->json(['data' => NULL], 200);
+        */
+
+        $activeRoutes = RouteHelper::getAvaliableRoutes($from_id,$to_id,$depart);
+
+        $result = [];
+        foreach($activeRoutes as $item) {
+            //$apiRoute = ApiRoutes::where('api_merchant_id', $merchant)->where('route_id',$item->id)->with('route')->first();
+            $sql = 'select
+	rc.seat,apir.regular_price,apir.child_price,apir.infant_price,apir.seat as default_seat
+from
+	api_routes apir
+    left join route_calendars rc on (apir.id = rc.api_route_id and rc.date = :date)
+where
+	apir.route_id = :route_id
+    and apir.api_merchant_id = :api_merchant_id';
+
+            $apiRoutes = DB::select($sql,['date'=>$depart,'route_id'=>$item->id,'api_merchant_id'=>$merchant]);
+
+            if(sizeof($apiRoutes) ==0){
+                continue;
+            }
+            $apiRoute = $apiRoutes[0];
+            //Log::debug($_merchant);
+            //get calendar setting
+
+            $_route = [
+                'id' => $item->id,
+                'depart_time' => $item->depart_time,
+                'arrive_time' => $item->arrive_time,
+                'date'=>$depart,
+                'seat' => empty($apiRoute->seat)?$apiRoute->default_seat:$apiRoute->seat,
+                'regular_price'=>$_merchant->isopenregular=='Y'?(float)$apiRoute->regular_price:0,
+                'child_price'=>$_merchant->isopenchild=='Y'?(float)$apiRoute->child_price:0,
+                'infant_price'=>$_merchant->isopeninfant=='Y'?(float)$apiRoute->infant_price:0,
+                'station_from' => [
+                    'id' => $item->station_from_id,
+                    'name' => $item->station_from->name,
+                    'th_name'=>$item->station_from->thai_name,
+                    'piername' => $item->station_from->piername,
+                    'thai_piername' => $item->station_from->thai_piername,
+                    'nickname' => $item->station_from->nickname,
+                ],
+                'station_to' => [
+                    'id' => $item->station_to_id,
+                    'name' => $item->station_to->name,
+                    'th_name'=>$item->station_to->thai_name,
+                    'piername' => $item->station_to->piername,
+                    'thai_piername' => $item->station_to->thai_piername,
+                    'nickname' => $item->station_to->nickname,
+                ],
+
+            ];
+
+            array_push($result, $_route);
+        }
+
+        if(empty($result)){
+            return response()->json(['data' => $result,'msg'=>'no route avaliable on '.$depart], 200);
+        }
+        return response()->json(['data' => $result], 200);
     }
 
     private function setupRoute($route, $merchant) {

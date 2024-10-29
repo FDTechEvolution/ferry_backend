@@ -226,7 +226,7 @@ class ApiRoutesController extends Controller
         $apiRouteIds = $request->api_route_id;
         $api_merchant_id = $request->api_merchant_id;
 
-        DB::table('api_routes')->whereIn('id', $apiRouteIds)->update(['isactive'=>'N']);
+        DB::table('api_routes')->whereIn('id', $apiRouteIds)->delete();
 
         return redirect()->route('api.edit',['id'=>$api_merchant_id])->withSuccess('deleted.');
     }

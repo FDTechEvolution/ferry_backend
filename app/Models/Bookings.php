@@ -29,11 +29,16 @@ class Bookings extends Model
         'ispremiumflex',
         'promotion_id',
         'isconflict',
-        'amend'
+        'amend',
+        'api_merchant_id'
     ];
 
     public function user() {
         return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+    public function apiMerchant() {
+        return $this->hasOne(ApiMerchants::class, 'id', 'api_merchant_id');
     }
 
     public function bookingCustomers() {

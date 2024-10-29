@@ -24,6 +24,7 @@
                     <th>Name</th>
                     <th>API Code</th>
                     <th>API KEY</th>
+                    <th>Ticket Prefix</th>
                     <th class="text-center">Regular</th>
                     <th class="text-center">Child</th>
                     <th class="text-center">Infant</th>
@@ -45,6 +46,7 @@
                     <td>{{ $apiMerchant->name }}</td>
                     <td>{{ $apiMerchant->code }}</td>
                     <td>{{ $apiMerchant->key }}</td>
+                    <td>{{ $apiMerchant->prefix }}</td>
                     <td class="text-center">
                         @if ($apiMerchant->isopenregular =='Y')
                         <span class="text-success">

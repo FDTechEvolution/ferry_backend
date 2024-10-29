@@ -28,21 +28,22 @@ class BookingController extends Controller
                         'infant_passenger' => 0,
                         'totalamt' => ($request->totalamount*$request->passenger),
                         'extraamt' => 0,
-                        'amount' => $request->totalamount,
+                        'amount' => ($request->totalamount*$request->passenger),
                         'ispayment' => 'N',
                         'user_id' => NULL,
                         'trip_type' => 'one-way',
                         'status' => 'DR',
-                        'book_channel' => $_merchant->name
+                        'book_channel' => $_merchant->name,
+                        'api_merchant_id'=>$_merchant->id,
                     ],
                     'customers' => [
                         [
                             'fullname' => $request->fullname,
                             'type' => 'ADULT',
-                            'passportno' => NULL,
-                            'email' => NULL,
+                            'passportno' => isset($request->passportno)?$request->passportno:NULL,,
+                            'email' => isset($request->email)?$request->email:NULL,
                             'mobile' => $request->mobile,
-                            'fulladdress' => NULL
+                            'fulladdress' => isset($request->fulladdress)?$request->fulladdress:NULL,
                         ]
                     ],
                     'routes' => [
@@ -50,7 +51,7 @@ class BookingController extends Controller
                             'route_id' => $request->route_id,
                             'traveldate' => $request->departdate,
                             'amount' => $request->totalamount,
-                            'type' => NULL
+                            'type' => 'O'
                         ]
                     ]
                 ];

@@ -143,6 +143,7 @@ class BookingHelper
 
         //Create booking
         $_b = $data['booking'];
+        $apiMerchantId =isset($_b['api_merchant_id']) ? $_b['api_merchant_id'] : NULL;
         $booking = Bookings::create([
             'departdate' => $_b['departdate'],
             'adult_passenger' => $_b['adult_passenger'],
@@ -154,10 +155,11 @@ class BookingHelper
             'ispayment' => isset($_b['ispayment']) ? $_b['ispayment'] : 'N',
             'user_id' => isset($_b['user_id']) ? $_b['user_id'] : NULL,
             'trip_type' => $_b['trip_type'],
-            'bookingno' => newSequenceNumber('BOOKING'),
+            'bookingno' => newSequenceNumber('BOOKING',$apiMerchantId),
             'book_channel' => isset($_b['book_channel']) ? $_b['book_channel'] : 'ONLINE',
             'ispremiumflex' => isset($_b['ispremiumflex']) ? $_b['ispremiumflex'] : 'N',
             'promotion_id' => isset($_b['promotion_id']) ? $_b['promotion_id'] : NULL,
+            'api_merchant_id'=>$apiMerchantId,
         ]);
 
         $amount += $_b['amount'];
@@ -283,7 +285,7 @@ class BookingHelper
         $countTicket = 0;
         foreach ($routes as $key => $route) {
             //foreach ($customers as $index => $customer) {
-                $ticketNo = newSequenceNumber($ticketType);
+                $ticketNo = newSequenceNumber($ticketType,$booking->api_merchant_id);
 
                 if($booking['trip_type'] == 'multiple'){
                     $ticketNo .= '#'.($key+1);

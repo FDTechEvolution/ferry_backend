@@ -23,7 +23,8 @@ class ApiMerchants extends Model
         'isopenchild',
         'isopeninfant',
         'isopendiscount',
-        'image_id'
+        'image_id',
+        'prefix'
     ];
 
     public function apiRoutes() {

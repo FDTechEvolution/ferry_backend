@@ -47,6 +47,13 @@
             </div>
 
             <div class="col-12 mb-2">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="prefix" name="prefix" value="{{$apiMerchant->prefix}}">
+                    <label for="prefix">Ticket Prefix *</label>
+                </div>
+            </div>
+
+            <div class="col-12 mb-2">
                 <div class="form-check mb-2">
                     <input class="form-check-input form-check-input-success" type="checkbox" value="Y"
                         id="isopenregular" name="isopenregular" @checked($apiMerchant->isopenregular=='Y')>

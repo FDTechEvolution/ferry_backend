@@ -1,6 +1,12 @@
 @extends('layouts.blank')
 
 @section('content')
+<style>
+    tr {
+        page-break-inside: avoid;
+    }
+</style>
+
 <div class="container">
     <div class="row">
         <div class="col-12 p-3 text-center">
@@ -23,14 +29,14 @@
                 <thead>
                     <tr class="">
                         <th class="text-center">#</th>
-                        <th width="80">Payment Date</th>
+                        <th width="90">Payment Date</th>
                         <th>InvoiceNo.</th>
                         <th>PaymentNo.</th>
                         <th>TicketNo.</th>
                         <th>Station From</th>
                         <th>Station To</th>
-                        <th width="80">Depart</th>
-                        <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Premium Flex">
+                        <th width="90">Depart</th>
+                        <th class="text-end" data-bs-toggle="tooltip" data-bs-placement="top" title="Premium Flex">
                             P.Flex
                         </th>
                         <th class="p-0">
@@ -39,6 +45,7 @@
                         <th>Customer</th>
 
                         <th class="text-end">Price</th>
+                        <th class="text-end">Discount</th>
                         <th class="text-end">Processing fee</th>
                         <th class="text-end">Total Price</th>
                     </tr>
@@ -46,26 +53,35 @@
                 <tbody>
                     @foreach ($bookings as $index => $item)
                     <tr class="" style="font-size: 10px;">
-                        <td class="text-center">{{ $index+1 }}</td>
-                        <td>{{ $item->docdate }}</td>
-                        <td>{{ $item->bookingno }}</td>
-                        <td>{{ $item->paymentno }}</td>
-                        <td>{{ $item->ticketno }}</td>
-                        <td>{{ $item->station_from_name }}</td>
-                        <td>{{ $item->station_to_name }}</td>
-                        <td>{{ $item->traveldate }}</td>
-                        <td></td>
+                        <td class="text-center align-middle">{{ $index+1 }}</td>
+                        <td class="align-middle">{{ $item->docdate }}</td>
+                        <td class="align-middle">{{ $item->bookingno }}</td>
+                        <td class="align-middle">{{ $item->paymentno }}</td>
+                        <td class="align-middle">{{ $item->ticketno }}</td>
+                        <td class="align-middle">{{ $item->station_from_name }}</td>
+                        <td class="align-middle">{{ $item->station_to_name }}</td>
+                        <td class="align-middle">{{ $item->traveldate }}</td>
+                        <td class="align-middle text-end">{{ number_format($item->pflex,2) }}</td>
                         <td class="p-0">
+                            @if (!empty($item->addon_name))
                             <small>
                                 <strong>{{ $item->addon_name }}</strong>: {{ $item->description }}
                             </small>
+                            @endif
+
                         </td>
-                        <td>
+                        <td class="align-middle align-middle">
+                            @if (empty($item->title))
                             {{ $item->fullname }}
+                            @else
+                            {{ sprintf('%s.%s',$item->title,$item->fullname) }}
+                            @endif
+
                         </td>
-                        <td class="text-end">{{ number_format($item->amount,2) }}</td>
-                        <td class="text-end">{{ number_format($item->fee,2) }}</td>
-                        <td class="text-end">{{ number_format($item->totalamt,2) }}</td>
+                        <td class="text-end align-middle">{{ number_format($item->amount,2) }}</td>
+                        <td class="text-end align-middle">{{ number_format($item->discount,2) }}</td>
+                        <td class="text-end align-middle">{{ number_format($item->fee,2) }}</td>
+                        <td class="text-end align-middle">{{ number_format($item->totalamt,2) }}</td>
 
 
 

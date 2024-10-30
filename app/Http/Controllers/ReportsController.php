@@ -117,7 +117,7 @@ class ReportsController extends Controller
         $description = '';
 
         $sql = 'select br.traveldate,b.ispremiumflex, b.bookingno,b.status,b.adult_passenger,b.child_passenger,b.infant_passenger,
- concat(c.title,".",c.fullname) as fullname,concat(c.mobile_code,c.mobile) as mobileno,c.mobile_th,c.email,
+ c.fullname,c.title,concat(c.mobile_code,c.mobile) as mobileno,c.mobile_th,c.email,
  sf.nickname as station_from_name,st.nickname as station_to_name,
 ra.name as addon_name, bx.description ,b.id,p.paymentno,p.status as payment_status,b.book_channel,pa.name as partner_name
 from
@@ -191,9 +191,9 @@ order by br.traveldate ASC,b.bookingno ASC
         //dd($daterangeSplit);
 
         $sql = 'select br.traveldate, b.bookingno,b.status,DATE_FORMAT(p.docdate,"%d-%m-%Y") as docdate,
- concat(c.title,".",c.fullname) as fullname,concat(c.mobile_code,c.mobile) as mobileno,c.mobile_th,c.email,
- sf.name as station_from_name,st.name as station_to_name,t.ticketno,p.amount,p.totalamt,(p.totalamt-(p.amount-p.discount)) as fee,
-ra.name as addon_name, bx.description ,b.id,p.paymentno,p.status as payment_status,b.book_channel,pa.name as partner_name
+ c.fullname,c.title,concat(c.mobile_code,c.mobile) as mobileno,c.mobile_th,c.email,
+ sf.name as station_from_name,st.name as station_to_name,t.ticketno,p.amount,p.totalamt,pfee.amount as fee,ppremium.amount as pflex,
+ra.name as addon_name, p.discount,bx.description ,b.id,p.paymentno,p.status as payment_status,b.book_channel,pa.name as partner_name
 from
 	bookings b
     join payments p on b.id = p.booking_id
@@ -207,13 +207,19 @@ from
     left join booking_extras bx on br.id = bx.booking_route_id
     left join route_addons ra on bx.route_addon_id = ra.id
     left join partners pa on r.partner_id = pa.id
+    left join (
+		select payment_id,amount from payment_lines where type = "FEE"
+    ) as pfee on p.id = pfee.payment_id
+     left join (
+		select payment_id,amount from payment_lines where type = "PREMIUM"
+    ) as ppremium on p.id = ppremium.payment_id
 where b.status = "CO" and :conditions
 order by p.docdate ASC,b.bookingno ASC
 ';
         //$conditionStr = '(br.traveldate >= "2024-10-01" and br.traveldate <= "2024-10-30")';
         $startDateSql = Carbon::createFromFormat('d/m/Y', trim($daterangeSplit[0]))->format('Y-m-d');
         $endDateSql = Carbon::createFromFormat('d/m/Y', trim($daterangeSplit[1]))->format('Y-m-d');
-        $conditionStr = '(br.traveldate >="' . $startDateSql . '" and br.traveldate <="' . $endDateSql . '") ';
+        $conditionStr = '(DATE_FORMAT(p.docdate,"%Y-%m-%d") >="' . $startDateSql . '" and DATE_FORMAT(p.docdate,"%Y-%m-%d") <="' . $endDateSql . '") ';
 
         $description .= sprintf('%s to %s | ',$startDateSql,$endDateSql);
 

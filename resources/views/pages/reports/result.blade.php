@@ -1,6 +1,11 @@
 @extends('layouts.blank')
 
 @section('content')
+<style>
+    tr {
+        page-break-inside: avoid;
+    }
+</style>
 <div class="container">
     <div class="row">
         <div class="col-12 p-3 text-center">
@@ -57,7 +62,12 @@
                             <small class="d-flex">{{ $item->traveldate }}</small>
                         </td>
                         <td>
+                            @if (empty($item->title))
                             {{ $item->fullname }}
+                            @else
+                            {{ sprintf('%s.%s',$item->title,$item->fullname) }}
+                            @endif
+
                         </td>
                         <td>
                             <span class="d-flex">{{ $item->mobileno }}</span>
@@ -69,9 +79,12 @@
                             <span class="">I:{{ $item->infant_passenger }}</span>
                         </td>
                         <td class="p-0">
+                            @if (!empty($item->addon_name))
                             <small>
                                 <strong>{{ $item->addon_name }}</strong>: {{ $item->description }}
                             </small>
+                            @endif
+
                         </td>
                         <td>{{ $item->book_channel }}</td>
                         <td>{{ $item->partner_name }}</td>

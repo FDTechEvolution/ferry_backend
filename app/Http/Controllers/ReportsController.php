@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\RouteHelper;
+use App\Models\ApiMerchants;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
@@ -12,7 +13,9 @@ use App\Models\Station;
 use App\Models\BookingRoutes;
 use App\Models\Route;
 use App\Models\BookingExtras;
+use App\Models\Bookings;
 use App\Models\Partners;
+use Illuminate\Support\Facades\DB;
 
 class ReportsController extends Controller
 {
@@ -23,228 +26,239 @@ class ReportsController extends Controller
 
     public function index() {
         //$sections = $this->getSection();
-        $sections = RouteHelper::getSectionStationFrom(true);
-        $partners = $this->getPartner();
+        //$sections = RouteHelper::getSectionStationFrom(true);
+        $partners = Partners::orderBy('name','ASC')->get();
 
-        return view('pages.reports.index', ['sections' => $sections, 'partners' => $partners, 'reports' => []]);
-    }
+        $stationFromId = request()->station_from;
+        $stationToId = request()->station_to;
+        $daterange = request()->daterange;
+        $partnerId = request()->partner;
 
-    public function getRoute(Request $request) {
-        $sections = RouteHelper::getSectionStationFrom(true);
-        $partners = $this->getPartner();
+        $stationFroms = RouteHelper::getSectionStationFrom(true);
 
-        $depart_date = $this->setDepartDate($request->daterange);
-        $start_date = Carbon::createFromFormat('Y-m-d', $depart_date[0])->startOfDay();
-        $end_date = Carbon::createFromFormat('Y-m-d', $depart_date[1])->startOfDay();
-        $station_from = 'ALL';
-        $station_to = 'ALL';
-        $partner = null;
-        $depart_arrive = 'ALL';
+        $routes = Route::where('status', 'CO')
+            ->with('station_from', 'station_from.section', 'station_to', 'icons', 'routeAddons', 'activity_lines', 'meal_lines', 'partner');
+            if($stationFromId != 'all'){
+                $routes = $routes->where('station_from_id',$stationFromId);
+            }
 
-        $from = $request->station_from != 'all' ? $request->station_from : '';
-        $to = $request->station_to != 'all' ? $request->station_to : '';
-        $_partner = $request->partner != 'all' ? $request->partner : '';
-        $_depart_arrive = $request->depart_time != 'all' ? $request->depart_time : '';
-
-        $routes = $this->routeGetReport($from, $to, $start_date, $end_date, $_partner, $_depart_arrive);
-
-        $booking_route = $this->getOnlyBookingRoutes($routes);
-        if($from != '') $station_from = $this->getStationById($request->station_from);
-        if($to != '') $station_to = $this->getStationById($request->station_to);
-        if($_partner != '') $partner = $this->getPassnerById($request->partner);
-        if($_depart_arrive != '') $depart_arrive = $request->depart_time;
-        // Log::debug($partner->toArray());
-
-        return view('pages.reports.index', ['sections' => $sections, 'partners' => $partners, 'reports' => $booking_route,
-                'depart_date' => $request->daterange, 'from' => $station_from, 'to' => $station_to, 'is_partner' => $partner,
-                'depart_arrive' => $depart_arrive]);
-    }
-
-    public function reportPdfGenerate(Request $request) {
-        $depart_date = $this->setDepartDate($request->daterange);
-        $start_date = Carbon::createFromFormat('Y-m-d', $depart_date[0])->startOfDay();
-        $end_date = Carbon::createFromFormat('Y-m-d', $depart_date[1])->startOfDay();
-        $station_from = 'ALL';
-        $station_to = 'ALL';
-        $partner = 'ALL';
-        $depart_arrive = 'ALL';
-        //dd($request);
-
-        $from = $request->station_from != 'all' ? $request->station_from : '';
-        $to = $request->station_to != 'all' ? $request->station_to : '';
-        $_partner = $request->partner != 'all' ? $request->partner : '';
-        $_depart_arrive = strtolower($request->depart_time) != 'all' ? $request->depart_time : '';
-
-        $routes = $this->routeGetReport($from, $to, $start_date, $end_date, $_partner, $_depart_arrive);
-
-        $booking_route = $this->getOnlyBookingRoutes($routes);
-        if($from != '') $station_from = $this->getStationById($request->station_from);
-        if($to != '') $station_to = $this->getStationById($request->station_to);
-        if($_partner != '') $partner = $this->getPassnerById($request->partner);
-        if($_depart_arrive != '') $depart_arrive = $request->depart_time;
-
-        return view('pages.reports.pdf', ['reports' => $booking_route, 'depart_date' => $request->daterange,
-                    'from' => $station_from, 'to' => $station_to, 'partner' => $partner, 'is_partner' => $partner,
-                    'depart_arrive' => $depart_arrive]);
-    }
-
-    private function routeGetReport($station_from, $station_to, $start_date, $end_date, $partner, $depart_time) {
-        $_from = $station_from != '' ? $station_from : '';
-        $_to = $station_to != '' ? $station_to : '';
-        $_partner = $partner != '' ? $partner : '';
-        $depart = '';
-        $arrive = '';
-        if($depart_time != '') {
-            $ex = explode('-', $depart_time);
-            $depart = $ex[0];
-            $arrive = $ex[1];
+        if(empty($stationToId) || $stationToId == ''){
+            $stationToId = '';
+        }else{
+            $routes = $routes->where('station_to_id',$stationToId);
         }
+        $routes = $routes->orderBy('depart_time', 'ASC')->get();
 
-        $routes = Route::where(function($f) use ($_from) {
-                            if($_from != '') return $f->where('station_from_id', $_from);
-                        })
-                        ->where(function($t) use ($_to) {
-                            if($_to != '') return $t->where('station_to_id', $_to);
-                        })
-                        ->where(function($p) use ($_partner) {
-                            if($_partner != '') return $p->where('partner_id', $_partner);
-                        })
-                        ->where(function($d) use ($depart) {
-                            if($depart != '') return $d->where('depart_time', $depart);
-                        })
-                        ->where(function($a) use ($arrive) {
-                            if($arrive != '') return $a->where('arrive_time', $arrive);
-                        })
-                        ->with(['bookings' => function($br) use ($start_date, $end_date) {
-                            return $br->whereDate('traveldate', '>=', $start_date)->whereDate('traveldate', '<=', $end_date);
-                        }, 'partner'])
-                        ->get();
+        $stationTos = RouteHelper::getSectionStationTo(true,$stationFromId);
+        //Log::debug(sizeof($routes));
 
-        // Log::debug($routes->toArray());
-        return $routes;
+        $apiMerchants = ApiMerchants::orderBy('name','ASC')->get();
+
+        return view('pages.reports.index', [
+            'stationFroms' => $stationFroms,
+            'stationTos'=>$stationTos,
+            'partners' => $partners,
+            'stationFromId' => $stationFromId,
+            'stationToId' => $stationToId,
+            'daterange' => $daterange,
+            'partnerId' => $partnerId,
+            'routes'=>$routes,
+            'apiMerchants'=>$apiMerchants
+        ]);
     }
 
-    private function getStationById($id) {
-        return Station::find($id);
+    public function paymentReport() {
+        //$sections = $this->getSection();
+        //$sections = RouteHelper::getSectionStationFrom(true);
+        $partners = Partners::orderBy('name','ASC')->get();
+
+        $stationFromId = request()->station_from;
+        $stationToId = request()->station_to;
+        $daterange = request()->daterange;
+        $partnerId = request()->partner;
+
+        $stationFroms = RouteHelper::getSectionStationFrom(true);
+
+        $routes = Route::where('status', 'CO')
+            ->with('station_from', 'station_from.section', 'station_to', 'icons', 'routeAddons', 'activity_lines', 'meal_lines', 'partner');
+            if($stationFromId != 'all'){
+                $routes = $routes->where('station_from_id',$stationFromId);
+            }
+
+        if(empty($stationToId) || $stationToId == ''){
+            $stationToId = '';
+        }else{
+            $routes = $routes->where('station_to_id',$stationToId);
+        }
+        $routes = $routes->orderBy('depart_time', 'ASC')->get();
+
+        $stationTos = RouteHelper::getSectionStationTo(true,$stationFromId);
+        //Log::debug(sizeof($routes));
+
+        $apiMerchants = ApiMerchants::orderBy('name','ASC')->get();
+
+        return view('pages.reports.payment_report', [
+            'stationFroms' => $stationFroms,
+            'stationTos'=>$stationTos,
+            'partners' => $partners,
+            'stationFromId' => $stationFromId,
+            'stationToId' => $stationToId,
+            'daterange' => $daterange,
+            'partnerId' => $partnerId,
+            'routes'=>$routes,
+            'apiMerchants'=>$apiMerchants
+        ]);
     }
 
-    private function getPassnerById($id) {
-        return Partners::find($id);
-    }
+    public function result(Request $request){
+        //dd($request->all());
+        $daterange = $request->date_range;
+        $daterangeSplit = explode('-',$daterange);
+        $description = '';
 
-    private function getOnlyBookingRoutes($routes) {
-        $booking_routes = [];
+        $sql = 'select br.traveldate,b.ispremiumflex, b.bookingno,b.status,b.adult_passenger,b.child_passenger,b.infant_passenger,
+ concat(c.title,".",c.fullname) as fullname,concat(c.mobile_code,c.mobile) as mobileno,c.mobile_th,c.email,
+ sf.nickname as station_from_name,st.nickname as station_to_name,
+ra.name as addon_name, bx.description ,b.id,p.paymentno,p.status as payment_status,b.book_channel,pa.name as partner_name
+from
+	bookings b
+    join payments p on b.id = p.booking_id
+    join booking_customers bc on (b.id = bc.booking_id and bc.isdefault="Y")
+    join customers c on bc.customer_id = c.id
+    join booking_routes br on b.id = br.booking_id
+    join routes r on br.route_id = r.id
+    join stations sf on r.station_from_id = sf.id
+    join stations st on r.station_to_id = st.id
+    left join booking_extras bx on br.id = bx.booking_route_id
+    left join route_addons ra on bx.route_addon_id = ra.id
+    left join partners pa on r.partner_id = pa.id
+where b.status = "CO" and :conditions
+order by br.traveldate ASC,b.bookingno ASC
+';
+        //$conditionStr = '(br.traveldate >= "2024-10-01" and br.traveldate <= "2024-10-30")';
+        $startDateSql = Carbon::createFromFormat('d/m/Y', trim($daterangeSplit[0]))->format('Y-m-d');
+        $endDateSql = Carbon::createFromFormat('d/m/Y', trim($daterangeSplit[1]))->format('Y-m-d');
+        $conditionStr = '(br.traveldate >="' . $startDateSql . '" and br.traveldate <="' . $endDateSql . '") ';
 
-        foreach($routes as $index => $route) {
-            if(sizeof($route['bookings']) > 0) {
-                foreach($route['bookings'] as $br) {
-                    $shuttle_bus = $this->getRouteExtra($br->pivot->id, 'shuttle_bus');
-                    $longtail_boat = $this->getRouteExtra($br->pivot->id, 'longtail_boat');
-                    $private_taxi = $this->getRouteExtra($br->pivot->id, 'private_taxi');
+        $description .= sprintf('%s to %s | ',$startDateSql,$endDateSql);
 
-                    $br->traveldate = $br->pivot->traveldate;
-                    $br->travel_date = date('d/m/Y', strtotime($br->pivot->traveldate));
-                    $br->station_from = $this->setStationToBookingRoute($routes[$index]->station_from);
-                    $br->station_to = $this->setStationToBookingRoute($routes[$index]->station_to);
-                    $br->shuttle_bus_from = $shuttle_bus[0];
-                    $br->shuttle_bus_to = $shuttle_bus[1];
-                    $br->longtail_boat_from = $longtail_boat[0];
-                    $br->longtail_boat_to = $longtail_boat[1];
-                    $br->private_taxi_from = $private_taxi[0];
-                    $br->private_taxi_to = $private_taxi[1];
-                    $br->meal = $this->getAddonExtra($br->pivot->id, 'MEAL');
-                    $br->activity = $this->getAddonExtra($br->pivot->id, 'ACTV');
-                    array_push($booking_routes, $br->toArray());
-                }
+        if(!empty($request->route_id) && $request->route_id !='all'){
+            $conditionStr .= ' and r.id ="'.$request->route_id.'"';
+            $_route = Route::where('id',$request->route_id)->with(['station_from','station_to'])->first();
+            $description .= sprintf('%s - %s time %s/%s | ',$_route->station_from->name,$_route->station_to->name, date('H:i', strtotime($_route->depart_time)),date('H:i', strtotime($_route->arrive_time)));
+        }else{
+            if(!empty($request->station_from_id) && $request->station_from_id !='all'){
+                $conditionStr .= ' and r.station_from_id = "'.$request->station_from_id.'"';
+                $_station = Station::where('id',$request->station_from_id)->first();
+                $description .= sprintf('From:%s | ',$_station->name);
+            }
+
+            if(!empty($request->station_to_id) && $request->station_to_id !='all'){
+                $conditionStr .= ' and r.station_to_id = "'.$request->station_to_id.'"';
+                $_station = Station::where('id',$request->station_to_id)->first();
+                $description .= sprintf('To:%s | ',$_station->name);
             }
         }
 
-        usort($booking_routes, function ($a, $b) {
-            return strtotime($a['traveldate']) - strtotime($b['traveldate']);
-        });
+        if(!empty($request->partner_id) && $request->partner_id !='all'){
+            $conditionStr .= ' and r.partner_id = "'.$request->partner_id.'"';
+        }
 
-        // Log::debug($booking_routes);
-        return $booking_routes;
-    }
-
-    private function getAddonExtra($booking_route_id, $type) {
-        $addon_extra = BookingExtras::where('booking_route_id', $booking_route_id)
-                        ->with(['addon' => function($a) use ($type) {
-                            return $a->where('type', $type);
-                        }])
-                        ->get();
-
-        $addons = [];
-        foreach($addon_extra as $extra) {
-            if($extra->addon != NULL) {
-                array_push($addons, $extra->addon->name);
+        if(!empty($request->api_merchant_id) && $request->api_merchant_id !='all'){
+            if($request->api_merchant_id == 'admin' || $request->api_merchant_id == 'online'){
+                $conditionStr .= ' and b.book_channel = "'.$request->api_merchant_id.'"';
+            }else{
+                $conditionStr .= ' and b.api_merchant_id = "'.$request->api_merchant_id.'"';
             }
 
         }
 
-        return $addons;
+        $sql = str_replace(':conditions', $conditionStr, $sql);
+
+        $bookings = DB::select($sql);
+
+        return view('pages.reports.result',[
+            'bookings'=>$bookings,'title'=>'Route Report','description'=>$description
+        ]);
     }
 
-    private function getRouteExtra($booking_route_id, $type) {
-        $booking_extra = BookingExtras::where('booking_route_id', $booking_route_id)
-                            ->with(['route_addon' => function($ra) use ($type) {
-                                return $ra->where('type', $type);
-                            }])
-                            ->get();
 
-        $from = '';
-        $to = '';
-        foreach($booking_extra as $extra) {
-            if($extra->route_addon != NULL) {
-                foreach($extra->route_addon as $addon) {
-                    if($addon->subtype == 'from') $from = $extra->description;
-                    if($addon->subtype == 'to') $to = $extra->description;
-                }
+    public function paymentResult(Request $request){
+        //dd($request->all());
+        $daterange = $request->date_range;
+        $daterangeSplit = explode('-',$daterange);
+        $description = '';
+        //dd($daterangeSplit);
+
+        $sql = 'select br.traveldate, b.bookingno,b.status,DATE_FORMAT(p.docdate,"%d-%m-%Y") as docdate,
+ concat(c.title,".",c.fullname) as fullname,concat(c.mobile_code,c.mobile) as mobileno,c.mobile_th,c.email,
+ sf.name as station_from_name,st.name as station_to_name,t.ticketno,p.amount,p.totalamt,(p.totalamt-(p.amount-p.discount)) as fee,
+ra.name as addon_name, bx.description ,b.id,p.paymentno,p.status as payment_status,b.book_channel,pa.name as partner_name
+from
+	bookings b
+    join payments p on b.id = p.booking_id
+    join booking_customers bc on (b.id = bc.booking_id and bc.isdefault="Y")
+    join customers c on bc.customer_id = c.id
+    join booking_routes br on b.id = br.booking_id
+    join tickets t on br.id = t.booking_route_id
+    join routes r on br.route_id = r.id
+    join stations sf on r.station_from_id = sf.id
+    join stations st on r.station_to_id = st.id
+    left join booking_extras bx on br.id = bx.booking_route_id
+    left join route_addons ra on bx.route_addon_id = ra.id
+    left join partners pa on r.partner_id = pa.id
+where b.status = "CO" and :conditions
+order by p.docdate ASC,b.bookingno ASC
+';
+        //$conditionStr = '(br.traveldate >= "2024-10-01" and br.traveldate <= "2024-10-30")';
+        $startDateSql = Carbon::createFromFormat('d/m/Y', trim($daterangeSplit[0]))->format('Y-m-d');
+        $endDateSql = Carbon::createFromFormat('d/m/Y', trim($daterangeSplit[1]))->format('Y-m-d');
+        $conditionStr = '(br.traveldate >="' . $startDateSql . '" and br.traveldate <="' . $endDateSql . '") ';
+
+        $description .= sprintf('%s to %s | ',$startDateSql,$endDateSql);
+
+        if(!empty($request->route_id) && $request->route_id !='all'){
+            $conditionStr .= ' and r.id ="'.$request->route_id.'"';
+            $_route = Route::where('id',$request->route_id)->with(['station_from','station_to'])->first();
+            $description .= sprintf('%s - %s time %s/%s | ',$_route->station_from->name,$_route->station_to->name, date('H:i', strtotime($_route->depart_time)),date('H:i', strtotime($_route->arrive_time)));
+        }else{
+            if(!empty($request->station_from_id) && $request->station_from_id !='all'){
+                $conditionStr .= ' and r.station_from_id = "'.$request->station_from_id.'"';
+                $_station = Station::where('id',$request->station_from_id)->first();
+                $description .= sprintf('From:%s | ',$_station->name);
+            }
+
+            if(!empty($request->station_to_id) && $request->station_to_id !='all'){
+                $conditionStr .= ' and r.station_to_id = "'.$request->station_to_id.'"';
+
+                $_station = Station::where('id',$request->station_to_id)->first();
+                $description .= sprintf('To:%s | ',$_station->name);
             }
         }
 
-        return array($from, $to);
-    }
-
-    private function setStationToBookingRoute($station) {
-        return [
-            'name' => $station->name,
-            'nickname' => $station->nickname,
-            'piername' => $station->piername
-        ];
-    }
-
-    private function getPartner() {
-        return Partners::where('isactive', 'Y')->orderBy('name', 'ASC')->get();
-    }
-
-    private function setDepartDate($daterange) {
-        $ex = explode(' - ', $daterange);
-        $ex_start = explode('/', $ex[0]);
-        $ex_end = explode('/', $ex[1]);
-
-        $depart_start = $ex_start[2].'-'.$ex_start[1].'-'.$ex_start[0];
-        $depart_end = $ex_end[2].'-'.$ex_end[1].'-'.$ex_end[0];
-
-        return array($depart_start, $depart_end);
-    }
-
-    public function routeDepartArriveTime(string $from_id = null, string $to_id = null) {
-        $route = Route::where('station_from_id', $from_id)
-                        ->where('station_to_id', $to_id)
-                        ->where('isactive', 'Y')
-                        ->orderBy('depart_time', 'ASC')
-                        ->get();
-
-        $times = [];
-        foreach($route as $index => $item) {
-            $depart = date('H:i', strtotime($item->depart_time));
-            $arrive = date('H:i', strtotime($item->arrive_time));
-
-            array_push($times, ['depart_time' => $depart, 'arrive_time' => $arrive]);
+        if(!empty($request->partner_id) && $request->partner_id !='all'){
+            $conditionStr .= ' and r.partner_id = "'.$request->partner_id.'"';
         }
 
-        $_times = array_unique($times, SORT_REGULAR);
-        return response()->json(['data' => $_times], 200);
+        if(!empty($request->api_merchant_id) && $request->api_merchant_id !='all'){
+            if($request->api_merchant_id == 'admin' || $request->api_merchant_id == 'online'){
+                $conditionStr .= ' and b.book_channel = "'.$request->api_merchant_id.'"';
+            }else{
+                $conditionStr .= ' and b.api_merchant_id = "'.$request->api_merchant_id.'"';
+            }
+
+        }
+
+        $sql = str_replace(':conditions', $conditionStr, $sql);
+
+        $bookings = DB::select($sql);
+
+        return view('pages.reports.payment',[
+            'bookings'=>$bookings,'title'=>'Payment Report','description'=>$description
+        ]);
+
+
+        //$bookings = Bookings::with(['bookingCustomers'])
     }
+
 }

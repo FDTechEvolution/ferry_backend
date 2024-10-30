@@ -355,17 +355,14 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(ReportsController::class)->group(function() {
         Route::get('/report', 'index')->name('report-index');
-
+        Route::get('/report/payment', 'paymentReport')->name('report.payment');
+        Route::post('/report/result', 'result')->name('report.result');
+        Route::post('/report/payment-result', 'paymentResult')->name('report.payment_result');
         Route::post('/report', 'getRoute')->name('report-get');
         Route::post('/report-pdf', 'reportPdfGenerate')->name('report-pdf');
 
         // AJAX
         Route::get('/ajax/report/depart-arrive-time/{from_id}/{to_id}', 'routeDepartArriveTime');
-    });
-
-    //ner version
-    Route::controller(ReportController::class)->group(function() {
-        Route::get('/app-report', 'index')->name('report.index');
     });
 
     Route::controller(FeeManageController::class)->group(function() {

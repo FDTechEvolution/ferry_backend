@@ -7,19 +7,19 @@
 @section('content')
 <div class="row">
     <div class="col-12">
-        <a href="{{ route('report-index') }}" class="btn btn-primary"><i class="fa-solid fa-file"></i> Booking Route
+        <a href="{{ route('report-index') }}" class="btn btn-light"><i class="fa-solid fa-file"></i> Booking Route
             Report</a>
-        <a href="{{ route('report.payment') }}" class="btn btn-light"><i class="fa-solid fa-cash-register"></i> Payment
-            Report</a>
+        <a href="{{ route('report.payment') }}" class="btn btn-primary"><i class="fa-solid fa-cash-register"></i>
+            Payment Report</a>
     </div>
 </div>
 <hr>
 <div class="row mb-4">
     <div class="col-12 text-center">
-        <h3>Booking Route Report</h3>
+        <h3>Payment Report</h3>
     </div>
     <div class="col-12">
-        <form class="bs-validate" id="frm" method="GET" action="{{ route('report-index') }}">
+        <form class="bs-validate" id="frm" method="GET" action="{{ route('report.payment') }}">
             @csrf
             <fieldset id="report-create">
                 <div class="row">
@@ -60,7 +60,7 @@
                                         "lang_months"	 : ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
                                         "lang_weekdays" : ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
                                     }'>
-                            <label for="daterange">Depart Date</label>
+                            <label for="daterange">Payment Date</label>
                         </div>
                     </div>
                     <div class="col-12 col-lg-3">
@@ -91,7 +91,7 @@
                 <hr>
                 <div class="row">
                     <div class="col-12 text-center">
-                        <button type="button" class="btn btn-success" id="bt-routereport">Show Report</button>
+                        <button type="button" class="btn btn-success" id="bt-paymentreport">Show Payment Report</button>
                     </div>
                 </div>
             </fieldset>
@@ -99,7 +99,7 @@
     </div>
 </div>
 
-<form id="frm-submit" method="POST" action="{{ route('report.result') }}" target="_blank">
+<form id="frm-submit" method="POST" action="{{ route('report.payment_result') }}" target="_blank">
     @csrf
     <input type="hidden" name="station_from_id" id="station_from_id">
     <input type="hidden" name="station_to_id" id="station_to_id">

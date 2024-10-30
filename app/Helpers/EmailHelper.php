@@ -44,6 +44,9 @@ class EmailHelper
                 ->cc($cc)
                 ->send(new TicketMail($mailData, $booking->bookingno,$ticketno));
                 TransactionLogHelper::tranLog(['type' => 'email', 'title' => 'Sent ticket email successfully', 'description' => '', 'booking_id' => $booking->id]);
+                $booking->isemailsent = 'Y';
+                $booking->save();
+
             } catch (Exception $e) {
                 TransactionLogHelper::tranLog(['type' => 'email', 'title' => 'Sent ticket email failed', 'description' => $e->getMessage(), 'booking_id' => $booking->id]);
 

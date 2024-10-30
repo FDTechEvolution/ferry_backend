@@ -30,7 +30,8 @@ class Bookings extends Model
         'promotion_id',
         'isconflict',
         'amend',
-        'api_merchant_id'
+        'api_merchant_id',
+        'isemailsent'
     ];
 
     public function user() {

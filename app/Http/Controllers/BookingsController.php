@@ -57,7 +57,7 @@ class BookingsController extends Controller
         (b.adult_passenger+b.child_passenger+b.infant_passenger) as total_passenger,
         b.trip_type,br.type,b.amend,concat(sf.nickname,"-",st.nickname) as route,br.traveldate,b.ispayment,
         b.book_channel,c.fullname as customer_name,c.email,r.depart_time,r.arrive_time,b.totalamt,p.totalamt as payment_totalamt,
-        b.status,b.ispremiumflex,p.c_tranref,p.paymentno,p.discount
+        b.status,b.ispremiumflex,p.c_tranref,p.paymentno,p.discount,b.isemailsent
     from
         bookings b
         join booking_routes br on b.id = br.booking_id
@@ -91,7 +91,7 @@ class BookingsController extends Controller
         if (!is_null($status) && $status != '') {
             $conditionStr .= ' and b.status = "' . $status . '"';
         } else {
-            $conditionStr .= ' and b.status != "delete"';
+            $conditionStr .= ' and b.status not in ("delete","void")';
         }
 
         if (!is_null($station_from) && $station_from != '') {

@@ -197,6 +197,7 @@ $colors = [
                             <th>Route</th>
 
                             <th>Status</th>
+                            <th>Email sent</th>
                             <th>Bank Ref.</th>
                             <th>Amend</th>
 
@@ -268,7 +269,20 @@ $colors = [
                                 <small class="{{ $bookingStatus[$item['status']]['class'] }}">{{
                                     $bookingStatus[$item['status']]['title'] }}</small>
                             </td>
-                            <td>{{ $item['c_tranref'] }}</td>
+                            <td>
+                                @if ($item['isemailsent'] == 'Y')
+                                <span class="text-success"><svg width="18px" height="18px"
+                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                        class="bi bi-check-circle" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z">
+                                        </path>
+                                        <path
+                                            d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z">
+                                        </path>
+                                    </svg></span>
+                                @endif
+                            </td>
+                            <td class="text-center">{{ $item['c_tranref'] }}</td>
                             <td class="text-center">{{ $item['amend'] }}</td>
                             <td class="text-end">
                                 <div class="d-none">

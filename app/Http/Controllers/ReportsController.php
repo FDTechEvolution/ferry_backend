@@ -118,7 +118,7 @@ class ReportsController extends Controller
 
         $sql = 'select br.traveldate,b.ispremiumflex, b.bookingno,b.status,b.adult_passenger,b.child_passenger,b.infant_passenger,
  c.fullname,c.title,concat(c.mobile_code,c.mobile) as mobileno,c.mobile_th,c.email,
- sf.nickname as station_from_name,st.nickname as station_to_name,
+ sf.nickname as station_from_name,st.nickname as station_to_name,DATE_FORMAT(r.depart_time,"%H:%i") as depart_time,DATE_FORMAT(r.arrive_time,"%H:%i") as arrive_time,
 ra.name as addon_name, bx.description ,b.id,p.paymentno,p.status as payment_status,b.book_channel,pa.name as partner_name
 from
 	bookings b

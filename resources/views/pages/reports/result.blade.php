@@ -57,7 +57,9 @@
                             @endif
                         </td>
                         <td>
-                            <p class="mb-0">{{ $item->station_from_name }}-{{ $item->station_to_name }}
+                            <p class="mb-0">{{ $item->station_from_name }}-{{ $item->station_to_name }}<br> {{
+                                $item->depart_time }}/{{
+                                $item->arrive_time }}
                             </p>
                             <small class="d-flex">{{ $item->traveldate }}</small>
                         </td>

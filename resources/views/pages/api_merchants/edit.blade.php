@@ -96,9 +96,9 @@
                 data-lng-sort-descending=": activate to sort column descending" data-main-search="false"
                 data-column-search="false" data-row-reorder="false" data-col-reorder="false" data-responsive="true"
                 data-header-fixed="false" data-select-onclick="false" data-enable-paging="true"
-                data-enable-col-sorting="false" data-autofill="false" data-group="false" data-items-per-page="10"
+                data-enable-col-sorting="false" data-autofill="false" data-group="false"
                 data-enable-column-visibility="false" data-lng-column-visibility="Column Visibility"
-                data-enable-export="false">
+                data-enable-export="false" data-items-per-page="100">
                 <thead>
                     <tr>
                         <th></th>

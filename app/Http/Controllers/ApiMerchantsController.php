@@ -229,12 +229,15 @@ class ApiMerchantsController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
+            'prefix' => 'required|string',
         ]);
+
+        //dd($request->all());
 
         $apiMerchant = ApiMerchants::where('id', $request->id)->first();
 
         $apiMerchant->name = $request->name;
-        $apiMerchant->prefix = $request->preifx;
+        $apiMerchant->prefix = $request->prefix;
         $apiMerchant->isopenregular = isset($request->isopenregular) ? 'Y' : 'N';
         $apiMerchant->isopenchild = isset($request->isopenchild) ? 'Y' : 'N';
         $apiMerchant->isopeninfant = isset($request->isopeninfant) ? 'Y' : 'N';

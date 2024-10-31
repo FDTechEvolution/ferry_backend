@@ -19,10 +19,10 @@
                 </td>
             </tr>
             <tr class="bg-gray font-w-700">
-                <td class="w-15">ISSUED DATE</td>
-                <td class="w-15">INVOICE NO.</td>
-                <td class="w-15">TICKET NO.</td>
-                <td class="w-15 text-end">{{ Str::upper('Number of Passenger:') }}
+                <td class="" style="width: 25%;">ISSUED DATE</td>
+                <td class="" style="width: 25%;">INVOICE NO.</td>
+                <td class="" style="width: 20%;">TICKET NO.</td>
+                <td class="">{{ Str::upper('Number of Passenger:') }}
                     {{($booking['adult_passenger']+$booking['child_passenger']+$booking['infant_passenger'])}}</td>
             </tr>
             <tr>
@@ -33,20 +33,20 @@
                     {{ $bookingRouteX->tickets[0]['ticketno'] }}
                     @endif
                 </td>
-                <td class="text-end">
+                <td class="">
                     Adult: {{$booking['adult_passenger']}} &nbsp;&nbsp;
                     Child: {{$booking['child_passenger']}} &nbsp;&nbsp;
                     Infant: {{$booking['infant_passenger']}}
                 </td>
             </tr>
             <tr class="bg-gray">
-                <td colspan="3" class="w-75 font-w-700">
+                <td colspan="3" class="font-w-700">
                     {{strtoupper('Contact Information')}}
                     @if ($index==0 && sizeof($customers) >1)
                     <span class="text-main">[Lead passenger]</span>
                     @endif
                 </td>
-                <td colspan="1" class="w-25 font-w-700">
+                <td colspan="1" class="font-w-700">
                     {{strtoupper('Payment Information')}}
                 </td>
 
@@ -71,7 +71,7 @@
                         }}</span><br>
                     Method:{{ $booking['book_channel'] }}-{{
                     isset($payment['payment_method'])?$payment['payment_method']:'-' }}<br>
-                    Transaction No.: {{ $payment['c_tranref'] }}
+                    Transection No.: {{ $payment['c_tranref'] }}
                     <br>
                     Approved by: @if(isset($user->firstname)) {{$user->firstname}} @else RSVN @endif<br>
 

@@ -12,7 +12,7 @@
 
             <td class="text-end">{{ $i + 1 }}.</td>
 
-            <td>{{ $customer['title'] }}.{{ ucfirst($customer['fullname']) }}</td>
+            <td>{{ $customer['title'] }}.{{ ucfirst(Str::of($customer['fullname'])->limit(20)) }}</td>
 
             <td class="text-end">
                 @if ($customer['type'] == 'ADULT')

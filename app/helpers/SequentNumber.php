@@ -21,7 +21,17 @@ function newSequenceNumber($type,$apiMerchantId=null)
                 $sequence->save();
                 $sequence = Sequencenumbers::where("type", $type)->first();
             }
+        }else{
+            $_today = date('Y-m');
+            $_dataDate = $sequence->updated_at->format('Y-m');
+
+            if($_today !=$_dataDate){
+                $sequence->running = 0;
+                $sequence->save();
+                $sequence = Sequencenumbers::where("type", $type)->first();
+            }
         }
+
 
 
         $prefix = $sequence->prefix;

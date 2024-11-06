@@ -40,7 +40,7 @@ class BookingController extends Controller
                         [
                             'fullname' => $request->fullname,
                             'type' => 'ADULT',
-                            'passportno' => isset($request->passportno)?$request->passportno:NULL,,
+                            'passportno' => isset($request->passportno)?$request->passportno:NULL,
                             'email' => isset($request->email)?$request->email:NULL,
                             'mobile' => $request->mobile,
                             'fulladdress' => isset($request->fulladdress)?$request->fulladdress:NULL,
@@ -57,6 +57,33 @@ class BookingController extends Controller
                 ];
 
                 $booking = BookingHelper::createBooking($data);
+
+                $_booking = Bookings::where(['id' => $booking->id])
+                ->with(
+                    'bookingCustomers',
+                    'bookingRoutes',
+                )
+                ->first();
+
+
+                $customer = $_booking->bookingCustomers[0];
+                $booking['customer'] = [
+                    'fullname'=>$customer->fullname,
+                    'type'=>$customer->type,
+                    'mobile'=>$customer->mobile,
+
+                ];
+
+                $route = $_booking->bookingRoutes[0];
+                $booking['route'] = [
+                    'depart_time'=>$route->depart_time,
+                    'arrive_time'=>$route->arrive_time,
+                    'station_from'=>$route->station_from->name,
+                    'station_to'=>$route->station_to->name,
+                ];
+
+
+
 
                 return response()->json(['result' => true, 'data' => $booking], 200);
             }

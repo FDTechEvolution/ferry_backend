@@ -238,7 +238,7 @@ class BookingHelper
 
         TransactionLogHelper::tranLog(['type' => 'booking', 'title' => 'Create booking', 'description' => '', 'booking_id' => $booking->id]);
 
-        $booking->mobileno = $mobileno;
+        //$booking->mobileno = $mobileno;
         return $booking;
     }
 

@@ -49,22 +49,29 @@ class StationsController extends Controller
     }
 
     public function getStationType() {
-        $routes = Route::where('isactive', 'Y')->where('status', 'CO')
-                ->with('station_from', 'station_to')
-                ->get();
+        // station by route ------------------------------------------------------------------------->
+        // $routes = Route::where('isactive', 'Y')->where('status', 'CO')
+        //         ->with('station_from', 'station_to')
+        //         ->get();
+        // $stations = $this->groupStation($routes);
+        // $unique_from = $this->arrayUniqueSet($stations['from']);
+        // $unique_to = $this->arrayUniqueSet($stations['to']);
 
-        $stations = $this->groupStation($routes);
-        $unique_from = $this->arrayUniqueSet($stations['from']);
-        $unique_to = $this->arrayUniqueSet($stations['to']);
+        // $unique_all = $this->arrayUniqueSet(array_merge($unique_from, $unique_to));
+        // $_stations = [];
 
-        $unique_all = $this->arrayUniqueSet(array_merge($unique_from, $unique_to));
-        $_stations = [];
+        // foreach($unique_all as $u) {
+        //     if($u['type'] != '') array_push($_stations, $u);
+        // }
 
-        foreach($unique_all as $u) {
-            if($u['type'] != '') array_push($_stations, $u);
-        }
 
-        return response()->json(['data' => $_stations], 200);
+        // station by Stations ---------------------------------------------------------------------->
+        $nStations = Station::where('isactive', 'Y')->where('status', 'CO')->with('image')->get();
+        $_nStations = [];
+
+        foreach($nStations->toArray() as $s) $_nStations[$s['type']][] = $s;
+
+        return response()->json(['data' => $_nStations], 200);
     }
 
     private function arrayUniqueSet($arr) {

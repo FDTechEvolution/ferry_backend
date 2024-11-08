@@ -70,6 +70,7 @@ class StationsController extends Controller
         $_nStations = [];
 
         foreach($nStations->toArray() as $s) $_nStations[$s['type']][] = $s;
+        foreach($_nStations as $key => $value) usort($_nStations[$key], fn($a, $b) => $a['sort'] <=> $b['sort']);
 
         return response()->json(['data' => $_nStations], 200);
     }

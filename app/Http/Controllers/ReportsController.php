@@ -118,7 +118,7 @@ class ReportsController extends Controller
 
         $sql = 'select br.traveldate,b.ispremiumflex, b.bookingno,b.status,b.adult_passenger,b.child_passenger,b.infant_passenger,
  c.fullname,c.title,concat(c.mobile_code,c.mobile) as mobileno,c.mobile_th,c.email,
- sf.nickname as station_from_name,st.nickname as station_to_name,DATE_FORMAT(r.depart_time,"%H:%i") as depart_time,DATE_FORMAT(r.arrive_time,"%H:%i") as arrive_time,
+ sf.nickname as station_from_name,st.nickname as station_to_name,DATE_FORMAT(r.depart_time,"%H:%i") as depart_time,DATE_FORMAT(r.arrive_time,"%H:%i") as arrive_time,t.ticketno,
 ra.name as addon_name, bx.description ,b.id,p.paymentno,p.status as payment_status,b.book_channel,pa.name as partner_name
 from
 	bookings b
@@ -126,6 +126,7 @@ from
     join booking_customers bc on (b.id = bc.booking_id and bc.isdefault="Y")
     join customers c on bc.customer_id = c.id
     join booking_routes br on b.id = br.booking_id
+    left join tickets t on br.id = t.booking_route_id
     join routes r on br.route_id = r.id
     join stations sf on r.station_from_id = sf.id
     join stations st on r.station_to_id = st.id
@@ -200,7 +201,7 @@ from
     join booking_customers bc on (b.id = bc.booking_id and bc.isdefault="Y")
     join customers c on bc.customer_id = c.id
     join booking_routes br on b.id = br.booking_id
-    join tickets t on br.id = t.booking_route_id
+    left join tickets t on br.id = t.booking_route_id
     join routes r on br.route_id = r.id
     join stations sf on r.station_from_id = sf.id
     join stations st on r.station_to_id = st.id

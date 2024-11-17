@@ -30,6 +30,7 @@
                         <th class="text-center">#</th>
                         <th width="70">InvoiceNo.</th>
                         <th width="70">PaymentNo.</th>
+                        <th width="70">TicketNo.</th>
                         <th class="text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Premium Flex">
                             P.Flex
                         </th>
@@ -51,6 +52,7 @@
                         <td class="text-center">{{ $index+1 }}</td>
                         <td>{{ $item->bookingno }}</td>
                         <td>{{ $item->paymentno }}</td>
+                        <td>{{ $item->ticketno }}</td>
                         <td class="text-center">
                             @if($item->ispremiumflex == 'Y')
                             <span class="text-success">YES</span>

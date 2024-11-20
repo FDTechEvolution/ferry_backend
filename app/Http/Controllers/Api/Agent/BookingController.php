@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Agent;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-
+use App\Helpers\PaymentHelper;
 use App\Models\Route;
 use App\Models\Bookings;
 use App\Helpers\BookingHelper;
@@ -20,15 +20,16 @@ class BookingController extends Controller
         if(isset($_merchant)) {
             $route = $this->getRoute($request->route_id);
             if($route) {
+                $totalamt = $request->totalamount;
                 $data = [
                     'booking' => [
                         'departdate' => $request->departdate,
                         'adult_passenger' => $request->passenger,
                         'child_passenger' => 0,
                         'infant_passenger' => 0,
-                        'totalamt' => ($request->totalamount*$request->passenger),
+                        'totalamt' => $totalamt,
                         'extraamt' => 0,
-                        'amount' => ($request->totalamount*$request->passenger),
+                        'amount' =>$totalamt,
                         'ispayment' => 'N',
                         'user_id' => NULL,
                         'trip_type' => 'one-way',
@@ -50,13 +51,14 @@ class BookingController extends Controller
                         [
                             'route_id' => $request->route_id,
                             'traveldate' => $request->departdate,
-                            'amount' => $request->totalamount,
+                            'amount' => $totalamt,
                             'type' => 'O'
                         ]
                     ]
                 ];
 
                 $booking = BookingHelper::createBooking($data);
+                $payment = PaymentHelper::createPaymentFromBooking($booking->id);
 
                 $_booking = Bookings::where(['id' => $booking->id])
                 ->with(
@@ -83,12 +85,10 @@ class BookingController extends Controller
                 ];
 
 
-
-
                 return response()->json(['result' => true, 'data' => $booking], 200);
             }
 
-            return response()->json(['result' => false, 'data' => 'No Route.'], 200);
+            return response()->json(['result' => false, 'data' => 'route is incorrect ->'.$request->route_id], 200);
         }
     }
 

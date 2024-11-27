@@ -70,8 +70,10 @@ class BookingsController extends Controller
         left join payments p on b.id = p.booking_id
     where :conditions order by b.created_at DESC';
 
-        $startDate = date_format(date_create('2024-01-01'), 'd/m/Y');
+        //$startDate = date_format(date_create('2024-01-01'), 'd/m/Y');
+        $startDate = Carbon::today()->subDays(7)->format('d/m/Y');
         $endDate = date('d/m/Y');
+        $startTravelDate = Carbon::today()->subDays(7)->format('Y-m-d');
 
         $conditionStr = '1=1';
 

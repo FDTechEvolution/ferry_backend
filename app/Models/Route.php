@@ -31,7 +31,8 @@ class Route extends Model
         'information_from',
         'information_to',
         'isinformation_from_active',
-        'isinformation_to_active'
+        'isinformation_to_active',
+        'boat_type'
     ];
 
     protected $hidden = [

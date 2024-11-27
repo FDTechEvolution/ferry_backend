@@ -35,16 +35,7 @@ class RouteController extends Controller
         if(empty($depart)){
             $depart = Carbon::now()->format('Y-m-d');
         }
-        /*
-        $_routes = $this->routeFromAndToCondition($routes, $from_id, $to_id);
 
-        if(sizeof($_routes) > 0) {
-            $data = $this->setupRoute($_routes, $_merchant);
-            return response()->json(['data' => $data], 200);
-        }
-        else
-            return response()->json(['data' => NULL], 200);
-        */
 
         $activeRoutes = RouteHelper::getAvaliableRoutes($from_id,$to_id,$depart);
 
@@ -73,6 +64,7 @@ where
                 'id' => $item->id,
                 'depart_time' => $item->depart_time,
                 'arrive_time' => $item->arrive_time,
+                'boat_type'=>$item->boat_type,
                 'date'=>$depart,
                 'seat' => empty($apiRoute->seat)?$apiRoute->default_seat:$apiRoute->seat,
                 'regular_price'=>$_merchant->isopenregular=='Y'?(float)$apiRoute->regular_price:0,
@@ -151,7 +143,8 @@ where
                 ],
                 'depart_time' => $item->route->depart_time,
                 'arrive_time' => $item->route->arrive_time,
-                'seat' => $item->seat
+                'seat' => $item->seat,
+                'boat_type'=>$item->route->boat_type
             ];
 
             if($merchant->isopenregular == 'Y') $_route['regular_price'] = $item->regular_price;

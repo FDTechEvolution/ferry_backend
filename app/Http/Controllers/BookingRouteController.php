@@ -52,22 +52,26 @@ class BookingRouteController extends Controller
     {
         $booking_id = request()->booking_id;
         $bookingRoute = BookingRoutes::with(['Route'])->where('id',$id)->first();
+        $route = Route::where('id',$bookingRoute->route_id)->first();
 
         $departdate = request()->departdate;
         $routes = [];
         $stationFromId = request()->station_from_id;
         $stationToId = request()->station_to_id;
 
-        if(is_null($departdate)){
-            $departdate = date('d/m/Y');
+        if(empty($stationFromId) && !empty($route)){
+            $stationFromId = $route->station_from_id;
         }
-        $stationFroms = RouteHelper::getStationFrom();
-        if (is_null($stationFromId) && sizeof($stationFroms) > 0) {
-            $stationFromId = $stationFroms[0]->id;
+
+        if(empty($stationToId) && !empty($route)){
+            $stationToId = $route->station_to_id;
+            Log::debug($stationToId);
         }
-        $stationTos = RouteHelper::getStationTo($stationFromId);
-        if (is_null($stationToId) && sizeof($stationTos) > 0) {
-            $stationToId = $stationTos[0]->id;
+
+        if(empty($departdate)){
+            //dd($bookingRoute);
+            $departdate = Carbon::createFromFormat('Y-m-d', $bookingRoute->traveldate)->format('d/m/Y');
+            //$departdate = $bookingRoute->traveldate->format('d/m/Y');
         }
 
         if (!is_null($stationFromId) && !is_null($stationToId)) {
@@ -75,10 +79,11 @@ class BookingRouteController extends Controller
             $routes = RouteHelper::getAvaliableRoutes($stationFromId, $stationToId,$departdateSql);
         }
 
+        $sections = RouteHelper::getSectionStationFrom(true);
 
         return view('pages.booking_route.edit',[
             'bookingRoute'=>$bookingRoute,'booking_id'=>$booking_id,
-            'stationFroms'=>$stationFroms,'stationTos'=>$stationTos,
+            'sections'=>$sections,
             'routes'=>$routes,'stationFromId'=>$stationFromId,'stationToId'=>$stationToId,
             'departdate'=>$departdate
         ]);

@@ -131,7 +131,7 @@ $payments = $booking->payments;
                                 <h5>{{ number_format($route->regular_price) }}THB</h5>
                             </td>
                             <td>
-                                @if ($booking->ispremiumflex == 'Y')
+                                @if ($booking->ispremiumflex == 'Y' || true)
                                 <a href="{{ route('bookingRoute.edit', ['bookingRoute' => $route->pivot->id, 'booking_id' => $booking->id]) }}"
                                     class="btn btn-secondary btn-sm "><i
                                         class="fa-regular fa-pen-to-square me-0"></i></a>

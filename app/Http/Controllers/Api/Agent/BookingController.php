@@ -148,8 +148,86 @@ class BookingController extends Controller
     }
 
     public function getBookingById(string $id = null) {
-        $booking = Bookings::find($id);
-        if(isset($booking)) return response()->json(['result' => true, 'data' => $booking]);
+        //$booking = Bookings::where('id',$id)->with();
+
+        $booking = Bookings::where('id', $id)
+            ->with(
+                'bookingCustomers',
+                'bookingRoutes',
+                'bookingRoutes.station_from',
+                'bookingRoutes.station_to',
+                'bookingRoutes.station_lines',
+                'payments',
+                'payments.paymentLines',
+                'transactionLogs','apiMerchant'
+            )
+            ->first();
+        if(empty($booking)){
+            return response()->json(['result' => false, 'data' => 'No Booking.']);
+        }
+
+        $bookingStatus = BookingHelper::status();
+        //Log::debug($booking);
+        $customers = [];
+        foreach($booking->bookingCustomers as $c){
+            array_push($customers,[
+                'fullname'=>$c->fullname,
+                'type'=>$c->type,
+                'mobile'=>$c->mobile
+            ]);
+        }
+
+        $routes = [];
+        foreach($booking->bookingRoutes as $r){
+            array_push($routes,[
+                'depart_time'=>$r->depart_time,
+                'arrive_time'=>$r->arrive_time,
+                'boat_type'=>$r->boat_type,
+                'station_from'=>[
+                    'id'=>$r->station_from->id,
+                    'name'=>$r->station_from->name,
+                    'piername'=>$r->station_from->name,
+                    'nickname'=>$r->station_from->nickname,
+                    'thai_name'=>$r->station_from->thai_name,
+                    'thai_piername'=>$r->station_from->thai_piername,
+                    'type'=>$r->station_from->type,
+                ],
+                'station_to'=>[
+                    'id'=>$r->station_to->id,
+                    'name'=>$r->station_to->name,
+                    'piername'=>$r->station_to->name,
+                    'nickname'=>$r->station_to->nickname,
+                    'thai_name'=>$r->station_to->thai_name,
+                    'thai_piername'=>$r->station_to->thai_piername,
+                    'type'=>$r->station_to->type,
+                ]
+            ]);
+        }
+        $data = [
+            'id'=>$booking->id,
+            'departdate'=>$booking->departdate,
+            'adult_passenger'=>$booking->adult_passenger,
+            'child_passenger'=>$booking->child_passenger,
+            'infant_passenger'=>$booking->infant_passenger,
+            'totalamt'=>$booking->totalamt,
+            'created_at'=>$booking->created_at,
+            'updated_at'=>$booking->updated_at,
+            'ispayment'=>$booking->ispayment,
+            'trip_type'=>$booking->trip_type,
+            'status'=>$bookingStatus[$booking->status]['title'],
+            'bookingno'=>$booking->bookingno,
+            'book_channel'=>$booking->book_channel,
+            'merchant'=>$booking->apiMerchant->name,
+            'customers'=>[
+                $customers
+            ],
+            'route'=>[
+                $routes
+            ]
+        ];
+
+
+        if(isset($booking)) return response()->json(['result' => true, 'data' => $data]);
         return response()->json(['result' => false, 'data' => 'No Booking.']);
     }
 }

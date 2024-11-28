@@ -76,6 +76,7 @@ class BookingsController extends Controller
         $startTravelDate = Carbon::today()->subDays(7)->format('Y-m-d');
 
         $conditionStr = '1=1';
+        $dateFillter = true;
 
         if (!is_null($daterange) && $daterange != '') {
             $dates = explode('-', $daterange);
@@ -88,45 +89,66 @@ class BookingsController extends Controller
         $endDateSql = Carbon::createFromFormat('d/m/Y', $endDate)->format('Y-m-d 23:59:59');
 
         // $conditionStr .= ' and (b.departdate >="' . $startDateSql . '" and b.departdate <="' . $endDateSql . '") ';
-        $conditionStr .= ' and (b.created_at >="' . $startDateSql . '" and b.created_at <="' . $endDateSql . '") ';
 
-        if (!is_null($status) && $status != '') {
-            $conditionStr .= ' and b.status = "' . $status . '"';
-        } else {
-            $conditionStr .= ' and b.status not in ("delete","void")';
-        }
+
+
 
         if (!is_null($station_from) && $station_from != '') {
+            $dateFillter = false;
             $conditionStr .= ' and sf.id = "' . $station_from . '"';
         }
         if (!is_null($station_to) && $station_to != '') {
+            $dateFillter = false;
             $conditionStr .= ' and st.id = "' . $station_to . '"';
         }
         if (!is_null($departdate) && $departdate != '') {
+            $dateFillter = false;
             $conditionStr .= ' and br.traveldate = "' . $departdate . '"';
         }
         if (!is_null($ticketno) && $ticketno != '') {
+            $dateFillter = false;
             $conditionStr .= ' and t.ticketno = "' . $ticketno . '"';
         }
         if (!is_null($bookingno) && $bookingno != '') {
+            $dateFillter = false;
             $conditionStr .= ' and b.bookingno = "' . $bookingno . '"';
         }
 
         if (!empty($paymentno)) {
+            $dateFillter = false;
             $conditionStr .= ' and p.paymentno = "' . $paymentno . '"';
         }
         if (!empty($customername)) {
+            $dateFillter = false;
             $conditionStr .= ' and c.fullname like "' . $customername . '%"';
         }
         if (!empty($email)) {
+            $dateFillter = false;
             $conditionStr .= ' and c.email = "' . $email . '"';
         }
         if (!empty($bookChannel)) {
             $conditionStr .= ' and b.book_channel = "' . $bookChannel . '"';
         }
         if (!empty($tripType)) {
+            $dateFillter = false;
             $conditionStr .= ' and b.trip_type = "' . $tripType . '"';
         }
+
+        if (!is_null($status) && $status != '') {
+            $dateFillter = false;
+            $conditionStr .= ' and b.status = "' . $status . '"';
+        } else {
+            if($dateFillter){
+                $conditionStr .= ' and b.status not in ("delete","void")';
+            }
+
+        }
+
+        if($dateFillter){
+            $conditionStr .= ' and (b.created_at >="' . $startDateSql . '" and b.created_at <="' . $endDateSql . '") ';
+        }
+
+
 
         $sql = str_replace(':conditions', $conditionStr, $sql);
 

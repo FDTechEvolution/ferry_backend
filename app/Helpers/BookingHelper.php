@@ -2,6 +2,7 @@
 namespace App\Helpers;
 
 use App\Models\Addon;
+use App\Models\ApiMerchants;
 use App\Models\BookingRoutes;
 use App\Models\BookingExtras;
 use App\Models\Bookings;
@@ -11,6 +12,7 @@ use App\Models\BookingRelated;
 use Ramsey\Uuid\Uuid;
 use App\Models\Promotions;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class BookingHelper
 {
@@ -248,7 +250,7 @@ class BookingHelper
             return null;
         }
 
-        $booking = Bookings::with('bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingCustomers')
+        $booking = Bookings::with(['bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingCustomers'])
         ->where('id', $bookingId)
         ->where('status','!=', 'CO')
         ->first();
@@ -276,21 +278,29 @@ class BookingHelper
         $mobileno = '';
         $ticketType = 'TICKET';
 
-        if($booking->book_channel != 'ONLINE' && $booking->book_channel != 'ADMIN'){
-
-        }
         foreach($customers as $c) { if($c->mobile != '') $mobileno = $c->mobile; }
 
         $isCreateTicket = false;
         $countTicket = 0;
         foreach ($routes as $key => $route) {
             //foreach ($customers as $index => $customer) {
+            if(isset($booking->api_merchant_id) && !empty($booking->api_merchant_id)){
+                $apiMerchant = ApiMerchants::find($booking->api_merchant_id);
+                //Log::debug($apiMerchant);
+                if(!is_null($apiMerchant)){
+                    $ticketType = 'TICKET_'.$apiMerchant->code;
+                }
+                //Log::debug($ticketType);
+            }
                 $ticketNo = newSequenceNumber($ticketType,$booking->api_merchant_id);
 
                 if($booking['trip_type'] == 'multiple'){
                     $ticketNo .= '#'.($key+1);
                 }
-                $ticket = Tickets::create(
+                $ticket = Tickets::updateOrCreate(
+                    [
+                        'booking_route_id' =>$route->pivot->id,
+                    ],
                     [
                         'ticketno' => $ticketNo,
                         'station_from_id' => $route['station_from']['id'],
@@ -315,11 +325,11 @@ class BookingHelper
         }
 
 
-        $booking = Bookings::with('bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingCustomers', 'tickets')->where('id', $bookingId)->first();
+        $booking = Bookings::with(['bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingCustomers'])->where('id', $bookingId)->first();
 
         TransactionLogHelper::tranLog(['type' => 'booking', 'title' => 'Complated booking', 'description' => '', 'booking_id' => $booking->id]);
         EmailHelper::ticket($bookingId);
-        $booking->mobileno = $mobileno;
+        //$booking->mobileno = $mobileno;
         return $booking;
     }
 

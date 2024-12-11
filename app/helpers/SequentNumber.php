@@ -3,6 +3,7 @@ namespace App\Helpers;
 
 use App\Models\ApiMerchants;
 use App\Models\Sequencenumbers;
+use Illuminate\Support\Facades\Log;
 
 
 //https://medium.com/@icecslox/laravel-5-4-%E0%B8%AA%E0%B8%A3%E0%B9%89%E0%B8%B2%E0%B8%87-helper-%E0%B9%84%E0%B8%A7%E0%B9%89%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B8%87%E0%B8%B2%E0%B8%99-52f93ee1805a
@@ -11,6 +12,7 @@ function newSequenceNumber($type,$apiMerchantId=null)
 {
     $sequence = Sequencenumbers::where("type", $type)->first();
     $newSequenceNumber = '0000000000';
+    //Log::debug($sequence);
     if ($sequence) {
         $today = date('Y-m-d');
         $dataDate = $sequence->updated_at->format('Y-m-d');
@@ -32,17 +34,17 @@ function newSequenceNumber($type,$apiMerchantId=null)
             }
         }
 
-
-
         $prefix = $sequence->prefix;
 
         //change ticket prefix when book from api agent
+        /*
         if($type == 'TICKET' && !empty($apiMerchantId)){
             $apiMerchant = ApiMerchants::find($apiMerchantId);
             if(!empty($apiMerchant)){
                 $prefix = $apiMerchant->prefix;
             }
         }
+            */
 
         $dateformat = $sequence->dateformat;
         $currentNumber = $sequence->running;

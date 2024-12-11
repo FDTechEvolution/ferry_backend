@@ -18,12 +18,27 @@
         <form action="{{ route('apiroute.calendar', ['id' => $apiRouteId]) }}" method="GET" id="frm">
             @csrf
             <input type="hidden" name="api_merchant_id" id="api_merchant_id" value="{{ $apiMerchant->id }}">
-            <input type="hidden" name="api_route_id" value="{{ $apiRouteId }}">
             <div class="row">
                 <div class="col-12">
                     <h4>Agent: {{ $apiMerchant->name }}</h4>
                 </div>
-
+                <!--
+                <div class="col-12 col-lg-7">
+                    <div class="form-floating mb-3">
+                        <select class="form-select" id="api_route_id" name="api_route_id" aria-label=""
+                            data-action="change">
+                            @foreach ($apiMerchant->apiRoutes as $apiRoute)
+                            <option value="{{ $apiRoute->pivot->id }}" @selected($apiRoute->pivot->id == $apiRouteId)>
+                                {{ sprintf('%s > %s : %s/%s', $apiRoute->station_from->name,
+                                $apiRoute->station_to->name, date('H:i', strtotime($apiRoute->depart_time)), date('H:i',
+                                strtotime($apiRoute->arrive_time))) }}
+                            </option>
+                            @endforeach
+                        </select>
+                        <label for="floatingSelect">Route</label>
+                    </div>
+                </div>
+            -->
                 <div class="col-6 col-lg-3">
                     <div class="form-floating mb-3">
                         <select class="form-select" id="month" name="month" data-action="change">
@@ -97,10 +112,7 @@
                                     @endif
 
                                 </span><br>
-                                <span class="text-success">Sold <strong
-                                        class="@if($col['sold']>0) text-danger  @endif">{{
-                                        number_format($col['sold'])
-                                        }}</strong></span>
+                                <span class="text-success">Sold <strong>{{ number_format(0) }}</strong></span>
                             </td>
                             @endforeach
                         </tr>

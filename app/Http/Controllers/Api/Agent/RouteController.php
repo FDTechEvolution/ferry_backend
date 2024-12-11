@@ -7,8 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-use App\Http\Resources\RouteResource;
-use App\Models\Route;
+use App\Helpers\AgentHelper;
 use App\Models\ApiMerchants;
 use App\Models\ApiRoutes;
 use Carbon\Carbon;
@@ -59,6 +58,13 @@ where
             $apiRoute = $apiRoutes[0];
             //Log::debug($_merchant);
             //get calendar setting
+            $soldSeat = AgentHelper::getDateSoldByAgent($merchant,$depart,$item->id);
+
+            $maxSeat = (int)empty($apiRoute->seat)?$apiRoute->default_seat:$apiRoute->seat;
+
+            if(($maxSeat-$soldSeat['sold_seat'])<1 ){
+                continue;
+            }
 
             $_route = [
                 'id' => $item->id,
@@ -66,7 +72,9 @@ where
                 'arrive_time' => $item->arrive_time,
                 'boat_type'=>$item->boat_type,
                 'date'=>$depart,
-                'seat' => empty($apiRoute->seat)?$apiRoute->default_seat:$apiRoute->seat,
+                'seat' => $maxSeat,
+                'sold_seat'=> $soldSeat['sold_seat'],
+                'avaliable_seat'=> $maxSeat-$soldSeat['sold_seat'],
                 'regular_price'=>$_merchant->isopenregular=='Y'?(float)$apiRoute->regular_price:0,
                 'child_price'=>$_merchant->isopenchild=='Y'?(float)$apiRoute->child_price:0,
                 'infant_price'=>$_merchant->isopeninfant=='Y'?(float)$apiRoute->infant_price:0,

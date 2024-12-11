@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\AgentHelper;
 use App\Helpers\CalendarHelper;
 use App\Models\ApiMerchants;
 use App\Models\RouteCalendars;
@@ -146,7 +147,7 @@ class ApiRoutesController extends Controller
         $apiRoute = ApiRoutes::where('id',$apiRouteId)->first();
         //dd($apiRoute);
         $apiMerchant = ApiMerchants::where('id',$apiRoute->api_merchant_id)->with('apiRoutes')->first();
-
+        //dd($apiMerchant);
         $date = Carbon::now();
         if(!is_null($month) && !is_null($year)){
             $date = Carbon::createFromFormat('Y-m-d',  sprintf('%s-%s-01',$year,$month));
@@ -160,7 +161,7 @@ class ApiRoutesController extends Controller
             ->whereMonth('date', '=', $month)
             ->whereYear('date','=',$year)
             ->orderBy('date','ASC')->get();
-
+        //dd($routeCalendars);
 
         $dateDatas = [];
         foreach($routeCalendars as $routeCalendar){
@@ -169,8 +170,9 @@ class ApiRoutesController extends Controller
                 'seat'=>$routeCalendar->seat
             ];
         }
-        //dd($dateDatas);
+        $solds = AgentHelper::getMonthSoldByAgent($apiRoute->api_merchant_id,($year.'-'.$month),$apiRoute->route_id);
 
+        //dd(AgentHelper::getDateSoldByAgent($apiRoute->api_merchant_id,'2024-12-07',$apiRoute->route_id));
         foreach($monthCalendar as $index=> $row){
             foreach($row as $i=> $col){
 
@@ -182,8 +184,16 @@ class ApiRoutesController extends Controller
                     $monthCalendar[$index][$i]['id'] = null;
                 }
 
+                if(isset($solds[$col['date']])){
+                    $monthCalendar[$index][$i]['sold'] = (int)$solds[$col['date']]['sold_seat'];
+                }else{
+                    $monthCalendar[$index][$i]['sold'] = 0;
+                }
+
             }
         }
+
+        //dd($monthCalendar);
 
 
         $monthOptions = [
@@ -208,6 +218,9 @@ class ApiRoutesController extends Controller
             '2026'=>'2026',
             '2027'=>'2027'
         ];
+
+
+
 
         return view('pages.api_routes.calendar',[
             'monthCalendar'=>$monthCalendar,

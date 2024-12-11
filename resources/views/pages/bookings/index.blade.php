@@ -209,7 +209,7 @@ $colors = [
                         @foreach ($bookings as $index => $item)
                         @php
                         $textClass = $colors[$item['trip_type']];
-                        if($item['book_channel'] == 'ADMIN'){
+                        if($item['book_channel'] != 'ONLINE'){
                         $textClass = '';
                         }
                         @endphp
@@ -222,9 +222,11 @@ $colors = [
 
                                 </div>
                             </td>
-                            <td class="{{$textClass}}"><small>{{ date('d/m/Y H:i', strtotime($item['created_at']))
+                            <td class="{{$textClass}}"><small>{{ date('d/m/y H:i', strtotime($item['created_at']))
                                     }}</small></td>
-                            <td style="white-space: pre;" class="{{$textClass}}">{{ $item['traveldate'] }}</td>
+                            <td style="white-space: pre;" class="{{$textClass}}"><small>{{ date('d/m/y',
+                                    strtotime($item['traveldate']))
+                                    }}</small></td>
                             <td class="{{$textClass}}">
                                 <a href="#" data-href="{{route('booking-mview',['id'=>$item['id']])}}"
                                     data-ajax-modal-size="modal-xl" data-ajax-modal-centered="true"
@@ -233,7 +235,8 @@ $colors = [
                                     {{ $item['bookingno'] }}
                                 </a>
                             </td>
-                            <td class="{{$textClass}}">{{ $item['book_channel']=='ADMIN'?'':$item['paymentno'] }}</td>
+                            <td class="{{$textClass}}"><small>{{ $item['book_channel']!='ONLINE'?'':$item['paymentno']
+                                    }}</small></td>
                             <td class="{{$textClass}}">{{ $item['ticketno'] }}</td>
                             <td class="{{$textClass}}">{{$item['book_channel']}}</td>
                             <td class="text-center {{$textClass}}">{{ $item['type'] }}</td>

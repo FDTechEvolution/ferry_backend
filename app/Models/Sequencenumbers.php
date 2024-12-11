@@ -10,6 +10,11 @@ class Sequencenumbers extends Model
     use HasFactory;
 
     protected $fillable = [
-        'running'
+        'running',
+        'name',
+        'type',
+        'dateformat',
+        'prefix',
+        'running_digit'
     ];
 }

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Helpers\ImageHelper;
 use App\Helpers\RouteHelper;
-
+use App\Models\Sequencenumbers;
 
 class ApiMerchantsController extends Controller
 {
@@ -24,6 +24,20 @@ class ApiMerchantsController extends Controller
 
         //$api_merchant = ApiMerchants::where('name','SEVEN')->first();
         $apiMerchants = ApiMerchants::with('image')->get();
+
+        /*
+        foreach($apiMerchants as $item){
+            Sequencenumbers::create([
+                'name'=>'Ticket '.$item->name,
+                'type'=>'TICKET_'.$item->code,
+                'dateformat'=>'ymd',
+                'prefix'=>$item->prefix,
+                'running'=>100,
+                'running_digit'=>3
+            ]);
+        }
+            */
+
         return view('pages.api_merchants.index', ['apiMerchants' => $apiMerchants]);
     }
 
@@ -44,11 +58,21 @@ class ApiMerchantsController extends Controller
         $request->validate([
             'name' => 'required|string',
             'key' => 'required|string',
-            'prefix' => 'required|string',
+            'prefix' => 'required|string|unique:api_merchants,prefix',
             'code' => 'required|string|unique:api_merchants,code',
         ]);
 
         $apiMerchant = ApiMerchants::create($request->all());
+
+        Sequencenumbers::create([
+            'name'=>'Ticket '.$apiMerchant->name,
+            'type'=>'TICKET_'.$apiMerchant->code,
+            'dateformat'=>'ymd',
+            'prefix'=>$apiMerchant->prefix,
+            'running'=>0,
+            'running_digit'=>3
+        ]);
+
 
         //logo
         $this->uploadFile($request,$apiMerchant);
@@ -175,6 +199,8 @@ class ApiMerchantsController extends Controller
      */
     public function update(Request $request, string $id)
     {
+
+
         $api_merchant = ApiMerchants::find($id);
         $api_merchant->commission = $request->commission;
         $api_merchant->vat = $request->vat;
@@ -229,12 +255,15 @@ class ApiMerchantsController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
-            'prefix' => 'required|string',
+            'prefix' => 'required|string|unique:api_merchants,prefix,'.$request->id,
+            //'code' => 'required|string|unique:api_merchants,code,'.$request->id,
         ]);
 
         //dd($request->all());
 
         $apiMerchant = ApiMerchants::where('id', $request->id)->first();
+        $oldPrefix = $apiMerchant->prefix;
+        $oldCode = $apiMerchant->code;
 
         $apiMerchant->name = $request->name;
         $apiMerchant->prefix = $request->prefix;
@@ -243,7 +272,17 @@ class ApiMerchantsController extends Controller
         $apiMerchant->isopeninfant = isset($request->isopeninfant) ? 'Y' : 'N';
         $apiMerchant->isopendiscount = isset($request->isopendiscount) ? 'Y' : 'N';
 
+
         $apiMerchant->save();
+        //Log::debug($oldPrefix);
+        //Log::debug($apiMerchant->prefix);
+        if($oldPrefix != $apiMerchant->prefix){
+            $sequent = Sequencenumbers::where('type','TICKET_'.$oldCode)->first();
+            //Log::debug($sequent);
+            $sequent->prefix = $apiMerchant->prefix;
+            $sequent->save();
+        }
+
 
         $this->uploadFile($request,$apiMerchant);
 

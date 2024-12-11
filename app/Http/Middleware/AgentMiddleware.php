@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Log;
 use App\Models\ApiMerchants;
+use Illuminate\Support\Facades\Cache;
 
 class AgentMiddleware
 {
@@ -17,10 +18,12 @@ class AgentMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+
         $response = $next($request);
         $response->headers->set('Access-Control-Allow-Origin' , '*');
         $response->headers->set('Access-Control-Allow-Methods', 'POST, GET');
         $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, Application','ip');
+
 
         $authorizationHeader = $request->header('Authorization');
         $code = explode(' ', $authorizationHeader);

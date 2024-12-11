@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Agent\BookingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -181,7 +182,7 @@ Route::middleware(['agent'])->prefix('v1')->group(function() {
     });
 
     // Booking
-    Route::controller(\App\Http\Controllers\Api\Agent\BookingController::class)->group(function() {
+    Route::controller(BookingController::class)->group(function() {
         Route::prefix('booking')->group(function() {
             Route::post('create', 'store');
             Route::post('complete', 'complete');

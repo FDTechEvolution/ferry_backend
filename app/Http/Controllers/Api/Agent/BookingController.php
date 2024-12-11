@@ -103,11 +103,17 @@ class BookingController extends Controller
     }
 
     public function complete(Request $request) {
-        if($this->checkBooking($request->booking_id)) {
-            $booking = Bookings::find($request->booking_id);
+        $booking = Bookings::find($request->booking_id);
+        Log::debug($request);
+        if(!is_null($booking)) {
+
+
             if($booking->status == 'DR') {
                 $c = new BookingHelper;
                 $booking = $c->completeBooking($request->booking_id);
+            }else{
+                $status = BookingHelper::status();
+                return response()->json(['result' => false, 'data' => 'this booking is '.$status[$booking->status]['title']]);
             }
 
             return response()->json(['result' => true, 'data' => $booking]);
@@ -148,7 +154,6 @@ class BookingController extends Controller
     }
 
     public function getBookingById(string $id = null) {
-        //$booking = Bookings::where('id',$id)->with();
 
         $booking = Bookings::where('id', $id)
             ->with(
@@ -157,6 +162,7 @@ class BookingController extends Controller
                 'bookingRoutes.station_from',
                 'bookingRoutes.station_to',
                 'bookingRoutes.station_lines',
+                'bookingRoutesX.tickets',
                 'payments',
                 'payments.paymentLines',
                 'transactionLogs','apiMerchant'
@@ -177,8 +183,17 @@ class BookingController extends Controller
             ]);
         }
 
+        //ticket
+        $ticketno = '';
+        foreach($booking->bookingRoutesX as $r){
+            if(!empty($r->tickets) && sizeof($r->tickets)>0){
+                $ticketno = $r->tickets[0]->ticketno;
+            }
+        }
+
         $routes = [];
         foreach($booking->bookingRoutes as $r){
+
             array_push($routes,[
                 'depart_time'=>$r->depart_time,
                 'arrive_time'=>$r->arrive_time,
@@ -209,13 +224,14 @@ class BookingController extends Controller
             'adult_passenger'=>$booking->adult_passenger,
             'child_passenger'=>$booking->child_passenger,
             'infant_passenger'=>$booking->infant_passenger,
-            'totalamt'=>$booking->totalamt,
+            'totalamt'=>(float)$booking->totalamt,
             'created_at'=>$booking->created_at,
             'updated_at'=>$booking->updated_at,
             'ispayment'=>$booking->ispayment,
             'trip_type'=>$booking->trip_type,
             'status'=>$bookingStatus[$booking->status]['title'],
             'bookingno'=>$booking->bookingno,
+            'ticketno'=>$ticketno,
             'book_channel'=>$booking->book_channel,
             'merchant'=>$booking->apiMerchant->name,
             'customers'=>[
@@ -229,5 +245,9 @@ class BookingController extends Controller
 
         if(isset($booking)) return response()->json(['result' => true, 'data' => $data]);
         return response()->json(['result' => false, 'data' => 'No Booking.']);
+    }
+
+    private function getBooking(){
+
     }
 }

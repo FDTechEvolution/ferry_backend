@@ -22,10 +22,6 @@ class AgentMiddleware
         $code = explode(' ', $authorizationHeader);
         $merchant = ApiMerchants::where('code', $code[0])->first();
         if(isset($merchant)) {
-            $response = $next($request);
-            $response->headers->set('Access-Control-Allow-Origin' , '*');
-            $response->headers->set('Access-Control-Allow-Methods', 'POST, GET');
-            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, Application','ip');
 
             if ($authorizationHeader && $this->starts_with($authorizationHeader, $merchant->code)) {
                 $token = substr($authorizationHeader, strlen($code[0]) + 1);
@@ -34,13 +30,20 @@ class AgentMiddleware
 
             if($request->header('Authorization') == $merchant->key) {
                 $request->attributes->set('merchant', $merchant->id);
+
+                $response = $next($request);
+                $response->headers->set('Access-Control-Allow-Origin' , '*');
+                $response->headers->set('Access-Control-Allow-Methods', 'POST, GET');
+                $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, Application','ip');
+
                 $this->log($request, $response, 200);
-                return $next($request);
+                return $response;
             }
         }
 
         $this->log($request, null, 403);
         return response('Unauthorized', 403);
+
     }
 
     private function starts_with($string, $startString) {

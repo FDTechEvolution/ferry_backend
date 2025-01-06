@@ -20,15 +20,13 @@ $colors = [
 
         <div class="col-12 col-md-4">
             <div class="form-floating mb-3">
-                <x-element.dropdown-station label="Station From" name="station_from" :data=$sections
-                    selected="{{ $station_from }}" />
+                <x-element.dropdown-station label="Station From" name="station_from" :data=$sections selected="{{ $station_from }}" />
 
             </div>
         </div>
         <div class="col-12 col-md-4">
             <div class="form-floating mb-3">
-                <x-element.dropdown-station label="Station To" name="station_to" :data=$sections
-                    selected="{{ $station_to }}" />
+                <x-element.dropdown-station label="Station To" name="station_to" :data=$sections selected="{{ $station_to }}" />
             </div>
         </div>
         <div class="col-12 col-md-2">
@@ -55,10 +53,7 @@ $colors = [
         </div>
         <div class="col-12 col-md-3">
             <div class="form-floating mb-3">
-                <input autocomplete="off" type="text" name="daterange" id="daterange"
-                    class="form-control form-control-sm rangepicker" data-bs-placement="left" data-ranges="false"
-                    data-date-start="{{ $startDate }}" data-date-end="{{ $endDate }}" data-date-format="DD/MM/YYYY"
-                    data-quick-locale='{
+                <input autocomplete="off" type="text" name="daterange" id="daterange" class="form-control form-control-sm rangepicker" data-bs-placement="left" data-ranges="false" data-date-start="{{ $startDate }}" data-date-end="{{ $endDate }}" data-date-format="DD/MM/YYYY" data-quick-locale='{
                             "lang_apply"	: "Apply",
                             "lang_cancel" : "Cancel",
                             "lang_crange" : "Custom Range",
@@ -99,8 +94,7 @@ $colors = [
         </div>
         <div class="col-12 col-md-3">
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="customername" name="customername"
-                    value="{{ $customername }}">
+                <input type="text" class="form-control" id="customername" name="customername" value="{{ $customername }}">
                 <label for="customername">Customer</label>
             </div>
         </div>
@@ -111,8 +105,7 @@ $colors = [
             </div>
         </div>
         <div class="col-12 col-md-3 text-end">
-            <a class="btn btn-sm btn-secondary" href="{{ route('booking-index') }}"><i
-                    class="fa-solid fa-arrows-rotate"></i> Clear</a>
+            <a class="btn btn-sm btn-secondary" href="{{ route('booking-index') }}"><i class="fa-solid fa-arrows-rotate"></i> Clear</a>
             <button type="submit" class="btn btn-sm btn-ferry"><i class="fa-solid fa-magnifying-glass"></i>
                 Search</button>
         </div>
@@ -130,21 +123,18 @@ $colors = [
                     </div>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="#" id="action-print" data-action="selectbook"
-                        data-url="{{ route('print.multipleticket') }}" class="disabled"><i class="fi fi-print m-0"></i>
+                    <a href="#" id="action-print" data-action="selectbook" data-url="{{ route('print.multipleticket') }}" class="disabled"><i class="fi fi-print m-0"></i>
                         Print Ticket</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="#" id="action-send-email" class="disabled" data-action="selectbook"
-                        data-url="{{ route('booking.sendConfirmEmail') }}"><i class="fa-regular fa-envelope"></i>
+                    <a href="#" id="action-send-email" class="disabled" data-action="selectbook" data-url="{{ route('booking.sendConfirmEmail') }}"><i class="fa-regular fa-envelope"></i>
                         Send Email</a>
                 </li>
             </ol>
         </nav>
     </div>
     <div class="col-12 col-lg-5 mb-2 text-end">
-        <a href="{{route('booking-index',['status'=>'delete'])}}"
-            class="btn btn-sm btn-outline-danger position-relative">
+        <a href="{{route('booking-index',['status'=>'delete'])}}" class="btn btn-sm btn-outline-danger position-relative">
             Deleted
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                 10+
@@ -159,22 +149,7 @@ $colors = [
                 @csrf
                 @method('POST')
                 <input type="hidden" name="action" id="action" value="TICKET">
-                <table class="table-datatable table table-hover table-bordered" id=""
-                    data-lng-empty="No data available in table"
-                    data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
-                    data-lng-filtered="(filtered from _MAX_ total entries)" data-lng-loading="Loading..."
-                    data-lng-processing="Processing..." data-lng-search="Search..."
-                    data-lng-norecords="No matching records found"
-                    data-lng-sort-ascending=": activate to sort column ascending"
-                    data-lng-sort-descending=": activate to sort column descending" data-main-search="false"
-                    data-column-search="false" data-row-reorder="false" data-col-reorder="false" data-responsive="false"
-                    data-header-fixed="true" data-select-onclick="false" data-enable-paging="true"
-                    data-enable-col-sorting="false" data-autofill="false" data-group="false" data-items-per-page="50"
-                    data-enable-column-visibility="false" data-lng-column-visibility="Column Visibility"
-                    data-enable-export="false" data-lng-export="<i class='fi fi-squared-dots fs-5 lh-1'></i>"
-                    data-lng-pdf="PDF" data-lng-xls="XLS" data-lng-print="Print" data-lng-all="All"
-                    data-export-pdf-disable-mobile="false" data-export='["csv", "pdf", "xls"]'
-                    data-custom-config='{"searching":false}'>
+                <table class="table-datatable table table-hover table-bordered" id="" data-lng-empty="No data available in table" data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries" data-lng-filtered="(filtered from _MAX_ total entries)" data-lng-loading="Loading..." data-lng-processing="Processing..." data-lng-search="Search..." data-lng-norecords="No matching records found" data-lng-sort-ascending=": activate to sort column ascending" data-lng-sort-descending=": activate to sort column descending" data-main-search="false" data-column-search="false" data-row-reorder="false" data-col-reorder="false" data-responsive="false" data-header-fixed="true" data-select-onclick="false" data-enable-paging="true" data-enable-col-sorting="false" data-autofill="false" data-group="false" data-items-per-page="50" data-enable-column-visibility="false" data-lng-column-visibility="Column Visibility" data-enable-export="false" data-lng-export="<i class='fi fi-squared-dots fs-5 lh-1'></i>" data-lng-pdf="PDF" data-lng-xls="XLS" data-lng-print="Print" data-lng-all="All" data-export-pdf-disable-mobile="false" data-export='["csv", "pdf", "xls"]' data-custom-config='{"searching":false}'>
                     <thead>
                         <tr>
                             <th class="align-content-between">
@@ -198,7 +173,7 @@ $colors = [
 
                             <th>Status</th>
                             <th>Email sent</th>
-                            <th>Bank Ref.</th>
+                            <th>Bank/Agent Ref.</th>
                             <th>Amend</th>
 
                             <th class="text-center">Action</th>
@@ -216,9 +191,7 @@ $colors = [
                         <tr>
                             <td>
                                 <div class="form-check mb-2">
-                                    <input class="form-check-input form-check-input-primary" data-action="check_all"
-                                        type="checkbox" value="{{ $item['bookingno'] }}" id="book_{{ $item['id'] }}"
-                                        name="booking_nos[]">
+                                    <input class="form-check-input form-check-input-primary" data-action="check_all" type="checkbox" value="{{ $item['bookingno'] }}" id="book_{{ $item['id'] }}" name="booking_nos[]">
 
                                 </div>
                             </td>
@@ -228,10 +201,7 @@ $colors = [
                                     strtotime($item['traveldate']))
                                     }}</small></td>
                             <td class="{{$textClass}}">
-                                <a href="#" data-href="{{route('booking-mview',['id'=>$item['id']])}}"
-                                    data-ajax-modal-size="modal-xl" data-ajax-modal-centered="true"
-                                    data-ajax-modal-callback-function="" data-ajax-modal-backdrop="static"
-                                    class="me-2 js-ajax-modal {{$textClass}}">
+                                <a href="#" data-href="{{route('booking-mview',['id'=>$item['id']])}}" data-ajax-modal-size="modal-xl" data-ajax-modal-centered="true" data-ajax-modal-callback-function="" data-ajax-modal-backdrop="static" class="me-2 js-ajax-modal {{$textClass}}">
                                     {{ $item['bookingno'] }}
                                 </a>
                             </td>
@@ -249,8 +219,7 @@ $colors = [
                                 {{$item['total_passenger']}}
                             </td>
 
-                            <td class="text-end">{{ number_format($item['totalamt'], 2) }} @if ($item['discount']<0)
-                                    <small class="text-danger">({{
+                            <td class="text-end">{{ number_format($item['totalamt'], 2) }} @if ($item['discount']<0) <small class="text-danger">({{
                                     number_format($item['discount'], 2) }})</small> @endif</td>
                             <td class="text-end">
                                 {{ number_format(($item['payment_totalamt']-($item['totalamt']-($item['discount']*-1))),
@@ -274,46 +243,35 @@ $colors = [
                             </td>
                             <td>
                                 @if ($item['isemailsent'] == 'Y')
-                                <span class="text-success"><svg width="18px" height="18px"
-                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                                        class="bi bi-check-circle" viewBox="0 0 16 16">
+                                <span class="text-success"><svg width="18px" height="18px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
                                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z">
                                         </path>
-                                        <path
-                                            d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z">
+                                        <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z">
                                         </path>
                                     </svg></span>
                                 @endif
                             </td>
-                            <td class="text-center">{{ $item['c_tranref'] }}</td>
+                            <td class="text-center">{{ $item['c_tranref'] }} {{ $item['referenceno'] }}</td>
                             <td class="text-center">{{ $item['amend'] }}</td>
                             <td class="text-end">
                                 <div class="d-none">
                                     <div class="btn-group" role="group" aria-label="Basic example">
 
-                                        <a href="{{ route('print-ticket', ['bookingno' => $item['bookingno']]) }}"
-                                            class="transition-hover-top me-2 fs-5" rel="noopener" target="_blank"
-                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Print Ticket">
+                                        <a href="{{ route('print-ticket', ['bookingno' => $item['bookingno']]) }}" class="transition-hover-top me-2 fs-5" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Print Ticket">
                                             <i class="fi fi-print m-0"></i>
                                         </a>
 
-                                        <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
-                                            class="transition-hover-top me-2 fs-5" rel="noopener" target="_blank"
-                                            style="display: none;">
+                                        <a href="{{ route('booking-view', ['id' => $item['id']]) }}" class="transition-hover-top me-2 fs-5" rel="noopener" target="_blank" style="display: none;">
                                             <i class="fi fi-pencil m-0"></i>
                                         </a>
-                                        <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
-                                            class="transition-hover-top fs-5" rel="noopener" target="_blank"
-                                            data-bs-toggle="tooltip" data-bs-placement="top"
-                                            title="View and Edit ooking">
+                                        <a href="{{ route('booking-view', ['id' => $item['id']]) }}" class="transition-hover-top fs-5" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="View and Edit ooking">
                                             <i class="fa-solid fa-eye"></i>
                                         </a>
                                     </div>
                                 </div>
                                 <div class="">
                                     <div class="dropstart">
-                                        <a href="#" class="btn btn-sm btn-light rounded-circle"
-                                            data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                                        <a href="#" class="btn btn-sm btn-light rounded-circle" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
                                             <span class="group-icon">
                                                 <i class="fi fi-dots-vertical-full"></i>
                                                 <i class="fi fi-close"></i>
@@ -322,39 +280,25 @@ $colors = [
                                         <div class="dropdown-menu dropdown-menu-clean dropdown-click-ignore max-w-220">
                                             <div class="scrollable-vertical max-vh-50">
 
-                                                <a href="{{ route('print-ticket', ['bookingno' => $item['bookingno']]) }}"
-                                                    class="dropdown-item text-truncate" rel="noopener" target="_blank">
+                                                <a href="{{ route('print-ticket', ['bookingno' => $item['bookingno']]) }}" class="dropdown-item text-truncate" rel="noopener" target="_blank">
                                                     <i class="fi fi-print m-1"></i> Print Ticket
                                                 </a>
 
 
-                                                <a href="{{ route('booking-view', ['id' => $item['id']]) }}"
-                                                    class="dropdown-item text-truncate" rel="noopener" target="">
+                                                <a href="{{ route('booking-view', ['id' => $item['id']]) }}" class="dropdown-item text-truncate" rel="noopener" target="">
                                                     <i class="fi fi-pencil m-1"></i> View/Edit
                                                 </a>
 
-                                                <a href="#"
-                                                    data-href="{{ route('booking.changeStatus', ['id' => $item['id'], 'status' => 'void']) }}"
-                                                    data-ajax-modal-size="modal-md" data-ajax-modal-centered="true"
-                                                    data-ajax-modal-callback-function=""
-                                                    data-ajax-modal-backdrop="static"
-                                                    class="dropdown-item text-warning js-ajax-modal">
-                                                    <svg width="18px" height="18px" xmlns="http://www.w3.org/2000/svg"
-                                                        fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-                                                        <path
-                                                            d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z">
+                                                <a href="#" data-href="{{ route('booking.changeStatus', ['id' => $item['id'], 'status' => 'void']) }}" data-ajax-modal-size="modal-md" data-ajax-modal-centered="true" data-ajax-modal-callback-function="" data-ajax-modal-backdrop="static" class="dropdown-item text-warning js-ajax-modal">
+                                                    <svg width="18px" height="18px" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z">
                                                         </path>
                                                     </svg>
                                                     Cancel
                                                 </a>
 
 
-                                                <a href="#"
-                                                    data-href="{{ route('booking.changeStatus', ['id' => $item['id'], 'status' => 'delete']) }}"
-                                                    data-ajax-modal-size="modal-md" data-ajax-modal-centered="true"
-                                                    data-ajax-modal-callback-function=""
-                                                    data-ajax-modal-backdrop="static"
-                                                    class="dropdown-item text-danger js-ajax-modal">
+                                                <a href="#" data-href="{{ route('booking.changeStatus', ['id' => $item['id'], 'status' => 'delete']) }}" data-ajax-modal-size="modal-md" data-ajax-modal-centered="true" data-ajax-modal-callback-function="" data-ajax-modal-backdrop="static" class="dropdown-item text-danger js-ajax-modal">
                                                     <i class="fi fi-thrash m-1"></i> Delete
                                                 </a>
                                             </div>
@@ -378,51 +322,52 @@ $colors = [
 @section('script')
 <script>
     function settingActionLink(active) {
-            if (active) {
-                $('#action-print').removeClass('disabled');
-                $('#action-send-email').removeClass('disabled');
-            } else {
-                $('#action-print').addClass('disabled');
-                $('#action-send-email').addClass('disabled');
-            }
+        if (active) {
+            $('#action-print').removeClass('disabled');
+            $('#action-send-email').removeClass('disabled');
+        } else {
+            $('#action-print').addClass('disabled');
+            $('#action-send-email').addClass('disabled');
         }
-        $(document).ready(function() {
-            $('#check_all').on('change', function() {
-                let all_booking_checks = $('input[data-action="check_all"]');
-                let checked = false;
+    }
+    $(document).ready(function() {
+        $('#check_all').on('change', function() {
+            let all_booking_checks = $('input[data-action="check_all"]');
+            let checked = false;
 
-                if (this.checked) {
-                    checked = true;
-                    settingActionLink(true);
-                } else {
-                    settingActionLink(false);
-                }
-
-                $.each(all_booking_checks, function(index, item) {
-                    item.checked = checked;
-                });
-            });
-
-            $('input[data-action="check_all"]').on('change', function() {
-                let all_booking_checks = $('input[data-action="check_all"]');
-
+            if (this.checked) {
+                checked = true;
+                settingActionLink(true);
+            } else {
                 settingActionLink(false);
-                $.each(all_booking_checks, function(index, item) {
-                    if (item.checked) {
-                        settingActionLink(true);
-                        return true;
-                    }
-                });
-            });
+            }
 
-            $('a[data-action="selectbook"]').on('click', function(e) {
-                let url = $(this).data('url');
-                console.log(url);
-                e.preventDefault();
-                //$("#frm_action").attr("method", "POST");
-                $('#frm_action').attr('action', url).submit();
-                //$('#frm')
+            $.each(all_booking_checks, function(index, item) {
+                item.checked = checked;
             });
         });
+
+        $('input[data-action="check_all"]').on('change', function() {
+            let all_booking_checks = $('input[data-action="check_all"]');
+
+            settingActionLink(false);
+            $.each(all_booking_checks, function(index, item) {
+                if (item.checked) {
+                    settingActionLink(true);
+                    return true;
+                }
+            });
+        });
+
+        $('a[data-action="selectbook"]').on('click', function(e) {
+            let url = $(this).data('url');
+            console.log(url);
+            e.preventDefault();
+            //$("#frm_action").attr("method", "POST");
+            $('#frm_action').attr('action', url).submit();
+            //$('#frm')
+        });
+    });
+
 </script>
 @stop

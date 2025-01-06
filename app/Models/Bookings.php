@@ -31,47 +31,58 @@ class Bookings extends Model
         'isconflict',
         'amend',
         'api_merchant_id',
-        'isemailsent'
+        'isemailsent',
+        'referenceno'
     ];
 
-    public function user() {
+    public function user()
+    {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
-    public function apiMerchant() {
+    public function apiMerchant()
+    {
         return $this->hasOne(ApiMerchants::class, 'id', 'api_merchant_id');
     }
 
-    public function bookingCustomers() {
-        return $this->belongsToMany(Customers::class, 'booking_customers', 'booking_id', 'customer_id')->orderByPivot('isdefault','ASC')->OrderBy('type', 'ASC')->withPivot('isdefault');
+    public function bookingCustomers()
+    {
+        return $this->belongsToMany(Customers::class, 'booking_customers', 'booking_id', 'customer_id')->orderByPivot('isdefault', 'ASC')->OrderBy('type', 'ASC')->withPivot('isdefault');
     }
 
 
-    public function bookingRoutes() {
-        return $this->belongsToMany(Route::class, 'booking_routes', 'booking_id', 'route_id')->withPivot('type', 'traveldate','amount','id','ischange')->with('station_from', 'station_to', 'routeAddons');
+    public function bookingRoutes()
+    {
+        return $this->belongsToMany(Route::class, 'booking_routes', 'booking_id', 'route_id')->withPivot('type', 'traveldate', 'amount', 'id', 'ischange')->with('station_from', 'station_to', 'routeAddons');
     }
 
-    public function bookingRoutesX(){
-        return $this->hasMany(BookingRoutes::class,'booking_id','id')->with('bookingExtraAddons', 'bookingRouteAddons','tickets');
+    public function bookingRoutesX()
+    {
+        return $this->hasMany(BookingRoutes::class, 'booking_id', 'id')->with('bookingExtraAddons', 'bookingRouteAddons', 'tickets');
     }
 
-    public function tickets() {
-        return $this->hasMany(Tickets::class,'booking_id', 'id')->with('station_from', 'station_to');
+    public function tickets()
+    {
+        return $this->hasMany(Tickets::class, 'booking_id', 'id')->with('station_from', 'station_to');
     }
 
-    public function payments() {
-        return $this->hasMany(Payments::class,'booking_id', 'id')->with('paymentLines');
+    public function payments()
+    {
+        return $this->hasMany(Payments::class, 'booking_id', 'id')->with('paymentLines');
     }
 
-    public function transactionLogs() {
-        return $this->hasMany(TransactionLogs::class,'booking_id', 'id')->with('user')->orderBy('created_at','DESC');
+    public function transactionLogs()
+    {
+        return $this->hasMany(TransactionLogs::class, 'booking_id', 'id')->with('user')->orderBy('created_at', 'DESC');
     }
 
-    public function promotion() {
+    public function promotion()
+    {
         return $this->hasOne(Promotions::class, 'id', 'promotion_id');
     }
 
-    public function route() {
+    public function route()
+    {
         return $this->belongsToMany(Route::class, 'booking_routes', 'booking_id', 'route_id');
     }
 }

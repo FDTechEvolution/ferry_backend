@@ -57,7 +57,7 @@ class BookingsController extends Controller
         (b.adult_passenger+b.child_passenger+b.infant_passenger) as total_passenger,
         b.trip_type,br.type,b.amend,concat(sf.nickname,"-",st.nickname) as route,br.traveldate,b.ispayment,
         b.book_channel,c.fullname as customer_name,c.email,r.depart_time,r.arrive_time,b.totalamt,p.totalamt as payment_totalamt,
-        b.status,b.ispremiumflex,p.c_tranref,p.paymentno,p.discount,b.isemailsent
+        b.status,b.ispremiumflex,p.c_tranref,p.paymentno,p.discount,b.isemailsent,b.referenceno
     from
         bookings b
         join booking_routes br on b.id = br.booking_id
@@ -82,7 +82,6 @@ class BookingsController extends Controller
             $dates = explode('-', $daterange);
             $startDate = trim($dates[0]);
             $endDate = trim($dates[1]);
-
         }
 
         $startDateSql = Carbon::createFromFormat('d/m/Y', $startDate)->format('Y-m-d 00:00:00');
@@ -138,13 +137,12 @@ class BookingsController extends Controller
             $dateFillter = false;
             $conditionStr .= ' and b.status = "' . $status . '"';
         } else {
-            if($dateFillter){
+            if ($dateFillter) {
                 $conditionStr .= ' and b.status not in ("delete","void")';
             }
-
         }
 
-        if($dateFillter){
+        if ($dateFillter) {
             $conditionStr .= ' and (b.created_at >="' . $startDateSql . '" and b.created_at <="' . $endDateSql . '") ';
         }
 
@@ -174,11 +172,11 @@ class BookingsController extends Controller
             'bookingStatus' => $bookingStatus,
             'tripTypes' => $tripTypes,
             'bookChannels' => $bookChannels,
-            'customername'=>$customername,
-            'paymentno'=>$paymentno,
-            'email'=>$email,
-            'bookChannel'=>$bookChannel,
-            'tripType'=>$tripType
+            'customername' => $customername,
+            'paymentno' => $paymentno,
+            'email' => $email,
+            'bookChannel' => $bookChannel,
+            'tripType' => $tripType
         ]);
     }
 
@@ -195,17 +193,17 @@ class BookingsController extends Controller
         }
         $stationFroms = RouteHelper::getSectionStationFrom(true);
         if (is_null($stationFromId) && sizeof($stationFroms) > 0) {
-            foreach($stationFroms as $seaction){
-                if(sizeof($seaction->stations) !=0){
+            foreach ($stationFroms as $seaction) {
+                if (sizeof($seaction->stations) != 0) {
                     $stationFromId = $seaction->stations[0]->id;
                     break;
                 }
             }
         }
-        $stationTos = RouteHelper::getSectionStationTo(true,$stationFromId);
+        $stationTos = RouteHelper::getSectionStationTo(true, $stationFromId);
         if (is_null($stationToId) && sizeof($stationTos) > 0) {
-            foreach($stationTos as $seaction){
-                if(sizeof($seaction->stations) !=0){
+            foreach ($stationTos as $seaction) {
+                if (sizeof($seaction->stations) != 0) {
                     $stationToId = $seaction->stations[0]->id;
                     break;
                 }
@@ -468,7 +466,6 @@ class BookingsController extends Controller
             return redirect()->back()->withSuccess('Customer updated.');
         }
         return redirect()->back()->withFail('Something is wrong. Please try again.');
-
     }
 
     public function sendConfirmEmail(Request $request)
@@ -480,7 +477,6 @@ class BookingsController extends Controller
             $booking = Bookings::where('bookingno', $bookingno)->first();
 
             EmailHelper::ticket($booking->id);
-
         }
         return redirect()->back()->withSuccess('sent email.');
         //return redirect()->route('booking-index')->withSuccess('sent email.');
@@ -518,7 +514,6 @@ class BookingsController extends Controller
                 }
 
                 $booking->ispayment = 'Y';
-
             }
 
             $booking->status = $status;
@@ -528,9 +523,9 @@ class BookingsController extends Controller
             //Log
             TransactionLogHelper::tranLog(['type' => 'booking', 'title' => 'Change booking status to ' . $statusLabel[$status]['title'], 'description' => $description, 'booking_id' => $booking_id]);
 
-            return redirect()->route('booking-view',['id'=>$booking_id])->withSuccess('Saved.');
+            return redirect()->route('booking-view', ['id' => $booking_id])->withSuccess('Saved.');
         }
 
-        return redirect()->route('booking-view',['id'=>$booking_id])->withFail('Something is wrong. Please try again.');
+        return redirect()->route('booking-view', ['id' => $booking_id])->withFail('Something is wrong. Please try again.');
     }
 }

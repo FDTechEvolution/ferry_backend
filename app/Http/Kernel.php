@@ -39,8 +39,9 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
+            'throttle:100,1', // เพิ่มขีดจำกัดเป็น 100 ครั้งต่อนาที
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
+            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];

@@ -116,12 +116,7 @@ class BookingController extends Controller
 
             if ($booking->status == 'DR') {
                 $c = new BookingHelper;
-                $c->completeBooking($request->booking_id);
-
-                if (!empty($referenceNo)) {
-                    $booking->referenceno = $referenceNo;
-                    $booking->save();
-                }
+                $c->completeBooking($request->booking_id, $referenceNo);
             } else {
                 $status = BookingHelper::status();
                 return response()->json(['result' => false, 'data' => 'this booking is ' . $status[$booking->status]['title']]);

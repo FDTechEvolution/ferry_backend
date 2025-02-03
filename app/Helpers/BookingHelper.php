@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Helpers;
 
 use App\Models\Addon;
@@ -20,13 +21,13 @@ class BookingHelper
     public static function status()
     {
         $status = [
-            'DR' => ['title' => 'Non Approved', 'icon' => '<i class="fi fi-circle-spin"></i>', 'class' => '','action'=>''],
-            'UNP' => ['title' => 'On Hold', 'icon' => '<i class="fa-solid fa-clock-rotate-left"></i>', 'class' => 'text-warning','action'=>'Unpaid'],
-            'CO' => ['title' => 'Approved', 'icon' => '<i class="fa-solid fa-check-double"></i>', 'class' => 'text-success','action'=>'Paid'],
-            'void' => ['title' => 'Cancelled', 'icon' => '<i class="fa-solid fa-xmark"></i>', 'class' => 'text-danger','action'=>'Cancel'],
+            'DR' => ['title' => 'Non Approved', 'icon' => '<i class="fi fi-circle-spin"></i>', 'class' => '', 'action' => ''],
+            'UNP' => ['title' => 'On Hold', 'icon' => '<i class="fa-solid fa-clock-rotate-left"></i>', 'class' => 'text-warning', 'action' => 'Unpaid'],
+            'CO' => ['title' => 'Approved', 'icon' => '<i class="fa-solid fa-check-double"></i>', 'class' => 'text-success', 'action' => 'Paid'],
+            'void' => ['title' => 'Cancelled', 'icon' => '<i class="fa-solid fa-xmark"></i>', 'class' => 'text-danger', 'action' => 'Cancel'],
             //'VO' => ['title' => 'CANX', 'icon' => '', 'class' => 'text-mute','action'=>'Cancel'],
-            'amended' => ['title' => 'Amended', 'icon' => '<i class="fa-solid fa-list-check"></i>', 'class' => 'text-blue-900','action'=>''],
-            'delete' => ['title' => 'Deleted', 'icon' => '<i class="fa-solid fa-trash"></i>', 'class' => 'text-danger','action'=>'Delete'],
+            'amended' => ['title' => 'Amended', 'icon' => '<i class="fa-solid fa-list-check"></i>', 'class' => 'text-blue-900', 'action' => ''],
+            'delete' => ['title' => 'Deleted', 'icon' => '<i class="fa-solid fa-trash"></i>', 'class' => 'text-danger', 'action' => 'Delete'],
 
         ];
 
@@ -45,7 +46,7 @@ class BookingHelper
     public static function bookChannels()
     {
         $bookChannels = DB::table('bookings')
-            ->select('book_channel','book_channel as title')
+            ->select('book_channel', 'book_channel as title')
             ->groupBy('book_channel')
             ->get();
         $channels = [];
@@ -59,7 +60,7 @@ class BookingHelper
     public static function getBookingInfoByBookingNo($bookingno)
     {
         $booking = Bookings::where(['bookingno' => $bookingno])
-            ->with('bookingCustomers', 'user', 'bookingRoutes','bookingRoutesX.tickets', 'bookingRoutesX.bookingExtraAddons', 'bookingRoutes.station_from', 'bookingRoutes.station_to', 'payments')
+            ->with('bookingCustomers', 'user', 'bookingRoutes', 'bookingRoutesX.tickets', 'bookingRoutesX.bookingExtraAddons', 'bookingRoutes.station_from', 'bookingRoutes.station_to', 'payments')
             ->first();
 
         //dd($booking);
@@ -145,7 +146,7 @@ class BookingHelper
 
         //Create booking
         $_b = $data['booking'];
-        $apiMerchantId =isset($_b['api_merchant_id']) ? $_b['api_merchant_id'] : NULL;
+        $apiMerchantId = isset($_b['api_merchant_id']) ? $_b['api_merchant_id'] : NULL;
         $booking = Bookings::create([
             'departdate' => $_b['departdate'],
             'adult_passenger' => $_b['adult_passenger'],
@@ -157,11 +158,11 @@ class BookingHelper
             'ispayment' => isset($_b['ispayment']) ? $_b['ispayment'] : 'N',
             'user_id' => isset($_b['user_id']) ? $_b['user_id'] : NULL,
             'trip_type' => $_b['trip_type'],
-            'bookingno' => newSequenceNumber('BOOKING',$apiMerchantId),
+            'bookingno' => newSequenceNumber('BOOKING', $apiMerchantId),
             'book_channel' => isset($_b['book_channel']) ? $_b['book_channel'] : 'ONLINE',
             'ispremiumflex' => isset($_b['ispremiumflex']) ? $_b['ispremiumflex'] : 'N',
             'promotion_id' => isset($_b['promotion_id']) ? $_b['promotion_id'] : NULL,
-            'api_merchant_id'=>$apiMerchantId,
+            'api_merchant_id' => $apiMerchantId,
         ]);
 
         $amount += $_b['amount'];
@@ -176,7 +177,7 @@ class BookingHelper
         $_c = $data['customers'];
         $mobileno = '';
         foreach ($_c as $key => $customerData) {
-            if($customerData['mobile'] != '') $mobileno = $customerData['mobile'];
+            if ($customerData['mobile'] != '') $mobileno = $customerData['mobile'];
             $customer = Customers::create([
                 'fullname' => $customerData['fullname'],
                 'type' => $customerData['type'],
@@ -221,7 +222,6 @@ class BookingHelper
                         'amount' => $extra['amount'],
                         'booking_route_id' => $bookingRoute->id,
                     ]);
-
                 }
             }
 
@@ -244,16 +244,16 @@ class BookingHelper
         return $booking;
     }
 
-    public static function completeBooking($bookingId = null, $paymentData = [])
+    public static function completeBooking($bookingId = null, $referenceNo = null)
     {
         if (is_null($bookingId)) {
             return null;
         }
 
         $booking = Bookings::with(['bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingCustomers'])
-        ->where('id', $bookingId)
-        ->where('status','!=', 'CO')
-        ->first();
+            ->where('id', $bookingId)
+            ->where('status', '!=', 'CO')
+            ->first();
 
         //dd($booking);
         if (is_null($booking)) {
@@ -263,6 +263,7 @@ class BookingHelper
 
         $booking->status = 'CO';
         $booking->ispayment = 'Y';
+        $booking->referenceno = $referenceNo;
         $booking->save();
 
         if ($booking->promotion_id != NULL) {
@@ -278,50 +279,52 @@ class BookingHelper
         $mobileno = '';
         $ticketType = 'TICKET';
 
-        foreach($customers as $c) { if($c->mobile != '') $mobileno = $c->mobile; }
+        foreach ($customers as $c) {
+            if ($c->mobile != '') $mobileno = $c->mobile;
+        }
 
         $isCreateTicket = false;
         $countTicket = 0;
         foreach ($routes as $key => $route) {
             //foreach ($customers as $index => $customer) {
-            if(isset($booking->api_merchant_id) && !empty($booking->api_merchant_id)){
+            if (isset($booking->api_merchant_id) && !empty($booking->api_merchant_id)) {
                 $apiMerchant = ApiMerchants::find($booking->api_merchant_id);
                 //Log::debug($apiMerchant);
-                if(!is_null($apiMerchant)){
-                    $ticketType = 'TICKET_'.$apiMerchant->code;
+                if (!is_null($apiMerchant)) {
+                    $ticketType = 'TICKET_' . $apiMerchant->code;
                 }
                 //Log::debug($ticketType);
             }
-                $ticketNo = newSequenceNumber($ticketType,$booking->api_merchant_id);
+            $ticketNo = newSequenceNumber($ticketType, $booking->api_merchant_id);
 
-                if($booking['trip_type'] == 'multiple'){
-                    $ticketNo .= '#'.($key+1);
-                }
-                $ticket = Tickets::updateOrCreate(
-                    [
-                        'booking_route_id' =>$route->pivot->id,
-                    ],
-                    [
-                        'ticketno' => $ticketNo,
-                        'station_from_id' => $route['station_from']['id'],
-                        'station_to_id' => $route['station_to']['id'],
-                        'status' => 'CO',
-                        //'customer_id' => $customer['id'],
-                        'booking_id' => $booking['id'],
-                        'booking_route_id' =>$route->pivot->id,
-                        //'isdefault' => $customer->pivot->isdefault,
-                    ],
-                );
+            if ($booking['trip_type'] == 'multiple') {
+                $ticketNo .= '#' . ($key + 1);
+            }
+            $ticket = Tickets::updateOrCreate(
+                [
+                    'booking_route_id' => $route->pivot->id,
+                ],
+                [
+                    'ticketno' => $ticketNo,
+                    'station_from_id' => $route['station_from']['id'],
+                    'station_to_id' => $route['station_to']['id'],
+                    'status' => 'CO',
+                    //'customer_id' => $customer['id'],
+                    'booking_id' => $booking['id'],
+                    'booking_route_id' => $route->pivot->id,
+                    //'isdefault' => $customer->pivot->isdefault,
+                ],
+            );
 
-                if($ticket){
-                    $isCreateTicket = true;
-                    $countTicket++;
-                }
+            if ($ticket) {
+                $isCreateTicket = true;
+                $countTicket++;
+            }
             //}
 
         }
-        if($isCreateTicket){
-            TransactionLogHelper::tranLog(['type' => 'ticket', 'title' => sprintf('Created ticket (%s)',$countTicket), 'description' => '', 'booking_id' => $booking->id]);
+        if ($isCreateTicket) {
+            TransactionLogHelper::tranLog(['type' => 'ticket', 'title' => sprintf('Created ticket (%s)', $countTicket), 'description' => '', 'booking_id' => $booking->id]);
         }
 
 

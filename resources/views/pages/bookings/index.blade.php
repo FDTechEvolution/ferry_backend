@@ -197,10 +197,15 @@ $colors = [
                             </td>
                             <td class="{{$textClass}}"><small>{{ date('d/m/y H:i', strtotime($item['created_at']))
                                     }}</small></td>
-                            <td style="white-space: pre;" class="{{$textClass}}"><small>{{ date('d/m/y',
+                            <td class="{{$textClass}} text-center">
+                                <small>{{ date('d/m/y',
                                     strtotime($item['traveldate']))
-                                    }}</small></td>
-                            <td class="{{$textClass}}">
+                                    }}</small>
+                                @if (date('d/m/y',strtotime($item['traveldate'])) == date('d/m/y'))
+                                <small><span class="badge rounded-pill bg-warning animate-blink">TODAY</span></small>
+                                @endif
+                            </td>
+                            <td class="{{$textClass}} text-center">
                                 <a href="#" data-href="{{route('booking-mview',['id'=>$item['id']])}}" data-ajax-modal-size="modal-xl" data-ajax-modal-centered="true" data-ajax-modal-callback-function="" data-ajax-modal-backdrop="static" class="me-2 js-ajax-modal {{$textClass}}">
                                     {{ $item['bookingno'] }}
                                 </a>

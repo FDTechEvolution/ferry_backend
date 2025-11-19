@@ -43,6 +43,7 @@ class BookingsController extends Controller
         $ticketno = request()->ticketno;
         $bookingno = request()->bookingno;
         $daterange = request()->daterange;
+        $date_type = request()->date_type;
         $status = request()->status;
 
         $paymentno = request()->paymentno;
@@ -144,7 +145,11 @@ class BookingsController extends Controller
         }
 
         if ($dateFillter) {
-            $conditionStr .= ' and (b.created_at >="' . $startDateSql . '" and b.created_at <="' . $endDateSql . '") ';
+            if ($date_type == 'booking_date' || empty($date_type)) {
+                $conditionStr .= ' and (b.created_at >="' . $startDateSql . '" and b.created_at <="' . $endDateSql . '") ';
+            } else {
+                $conditionStr .= ' and (br.traveldate >="' . $startDateSql . '" and br.traveldate <="' . $endDateSql . '") ';
+            }
         }
 
 
@@ -177,7 +182,8 @@ class BookingsController extends Controller
             'paymentno' => $paymentno,
             'email' => $email,
             'bookChannel' => $bookChannel,
-            'tripType' => $tripType
+            'tripType' => $tripType,
+            'date_type' => $date_type
         ]);
     }
 

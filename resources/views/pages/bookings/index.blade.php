@@ -53,6 +53,15 @@ $colors = [
         </div>
         <div class="col-12 col-md-3">
             <div class="form-floating mb-3">
+                <select class="form-select" id="date_type" aria-label="" name="date_type">
+                    <option value="booking_date" @selected($date_type=='booking_date' )>By Booking Date</option>
+                    <option value="travel_date" @selected($date_type=='travel_date' )>By Travel Date</option>
+                </select>
+                <label for="book_channel">By Date</label>
+            </div>
+        </div>
+        <div class="col-12 col-md-3">
+            <div class="form-floating mb-3">
                 <input autocomplete="off" type="text" name="daterange" id="daterange" class="form-control form-control-sm rangepicker" data-bs-placement="left" data-ranges="false" data-date-start="{{ $startDate }}" data-date-end="{{ $endDate }}" data-date-format="DD/MM/YYYY" data-quick-locale='{
                             "lang_apply"	: "Apply",
                             "lang_cancel" : "Cancel",
@@ -60,7 +69,7 @@ $colors = [
                             "lang_months"	 : ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
                             "lang_weekdays" : ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
                         }'>
-                <label for="departdate">Date</label>
+                <label for="departdate">Date Range</label>
             </div>
         </div>
         <div class="col-12 col-md-3">
@@ -104,7 +113,7 @@ $colors = [
                 <label for="email">Emali</label>
             </div>
         </div>
-        <div class="col-12 col-md-3 text-end">
+        <div class="col-12  text-center">
             <a class="btn btn-sm btn-secondary" href="{{ route('booking-index') }}"><i class="fa-solid fa-arrows-rotate"></i> Clear</a>
             <button type="submit" class="btn btn-sm btn-ferry"><i class="fa-solid fa-magnifying-glass"></i>
                 Search</button>
@@ -142,7 +151,13 @@ $colors = [
             </span>
         </a>
     </div>
-    <div class="col-12">
+
+    @php
+    $countApproveOrder = 0;
+    $countApprovePassenger = 0;
+    @endphp
+
+    <div class="col-12 order-2">
 
         <div class="table-responsive">
             <form novalidate class="bs-validate" id="frm_action" method="POST" target="_blank" action="">
@@ -186,6 +201,11 @@ $colors = [
                         $textClass = $colors[$item['trip_type']];
                         if($item['book_channel'] != 'ONLINE'){
                         $textClass = '';
+                        }
+
+                        if($item['status'] == 'CO'){
+                        $countApproveOrder++;
+                        $countApprovePassenger+=$item['total_passenger'];
                         }
                         @endphp
                         <tr>
@@ -320,6 +340,21 @@ $colors = [
         </div>
 
 
+    </div>
+
+    <div class="col-12 mb-2 order-1">
+        <div class="row text-center">
+            <div class="col py-4 px-2">
+                <small>Total Approved Booking</small><br>
+                <strong class="text-success">{{ number_format($countApproveOrder) }}</strong>
+            </div>
+            <div class="col py-4 px-2">
+                <small>Total Approved Passenger</small><br>
+                <strong class="text-success">{{ number_format($countApprovePassenger) }}</strong>
+            </div>
+
+
+        </div>
     </div>
 </div>
 @stop

@@ -155,6 +155,8 @@ $colors = [
     @php
     $countApproveOrder = 0;
     $countApprovePassenger = 0;
+
+    $agents = [];
     @endphp
 
     <div class="col-12 order-2">
@@ -207,6 +209,15 @@ $colors = [
                         $countApproveOrder++;
                         $countApprovePassenger+=$item['total_passenger'];
                         }
+
+                        if(!isset($agents[$item['book_channel']])){
+                        $agents[$item['book_channel']] = [
+                        'total_approve'=>0,
+                        'total_passenger'=>0
+                        ];
+                        }
+                        $agents[$item['book_channel']]['total_approve'] ++;
+                        $agents[$item['book_channel']]['total_passenger'] +=$item['total_passenger'];
                         @endphp
                         <tr>
                             <td>
@@ -230,6 +241,7 @@ $colors = [
                                     {{ $item['bookingno'] }}
                                 </a>
                             </td>
+
                             <td class="{{$textClass}}"><small>{{ $item['book_channel']!='ONLINE'?'':$item['paymentno']
                                     }}</small></td>
                             <td class="{{$textClass}}">{{ $item['ticketno'] }}</td>
@@ -342,18 +354,52 @@ $colors = [
 
     </div>
 
-    <div class="col-12 mb-2 order-1">
-        <div class="row text-center">
-            <div class="col py-4 px-2">
-                <small>Total Approved Booking</small><br>
-                <strong class="text-success">{{ number_format($countApproveOrder) }}</strong>
+    <div class="col-12 mb-4 order-1">
+        <!-- Summary Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center py-4">
+                        <div class="text-muted mb-2">Total Approved Booking</div>
+                        <h3 class="text-success fw-bold mb-0">{{ number_format($countApproveOrder) }}</h3>
+                    </div>
+                </div>
             </div>
-            <div class="col py-4 px-2">
-                <small>Total Approved Passenger</small><br>
-                <strong class="text-success">{{ number_format($countApprovePassenger) }}</strong>
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center py-4">
+                        <div class="text-muted mb-2">Total Approved Passenger</div>
+                        <h3 class="text-success fw-bold mb-0">{{ number_format($countApprovePassenger) }}</h3>
+                    </div>
+                </div>
             </div>
+        </div>
 
-
+        <!-- Agent Cards -->
+        <div class="row g-3 justify-content-center">
+            @foreach ($agents as $key => $agent)
+            <div class="col-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-header bg-primary text-white text-center py-3">
+                        <strong>{{ $key }}</strong>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between align-items-baseline">
+                                <small class="text-muted">Total Approved Booking</small>
+                                <strong class="text-primary">{{ number_format($agent['total_approve']) }}</strong>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="d-flex justify-content-between align-items-baseline">
+                                <small class="text-muted">Total Approved Passenger</small>
+                                <strong class="text-primary">{{ number_format($agent['total_passenger']) }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endforeach
         </div>
     </div>
 </div>

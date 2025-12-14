@@ -208,7 +208,6 @@ $colors = [
                         if($item['status'] == 'CO'){
                         $countApproveOrder++;
                         $countApprovePassenger+=$item['total_passenger'];
-                        }
 
                         if(!isset($agents[$item['book_channel']])){
                         $agents[$item['book_channel']] = [
@@ -218,6 +217,9 @@ $colors = [
                         }
                         $agents[$item['book_channel']]['total_approve'] ++;
                         $agents[$item['book_channel']]['total_passenger'] +=$item['total_passenger'];
+                        }
+
+
                         @endphp
                         <tr>
                             <td>

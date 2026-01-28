@@ -69,43 +69,42 @@ class RouteController extends Controller
     {
         $stationFromId = request()->station_from;
         $stationToId = request()->station_to;
-
+        //dd($stationToId);
         $stationFroms = RouteHelper::getSectionStationFrom(true);
 
         $routes = Route::where('status', 'CO')
-            ->with('station_from', 'station_from.section', 'station_to', 'icons', 'routeAddons', 'activity_lines', 'meal_lines', 'partner');
-        if(empty($stationFromId) || $stationFromId == ''){
-            foreach($stationFroms as $seaction){
-                if(sizeof($seaction->stations) !=0){
+            ->with(['station_from', 'station_from.section', 'station_to', 'icons', 'routeAddons', 'activity_lines', 'meal_lines', 'partner']);
+        if (empty($stationFromId) || $stationFromId == '') {
+            foreach ($stationFroms as $seaction) {
+                if (sizeof($seaction->stations) != 0) {
                     $stationFromId = $seaction->stations[0]->id;
                     break;
                 }
             }
 
-            $routes = $routes->where('station_from_id',$stationFromId);
-        }else{
-            if($stationFromId != ''){
-                $routes = $routes->where('station_from_id',$stationFromId);
+            $routes = $routes->where('station_from_id', $stationFromId);
+        } else {
+            if ($stationFromId != '') {
+                $routes = $routes->where('station_from_id', $stationFromId);
             }
         }
 
-        if(empty($stationToId) || $stationToId == ''){
-            $stationToId = '';
-        }else{
-            $routes = $routes->where('station_to_id',$stationToId);
+        if (!empty($stationToId) && $stationToId != '') {
+            $routes = $routes->where('station_to_id', $stationToId);
         }
-        $stationTos = RouteHelper::getSectionStationTo(true,$stationFromId);
+
+        $stationTos = RouteHelper::getSectionStationTo(true, $stationFromId);
 
         $routes = $routes->orderBy('depart_time', 'ASC')->get();
         //dd($routes);
 
         $newRoutes = [];
-        foreach($routes as $index => $route){
-            $a = $route->station_from->section->sort.$route->station_from->sort;
-            $b = $route->station_to->section->sort.$route->station_to->sort;
-            $route['key'] = $a.$b.date('Hi', strtotime($route->depart_time));
+        foreach ($routes as $index => $route) {
+            $a = $route->station_from->section->sort . $route->station_from->sort;
+            $b = optional($route->station_to->section)->sort . $route->station_to->sort;
+            $route['key'] = $a . $b . date('Hi', strtotime($route->depart_time));
 
-            array_push($newRoutes,$route);
+            array_push($newRoutes, $route);
         }
 
         $key_values = array_column($newRoutes, 'key');
@@ -116,14 +115,15 @@ class RouteController extends Controller
         $status = $this->_Status;
 
         return view(
-            'pages.route_control.index',[
+            'pages.route_control.index',
+            [
                 'routes' => $newRoutes,
                 'route_status' => $status,
                 'icons' => $icons,
-                'stationFroms'=>$stationFroms,
-                'stationTos'=>$stationTos,
-                'stationFromId'=>$stationFromId,
-                'stationToId'=>$stationToId
+                'stationFroms' => $stationFroms,
+                'stationTos' => $stationTos,
+                'stationFromId' => $stationFromId,
+                'stationToId' => $stationToId
             ],
         );
     }
@@ -150,7 +150,7 @@ class RouteController extends Controller
             [
                 'partners' => $partners,
                 'stations' => $stations,
-                'sections'=>$sections,
+                'sections' => $sections,
                 'icons' => $icons,
                 'activities' => $activities,
                 'meals' => $meals,
@@ -162,15 +162,15 @@ class RouteController extends Controller
         );
     }
 
-    private function setRouteIconGroup($icons) {
+    private function setRouteIconGroup($icons)
+    {
         $group_1 = [];
         $group_2 = [];
 
-        foreach($icons->toArray() as $ic) {
-            if(strpos($ic->name, '(1)') != '') {
+        foreach ($icons->toArray() as $ic) {
+            if (strpos($ic->name, '(1)') != '') {
                 array_push($group_2, $ic);
-            }
-            else array_push($group_1, $ic);
+            } else array_push($group_1, $ic);
         }
 
         return array_merge($group_1, $group_2);
@@ -310,7 +310,6 @@ class RouteController extends Controller
                     'isservice_charge' => 'N',
                     'route_id' => $route->id,
                 ]);
-
             }
         }
     }
@@ -465,7 +464,6 @@ class RouteController extends Controller
             $this->createApiRoute($route->id, $route->regular_price);
 
             return redirect()->route('route-index')->withSuccess('Route created...');
-
         }
 
         // Log::debug($request);
@@ -708,7 +706,6 @@ class RouteController extends Controller
             $route->isactive = 'N';
             $route->status = 'VO';
             $route->save();
-
         } else {
             RouteActivity::where('route_id', $id)->delete();
             RouteMeal::where('route_id', $id)->delete();
@@ -733,8 +730,6 @@ class RouteController extends Controller
             RouteShuttlebus::where('route_id', $id)->delete();
             RouteLongtailboat::where('route_id', $id)->delete();
             $route->delete();
-
-
         }
 
         ApiRoutes::where('route_id', $id)->forceDelete();

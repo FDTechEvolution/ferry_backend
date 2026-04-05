@@ -34,6 +34,8 @@ use App\Http\Controllers\FareController;
 use App\Http\Controllers\PrintController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\BillboardController;
+use App\Http\Controllers\Change\ChangeBookingController;
+use App\Http\Controllers\Change\ChangeRouteController;
 use App\Http\Controllers\PremiumFlexController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\FeeManageController;
@@ -78,15 +80,9 @@ Route::controller(ForgotPasswordController::class)->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::resources([
-        'section' => SectionsController::class,
-        'routeSchedules' => RouteSchedulesController::class,
-        'customer'=>CustomerController::class,
-        'bookingRoute'=>BookingRouteController::class,
-        'routeCalendar'=>RouteCalendarController::class
-    ]);
 
-    Route::controller(RouteSchedulesController::class)->group(function() {
+
+    Route::controller(RouteSchedulesController::class)->group(function () {
         Route::get('/booking-affected', 'bookingEffect')->name('routeSchedules.bookingAffected');
         Route::post('/booking-affected/void', 'sendVoidBooking')->name('routeSchedules.sendVoidBooking');
 
@@ -94,7 +90,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/routeSchedule/job-run/{id}', 'jobRun')->name('routeSchedules.jobRun');
     });
 
-    Route::controller(ApiMerchantsController::class)->group(function() {
+    Route::controller(ApiMerchantsController::class)->group(function () {
         Route::get('/api', 'index')->name('api.index');
         Route::get('/api/create', 'create')->name('api.create');
         Route::get('/api/edit/{id}', 'edit')->name('api.edit');
@@ -109,7 +105,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/api/delete/{id}', 'destroy')->name('api.destroy');
     });
 
-    Route::controller(AjaxApiRouteController::class)->group(function() {
+    Route::controller(AjaxApiRouteController::class)->group(function () {
         Route::get('/apiagent/edit/{id}', 'edit')->name('apiagent.edit');
 
         Route::post('/apiagent/update/{id}', 'update')->name('apiagent.update');
@@ -282,7 +278,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/ajax/slide/show-in-homepage/{id}', 'updateShowInHomepage')->name('slide-show');
     });
 
-    Route::controller(BillboardController::class)->group(function() {
+    Route::controller(BillboardController::class)->group(function () {
         Route::get('/media/billboard', 'index')->name('billboard-index');
         Route::get('/media/billboard/create', 'create')->name('billboard-create');
         Route::get('/media/billboard/edit/{id}', 'edit')->name('billboard-edit');
@@ -334,7 +330,7 @@ Route::middleware('auth')->group(function () {
     });
 
 
-    Route::controller(NewsController::class)->group(function() {
+    Route::controller(NewsController::class)->group(function () {
         Route::get('/news', 'index')->name('news-index');
         Route::get('/news/create', 'create')->name('news-create');
         Route::get('/news/edit/{news}', 'edit')->name('news-edit');
@@ -348,12 +344,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/ajax/news/status/{id}', 'updateStatus')->name('news-update-status');
     });
 
-    Route::controller(PremiumFlexController::class)->group(function() {
+    Route::controller(PremiumFlexController::class)->group(function () {
         Route::get('/premium-flex', 'index')->name('pmf-index');
         Route::post('/premium-flex/update', 'update')->name('pmf-update');
     });
 
-    Route::controller(ReportsController::class)->group(function() {
+    Route::controller(ReportsController::class)->group(function () {
         Route::get('/report', 'index')->name('report-index');
         Route::get('/report/payment', 'paymentReport')->name('report.payment');
         Route::post('/report/result', 'result')->name('report.result');
@@ -365,22 +361,30 @@ Route::middleware('auth')->group(function () {
         Route::get('/ajax/report/depart-arrive-time/{from_id}/{to_id}', 'routeDepartArriveTime');
     });
 
-    Route::controller(FeeManageController::class)->group(function() {
+    Route::controller(FeeManageController::class)->group(function () {
         Route::get('/fee-manage', 'index')->name('fee.index');
 
         Route::post('/fee-manage/update', 'update')->name('fee.update');
     });
 
+    Route::resources([
+        'section' => SectionsController::class,
+        'routeSchedules' => RouteSchedulesController::class,
+        'customer' => CustomerController::class,
+        'bookingRoute' => BookingRouteController::class,
+        'routeCalendar' => RouteCalendarController::class,
+        'changeBooking' => ChangeBookingController::class,
+        'changeRoute' => ChangeRouteController::class
+    ]);
 });
 
 Route::controller(PrintController::class)->group(function () {
     Route::get('/print/ticket/{bookingno}', 'ticket')->name('print-ticket');
 
     Route::post('/print/multiple-ticket', 'multipleTicket')->name('print.multipleticket');
-
 });
 
-Route::get('/email/ticket', function() {
+Route::get('/email/ticket', function () {
     return view('email.ticket');
 });
 

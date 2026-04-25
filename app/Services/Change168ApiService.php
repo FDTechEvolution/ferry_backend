@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class Change168ApiService
 {
@@ -22,6 +23,7 @@ class Change168ApiService
 
     public function get(string $url, array|string|null $query = null): Response
     {
+        //Log::debug('get', [$url, $query]);
         return $this->request()->get($url, $query);
     }
 
@@ -55,6 +57,29 @@ class Change168ApiService
      */
     public function getAgentRoutes($departStationId = null, $destStationId = null): Response
     {
-        return $this->get('back/agent-route', ['fillter' => 'all', 'departStationId' => $departStationId, 'destStationId' => $destStationId]);
+        $query = ['fillter' => 'all'];
+        if ($departStationId !== null && $departStationId !== '') {
+            $query['departure'] = $departStationId;
+        }
+        if ($destStationId !== null && $destStationId !== '') {
+            $query['destination'] = $destStationId;
+        }
+
+        return $this->get('back/agent-route', $query);
+    }
+
+    public function updateSubRoute($agent_sub_route_id, $data)
+    {
+        return $this->post('back/agent-route/' . $agent_sub_route_id, $data);
+    }
+
+    public function getDepartStation(): Response
+    {
+        return $this->get('station/departure');
+    }
+
+    public function getDestStation($departStationId = null): Response
+    {
+        return $this->get('station/destination', ['depart_station' => $departStationId]);
     }
 }

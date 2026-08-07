@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Models\Addon;
 use App\Models\ApiMerchants;
+use App\Models\BookingAddon;
 use App\Models\BookingRoutes;
 use App\Models\BookingExtras;
 use App\Models\Bookings;
@@ -41,6 +42,7 @@ class BookingHelper
             'one-way' => 'One Way',
             'round-trip' => 'Round Trip',
             'multi-trip' => 'Multi Island',
+            'addon' => 'Addon',
         ];
     }
 
@@ -61,7 +63,7 @@ class BookingHelper
     public static function getBookingInfoByBookingNo($bookingno)
     {
         $booking = Bookings::where(['bookingno' => $bookingno])
-            ->with('bookingCustomers', 'user', 'bookingRoutes', 'bookingRoutesX.tickets', 'bookingRoutesX.bookingExtraAddons', 'bookingRoutes.station_from', 'bookingRoutes.station_to', 'payments')
+            ->with('bookingCustomers', 'user', 'bookingRoutes', 'bookingRoutesX.tickets', 'bookingRoutesX.bookingExtraAddons', 'bookingRoutes.station_from', 'bookingRoutes.station_to', 'payments', 'tickets', 'bookingAddons.addon')
             ->first();
 
         //dd($booking);
@@ -81,6 +83,7 @@ class BookingHelper
                 'bookingRoutes.station_from',
                 'bookingRoutes.station_to',
                 'bookingRoutes.station_lines',
+                'bookingAddons.addon',
                 'payments',
             )
             ->first();
@@ -245,6 +248,97 @@ class BookingHelper
         return $booking;
     }
 
+    /*
+        data = [
+            'booking' => [
+                'departdate' => Y-m-d,
+                'adult_passenger' => 0,
+                'child_passenger' => 0,
+                'infant_passenger' => 0,
+                'amount' => price,
+                'extraamt' => 0,
+                'totalamt' => price,
+                'book_channel' => ONLINE,
+                'trip_type' => one-way (optional),
+            ],
+            'customers' => [ ... ],
+            'addons' => [
+                ['addon_id' => uuid, 'qty' => 1, 'amount' => unit*qty],
+                ...
+            ],
+        ]
+    */
+    public static function createAddonBooking($data = [])
+    {
+        $_b = $data['booking'];
+        $apiMerchantId = isset($_b['api_merchant_id']) ? $_b['api_merchant_id'] : null;
+
+        $booking = Bookings::create([
+            'departdate' => $_b['departdate'],
+            'adult_passenger' => $_b['adult_passenger'] ?? 1,
+            'child_passenger' => $_b['child_passenger'] ?? 0,
+            'infant_passenger' => $_b['infant_passenger'] ?? 0,
+            'totalamt' => $_b['totalamt'],
+            'extraamt' => $_b['extraamt'] ?? 0,
+            'amount' => $_b['amount'],
+            'ispayment' => isset($_b['ispayment']) ? $_b['ispayment'] : 'N',
+            'user_id' => isset($_b['user_id']) ? $_b['user_id'] : null,
+            'trip_type' => $_b['trip_type'] ?? 'one-way',
+            'bookingno' => 'A' . newSequenceNumber('BOOKING', $apiMerchantId),
+            'book_channel' => isset($_b['book_channel']) ? $_b['book_channel'] : 'ONLINE',
+            'ispremiumflex' => 'N',
+            'promotion_id' => isset($_b['promotion_id']) ? $_b['promotion_id'] : null,
+            'api_merchant_id' => $apiMerchantId,
+            'type' => 'addon',
+            'status' => isset($_b['status']) ? $_b['status'] : 'DR',
+            'ref_ticketno' => $_b['ref_ticketno'] ?? null,
+        ]);
+
+        if (! $booking) {
+            return false;
+        }
+
+        foreach ($data['customers'] as $key => $customerData) {
+            $customer = Customers::create([
+                'fullname' => $customerData['fullname'],
+                'type' => $customerData['type'] ?? 'ADULT',
+                'passportno' => $customerData['passportno'] ?? null,
+                'email' => $customerData['email'] ?? null,
+                'mobile' => $customerData['mobile'] ?? null,
+                'fulladdress' => $customerData['fulladdress'] ?? null,
+                'mobile_code' => $customerData['mobile_code'] ?? null,
+                'mobile_th' => $customerData['mobile_th'] ?? null,
+                'title' => $customerData['title'] ?? null,
+                'country' => $customerData['country'] ?? null,
+                'birth_day' => $customerData['birthday'] ?? null,
+            ]);
+
+            $booking->bookingCustomers()->attach($customer, [
+                'id' => (string) Uuid::uuid4(),
+                'isdefault' => $key == 0 ? 'Y' : 'N',
+            ]);
+        }
+
+        foreach ($data['addons'] as $addonData) {
+            $qty = max(1, (int) ($addonData['qty'] ?? 1));
+            for ($i = 0; $i < $qty; $i++) {
+                BookingAddon::create([
+                    'booking_id' => $booking->id,
+                    'addon_id' => $addonData['addon_id'],
+                ]);
+            }
+        }
+
+        TransactionLogHelper::tranLog([
+            'type' => 'booking',
+            'title' => 'Create addon booking',
+            'description' => '',
+            'booking_id' => $booking->id,
+        ]);
+
+        return $booking;
+    }
+
     public static function completeBooking($bookingId = null, $referenceNo = null)
     {
         if (is_null($bookingId)) {
@@ -253,30 +347,34 @@ class BookingHelper
 
         $booking = Bookings::with(['bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingCustomers'])
             ->where('id', $bookingId)
-            ->where('status', '!=', 'CO')
             ->first();
 
-        //dd($booking);
         if (is_null($booking)) {
             return null;
         }
 
+        $alreadyCompleted = $booking->status === 'CO';
 
-        $booking->status = 'CO';
-        $booking->ispayment = 'Y';
-        $booking->referenceno = $referenceNo;
-        $booking->save();
+        if (! $alreadyCompleted) {
+            $booking->status = 'CO';
+            $booking->ispayment = 'Y';
+            $booking->referenceno = $referenceNo;
+            $booking->save();
 
-        if ($booking->promotion_id != NULL) {
-            $promotion = Promotions::find($booking->promotion_id);
-            $promotion->times_used = $promotion->times_used + 1;
-            $promotion->save();
+            if ($booking->promotion_id != NULL) {
+                $promotion = Promotions::find($booking->promotion_id);
+                $promotion->times_used = $promotion->times_used + 1;
+                $promotion->save();
+            }
+        } elseif (! empty($referenceNo) && empty($booking->referenceno)) {
+            $booking->referenceno = $referenceNo;
+            $booking->save();
         }
 
         //Create ticket
 
         $customers = $booking->bookingCustomers;
-        $routes = $booking->bookingRoutes;
+        $routes = $booking->bookingRoutes ?? [];
         $mobileno = '';
         $ticketType = 'TICKET';
 
@@ -286,6 +384,31 @@ class BookingHelper
 
         $isCreateTicket = false;
         $countTicket = 0;
+        $hasTicket = Tickets::where('booking_id', $booking->id)->exists();
+
+        if ($booking->type == 'addon' && ! $hasTicket) {
+            $ticketType = 'TICKET_ADDON';
+
+            $ticketNo = newSequenceNumber($ticketType);
+
+            $ticket = Tickets::updateOrCreate(
+                [
+                    'booking_id' => $booking['id'],
+                ],
+                [
+                    'ticketno' => $ticketNo,
+                    'booking_id' => $booking['id'],
+                    'status' => 'CO',
+                ],
+            );
+
+            if ($ticket) {
+                $isCreateTicket = true;
+                $countTicket++;
+            }
+        }
+
+
         foreach ($routes as $key => $route) {
             //foreach ($customers as $index => $customer) {
             if (isset($booking->api_merchant_id) && !empty($booking->api_merchant_id)) {
@@ -324,6 +447,8 @@ class BookingHelper
             //}
 
         }
+
+
         if ($isCreateTicket) {
             TransactionLogHelper::tranLog(['type' => 'ticket', 'title' => sprintf('Created ticket (%s)', $countTicket), 'description' => '', 'booking_id' => $booking->id]);
         }
@@ -331,8 +456,10 @@ class BookingHelper
 
         $booking = Bookings::with(['bookingRoutes.station_from', 'bookingRoutes.station_to', 'bookingCustomers'])->where('id', $bookingId)->first();
 
-        TransactionLogHelper::tranLog(['type' => 'booking', 'title' => 'Complated booking', 'description' => '', 'booking_id' => $booking->id]);
-        EmailHelper::ticket($bookingId);
+        if (! $alreadyCompleted) {
+            TransactionLogHelper::tranLog(['type' => 'booking', 'title' => 'Complated booking', 'description' => '', 'booking_id' => $booking->id]);
+            EmailHelper::ticket($bookingId);
+        }
         //$booking->mobileno = $mobileno;
         return $booking;
     }

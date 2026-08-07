@@ -21,7 +21,8 @@ class Addon extends Model
         'image_icon_id',
         'image_icon',
         'is_route_station',
-        'is_main_menu'
+        'is_main_menu',
+        'departure_time'
     ];
 
     protected $hidden = [
@@ -29,13 +30,18 @@ class Addon extends Model
         'image_icon_id'
     ];
 
-    public function image() {
+    public function image()
+    {
         return $this->hasOne(Image::class, 'id', 'image_id');
     }
 
-    public function icon() {
+    public function icon()
+    {
         return $this->hasOne(Image::class, 'id', 'image_icon_id');
     }
 
-    
+    public function bookingAddons()
+    {
+        return $this->hasMany(BookingAddon::class, 'addon_id', 'id');
+    }
 }

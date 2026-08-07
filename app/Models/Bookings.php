@@ -32,7 +32,9 @@ class Bookings extends Model
         'amend',
         'api_merchant_id',
         'isemailsent',
-        'referenceno'
+        'referenceno',
+        'type',
+        'ref_ticketno'
     ];
 
     public function user()
@@ -79,6 +81,16 @@ class Bookings extends Model
     public function promotion()
     {
         return $this->hasOne(Promotions::class, 'id', 'promotion_id');
+    }
+
+    public function bookingAddons()
+    {
+        return $this->hasMany(BookingAddon::class, 'booking_id', 'id')->with('addon');
+    }
+
+    public function addons()
+    {
+        return $this->belongsToMany(Addon::class, 'booking_addons', 'booking_id', 'addon_id');
     }
 
     public function route()

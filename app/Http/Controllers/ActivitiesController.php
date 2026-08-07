@@ -28,7 +28,10 @@ class ActivitiesController extends Controller
 
     public function index() {
         // $activity = Activity::where('status', 'CO')->get();
-        $activity = Addon::where('type', $this->AddonType)->where('status', 'CO')->get();
+        $activity = Addon::where('type', $this->AddonType)
+            ->where('status', 'CO')
+            ->with('image')
+            ->get();
 
         return view('pages.activities.index', ['activities' => $activity]);
     }
@@ -56,8 +59,9 @@ class ActivitiesController extends Controller
             'name' => 'required|string',
             'price' => 'integer|nullable',
             'detail' => 'string|nullable',
-            'file_icon' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1024|nullable',
-            'file_picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable'
+            'departure_time' => 'nullable|string|max:50',
+            'file_icon' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:1024|nullable',
+            'file_picture' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048|nullable'
         ]);
 
         $image_id = null;
@@ -75,6 +79,7 @@ class ActivitiesController extends Controller
             'amount' => $request->price,
             'type' => $this->AddonType,
             'description' => $request->detail,
+            'departure_time' => $request->departure_time,
             'isactive' => 'Y',
             'image_id' => $image_id,
             'image_icon_id' => $icon_id,
@@ -93,8 +98,9 @@ class ActivitiesController extends Controller
             'name' => 'required|string',
             'price' => 'integer|nullable',
             'detail' => 'string|nullable',
-            'file_icon' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1024|nullable',
-            'file_picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable'
+            'departure_time' => 'nullable|string|max:50',
+            'file_icon' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:1024|nullable',
+            'file_picture' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048|nullable'
         ]);
 
         $activity = Addon::find($request->id);
@@ -121,6 +127,7 @@ class ActivitiesController extends Controller
         $activity->name = $request->name;
         $activity->amount = $request->price;
         $activity->description = $request->detail;
+        $activity->departure_time = $request->departure_time;
         $activity->image_id = $image_id ?: $current_image;
         $activity->image_icon_id = $icon_id ?: $current_icon;
         $activity->is_route_station = isset($request->route_station) ? 'Y' : 'N';

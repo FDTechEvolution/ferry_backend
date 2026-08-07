@@ -10,6 +10,7 @@ $colors = [
 'one-way' => 'text-light-blue-600',
 'round-trip' => 'text-pink-600',
 'multi-trip' => 'text-green-800',
+'addon' => 'text-orange-600',
 ];
 @endphp
 
@@ -154,6 +155,7 @@ $colors = [
 
     @php
     $countApproveOrder = 0;
+    $countAddonOrder = 0;
     $countApprovePassenger = 0;
 
     $agents = [];
@@ -175,7 +177,7 @@ $colors = [
                             <th class="">Booking Date</th>
                             <th>Travel Date</th>
                             <th>Invoice No</th>
-                            <th>Payment No</th>
+
                             <th>Ticket No</th>
                             <th></th>
                             <th>Type</th>
@@ -200,12 +202,15 @@ $colors = [
 
                         @foreach ($bookings as $index => $item)
                         @php
-                        $textClass = $colors[$item['trip_type']];
+                        $textClass = $colors[$item['trip_type']] ?? '';
                         if($item['book_channel'] != 'ONLINE'){
                         $textClass = '';
                         }
 
                         if($item['status'] == 'CO'){
+                        if(($item['booking_type'] ?? 'booking') == 'addon'){
+                        $countAddonOrder++;
+                        } else {
                         $countApproveOrder++;
                         $countApprovePassenger+=$item['total_passenger'];
 
@@ -217,6 +222,7 @@ $colors = [
                         }
                         $agents[$item['book_channel']]['total_approve'] ++;
                         $agents[$item['book_channel']]['total_passenger'] +=$item['total_passenger'];
+                        }
                         }
 
 
@@ -231,10 +237,11 @@ $colors = [
                             <td class="{{$textClass}}"><small>{{ date('d/m/y H:i', strtotime($item['created_at']))
                                     }}</small></td>
                             <td class="{{$textClass}} text-center">
-                                <small>{{ date('d/m/y',
-                                    strtotime($item['traveldate']))
-                                    }}</small>
-                                @if (date('d/m/y',strtotime($item['traveldate'])) == date('d/m/y'))
+                                @php
+                                    $travelDate = !empty($item['traveldate']) ? $item['traveldate'] : $item['departdate'];
+                                @endphp
+                                <small>{{ date('d/m/y', strtotime($travelDate)) }}</small>
+                                @if (date('d/m/y', strtotime($travelDate)) == date('d/m/y'))
                                 <small><span class="badge rounded-pill bg-warning animate-blink">TODAY</span></small>
                                 @endif
                             </td>
@@ -244,11 +251,10 @@ $colors = [
                                 </a>
                             </td>
 
-                            <td class="{{$textClass}}"><small>{{ $item['book_channel']!='ONLINE'?'':$item['paymentno']
-                                    }}</small></td>
+
                             <td class="{{$textClass}}">{{ $item['ticketno'] }}</td>
                             <td class="{{$textClass}}">{{$item['book_channel']}}</td>
-                            <td class="text-center {{$textClass}}">{{ $item['type'] }}</td>
+                            <td class="text-center {{$textClass}}">{{ $item['booking_type'] == 'addon' ? 'A' : $item['type'] }}</td>
 
                             <td class="{{$textClass}}">
                                 {{ $item['customer_name'] }}<br>
@@ -268,12 +274,18 @@ $colors = [
                             <td class="{{ $item['ispremiumflex'] == 'Y' ? 'text-primary' : '' }} text-center">{{
                                 $item['ispremiumflex'] == 'Y' ? 'Yes' : 'No'}}</td>
                             <td>
+                                @if ($item['booking_type'] == 'addon')
+                                <span class="">
+                                    {{ $item['ref_ticketno'] }}
+                                </span>
+                                @else
                                 {{ $item['route'] }}<br>
 
                                 <span class="badge rounded-pill bg-secondary">
                                     {{ date('H:i', strtotime($item['depart_time'])) }}/{{ date('H:i',
                                     strtotime($item['arrive_time'])) }}
                                 </span>
+                                @endif
 
                             </td>
                             <td class="text-center">
@@ -359,7 +371,7 @@ $colors = [
     <div class="col-12 mb-4 order-1">
         <!-- Summary Cards -->
         <div class="row g-3 mb-4">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body text-center py-4">
                         <div class="text-muted mb-2">Total Approved Booking</div>
@@ -367,7 +379,16 @@ $colors = [
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center py-4">
+                        <div class="text-muted mb-2">Total Addon Booking</div>
+                        <h3 class="text-success fw-bold mb-0">{{ number_format($countAddonOrder) }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body text-center py-4">
                         <div class="text-muted mb-2">Total Approved Passenger</div>

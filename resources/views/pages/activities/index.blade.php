@@ -37,9 +37,10 @@
                     <thead>
                         <tr>
                             <th class="text-center w--10">#</th>
-                            <th>NameActivity</th>
+                            <th class="text-center w--15">Cover</th>
+                            <th>Name</th>
+                            <th class="text-center">Depart Time</th>
                             <th class="text-center">Price (THB)</th>
-                            <th class="text-center">View</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
@@ -47,9 +48,26 @@
                         @foreach($activities as $index => $activity)
                             <tr class="text-center">
                                 <td>{{ $index +1 }}</td>
+                                <td>
+                                    @if (! empty($activity->image?->path) && ! empty($activity->image?->name))
+                                        <a class="fancybox d-inline-block" href="{{ asset($activity->image->path.'/'.$activity->image->name) }}">
+                                            <img
+                                                src="{{ asset($activity->image->path.'/'.$activity->image->name) }}"
+                                                alt="{{ $activity->name }}"
+                                                class="rounded border"
+                                                style="width: 72px; height: 48px; object-fit: cover;"
+                                            >
+                                        </a>
+                                    @else
+                                        <div class="d-inline-flex align-items-center justify-content-center rounded border bg-light text-muted"
+                                            style="width: 72px; height: 48px;">
+                                            <i class="fi fi-image opacity-50"></i>
+                                        </div>
+                                    @endif
+                                </td>
                                 <td class="text-start">{{ $activity['name'] }}</td>
+                                <td>{{ $activity['departure_time'] ?: '-' }}</td>
                                 <td>{{ number_format($activity['amount']) }}</td>
-                                <td></td>
                                 <td>
                                     <x-action-edit 
                                         class="me-2"

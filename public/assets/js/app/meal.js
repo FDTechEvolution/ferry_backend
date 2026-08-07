@@ -11,8 +11,10 @@ if(btn_create) {
         setClassListAdd('btn-meal-create')
 
         setClassListRemove('to-meal-create')
-        meal_header.innerHTML = `<span class="text-main-color-2">Add</span> new Meal`
-        loadFileIcon('#meal-icon')
+        meal_header.innerHTML = `<span class="text-main-color-2">Add</span> Meal`
+        if (document.querySelector('#meal-icon')) {
+            loadFileIcon('#meal-icon')
+        }
     })
 }
 
@@ -89,14 +91,20 @@ function iconSelected(e, status) {
 }
 
 if(btn_cancel) {
-    btn_cancel.addEventListener('click', () => {
-        setClassListAdd('to-meal-create')
+    btn_cancel.addEventListener('click', (e) => {
+        // Keep in-page toggle when create form is embedded on index.
+        if (document.querySelector('#to-meal-create') && document.querySelector('#to-meal-list')) {
+            e.preventDefault()
+            setClassListAdd('to-meal-create')
 
-        setClassListRemove('to-meal-list')
-        setClassListRemove('btn-meal-create')
-        document.querySelector('#icon-image-show').src = '../assets/images/no_image_icon.svg'
-        document.querySelector('#icon-image-show-edit').src = '../assets/images/no_image_icon.svg'
-        meal_header.innerHTML = `<span>Meal manager</span>`
+            setClassListRemove('to-meal-list')
+            setClassListRemove('btn-meal-create')
+            const iconShow = document.querySelector('#icon-image-show')
+            const iconShowEdit = document.querySelector('#icon-image-show-edit')
+            if (iconShow) iconShow.src = '../assets/images/no_image_icon.svg'
+            if (iconShowEdit) iconShowEdit.src = '../assets/images/no_image_icon.svg'
+            meal_header.innerHTML = `Meal manage`
+        }
     })
 }
 

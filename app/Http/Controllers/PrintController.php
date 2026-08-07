@@ -27,7 +27,12 @@ class PrintController extends Controller
         $bookings[0] = $booking;
         //dd($booking);
         Pdf::setOption(['dpi' => 150, 'defaultMediaType' => 'a4', 'debugCss' => true]);
-        $pdf = Pdf::loadView('print.ticket_v2', ['bookings' => $bookings, 'term' => $term,'statusLabel'=>$statusLabel]);
+
+        if ($booking->type == 'addon') {
+            $pdf = Pdf::loadView('print.addon.ticket', ['bookings' => $bookings, 'term' => $term, 'statusLabel' => $statusLabel]);
+        } else {
+            $pdf = Pdf::loadView('print.ticket_v2', ['bookings' => $bookings, 'term' => $term, 'statusLabel' => $statusLabel]);
+        }
 
         /*
         if($booking->ispayment=='N'){
@@ -37,7 +42,6 @@ class PrintController extends Controller
             */
 
         return $pdf->stream();
-
     }
 
     public function multipleTicket(Request $request)
@@ -50,7 +54,6 @@ class PrintController extends Controller
             if ($booking->ispayment == 'Y') {
                 array_push($bookings, $booking);
             }
-
         }
 
 
@@ -60,6 +63,5 @@ class PrintController extends Controller
         $pdf = Pdf::loadView('print.ticket', ['bookings' => $bookings, 'term' => $term]);
 
         return $pdf->stream();
-
     }
 }

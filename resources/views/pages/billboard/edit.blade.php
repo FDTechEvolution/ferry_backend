@@ -22,12 +22,8 @@
                 </div>
             </div>
             <div class="col-12 col-lg-3 ps-lg-3 order-lg-2">
-                <div class="row mb-4">
-                    <label class="col-sm-12 col-lg-12 col-form-label-sm text-start fw-bold">Bacground Color</label>
-                    <div class="col-sm-12 col-lg-12">
-                        <input type="color" name="color" class="form-control form-control-color d-inline-block" id="background-color-select" value="{{ $billboard->color }}" title="Choose background color">
-                    </div>
-                </div>
+                <input type="hidden" name="color" id="background-color-select" value="{{ $billboard->color ?? '#FFFFFF' }}">
+
                 <div class="row">
                     <div class="col-12">
                         <h5>Icon</h5>
@@ -78,8 +74,7 @@
 
                             "placeholder": "Content here..."
                         }'
-                        onKeyup="counterWord(this)"
-                        style="background-color: {{ $billboard->color }}">
+                        onKeyup="counterWord(this)">
                         {!! $billboard->description !!}
                     </div>
                 </div>

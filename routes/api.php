@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\StationsController;
 use App\Http\Controllers\Api\SlideController;
 use App\Http\Controllers\Api\RouteController;
 use App\Http\Controllers\Api\BookingController as OnlineBooking;
+use App\Http\Controllers\Api\AddonBookingController;
 use App\Http\Controllers\Api\TimetableController;
 use App\Http\Controllers\Api\RouteMapController;
 use App\Http\Controllers\Api\PaymentController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\Api\BillboardController;
+use App\Http\Controllers\Api\AddonController;
 use App\Http\Controllers\Api\PremiumFlexController;
 use App\Http\Controllers\Api\EmailController;
 use App\Http\Controllers\Api\FeeManageController;
@@ -66,6 +68,21 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
     Route::controller(BillboardController::class)->group(function() {
         Route::get('billboard/get', 'getBillboard');
     });
+
+    Route::controller(AddonController::class)->group(function () {
+        Route::get('activity/get', 'getActivities');
+        Route::get('activity/view/{id}', 'getActivity');
+
+        Route::get('meal/get', 'getMeals');
+        Route::get('meal/view/{id}', 'getMeal');
+
+        Route::get('shuttle-bus-boat/get', 'getShuttleBusBoats');
+        Route::get('shuttle-bus-boat/view/{id}', 'getShuttleBusBoat');
+
+        Route::get('rent-a-bike/get', 'getRentABikes');
+        Route::get('rent-a-bike/view/{id}', 'getRentABike');
+    });
+
     Route::controller(RouteController::class)->group(function() {
         Route::get('route/search/{from}/{to}/{date}', 'searchRoute');
     });
@@ -79,6 +96,12 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
             Route::post('merge', 'bookingMerge');
 
             Route::post('add-new-route', 'addNewRoute');
+        });
+    });
+
+    Route::prefix('addon-booking')->group(function () {
+        Route::controller(AddonBookingController::class)->group(function () {
+            Route::post('create', 'store');
         });
     });
 

@@ -23,6 +23,8 @@ use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\StationsController;
 use App\Http\Controllers\MealsController;
 use App\Http\Controllers\ActivitiesController;
+use App\Http\Controllers\ShuttleBusBoatController;
+use App\Http\Controllers\RentABikeController;
 use App\Http\Controllers\StationInfomationsController;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\ReviewsController;
@@ -188,6 +190,26 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/activity/store', 'store')->name('activity-store');
         Route::post('/activity/update', 'update')->name('activity-update');
+    });
+
+    Route::controller(ShuttleBusBoatController::class)->group(function () {
+        Route::get('/shuttle-bus-boat', 'index')->name('shuttle-bus-boat-index');
+        Route::get('/shuttle-bus-boat/create', 'create')->name('shuttle-bus-boat-create');
+        Route::get('/shuttle-bus-boat/edit/{id}', 'edit')->name('shuttle-bus-boat-edit');
+        Route::get('/shuttle-bus-boat/delete/{id}', 'destroy')->name('shuttle-bus-boat-delete');
+
+        Route::post('/shuttle-bus-boat/store', 'store')->name('shuttle-bus-boat-store');
+        Route::post('/shuttle-bus-boat/update', 'update')->name('shuttle-bus-boat-update');
+    });
+
+    Route::controller(RentABikeController::class)->group(function () {
+        Route::get('/rent-a-bike', 'index')->name('rent-a-bike-index');
+        Route::get('/rent-a-bike/create', 'create')->name('rent-a-bike-create');
+        Route::get('/rent-a-bike/edit/{id}', 'edit')->name('rent-a-bike-edit');
+        Route::get('/rent-a-bike/delete/{id}', 'destroy')->name('rent-a-bike-delete');
+
+        Route::post('/rent-a-bike/store', 'store')->name('rent-a-bike-store');
+        Route::post('/rent-a-bike/update', 'update')->name('rent-a-bike-update');
     });
 
     Route::controller(RouteController::class)->group(function () {

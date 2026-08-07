@@ -139,28 +139,54 @@ class PaymentHelper
             $payment->save();
         }
 
-        foreach ($booking->bookingRoutes as $index => $bookingRoute) {
-            $title = sprintf('Booking No.%s, From %s to %s', $booking->bookingno, $bookingRoute->station_from->name, $bookingRoute->station_to->name);
-
-            PaymentHelper::createPaymentLine($payment->id,'ROUTE',$booking->id,$title,$bookingRoute->pivot->amount,$bookingRoute->id);
-
-            //Addons
-            $bRoute = $booking->bookingRoutesX[$index];
-            if (!is_null($bRoute->bookingExtraAddons)) {
-                foreach ($bRoute->bookingExtraAddons as $key => $addon) {
-                    PaymentHelper::createPaymentLine($payment->id,'ADDON',$booking->id,sprintf('%s', $addon->name),$addon->amount,$bookingRoute->id);
+        if (($booking->type ?? 'booking') === 'addon') {
+            $addonTotals = [];
+            foreach ($booking->bookingAddons as $bookingAddon) {
+                $addon = $bookingAddon->addon;
+                if (! $addon) {
+                    continue;
                 }
+                if (! isset($addonTotals[$addon->id])) {
+                    $addonTotals[$addon->id] = [
+                        'name' => $addon->name,
+                        'qty' => 0,
+                        'unit' => (float) $addon->amount,
+                    ];
+                }
+                $addonTotals[$addon->id]['qty']++;
             }
 
-            // Route Addons
-            if(!is_null($bRoute->bookingRouteAddons)) {
-                foreach($bRoute->bookingRouteAddons as $key => $addon) {
-                    $amount = $addon->isservice_charge == 'Y' ? $addon->price : 0;
-                    $amount = $amount * $passenger;
-                    PaymentHelper::createPaymentLine($payment->id,'ADDON',$booking->id,sprintf('%s', $addon->name),$amount,$bookingRoute->id,$addon->pivot->description);
-                }
+            foreach ($addonTotals as $item) {
+                $lineAmount = $item['unit'] * $item['qty'];
+                $title = $item['qty'] > 1
+                    ? sprintf('%s x %d', $item['name'], $item['qty'])
+                    : $item['name'];
+                PaymentHelper::createPaymentLine($payment->id, 'ADDON', $booking->id, $title, $lineAmount, null);
             }
+        } else {
+            foreach ($booking->bookingRoutes as $index => $bookingRoute) {
+                $title = sprintf('Booking No.%s, From %s to %s', $booking->bookingno, $bookingRoute->station_from->name, $bookingRoute->station_to->name);
 
+                PaymentHelper::createPaymentLine($payment->id,'ROUTE',$booking->id,$title,$bookingRoute->pivot->amount,$bookingRoute->id);
+
+                //Addons
+                $bRoute = $booking->bookingRoutesX[$index];
+                if (!is_null($bRoute->bookingExtraAddons)) {
+                    foreach ($bRoute->bookingExtraAddons as $key => $addon) {
+                        PaymentHelper::createPaymentLine($payment->id,'ADDON',$booking->id,sprintf('%s', $addon->name),$addon->amount,$bookingRoute->id);
+                    }
+                }
+
+                // Route Addons
+                if(!is_null($bRoute->bookingRouteAddons)) {
+                    foreach($bRoute->bookingRouteAddons as $key => $addon) {
+                        $amount = $addon->isservice_charge == 'Y' ? $addon->price : 0;
+                        $amount = $amount * $passenger;
+                        PaymentHelper::createPaymentLine($payment->id,'ADDON',$booking->id,sprintf('%s', $addon->name),$amount,$bookingRoute->id,$addon->pivot->description);
+                    }
+                }
+
+            }
         }
         $payment = Payments::where('id',$payment->id)->first();
 

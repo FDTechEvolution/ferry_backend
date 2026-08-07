@@ -32,6 +32,7 @@ class BookingResource extends JsonResource
             'booking_number' => $this->bookingno,
             'status' => $this->status,
             'ispayment' => $this->ispayment,
+            'type' => $this->type ?? 'booking',
             'route' => $this->bookingRoutes->map(function($route) {
                 return [
                     'station_from' => $route->station_from->name,
@@ -87,6 +88,22 @@ class BookingResource extends JsonResource
                     })
                 ];
             }),
+            'booking_addons' => ($this->relationLoaded('bookingAddons') ? $this->bookingAddons : collect())->map(function ($row) {
+                $addon = $row->addon;
+                if (! $addon) {
+                    return null;
+                }
+
+                return [
+                    'id' => $addon->id,
+                    'name' => $addon->name,
+                    'code' => $addon->code,
+                    'type' => $addon->type,
+                    'amount' => $addon->amount,
+                    'description' => $addon->description,
+                    'departure_time' => $addon->departure_time,
+                ];
+            })->filter()->values(),
             'payment' => $this->payments->map(function($payment) {
                 return [
                     'payment_id' => $payment->id,

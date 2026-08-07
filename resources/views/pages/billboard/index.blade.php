@@ -71,10 +71,7 @@
                                     <div class="avatar avatar-sm" style="background-image:url({{asset($icons[$item->icon])}})"></div>
                                 </td>
                                 <td class="text-start">
-                                    <div class="d-flex align-items-center">
-                                        <div class="avatar avatar-xs me-2" style="background-color:{{ $item->color }}"></div>
-                                        {{ $item->title }}
-                                    </div>
+                                    {{ $item->title }}
                                 </td>
                                 <td>
                                     <label class="d-flex align-items-center justify-content-center">

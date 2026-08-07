@@ -15,7 +15,8 @@ class TicketHelper
         $statusLabel = BookingHelper::status();
         $bookings[0] = $booking;
         Pdf::setOption(['dpi' => 150, 'defaultMediaType' => 'a4', 'debugCss' => true]);
-        $pdf = Pdf::loadView('print.ticket_v2', ['bookings' => $bookings, 'term' => $term,'statusLabel'=>$statusLabel]);
+        $view = ($booking->type ?? 'booking') === 'addon' ? 'print.addon.ticket' : 'print.ticket_v2';
+        $pdf = Pdf::loadView($view, ['bookings' => $bookings, 'term' => $term,'statusLabel'=>$statusLabel]);
 
         $filename = sprintf('%s.pdf',$booking->bookingno);
         Storage::disk('attachments')->put($filename, $pdf->output());

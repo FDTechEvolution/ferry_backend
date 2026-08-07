@@ -612,7 +612,9 @@ class BookingController extends Controller
     }
 
     private function getBookingByBookingNumber($bookingno) {
-        return Bookings::where('bookingno', $bookingno)->with('bookingCustomers', 'bookingRoutes', 'bookingRoutesX', 'payments')->first();
+        return Bookings::where('bookingno', $bookingno)
+            ->with('bookingCustomers', 'bookingRoutes', 'bookingRoutesX', 'bookingAddons.addon', 'payments')
+            ->first();
     }
 
     public function bookingRecord(string $bookingno = null, string $email = null) {
@@ -621,6 +623,35 @@ class BookingController extends Controller
             $cus_email = '';
             foreach($booking->bookingCustomers as $lead) { if($lead->email != NULL) $cus_email = $lead->email; }
             if($cus_email == $email) {
+                if (($booking->type ?? 'booking') === 'addon' || $booking->bookingRoutes->isEmpty()) {
+                    $bookingAddons = $booking->bookingAddons->map(function ($row) {
+                        $addon = $row->addon;
+                        if (! $addon) {
+                            return null;
+                        }
+
+                        return [
+                            'id' => $addon->id,
+                            'name' => $addon->name,
+                            'code' => $addon->code,
+                            'type' => $addon->type,
+                            'amount' => $addon->amount,
+                            'description' => $addon->description,
+                            'departure_time' => $addon->departure_time,
+                        ];
+                    })->filter()->values();
+
+                    return response()->json([
+                        'result' => true,
+                        'data' => new BookingResource($booking),
+                        'type' => 'addon',
+                        'booking_addons' => $bookingAddons,
+                        'addon' => ['meals' => [], 'activities' => []],
+                        'm_route' => [],
+                        'm_from_route' => null,
+                    ], 200);
+                }
+
                 $addons = $this->getRouteAddon($booking);
                 $booking_routes = $booking->bookingRoutes->toArray();
                 $last_route = end($booking_routes);

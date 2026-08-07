@@ -32,6 +32,14 @@ class BookingsController extends Controller
         $this->CountryList = config('services.country_list');
     }
 
+    public static function getBookingType()
+    {
+        return [
+            'addon' => 'Addon',
+            'booking' => 'Booking',
+        ];
+    }
+
     public function index()
     {
 
@@ -54,19 +62,19 @@ class BookingsController extends Controller
 
 
         $sql = 'select
-        b.id,b.created_at,b.bookingno,t.ticketno,b.adult_passenger,b.child_passenger,b.infant_passenger,
+        b.id,b.created_at,b.bookingno,b.departdate,t.ticketno,b.adult_passenger,b.child_passenger,b.infant_passenger,
         (b.adult_passenger+b.child_passenger+b.infant_passenger) as total_passenger,
         b.trip_type,br.type,b.amend,concat(sf.nickname,"-",st.nickname) as route,br.traveldate,b.ispayment,
         b.book_channel,c.fullname as customer_name,c.email,r.depart_time,r.arrive_time,b.totalamt,p.totalamt as payment_totalamt,
-        b.status,b.ispremiumflex,p.c_tranref,p.paymentno,p.discount,b.isemailsent,b.referenceno
+        b.status,b.ispremiumflex,p.c_tranref,p.paymentno,p.discount,b.isemailsent,b.referenceno,b.type as booking_type,b.ref_ticketno
     from
         bookings b
-        join booking_routes br on b.id = br.booking_id
-        join routes r on br.route_id = r.id
+        left join booking_routes br on b.id = br.booking_id
+        left join routes r on br.route_id = r.id
         left join tickets t on br.id = t.booking_route_id
-        join stations sf on r.station_from_id = sf.id
-        join stations st on r.station_to_id = st.id
-        join booking_customers bc on (b.id = bc.booking_id and bc.isdefault = "Y")
+        left join stations sf on r.station_from_id = sf.id
+        left join stations st on r.station_to_id = st.id
+        left join booking_customers bc on (b.id = bc.booking_id and bc.isdefault = "Y")
         join customers c on bc.customer_id = c.id
         left join payments p on b.id = p.booking_id
     where :conditions order by b.created_at DESC';

@@ -35,6 +35,7 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files" :[
+            "app/Helpers/TranslationHelper.php",
             "app/Helpers/SequentNumber.php",
             "app/Helpers/BookingHelper.php",
             "app/Helpers/PaymentHelper.php",

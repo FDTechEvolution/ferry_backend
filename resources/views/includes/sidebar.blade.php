@@ -28,16 +28,16 @@
   -->
         <nav class="nav-deep nav-deep-sm nav-deep-light">
             <ul class="nav flex-column">
-                <li class="nav-item text-secondary text-center">
+                <li class="nav-item text-secondary text-center" style="display: none;">
                     168 API
                 </li>
-                <li class="nav-item {{ (request()->is('changeBooking*')) ? 'active' : '' }}">
+                <li class="nav-item {{ (request()->is('changeBooking*')) ? 'active' : '' }}" style="display: none;">
                     <a class="nav-link" href="{{ route('changeBooking.index') }}">
                         <i class="fi fi-star-full"></i>
                         <span>Booking</span>
                     </a>
                 </li>
-                <li class="nav-item {{ (request()->is('changeRoute*')) ? 'active' : '' }}">
+                <li class="nav-item {{ (request()->is('changeRoute*')) ? 'active' : '' }}" style="display: none;">
                     <a class="nav-link" href="{{ route('changeRoute.index') }}">
                         <i class="fi fi-star-full"></i>
                         <span>Route</span>
@@ -112,6 +112,18 @@
                     <a class="nav-link" href="{{ route('activity-index') }}">
                         <i class="fi fi-arrow-right"></i>
                         <span>Activity</span>
+                    </a>
+                </li>
+                <li class="nav-item {{ (request()->is('shuttle-bus-boat*')) ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('shuttle-bus-boat-index') }}">
+                        <i class="fi fi-arrow-right"></i>
+                        <span>Shuttle Bus &amp; Boat</span>
+                    </a>
+                </li>
+                <li class="nav-item {{ (request()->is('rent-a-bike*')) ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('rent-a-bike-index') }}">
+                        <i class="fi fi-arrow-right"></i>
+                        <span>Rent a Bike</span>
                     </a>
                 </li>
                 <li class="nav-item">

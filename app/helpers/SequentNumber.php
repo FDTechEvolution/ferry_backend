@@ -16,10 +16,12 @@ function newSequenceNumber($type, $apiMerchantId = null)
     //Log::debug($sequence);
     if ($sequence) {
         $today = date('Y-m-d');
-        $dataDate = $sequence->updated_at->format('Y-m-d');
+        $dataDate = $sequence->updated_at
+            ? $sequence->updated_at->format('Y-m-d')
+            : null;
 
         if ($type != 'BOOKING') {
-            if ($today != $dataDate) {
+            if ($dataDate === null || $today != $dataDate) {
                 $sequence->running = 0;
                 $sequence->save();
                 $sequence = Sequencenumbers::where("type", $type)->first();
@@ -35,7 +37,7 @@ function newSequenceNumber($type, $apiMerchantId = null)
                 $sequence = Sequencenumbers::where("type", $type)->first();
             }
                 */
-            if ($today != $dataDate) {
+            if ($dataDate === null || $today != $dataDate) {
                 $sequence->running = 0;
                 $sequence->save();
                 $sequence = Sequencenumbers::where("type", $type)->first();

@@ -53,8 +53,8 @@ class MealsController extends Controller
             'name' => 'required|string',
             'price' => 'required|integer',
             'detail' => 'string|nullable',
-            'file_icon' => 'image|mimes:jpeg,png,jpg,gif,svg|max:1024|nullable',
-            'file_picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable',
+            'file_icon' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:1024|nullable',
+            'file_picture' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048|nullable',
         ]);
 
         if ($this->checkNameDupplicate($request->name)) {
@@ -119,7 +119,7 @@ class MealsController extends Controller
             'name' => 'required|string',
             'price' => 'required|integer',
             'detail' => 'string|nullable',
-            'file_picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable',
+            'file_picture' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048|nullable',
         ]);
 
         $meal = Addon::find($request->id);

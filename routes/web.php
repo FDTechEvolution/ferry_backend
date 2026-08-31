@@ -89,6 +89,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/booking-affected/void', 'sendVoidBooking')->name('routeSchedules.sendVoidBooking');
 
         Route::get('/routeSchedule/job-process', 'jobProcess')->name('routeSchedules.jobProcess');
+        Route::get('/routeSchedule/job-run-all', 'jobRunAll')->name('routeSchedules.jobRunAll');
         Route::get('/routeSchedule/job-run/{id}', 'jobRun')->name('routeSchedules.jobRun');
     });
 

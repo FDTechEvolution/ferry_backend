@@ -66,21 +66,31 @@
 <div class="row">
     <div class="col-12">
         <div class="table-responsive">
-            <table class="table-datatable table table-bordered table-striped"
+            <table class="table-datatable table table-bordered table-striped table-hover mb-0"
+                id="route-schedules-datatable"
                 data-lng-empty="No data available in table"
                 data-lng-page-info="Showing _START_ to _END_ of _TOTAL_ entries"
-                data-lng-filtered="(filtered from _MAX_ total entries)" data-lng-loading="Loading..."
-                data-lng-processing="Processing..." data-lng-search="Search..."
+                data-lng-filtered="(filtered from _MAX_ total entries)"
+                data-lng-loading="Loading..."
+                data-lng-processing="Processing..."
+                data-lng-search="Search..."
                 data-lng-norecords="No matching records found"
                 data-lng-sort-ascending=": activate to sort column ascending"
-                data-lng-sort-descending=": activate to sort column descending" data-enable-col-sorting="false"
-                data-items-per-page="15" data-enable-column-visibility="false" data-enable-export="false"
-                data-lng-export="<i class='fi fi-squared-dots fs-5 lh-1'></i>" data-lng-pdf="PDF" data-lng-xls="XLS"
-                data-lng-all="All" data-export-pdf-disable-mobile="true" data-responsive="false"
-                data-export='["pdf", "xls"]' data-main-search="false" data-column-search="false" data-custom-config='{
-
-                }'>
-
+                data-lng-sort-descending=": activate to sort column descending"
+                data-enable-col-sorting="false"
+                data-items-per-page="15"
+                data-enable-column-visibility="false"
+                data-enable-export="false"
+                data-lng-export="<i class='fi fi-squared-dots fs-5 lh-1'></i>"
+                data-lng-pdf="PDF"
+                data-lng-xls="XLS"
+                data-lng-all="All"
+                data-export-pdf-disable-mobile="true"
+                data-responsive="false"
+                data-export='["pdf", "xls"]'
+                data-main-search="false"
+                data-column-search="false"
+                data-custom-config='{}'>
                 <thead class="bg-light">
                     <tr>
                         <th>Partner</th>
@@ -92,44 +102,43 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @php
-                    $routeIdTxt = '';
-                    @endphp
-                    @foreach ($routes as $index => $route)
-                    @if (!empty($route->lastSchedule))
+                    @foreach ($routes as $route)
                     <tr>
                         <td class="text-center p-0 align-middle">
-                            @if (!is_null($route->partner))
-                            <img src="{{ asset($route->partner->image->path) }}" width="25" class="rounded-circle"
-                                alt="{{ $route->partner->name }}" />
+                            @if (!empty($route->partner_image_path))
+                            <img src="{{ asset($route->partner_image_path) }}" width="25" class="rounded-circle"
+                                alt="{{ $route->partner_name }}" loading="lazy" />
                             @endif
                         </td>
                         <td>
-                            <x-view-route-detail :stationfrom="$route['station_from']" :stationto="$route['station_to']"
-                                :icons="$route['icons']" />
+                            <span class="fw-semibold">[{{ $route->station_from_nickname }}] {{ $route->station_from_name }}</span>
+                            @if (!empty($route->station_from_piername))
+                            <small class="text-secondary">({{ $route->station_from_piername }})</small>
+                            @endif
+                            <i class="fa-solid fa-angles-right px-2"></i>
+                            <span class="fw-semibold">[{{ $route->station_to_nickname }}] {{ $route->station_to_name }}</span>
+                            @if (!empty($route->station_to_piername))
+                            <small class="text-secondary">({{ $route->station_to_piername }})</small>
+                            @endif
                         </td>
 
                         <td class="align-middle">
-                            <span class="">{{ date('H:i', strtotime($route->depart_time)) }}<i
-                                    class="fa-solid fa-angles-right px-2 fa-1x"></i>{{ date('H:i',
-                                strtotime($route->arrive_time)) }}
+                            <span>{{ date('H:i', strtotime($route->depart_time)) }}<i
+                                    class="fa-solid fa-angles-right px-2 fa-1x"></i>{{ date('H:i', strtotime($route->arrive_time)) }}
                             </span>
                         </td>
                         <td class="align-middle">
-                            <span
-                                class=" @if ($route->lastSchedule->type == 'CLOSE') text-danger @else text-success @endif">{{
-                                $route->lastSchedule->type }}
-                                {{ date('d M Y', strtotime($route->lastSchedule->start_datetime)) }} -
-                                {{ date('d M Y', strtotime($route->lastSchedule->end_datetime)) }}
+                            <span class="@if ($route->schedule_type == 'CLOSE') text-danger @else text-success @endif">
+                                {{ $route->schedule_type }}
+                                {{ date('d M Y', strtotime($route->start_datetime)) }} -
+                                {{ date('d M Y', strtotime($route->end_datetime)) }}
                             </span>
                         </td>
                         <td class="align-middle">
-                            <small class="d-flex">{{ date('D,d M Y H:i', strtotime($route->lastSchedule->created_at))
-                                }}</small>
-                            @if (!is_null($route->lastSchedule->updated_name) && $route->lastSchedule->updated_name !=
-                            '')
-                            <small>Updated By {{ $route->lastSchedule->updated_name }}:
-                                {{ date('D,d M Y H:i', strtotime($route->lastSchedule->updated_at)) }}</small>
+                            <small class="d-flex">{{ date('D,d M Y H:i', strtotime($route->schedule_created_at)) }}</small>
+                            @if (!empty($route->updated_name))
+                            <small>Updated By {{ $route->updated_name }}:
+                                {{ date('D,d M Y H:i', strtotime($route->schedule_updated_at)) }}</small>
                             @endif
                         </td>
                         <td class="text-end align-middle">
@@ -147,11 +156,6 @@
                             </a>
                         </td>
                     </tr>
-
-                    @php
-                    $routeIdTxt = ($route->station_from->id . $route->station_to->id);
-                    @endphp
-                    @endif
                     @endforeach
                 </tbody>
             </table>
@@ -162,28 +166,14 @@
 
 @section('script')
 <script>
-    var send_delete = function(el, data) {
-            let url = (el.attr('data-href'));
-            let id = (el.attr('data-id'));
-            $('#frm-' + id).submit();
-        }
-
-        $(document).ready(function() {
-            $('#station_from').on('change', function() {
-                $('#page-loader').show();
+    $(document).ready(function() {
+        $('#station_from, #station_to, #partner_id').on('change', function() {
+            $('#page-loader').show();
+            if (this.id === 'station_from') {
                 $('#station_to').empty();
-                $('#frm-search').submit();
-            });
-
-            $('#station_to').on('change', function() {
-                $('#page-loader').show();
-                $('#frm-search').submit();
-            });
-
-            $('#partner_id').on('change', function() {
-                $('#page-loader').show();
-                $('#frm-search').submit();
-            });
+            }
+            $('#frm-search').submit();
         });
+    });
 </script>
 @stop

@@ -57,9 +57,19 @@ class Route extends Model
         return $this->hasOne(Station::class, 'id', 'station_from_id')->orderBy('sort', 'ASC')->with('section', 'image');
     }
 
+    public function station_from_lite()
+    {
+        return $this->hasOne(Station::class, 'id', 'station_from_id');
+    }
+
     public function station_to()
     {
         return $this->hasOne(Station::class, 'id', 'station_to_id')->orderBy('sort', 'ASC')->with('section', 'image');
+    }
+
+    public function station_to_lite()
+    {
+        return $this->hasOne(Station::class, 'id', 'station_to_id');
     }
 
     public function icons()

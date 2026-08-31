@@ -11,6 +11,34 @@
                 DO NOT Close this page!!
             </div>
         </div>
+
+        <div class="col-12 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+                        <div>
+                            <div class="text-muted small">Current task</div>
+                            <div class="fw-semibold" id="job-current-label">Preparing...</div>
+                        </div>
+                        <div class="text-end">
+                            <div class="text-muted small">Progress</div>
+                            <div class="fs-4 fw-bold text-primary" id="job-progress-text">0%</div>
+                        </div>
+                    </div>
+                    <div class="progress mb-2" style="height: 1.5rem;">
+                        <div id="job-progress-bar"
+                            class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+                            role="progressbar"
+                            style="width: 0%;"
+                            aria-valuenow="0"
+                            aria-valuemin="0"
+                            aria-valuemax="100">0%</div>
+                    </div>
+                    <small class="text-muted" id="job-progress-count">0 / {{ $routeSchedules->count() }} completed</small>
+                </div>
+            </div>
+        </div>
+
         <div class="col-12">
             <table class="table" id="tb-job-task">
                 <thead>
@@ -23,12 +51,13 @@
                 </thead>
                 <tbody>
                     @foreach ($routeSchedules as $index => $routeSchedule)
-                        <tr data-id="{{ $routeSchedule->id }}">
+                        <tr data-id="{{ $routeSchedule->id }}"
+                            data-route-label="{{ $routeSchedule->station_from_name }} → {{ $routeSchedule->station_to_name }}">
                             <td>{{ $index + 1 }}</td>
                             <td>
-                                {{ $routeSchedule->route->station_from->name }}
+                                {{ $routeSchedule->station_from_name }}
                                 <i class="fa-solid fa-angles-right text-info"></i>
-                                {{ $routeSchedule->route->station_to->name }}
+                                {{ $routeSchedule->station_to_name }}
                             </td>
                             <td>
                                 {{ date('d M Y', strtotime($routeSchedule->start_datetime)) }} -
@@ -36,7 +65,7 @@
                             </td>
                             <td>
                                 <span id="{{ $routeSchedule->id }}-status">Waiting...</span>
-                                <div class="spinner-border text-warning" role="status" style="display: none;"
+                                <div class="spinner-border spinner-border-sm text-warning" role="status" style="display: none;"
                                     id="{{ $routeSchedule->id }}-running">
                                     <span class="visually-hidden">Processing ...</span>
                                 </div>
@@ -54,64 +83,117 @@
 @section('script')
     <script>
         $(document).ready(function() {
+            const isHasEffectBookingMaster = {{ $isHasEffectBookingMaster ? 'true' : 'false' }};
+            const jobRunUrlTemplate = @json(route('routeSchedules.jobRun', ['id' => '__ID__']));
+            const redirectUrl = isHasEffectBookingMaster
+                ? @json(route('routeSchedules.bookingAffected'))
+                : @json(route('routeSchedules.index'));
 
-            const isHasEffectBookingMaster = {{$isHasEffectBookingMaster}};
+            const $rows = $('#tb-job-task > tbody > tr');
+            const total = $rows.length;
+            let completed = 0;
+            let failed = false;
 
-            // Function to perform AJAX GET request
+            function updateProgress(currentLabel) {
+                const percent = total === 0 ? 100 : Math.round((completed / total) * 100);
+
+                $('#job-progress-text').text(percent + '%');
+                $('#job-progress-bar')
+                    .css('width', percent + '%')
+                    .attr('aria-valuenow', percent)
+                    .text(percent + '%');
+                $('#job-progress-count').text(completed + ' / ' + total + ' completed');
+                $('#job-current-label').text(currentLabel);
+            }
+
+            function setRowState(id, state) {
+                const $row = $('tr[data-id="' + id + '"]');
+                const $status = $('#' + id + '-status');
+                const $spin = $('#' + id + '-running');
+
+                $row.removeClass('table-warning table-success table-danger');
+
+                if (state === 'running') {
+                    $row.addClass('table-warning');
+                    $spin.show();
+                    $status.hide();
+                    return;
+                }
+
+                $spin.hide();
+                $status.show();
+
+                if (state === 'success') {
+                    $row.addClass('table-success');
+                    $status.addClass('text-success').text('Success');
+                } else if (state === 'error') {
+                    $row.addClass('table-danger');
+                    $status.addClass('text-danger').text('Failed');
+                } else if (state === 'waiting') {
+                    $status.removeClass('text-success text-danger').text('Waiting...');
+                }
+            }
+
             function performRequest(url) {
                 return $.ajax({
                     url: url,
-                    method: 'GET'
+                    method: 'GET',
                 });
             }
 
+            function processSequentially() {
+                if (total === 0) {
+                    updateProgress('No pending schedule');
+                    setTimeout(function() {
+                        window.location.href = redirectUrl;
+                    }, 500);
+                    return;
+                }
 
-            // Loop through each URL and wait for each request to complete before moving to the next one
-            function processUrlsSequentially() {
-                var sequence = $.Deferred().resolve();
-                const baseUrl = '{{env('APP_URL')}}';
-                //console.log(baseUrl);
-                $('#tb-job-task > tbody > tr').each(function(index, tr) {
-                    let $this = $(this);
-                    let id = $this.data('id');
-                    let statusText = '#' + id + '-status';
-                    let statusSpin = '#' + id + '-running';
+                let sequence = $.Deferred().resolve();
 
-
-
-                    let url = baseUrl+'/routeSchedule/job-run/'+id;
-
+                $rows.each(function(index) {
+                    const $row = $(this);
+                    const id = $row.data('id');
+                    const routeLabel = $row.data('route-label');
+                    const url = jobRunUrlTemplate.replace('__ID__', id);
 
                     sequence = sequence.then(function() {
-                        $(statusSpin).show();
-                        $(statusText).hide();
+                        if (failed) {
+                            return $.Deferred().reject();
+                        }
 
-                        return performRequest(url).then(function(data) {
-                            console.log('Data received from:', url, data);
+                        updateProgress('Processing #' + (index + 1) + ': ' + routeLabel);
+                        setRowState(id, 'running');
 
-                            $(statusText).show();
-                            $(statusSpin).hide();
-                            $(statusText).addClass('text-success');
-                            $(statusText).text('success');
+                        return performRequest(url).then(function() {
+                            completed++;
+                            setRowState(id, 'success');
+                            updateProgress(completed === total ? 'All tasks completed' : 'Waiting for next task...');
+                        }).fail(function() {
+                            failed = true;
+                            setRowState(id, 'error');
+                            updateProgress('Failed at #' + (index + 1) + ': ' + routeLabel);
+                            $('#job-progress-bar')
+                                .removeClass('progress-bar-animated bg-primary')
+                                .addClass('bg-danger');
+                            return $.Deferred().reject();
                         });
                     });
                 });
 
-                // All requests completed
                 sequence.done(function() {
-                    console.log('All requests completed');
-                    if(isHasEffectBookingMaster){
-                        window.location.href = baseUrl+'/booking-affected';
-                    }else{
-                        window.location.href = baseUrl+'/routeSchedules';
-                    }
+                    updateProgress('All tasks completed');
+                    $('#job-progress-bar').removeClass('progress-bar-animated');
+
+                    setTimeout(function() {
+                        window.location.href = redirectUrl;
+                    }, 800);
                 });
             }
 
-            // Start the process
-            processUrlsSequentially();
-
-
+            updateProgress('Starting...');
+            processSequentially();
         });
     </script>
 

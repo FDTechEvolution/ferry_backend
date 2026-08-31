@@ -16,6 +16,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class RouteSchedulesController extends Controller
 {
@@ -24,80 +25,95 @@ class RouteSchedulesController extends Controller
      */
     public function index()
     {
-
-        $merchant_id = request()->merchant_id;
-        $apiMerchant = null;
+        $merchant_id = request()->merchant_id ?: null;
         $stationFromId = request()->station_from;
         $stationToId = request()->station_to;
         $partnerId = request()->partner_id;
-
-        $routeSchedules = [];
-        $title = 'Route';
+        $title = empty($merchant_id) ? 'Route' : 'API Route';
 
         $stationFroms = RouteHelper::getSectionStationFrom(true);
-        $stationTos = RouteHelper::getSectionStationTo(true,$stationFromId);
-
-        $partners = Partners::where('isactive', 'Y')->orderBy('name', 'ASC')->get();
-
+        $stationTos = RouteHelper::getSectionStationTo(true, $stationFromId);
+        $partners = Partners::where('isactive', 'Y')->orderBy('name', 'ASC')->get(['id', 'name']);
         $countBooking = RouteSchedules::where('isconflict', 'Y')->count();
+        $routes = $this->getScheduleIndexRoutes($merchant_id, $stationFromId, $stationToId, $partnerId);
 
-        //check normal ruote
-        if (is_null($merchant_id) || $merchant_id == '') {
-            //set inactive
-            $date = date('Y-m-d');
-            /*
-            $routeSchedules = RouteSchedules::with('isactive', 'Y')
-                ->where('end_datetime', '<', $date)
-                ->whereNull('api_merchant_id')
-                ->update(['isactive' => 'N']);
-            */
-            $routes = Route::with('lastSchedule', 'partner', 'station_from', 'station_to', 'icons');
-            if (!is_null($stationFromId) && $stationFromId != 'all') {
-                $routes = $routes->where('routes.station_from_id', $stationFromId);
-            }
+        return view('pages.route_schedules.index', [
+            'routeSchedules' => [],
+            'merchant_id' => $merchant_id,
+            'title' => $title,
+            'stationFroms' => $stationFroms,
+            'stationTos' => $stationTos,
+            'stationFromId' => $stationFromId,
+            'stationToId' => $stationToId,
+            'apiMerchant' => null,
+            'countBooking' => $countBooking,
+            'routes' => $routes,
+            'partners' => $partners,
+            'partnerId' => $partnerId,
+        ]);
+    }
 
-            if (!is_null($stationToId) && $stationToId != 'all') {
-                $routes = $routes->where('routes.station_to_id', $stationToId);
-            }
+    private function getScheduleIndexRoutes($merchant_id, $stationFromId, $stationToId, $partnerId)
+    {
+        $latestSchedules = DB::table('route_schedules')
+            ->select('route_id', DB::raw('MAX(updated_at) as max_updated'))
+            ->when($merchant_id, fn ($query) => $query->where('api_merchant_id', $merchant_id), fn ($query) => $query->whereNull('api_merchant_id'))
+            ->groupBy('route_id');
 
-            if (!is_null($partnerId) && $partnerId != 'all') {
-                $routes = $routes->where('routes.partner_id', $partnerId);
-            }
+        $routes = DB::table('routes')
+            ->select(
+                'routes.id',
+                'routes.depart_time',
+                'routes.arrive_time',
+                'sfrom.name as station_from_name',
+                'sfrom.nickname as station_from_nickname',
+                'sfrom.piername as station_from_piername',
+                'sto.name as station_to_name',
+                'sto.nickname as station_to_nickname',
+                'sto.piername as station_to_piername',
+                'partners.name as partner_name',
+                'images.path as partner_image_path',
+                'route_schedules.type as schedule_type',
+                'route_schedules.start_datetime',
+                'route_schedules.end_datetime',
+                'route_schedules.created_at as schedule_created_at',
+                'route_schedules.updated_at as schedule_updated_at',
+                'updatedby.firstname as updated_name'
+            )
+            ->join('route_schedules', function ($join) use ($merchant_id) {
+                $join->on('routes.id', '=', 'route_schedules.route_id');
+                if ($merchant_id) {
+                    $join->where('route_schedules.api_merchant_id', $merchant_id);
+                } else {
+                    $join->whereNull('route_schedules.api_merchant_id');
+                }
+            })
+            ->joinSub($latestSchedules, 'latest_schedule', function ($join) {
+                $join->on('route_schedules.route_id', '=', 'latest_schedule.route_id')
+                    ->on('route_schedules.updated_at', '=', 'latest_schedule.max_updated');
+            })
+            ->join('stations as sfrom', 'routes.station_from_id', '=', 'sfrom.id')
+            ->join('stations as sto', 'routes.station_to_id', '=', 'sto.id')
+            ->leftJoin('partners', 'routes.partner_id', '=', 'partners.id')
+            ->leftJoin('images', 'partners.image_id', '=', 'images.id')
+            ->leftJoin('users as updatedby', 'route_schedules.updated_by', '=', 'updatedby.id');
 
-            $routes = $routes->get();
-
-        } else {
-            $title = 'API Route';
-
-            //set inactive
-            $date = date('Y-m-d');
-
-            /*
-            $routeSchedules = RouteSchedules::with('isactive', 'Y')
-                ->where('end_datetime', '<', $date)
-                ->where('api_merchant_id', $merchant_id)
-                ->update(['isactive' => 'N']);
-            */
-
-
-            $routeSchedules = DB::table('routes')
-                ->select('sfrom.name as station_from_name', 'sto.name as station_to_name', 'routes.*', 'route_schedules.*', 'createdby.firstname as created_name', 'updatedby.firstname as updated_name', 'images.path')
-                ->join('stations as sfrom', 'routes.station_from_id', '=', 'sfrom.id')
-                ->join('stations as sto', 'routes.station_to_id', '=', 'sto.id')
-                ->join('route_schedules', 'routes.id', '=', 'route_schedules.route_id')
-                ->leftJoin('users as createdby', 'route_schedules.created_by', 'createdby.id')
-                ->leftJoin('users as updatedby', 'route_schedules.updated_by', 'updatedby.id')
-                ->leftJoin('partners', 'routes.partner_id', 'partners.id')
-                ->leftJoin('images', 'partners.image_id', 'images.id')
-                ->where('route_schedules.api_merchant_id', $merchant_id)
-                ->orderBy('sfrom.name', 'ASC')
-                ->orderBy('routes.depart_time', 'ASC')
-                ->get();
+        if (! empty($stationFromId) && $stationFromId != 'all') {
+            $routes->where('routes.station_from_id', $stationFromId);
         }
 
-        //
+        if (! empty($stationToId) && $stationToId != 'all') {
+            $routes->where('routes.station_to_id', $stationToId);
+        }
 
-        return view('pages.route_schedules.index', ['routeSchedules' => $routeSchedules, 'merchant_id' => $merchant_id, 'title' => $title, 'stationFroms' => $stationFroms, 'stationTos' => $stationTos, 'stationFromId' => $stationFromId, 'stationToId' => $stationToId, 'apiMerchant' => $apiMerchant, 'countBooking' => $countBooking, 'routes' => $routes, 'partners' => $partners, 'partnerId' => $partnerId]);
+        if (! empty($partnerId) && $partnerId != 'all') {
+            $routes->where('routes.partner_id', $partnerId);
+        }
+
+        return $routes
+            ->orderBy('sfrom.name')
+            ->orderBy('routes.depart_time')
+            ->get();
     }
 
     /**
@@ -227,47 +243,95 @@ class RouteSchedulesController extends Controller
     {
         $isHasEffectBookingMaster = request()->haseff;
 
-        $routeSchedules = RouteSchedules::where('isjobsuccess', 'N')->with('route')->get();
-        //dd($routeSchedules);
-        return view('pages.route_schedules.job_process', ['routeSchedules' => $routeSchedules, 'isHasEffectBookingMaster' => $isHasEffectBookingMaster, 'title' => 'Make Calendar process...']);
+        $routeSchedules = DB::table('route_schedules')
+            ->select(
+                'route_schedules.id',
+                'route_schedules.start_datetime',
+                'route_schedules.end_datetime',
+                'sfrom.name as station_from_name',
+                'sto.name as station_to_name'
+            )
+            ->join('routes', 'route_schedules.route_id', '=', 'routes.id')
+            ->join('stations as sfrom', 'routes.station_from_id', '=', 'sfrom.id')
+            ->join('stations as sto', 'routes.station_to_id', '=', 'sto.id')
+            ->where('route_schedules.isjobsuccess', 'N')
+            ->orderBy('route_schedules.created_at')
+            ->get();
 
+        return view('pages.route_schedules.job_process', [
+            'routeSchedules' => $routeSchedules,
+            'isHasEffectBookingMaster' => $isHasEffectBookingMaster,
+            'title' => 'Make Calendar process...',
+        ]);
+    }
+
+    public function jobRunAll()
+    {
+        set_time_limit(0);
+
+        $routeSchedules = RouteSchedules::where('isjobsuccess', 'N')
+            ->orderBy('created_at')
+            ->get();
+
+        $processed = 0;
+        foreach ($routeSchedules as $routeSchedule) {
+            DB::transaction(function () use ($routeSchedule) {
+                $this->processRouteSchedule($routeSchedule);
+            });
+            $processed++;
+        }
+
+        return response()->json([
+            'result' => true,
+            'processed' => $processed,
+        ], 200);
     }
 
     public function jobRun($id)
     {
-        //Make daily records
         $routeSchedule = RouteSchedules::where('id', $id)->where('isjobsuccess', 'N')->first();
 
-        if (!empty($routeSchedule)) {
-            $sd = $routeSchedule->start_datetime;
-            $ed = $routeSchedule->end_datetime;
-            $routeId = $routeSchedule->route_id;
-            $t = ($routeSchedule->type == 'OPEN') ? 'Y' : 'N';
-
-            $startDay = Carbon::parse($sd);
-            $endDay = Carbon::parse($ed);
-            $period = $startDay->range($endDay, 1, 'day');
-
-            foreach ($period as $date) {
-                //Log::debug($date);
-                $date = $date->format('Y-m-d');
-
-                RouteDailyStatus::updateOrCreate(
-                    ['route_id' => $routeId, 'date' => $date],
-                    [
-                        'route_id' => $routeId,
-                        'date' => $date,
-                        'isopen' => $t,
-                    ],
-                );
-            }
-
-            $routeSchedule->isjobsuccess = 'Y';
-            $routeSchedule->save();
-
+        if (! empty($routeSchedule)) {
+            DB::transaction(function () use ($routeSchedule) {
+                $this->processRouteSchedule($routeSchedule);
+            });
         }
 
         return response()->json(['result' => true, 'data' => ''], 200);
+    }
+
+    private function processRouteSchedule(RouteSchedules $routeSchedule): void
+    {
+        $routeId = $routeSchedule->route_id;
+        $isOpen = $routeSchedule->type === 'OPEN' ? 'Y' : 'N';
+        $startDay = Carbon::parse($routeSchedule->start_datetime)->startOfDay();
+        $endDay = Carbon::parse($routeSchedule->end_datetime)->startOfDay();
+        $startDate = $startDay->format('Y-m-d');
+        $endDate = $endDay->format('Y-m-d');
+
+        RouteDailyStatus::where('route_id', $routeId)
+            ->whereBetween('date', [$startDate, $endDate])
+            ->delete();
+
+        $rows = [];
+        $timestamp = now();
+        foreach ($startDay->range($endDay, 1, 'day') as $date) {
+            $rows[] = [
+                'id' => (string) Str::uuid(),
+                'route_id' => $routeId,
+                'date' => $date->format('Y-m-d'),
+                'isopen' => $isOpen,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+            ];
+        }
+
+        foreach (array_chunk($rows, 500) as $chunk) {
+            RouteDailyStatus::insert($chunk);
+        }
+
+        $routeSchedule->isjobsuccess = 'Y';
+        $routeSchedule->save();
     }
 
     /**

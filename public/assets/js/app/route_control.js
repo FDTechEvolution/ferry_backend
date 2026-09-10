@@ -767,24 +767,38 @@ function clearInfomationInput(input_id) {
 
 
 
+function getAddonList(source) {
+    if (typeof source === 'undefined' || source === null) return []
+    return Array.isArray(source) ? source : Object.values(source)
+}
+
+function activityIconHtml(activity) {
+    if (!activity || !activity.icon || !activity.icon.path || !activity.icon.name) return ''
+    return `<img src="${activity.icon.path}/${activity.icon.name}" width="24" height="24" class="ms-2">`
+}
+
 // Activity action
 function addRouteActivity(index) {
     const ul = document.querySelector('#ul-activity-selected')
-    const activity = activities.find((item, key) => { return key === index })
+    if (!ul) return
+
+    const activity = getAddonList(activities)[index]
+    if (!activity) return
 
     let rand = generateString(8)
     let li = document.createElement('li')
     li.setAttribute('class', 'list-group-item')
     li.setAttribute('data-id', activity.id)
     li.id = `activity-${rand}`
-    li.innerHTML = `<img src="${activity.icon.path}/${activity.icon.name}" width="24" height="24" class="ms-2">
-                    ${activity.name} <small>(${parseInt(activity.amount)} ฿)</small>
+    const amount = parseInt(activity.amount || 0) || 0
+    li.innerHTML = `${activityIconHtml(activity)}
+                    ${activity.name} <small>(${amount} ฿)</small>
                     <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeActivity('${rand}', '${activity.id}')"></i>
                     <input type="hidden" name="activity_id[]" value="${activity.id}">`
     ul.appendChild(li)
 
     const _li = document.querySelector(`#activity-active-${index}`)
-    _li.classList.add('d-none')
+    if (_li) _li.classList.add('d-none')
 }
 
 function removeActivity(rand, id) {
@@ -797,7 +811,7 @@ function removeActivity(rand, id) {
     })
 
     const _li = ul_ac.querySelector(`[data-id="${id}"]`)
-    _li.classList.remove('d-none')
+    if (_li) _li.classList.remove('d-none')
 }
 
 function setActivityData() {
@@ -808,14 +822,15 @@ function setActivityData() {
         let li = document.createElement('li')
         li.setAttribute('class', 'list-group-item')
         li.id = `activity-${rand}`
-        li.innerHTML = `<img src="${activity.icon.path}/${activity.icon.name}" width="24" height="24" class="ms-2">
-                        ${activity.name} <small>(${parseInt(activity.amount)} ฿)</small>
+        const amount = parseInt(activity.amount || 0) || 0
+        li.innerHTML = `${activityIconHtml(activity)}
+                        ${activity.name} <small>(${amount} ฿)</small>
                         <i class="${remove_icon} ms-1 text-danger cursor-pointer" title="Remove" onClick="removeActivity('${rand}', '${activity.id}')"></i>
                         <input type="hidden" name="activity_id[]" value="${activity.id}">`
         ul.appendChild(li)
 
         const _li = document.querySelector(`[data-id="${activity.id}"]`)
-        _li.classList.add('d-none')
+        if (_li) _li.classList.add('d-none')
     })
 
     // route_activity.forEach((activity, index) => {

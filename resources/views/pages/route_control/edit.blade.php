@@ -666,7 +666,7 @@
             });
         });
     </script>
-    <script src="{{ asset('assets/js/app/route_control.js') }}"></script>
+    <script src="{{ asset('assets/js/app/route_control.js') }}?v={{ filemtime(public_path('assets/js/app/route_control.js')) }}"></script>
 
     <script>
         setRouteIcon()

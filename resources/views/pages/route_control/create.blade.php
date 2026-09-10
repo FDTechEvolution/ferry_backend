@@ -115,14 +115,14 @@
                                                 aria-labelledby="dropdownActivity">
                                                 @foreach ($activities as $index => $activity)
                                                 <li id="activity-active-{{ $index }}" data-id="{{ $activity->id }}">
-                                                    <a class="dropdown-item rounded" href="javascript:void(0)"
+                                                    <button type="button" class="dropdown-item rounded text-start"
                                                         onClick="addRouteActivity({{ $index }})">
                                                         @if (isset($activity->icon))
                                                         <img src="{{ asset($activity->icon->path . '/' . $activity->icon->name) }}"
                                                             class="me-2" width="24" height="24">
                                                         @endif
                                                         <span>{{ $activity->name }}</span>
-                                                    </a>
+                                                    </button>
                                                 </li>
                                                 @endforeach
                                             </ul>
@@ -652,5 +652,5 @@
             });
         });
 </script>
-<script src="{{ asset('assets/js/app/route_control.js') }}"></script>
+<script src="{{ asset('assets/js/app/route_control.js') }}?v={{ filemtime(public_path('assets/js/app/route_control.js')) }}"></script>
 @stop

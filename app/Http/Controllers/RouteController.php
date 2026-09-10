@@ -137,7 +137,7 @@ class RouteController extends Controller
         $icons = $this->setRouteIconGroup($icons);
 
         $meals = Addon::where('type', $this->Meal)->where('isactive', 'Y')->where('status', 'CO')->get();
-        $activities = Addon::where('type', $this->Activity)->where('isactive', 'Y')->where('status', 'CO')->get();
+        $activities = Addon::where('type', $this->Activity)->where('isactive', 'Y')->where('status', 'CO')->with('icon')->get();
         $fare_child = Fare::where('name', 'Child')->first();
         $fare_infant = Fare::where('name', 'Infant')->first();
 

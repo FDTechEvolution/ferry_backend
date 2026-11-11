@@ -33,7 +33,8 @@ class Promotions extends Model
         'isfreelongtailboat',
         'isfreeshuttlebus',
         'isfreeprivatetaxi',
-        'description'
+        'description',
+        'isdefault'
     ];
 
     public function image(){

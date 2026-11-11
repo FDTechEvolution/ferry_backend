@@ -46,26 +46,26 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1'], function () {
     Route::post('logout', [AuthenticationController::class, 'destroy'])->middleware('auth:api');
 });
 
-Route::prefix('v1')->group(function() {
-    Route::controller(PaymentController::class)->group(function() {
+Route::prefix('v1')->group(function () {
+    Route::controller(PaymentController::class)->group(function () {
         Route::post('payment/get-response', 'paymentResponse');
         Route::post('payment/ctsv-response', 'paymentCtsvResponse');
     });
 });
 
 Route::middleware(['cors'])->prefix('v1')->group(function () {
-    Route::controller(StationsController::class)->group(function() {
+    Route::controller(StationsController::class)->group(function () {
         Route::get('stations/get', 'getStations');
         Route::get('stations/route', 'getStationFromRoute');
         Route::get('stations/get/to/{from_id}', 'getToStation');
         Route::get('stations/get/nickname/{nickname}', 'getStationByNickname');
         Route::get('stations/get/type', 'getStationType');
     });
-    Route::controller(SlideController::class)->group(function() {
+    Route::controller(SlideController::class)->group(function () {
         Route::get('blog/get', 'getBlog');
         Route::get('blog/get-blog/{slug}', 'getBlogBySlug');
     });
-    Route::controller(BillboardController::class)->group(function() {
+    Route::controller(BillboardController::class)->group(function () {
         Route::get('billboard/get', 'getBillboard');
     });
 
@@ -83,12 +83,12 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
         Route::get('rent-a-bike/view/{id}', 'getRentABike');
     });
 
-    Route::controller(RouteController::class)->group(function() {
+    Route::controller(RouteController::class)->group(function () {
         Route::get('route/search/{from}/{to}/{date}', 'searchRoute');
     });
 
-    Route::prefix('online-booking')->group(function() {
-        Route::controller(OnlineBooking::class)->group(function() {
+    Route::prefix('online-booking')->group(function () {
+        Route::controller(OnlineBooking::class)->group(function () {
             Route::post('create', 'store');
             Route::post('create/multi', 'storeMultiTrip');
             Route::get('record/{bookingno}/{email}', 'bookingRecord');
@@ -105,11 +105,11 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
         });
     });
 
-    Route::controller(TimeTableController::class)->group(function() {
+    Route::controller(TimeTableController::class)->group(function () {
         Route::get('time-table/get', 'getTimetable');
     });
 
-    Route::controller(RouteMapController::class)->group(function() {
+    Route::controller(RouteMapController::class)->group(function () {
         Route::get('route-map/get', 'getRouteMap');
     });
 
@@ -118,38 +118,40 @@ Route::middleware(['cors'])->prefix('v1')->group(function () {
         Route::post('payment/create-ctsv', 'paymentCounterService');
     });
 
-    Route::controller(PromotionController::class)->group(function() {
+    Route::controller(PromotionController::class)->group(function () {
         Route::get('promotion/get', 'getPromotion');
+        Route::get('promotion/get-web-default', 'getPromotionWebDefault');
+
         Route::get('promotion/view/{promocode}', 'getPromotionByCode');
         Route::post('promotion/check', 'promotionCode');
 
         Route::get('promotion/check-v2/{promo_code}/{departdate}/{trip_type}', 'promotionCodeV2');
     });
 
-    Route::controller(InfomationController::class)->group(function() {
+    Route::controller(InfomationController::class)->group(function () {
         Route::get('infomation/get/{type}', 'getInfomation');
     });
 
-    Route::controller(ReviewController::class)->group(function() {
+    Route::controller(ReviewController::class)->group(function () {
         Route::get('review/get', 'index');
     });
 
-    Route::controller(CustomerController::class)->group(function() {
+    Route::controller(CustomerController::class)->group(function () {
         Route::post('customer/update', 'updateCustomer');
     });
 
-    Route::controller(NewsController::class)->group(function() {
+    Route::controller(NewsController::class)->group(function () {
         Route::get('news', 'getNews');
         // Route::get('news/get/{id}', 'getNewsById');
         Route::get('news/view', 'getNewByView');
         Route::get('news/get/{slug}', 'getNewsBySlug');
     });
 
-    Route::controller(PremiumFlexController::class)->group(function() {
+    Route::controller(PremiumFlexController::class)->group(function () {
         Route::get('premium-flex', 'index');
     });
 
-    Route::controller(FeeManageController::class)->group(function() {
+    Route::controller(FeeManageController::class)->group(function () {
         Route::get('fee-manage', 'index');
     });
 });
@@ -189,24 +191,24 @@ Route::middleware(['seven'])->prefix('v1')->group(function() {
 
 
 // Route Api for agent
-Route::middleware(['agent'])->prefix('v1')->group(function() {
+Route::middleware(['agent'])->prefix('v1')->group(function () {
     //Log::debug('agen');
     // Route
-    Route::controller(\App\Http\Controllers\Api\Agent\RouteController::class)->group(function() {
+    Route::controller(\App\Http\Controllers\Api\Agent\RouteController::class)->group(function () {
         Route::get('routes', 'getRoutes');
         Route::get('route/get/{from}/{to}/{depart}', 'getRouteByStation');
     });
 
     // Station
-    Route::controller(\App\Http\Controllers\Api\Agent\StationController::class)->group(function() {
+    Route::controller(\App\Http\Controllers\Api\Agent\StationController::class)->group(function () {
         Route::get('stations', 'getStationFromRoute');
         Route::get('stations/depart', 'stationDepart');
         Route::get('stations/arrive/{from_id}', 'stationArrive');
     });
 
     // Booking
-    Route::controller(BookingController::class)->group(function() {
-        Route::prefix('booking')->group(function() {
+    Route::controller(BookingController::class)->group(function () {
+        Route::prefix('booking')->group(function () {
             Route::post('create', 'store');
             Route::post('complete', 'complete');
             Route::post('cancel', 'destroy');
@@ -220,9 +222,9 @@ Route::middleware(['agent'])->prefix('v1')->group(function() {
 
 
 // Debug Only //////////////////////////////////////////////////////////////////
-Route::prefix('v8')->group(function() {
+Route::prefix('v8')->group(function () {
     // Email Debuging /////////////////////////
-    Route::controller(EmailController::class)->group(function() {
+    Route::controller(EmailController::class)->group(function () {
         Route::get('email/send/{booking_id}', 'sendEmail');
         Route::get('email/booking/{booking_id}', 'sendBookingEmail');
     });
